@@ -9,7 +9,7 @@ Declare @ErrMsg nvarchar(4000)
 EXEC dbo.DBA_Lrf_ChangeLicenseeName 
 @OldLicenseeName = 'Xintiandi',
 @NewLicenseeName = 'XTD1',
-@ErrCode = @ErrCode OUTPUT
+@ErrCode = @ErrCode OUTPUT,
 @ErrMsg = @ErrMsg OUTPUT
 ---------------------------------
 select 
