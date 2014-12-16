@@ -56,49 +56,40 @@ BEGIN
 			END
 
 	IF (@minbet = 0)  RETURN 
-	 	
-CREATE TABLE #tblCust (custid int, roleid int)	
-	INSERT INTO #tblCust (custid, roleid)
-		SELECT custid, roleid
-			FROM custinfo with (nolock)
-		    WHERE srecommend = @srecommend
-			and mrecommend not in (select custid from custInfo with(nolock)
-			where username like '%ACC%')
-			and custid<=@maxcustid		
-	
+
 --- update custinfo table 	:2849 rows affected			
-	UPDATE cs WITH(UPDLOCK,ROWLOCK)
-	SET cs.maxpermatch180 = @maxpermatch,
-	    cs.maxpermatch181 = @maxpermatch,
-		cs.maxpermatch182 = @maxpermatch,
-		cs.maxpermatch183 = @maxpermatch,
-		cs.maxpermatch184 = @maxpermatch,
-		cs.maxpermatch185 = @maxpermatch,
-		cs.maxpermatch186 = @maxpermatch,
+	UPDATE Custinfo WITH(UPDLOCK,ROWLOCK)
+	SET maxpermatch180 = @maxpermatch,
+	    maxpermatch181 = @maxpermatch,
+		maxpermatch182 = @maxpermatch,
+		maxpermatch183 = @maxpermatch,
+		maxpermatch184 = @maxpermatch,
+		maxpermatch185 = @maxpermatch,
+		maxpermatch186 = @maxpermatch,
 		DisableVirtualSports = 0,
 		HideVirtualSports = 0
-	FROM Custinfo cs
-	WHERE custid in (select custid from #tblCust)
-		
-	
-	-- Update VS bet setting: 19943 rows affected 
+	WHERE srecommend=@srecommend
+	AND custid<=@maxcustid
+			
+-- Update VS bet setting: 19943 rows affected 
 	UPDATE newVS WITH(UPDLOCK,ROWLOCK)
-	SET     newVS.spositiontaking = case when roleid = 4 then @ptVALUE else 0 end 
-			, newVS.mpositiontaking = case when roleid in (4,3)  then @ptVALUE else 0 end 
-			, newVS.apositiontaking = case when roleid = 3  then 0 else @ptVALUE end 
-			, newVS.sdiscount = 0
-			, newVS.adiscount = 0
-			, newVS.discount = 0
-			, newVS.playerdiscount = 0
-			, newVS.minbet = @minbet
-			, newVS.maxbet = @maxbet
+	SET    newVS.spositiontaking = case when roleid = 4 then @ptVALUE else 0 end 
+		  ,newVS.mpositiontaking = case when roleid in (4,3)  then @ptVALUE else 0 end 
+		  ,newVS.apositiontaking = case when roleid = 3  then 0 else @ptVALUE end 
+		  ,newVS.sdiscount = 0
+		  ,newVS.adiscount = 0
+		  ,newVS.discount = 0
+		  ,newVS.playerdiscount = 0
+		  ,newVS.minbet = @minbet
+		  ,newVS.maxbet = @maxbet
 	FROM Dep_CustSetting3rd newVS 
-	INNER JOIN #tblCust t ON newVS.custid = t.custid 
-	where newVS.sporttype IN (180,181,182,183,184,185,186)
+	INNER JOIN custInfo c with(nolock) ON newVS.custid = c.custid 
+	WHERE c.srecommend=@srecommend 
+	AND newVS.sporttype IN (180,181,182,183,184,185,186)
+	AND newVS.custid <=@maxcustid
 
 END
-GO
--- END STEP 1: DEPLOY THIS SP @ DBTRANS.CustDB -------
+GO-- END STEP 1: DEPLOY THIS SP @ DBTRANS.CustDB -------
 ------------------------------------------------------
 
 
