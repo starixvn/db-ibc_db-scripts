@@ -1,5 +1,5 @@
 /*
-	date : 2014-12-11
+	date : 2014-12-14
 	Author: Susan
 	Task: Adjust betsetting Virtual Sports for iBet 
 	Redmine: https://redmine.nexcel.vn/issues/27317
@@ -52,14 +52,6 @@ SELECT @minbet = CASE
 
 IF (@minbet = 0)  RETURN 
 
-CREATE TABLE #tblCust (custid int, roleid int)
-	
-	INSERT INTO #tblCust (custid,roleid)
-		SELECT custid,roleid
-		FROM custinfo with (nolock)
-	    WHERE srecommend = @srecommend
-		and mrecommend not in (select custid from custinfo with(nolock) where username like '%Acc%' and roleid=3)
-
 ---update VS maxpermatch : 899 rows
 	 					
 	UPDATE  Custinfo WITH(UPDLOCK,ROWLOCK)
@@ -70,17 +62,21 @@ CREATE TABLE #tblCust (custid int, roleid int)
 		maxpermatch184 = @maxpermatch,
 		maxpermatch185 = @maxpermatch,
 		maxpermatch186 = @maxpermatch
-	WHERE custid in (select custid from #tblCust )
+	WHERE srecommend=@srecommend
+	AND custid<=@maxcustid
 		
 
 	-- Update VS bet setting : 6293 rows
-	UPDATE Dep_CustSetting3rd  WITH(UPDLOCK,ROWLOCK)
-	SET       minbet = @minbet,
-			  maxbet = @maxbet
-	where custid in (select custid from #tblCust)
-	and sporttype in (180,181,182,183,184,185,186)
+	UPDATE newVS  WITH(UPDLOCK,ROWLOCK)
+	SET    newVS.minbet = @minbet,
+		   newVS.maxbet = @maxbet
+	FROM Dep_CustSetting3rd newVS
+	INNER JOIN custInfo c WITH(NOLOCK) ON c.custid=newVS.custid
+	where c.srecommend=@srecommend
+	AND sporttype in (180,181,182,183,184,185,186)
+	AND newVS.custid<=@maxcustid
+		
  	
-	DROP TABLE #tblCust
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBTRANS.CustDB -------
