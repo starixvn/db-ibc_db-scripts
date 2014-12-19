@@ -20,9 +20,20 @@ SELECT @LicenseeId = LicenseeId
 FROM dbo.Licensees WITH (NOLOCK)
 WHERE LicenseeName = 'Spondemo'
 
-IF NOT EXISTS (SELECT 1 FROM dbo.LicenseeFunctions WITH (NOLOCK) WHERE LicenseeId = @LicenseeId AND FunctionId = @FunctionId)
-	BEGIN
-		INSERT INTO dbo.LicenseeFunctions (LicenseeID,FunctionId)
-		SELECT @LicenseeId,@FunctionId
-	END
-	
+--LicenseeFunctions
+DELETE FROM dbo.LicenseeFunctions WITH (ROWLOCK,UPDLOCK) 
+WHERE LicenseeID = @LicenseeID AND FunctionId = @FunctionId
+
+INSERT INTO dbo.LicenseeFunctions (licenseeID,FunctionId) 
+SELECT @LicenseeID,@FunctionId
+
+--LicenseeUserFunctions
+DELETE FROM dbo.LicenseeUserFunctions WITH (ROWLOCK,UPDLOCK)
+WHERE LicenseeId = @LicenseeID AND FunctionId = @FunctionId
+
+INSERT INTO dbo.LicenseeUserFunctions(UserId,FunctionId,LicenseeId)
+SELECT UserId,@FunctionId,@LicenseeID
+FROM dbo.LicenseeUserFunctions WITH (NOLOCK)
+WHERE LicenseeId  = @LicenseeID AND FunctionId = 1 --total bets
+
+ 
