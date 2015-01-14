@@ -81,7 +81,7 @@ DECLARE @tmpCust TABLE (custid int)
 INSERT INTO @tmpCust
 SELECT custid
 FROM Customer (NOLOCK)
-where username IN ('lam', 'lam1', 'starix24', 'starix14','starix1','starix2','starix3','starix4','starixIT')
+where username IN ('starix24', 'starix14')
  
  
 UPDATE mp
