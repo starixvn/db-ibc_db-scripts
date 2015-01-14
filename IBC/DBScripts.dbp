@@ -112,6 +112,9 @@ Begin DataProject = "DBScripts"
    Begin Folder = "LogSettleOutright"
       Script = "Req_20140217_Feature12703_LogSettleOutright.sql"
    End
+   Begin Folder = "NAPU3"
+      Script = "Req_20150114_feature28862_Copy permissions for NAPU3.sql"
+   End
    Begin Folder = "NumberGame"
       Script = "Req_20140228_Feature_UpdateBetSettingForCreditCustomers.sql"
       Script = "Req_20140305_Feature_Scr1_UpdateBetSettingForAllSMA.sql"
