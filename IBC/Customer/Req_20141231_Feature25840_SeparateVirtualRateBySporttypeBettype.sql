@@ -68,18 +68,7 @@ BEGIN
 			SELECT 99 as sporttype, 8 as bettype
 			UNION 
 			SELECT 99 as sporttype, 12 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 20 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 21 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 154 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1301 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1311 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1324 as bettype 
+			
 			) t
 			CROSS APPLY (
 			SELECT 0 as isLive
