@@ -11,7 +11,7 @@
         ​​	Step 1: Copy current VirtualMultiplier value to all bet types of each sport type
 			Step 2: Update VirtualMultiplier = 1
 
-*/ 
+*/  
 
  -- BEGIN STEP 1: DEPLOY THIS SP @DBTRANS.CustDB ------
 ------------------------------------------------------
