@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProductVersion>10.50.1600.1</ProductVersion>
+  <SchemaVersion>9.0.1.0</SchemaVersion>
+  <State>$base64$PFNvdXJjZUNvbnRyb2xJbmZvIHhtbG5zOnhzZD0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zOmRkbDI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yIiB4bWxuczpkZGwyXzI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yLzIiIHhtbG5zOmRkbDEwMF8xMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDA4L2VuZ2luZS8xMDAvMTAwIiB4bWxuczpkZGwyMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAiIHhtbG5zOmRkbDIwMF8yMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAvMjAwIiB4bWxuczpkd2Q9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vRGF0YVdhcmVob3VzZS9EZXNpZ25lci8xLjAiPg0KICA8RW5hYmxlZD5mYWxzZTwvRW5hYmxlZD4NCiAgPFByb2plY3ROYW1lPjwvUHJvamVjdE5hbWU+DQogIDxBdXhQYXRoPjwvQXV4UGF0aD4NCiAgPExvY2FsUGF0aD48L0xvY2FsUGF0aD4NCiAgPFByb3ZpZGVyPjwvUHJvdmlkZXI+DQo8L1NvdXJjZUNvbnRyb2xJbmZvPg==</State>
+  <Database>
+    <Name>Initialize mcCustBettingMonthLy.database</Name>
+    <FullPath>Initialize mcCustBettingMonthLy.database</FullPath>
+  </Database>
+  <Cubes />
+  <Dimensions />
+  <DataSources>
+    <ProjectItem>
+      <Name>DBDW.Bodb Account.ds</Name>
+      <FullPath>DBDW.Bodb Account.ds</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>DBDW2.Bodb Account.ds</Name>
+      <FullPath>DBDW2.Bodb Account.ds</FullPath>
+    </ProjectItem>
+  </DataSources>
+  <DataSourceViews />
+  <MiningModels />
+  <Roles />
+  <Miscellaneous />
+  <Configurations>
+    <Configuration>
+      <Name>Development</Name>
+      <Options>
+        <OutputPath>bin</OutputPath>
+        <ConnectionMappings>
+          <ConfigurationSetting>
+            <Id>DBDW.Bodb Account</Id>
+            <Name>DBDW.Bodb Account</Name>
+            <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DBDW;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+          </ConfigurationSetting>
+          <ConfigurationSetting>
+            <Id>DBDW2.Bodb Account</Id>
+            <Name>DBDW2.Bodb Account</Name>
+            <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DBDW2;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+          </ConfigurationSetting>
+        </ConnectionMappings>
+        <ConnectionProviderMappings />
+        <ConnectionSecurityMappings>
+          <ConfigurationSetting>
+            <Id>DBDW.Bodb Account</Id>
+            <Name>DBDW.Bodb Account</Name>
+            <Value xsi:type="xsd:int">1</Value>
+          </ConfigurationSetting>
+          <ConfigurationSetting>
+            <Id>DBDW2.Bodb Account</Id>
+            <Name>DBDW2.Bodb Account</Name>
+            <Value xsi:type="xsd:int">1</Value>
+          </ConfigurationSetting>
+        </ConnectionSecurityMappings>
+        <DatabaseStorageLocations />
+      </Options>
+    </Configuration>
+  </Configurations>
+  <DTSPackages>
+    <DtsPackage FormatVersion="3">
+      <Name>Initialize_mcCustBettingMonthly.dtsx</Name>
+      <FullPath>Initialize_mcCustBettingMonthLy.dtsx</FullPath>
+      <References />
+    </DtsPackage>
+  </DTSPackages>
+</Project>
