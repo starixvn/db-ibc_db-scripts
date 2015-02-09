@@ -1,3 +1,7 @@
+/*
+	DBDW.bodb_Account
+	DBDW2.bodb_Account
+*/
 USE bodb_Account
 
 --Add file group 
@@ -61,3 +65,35 @@ END
 GO
 
 
+/*
+	DBDW.bodb_Staging
+	DBDW2.bodb_Staging
+*/
+USE bodb_Staging
+GO
+--Create monthly table
+IF OBJECT_ID('dbo.mcCustBettingMonthly', 'U') IS NULL
+BEGIN
+	CREATE TABLE [dbo].[mcCustBettingMonthly](
+		[rptYear] [smallint] NOT NULL,
+		[rptMonth] [tinyint] NOT NULL,
+		[CustID] [int] NOT NULL,
+		[SiteID] [smallint] NOT NULL,
+		[Currency] [tinyint] NOT NULL,
+		[BetType] [smallint] NOT NULL,
+		[LeagueID] [int] NOT NULL,
+		[IsLive] [bit] NOT NULL,
+		[Status] [tinyint] NOT NULL,
+		[WinlossIBC] [money] NULL,
+		[Winloss100] [money] NULL,
+		[WinlossIBCVirtual] [money] NULL,
+		[TurnoverIBC] [money] NULL,
+		[Turnover100] [money] NULL,
+		[TurnoverIBCVirtual] [money] NULL,
+		[CommissionS] [money] NULL,
+		[CommissionSVirtual] [money] NULL,
+		[BetCount] [int] NULL)
+	 ON [PRIMARY]
+
+END
+GO
