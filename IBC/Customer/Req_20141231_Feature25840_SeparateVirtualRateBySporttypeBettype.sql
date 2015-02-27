@@ -88,6 +88,8 @@ BEGIN
 			)b
 		WHERE ci.custid <= @maxcustid
 			AND ci.srecommend = @srecommend
+			AND ci.custid <> 1176092 --member01 : testing account
+			AND ci.recommend <> 14228863 --STAFFTWPG
 	END
 	
 	IF (SELECT COUNT(1)
@@ -99,6 +101,8 @@ BEGIN
 	SET VirtualMultiplier = CASE WHEN VirtualMultiplier = 1 THEN 0 ELSE 1 END
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
+		AND ci.custid <> 1176092 --member01 : testing account
+		AND ci.recommend <> 14228863 --STAFFTWPG
 	
 END
 GO
