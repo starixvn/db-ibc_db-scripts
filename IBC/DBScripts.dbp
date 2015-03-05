@@ -47,6 +47,7 @@ Begin DataProject = "DBScripts"
       Script = "Req_20141031_Feature25357_GetAgentListAndDownlines.sql"
       Script = "Req_20141231_Feature25840_Step1 Copy virtual rate settings to new table.sql"
       Script = "Req_20150227_Feature25840_step 2 Adjust virtual rate settings.sql"
+      Script = "Req_20150305_Feature25840_Step 3 Update virtual rate status on Custinfo.sql"
    End
    Begin DBRefFolder = "Database References"
    End
