@@ -4,7 +4,7 @@
 	Task: Virtual Rate - Separate setting into sport types and bet types
 	DB: DBTXN/CustDB
 	
-	Steps:
+	Steps: RUN AT UM
 		- correct virtual rate settings 
 		- copy settings for newly created customers
 */
@@ -13,11 +13,15 @@
 DECLARE @max_custid INT
 SELECT @max_custid = xxx
 
-SELECT custid, VirtualMultiplier
+SELECT custid, ci.VirtualMultiplier
 INTO #tmpCust
-FROM custinfo WITH(NOLOCK)
-WHERE custid <= @max_custid 
-	AND VirtualMultiplier NOT IN (0,1)
+FROM custinfo ci WITH(NOLOCK)
+	INNER JOIN CustVirtualRate cv WITH(NOLOCK) ON ci.custid = cv.custid AND cv.sporttype = 1 AND cv.bettype = 1
+WHERE ci.custid <= @max_custid 
+	AND ci.custid <> 1176092 --member01 : testing account
+	AND ci.recommend <> 14228863 --STAFFTWPG
+	AND ci.VirtualMultiplier <> cv.VirtualMultiplier
+	
 GO
 
 UPDATE cv
@@ -26,10 +30,6 @@ FROM [CustVirtualRate] cv WITH(UPDLOCK,ROWLOCK)
 	INNER JOIN #tmpCust t ON cv.custid = t.custid
 GO
 
-UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
-SET VirtualMultiplier = 1
-WHERE custid IN (SELECT custid FROM #tmpCust) 	
-GO
 
 --step 2: copy settings for newly created customers
 DECLARE @max_custid INT
@@ -93,10 +93,5 @@ FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.custid > @max_custid		 	
 GO
 
-DECLARE @max_custid INT
-SELECT @max_custid = xxx
 
-UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
-	SET VirtualMultiplier = CASE WHEN VirtualMultiplier = 1 THEN 0 ELSE 1 END
-	WHERE custid > @max_custid
 		
