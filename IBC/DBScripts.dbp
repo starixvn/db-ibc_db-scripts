@@ -45,7 +45,9 @@ Begin DataProject = "DBScripts"
       Script = "Req_20141016_Feature24481_SuspendAccountsUnderSite722222 .sql"
       Script = "Req_20141017_Feature24481_Rollback un-suspend for affected accounts.sql"
       Script = "Req_20141031_Feature25357_GetAgentListAndDownlines.sql"
-      Script = "Req_20141231_Feature25840_SeparateVirtualRateBySporttypeBettype.sql"
+      Script = "Req_20141231_Feature25840_Step1 Copy virtual rate settings to new table.sql"
+      Script = "Req_20150227_Feature25840_step 2 Adjust virtual rate settings.sql"
+      Script = "Req_20150305_Feature25840_Step 3 Update virtual rate status on Custinfo.sql"
    End
    Begin DBRefFolder = "Database References"
    End
@@ -64,6 +66,7 @@ Begin DataProject = "DBScripts"
       Script = "Req_20140613_Feature17557_CorrectPTsettingsHRFixedOddsForLicensees.sql"
    End
    Begin Folder = "Keno"
+      Script = "dbo.Req_20150127_Feature29712_AddBeijingMarketForLicensees.sql"
       Script = "Req_20140227_Feature11658_AddLogActionForKeno_P2.sql"
       Script = "Req_20140301_Feature_11658_Insert_KenoDefaultSettingForCreditCustomersFromNG.sql"
       Script = "Req_20140301_Feature_11658_Insert_KenoDefaultSettingForCreditCustomersFromNG_xtest.sql"
