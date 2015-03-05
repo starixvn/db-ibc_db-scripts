@@ -5,11 +5,7 @@
 	DB: DBTXN/CustDB
 	
 	Steps:
-		Customers having VirtualMultiplier = 1
-			Update VirtualMultiplier = 0
-		Customers having VirtualMultiplier > 0
-        ​​	Step 1: Copy current VirtualMultiplier value to all bet types of each sport type
-			Step 2: Update VirtualMultiplier = 1
+		RUN BEFORE UM: copy virtual rate settings to new structure
 
 */  
 
@@ -29,78 +25,67 @@ BEGIN
 	IF (SELECT COUNT(1)
 		FROM sys.objects
 		WHERE NAME IN ('CustInfo','CustVirtualRate') AND type = 'U'
-		) = 2 
-	BEGIN	
-		INSERT INTO [dbo].[CustVirtualRate]
-			   ([custid]
-			   ,[sporttype]
-			   ,[bettype]
-			   ,[isLive]
-			   ,[virtualMultiplier])		
-		SELECT custid,
-			t.sporttype,
-			t.bettype,
-			b.isLive,
-			ci.virtualMultiplier
-		FROM CustInfo ci WITH(NOLOCK)
-			CROSS APPLY 
-			(
-			SELECT 1 as sporttype, 1 as bettype
-			UNION 
-			SELECT 1 as sporttype, 2 as bettype
-			UNION 
-			SELECT 1 as sporttype, 3 as bettype
-			UNION 
-			SELECT 1 as sporttype, 7 as bettype
-			UNION 
-			SELECT 1 as sporttype, 8 as bettype
-			UNION 
-			SELECT 1 as sporttype, 12 as bettype			
-			UNION 
-			SELECT 99 as sporttype, 1 as bettype
-			UNION 
-			SELECT 99 as sporttype, 2 as bettype
-			UNION 
-			SELECT 99 as sporttype, 3 as bettype
-			UNION 
-			SELECT 99 as sporttype, 7 as bettype
-			UNION 
-			SELECT 99 as sporttype, 8 as bettype
-			UNION 
-			SELECT 99 as sporttype, 12 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 20 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 21 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 154 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1301 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1311 as bettype 
-			UNION 
-			SELECT 99 as sporttype, 1324 as bettype 
-			) t
-			CROSS APPLY (
-			SELECT 0 as isLive
-			UNION 
-			SELECT 1 as isLive
-			)b
-		WHERE ci.custid <= @maxcustid
-			AND ci.srecommend = @srecommend
-			AND ci.custid <> 1176092 --member01 : testing account
-			AND ci.recommend <> 14228863 --STAFFTWPG
-	END
+		) <> 2
+	RETURN
+	 
 	
-	IF (SELECT COUNT(1)
-		FROM sys.objects
-		WHERE NAME IN ('CustInfo') AND type = 'U'
-		) <> 1 RETURN
-	
-	UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
-	SET VirtualMultiplier = CASE WHEN VirtualMultiplier = 1 THEN 0 ELSE 1 END
-	WHERE srecommend = @srecommend
-		AND custid <= @maxcustid
+	INSERT INTO [dbo].[CustVirtualRate]
+		   ([custid]
+		   ,[sporttype]
+		   ,[bettype]
+		   ,[isLive]
+		   ,[virtualMultiplier])		
+	SELECT custid,
+		t.sporttype,
+		t.bettype,
+		b.isLive,
+		ci.virtualMultiplier
+	FROM CustInfo ci WITH(NOLOCK)
+		CROSS APPLY 
+		(
+		SELECT 1 as sporttype, 1 as bettype
+		UNION 
+		SELECT 1 as sporttype, 2 as bettype
+		UNION 
+		SELECT 1 as sporttype, 3 as bettype
+		UNION 
+		SELECT 1 as sporttype, 7 as bettype
+		UNION 
+		SELECT 1 as sporttype, 8 as bettype
+		UNION 
+		SELECT 1 as sporttype, 12 as bettype			
+		UNION 
+		SELECT 99 as sporttype, 1 as bettype
+		UNION 
+		SELECT 99 as sporttype, 2 as bettype
+		UNION 
+		SELECT 99 as sporttype, 3 as bettype
+		UNION 
+		SELECT 99 as sporttype, 7 as bettype
+		UNION 
+		SELECT 99 as sporttype, 8 as bettype
+		UNION 
+		SELECT 99 as sporttype, 12 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 20 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 21 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 154 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 1301 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 1311 as bettype 
+		UNION 
+		SELECT 99 as sporttype, 1324 as bettype 
+		) t
+		CROSS APPLY (
+		SELECT 0 as isLive
+		UNION 
+		SELECT 1 as isLive
+		)b
+	WHERE ci.custid <= @maxcustid
+		AND ci.srecommend = @srecommend
 		AND ci.custid <> 1176092 --member01 : testing account
 		AND ci.recommend <> 14228863 --STAFFTWPG
 	
@@ -113,7 +98,7 @@ GO
 
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB06/DBTP) -----
 --------------------------------------------------------------------------------------
  
 
