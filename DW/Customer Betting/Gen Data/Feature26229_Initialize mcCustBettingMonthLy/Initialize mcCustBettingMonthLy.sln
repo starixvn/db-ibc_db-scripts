@@ -1,0 +1,17 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{D183A3D8-5FD8-494B-B014-37F57B35E655}") = "Initialize mcCustBettingMonthLy", "Initialize mcCustBettingMonthLy.dtproj", "{A4E7690C-A1F5-4367-8BB9-86EBE1C1122F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4E7690C-A1F5-4367-8BB9-86EBE1C1122F}.Development|Default.ActiveCfg = Development
+		{A4E7690C-A1F5-4367-8BB9-86EBE1C1122F}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
