@@ -3,7 +3,11 @@
   <Name>DBDW.Bodb Account</Name>
   <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
   <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+<<<<<<< HEAD
   <ConnectionString>Provider=SQLNCLI10.1;Data Source=DB231;Password=;User ID=;Initial Catalog=bodb_Account</ConnectionString>
+=======
+  <ConnectionString>Provider=SQLNCLI10.1;Data Source=DBDW;Password=;User ID=;Initial Catalog=bodb_Account</ConnectionString>
+>>>>>>> d8f2d0d611db3c6e12bc25b86bc42fd259572dd6
   <ConnectionStringSecurity>PasswordRemoved</ConnectionStringSecurity>
   <Timeout>PT0S</Timeout>
 </DataSource>
