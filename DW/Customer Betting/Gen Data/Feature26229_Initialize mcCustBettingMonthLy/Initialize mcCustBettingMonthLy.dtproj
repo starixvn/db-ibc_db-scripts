@@ -32,12 +32,20 @@
           <ConfigurationSetting>
             <Id>DBDW.Bodb Account</Id>
             <Name>DBDW.Bodb Account</Name>
+<<<<<<< HEAD
             <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DB231;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+=======
+            <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DBDW;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+>>>>>>> d8f2d0d611db3c6e12bc25b86bc42fd259572dd6
           </ConfigurationSetting>
           <ConfigurationSetting>
             <Id>DBDW2.Bodb Account</Id>
             <Name>DBDW2.Bodb Account</Name>
+<<<<<<< HEAD
             <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DB215;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+=======
+            <Value xsi:type="xsd:string">Provider=SQLNCLI10.1;Data Source=DBDW2;Password=;User ID=;Initial Catalog=bodb_Account</Value>
+>>>>>>> d8f2d0d611db3c6e12bc25b86bc42fd259572dd6
           </ConfigurationSetting>
         </ConnectionMappings>
         <ConnectionProviderMappings />

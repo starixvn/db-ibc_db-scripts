@@ -16,13 +16,8 @@ BEGIN
 
 	DECLARE @TransId BIGINT, @MaxTransId BIGINT
 
-	SELECT @TransId = CONVERT(BIGINT,VValue) FROM bodb02.dbo.SystemSettings WITH (NOLOCK) WHERE VName = 'DuplicatedTicket'
-	SELECT @MaxTransId = MAX(TransId) FROM bodb02.dbo.Bettrans WITH (NOLOCK)
-
-
-	UPDATE bodb02.dbo.SystemSettings WITH (UPDLOCK, ROWLOCK) 
-	SET	   VValue = @MaxTransId
-	WHERE  VName = 'DuplicatedTicket'
+	SELECT @TransId = CONVERT(BIGINT,VValue) FROM bodb02.dbo.SystemSettings WITH (NOLOCK) WHERE VName = 'DuplTicketLastID'
+	SELECT @MaxTransId = MAX(TransId) FROM bodb02.dbo.Bettrans WITH (NOLOCK) WHERE MatchId > 0 AND Bettype < 19999 
 
 
  	; WITH AllTicket AS(	 
@@ -77,6 +72,16 @@ BEGIN
 			AND b.matchid = t.matchid
 	WHERE NOT EXISTS (SELECT 1 FROM dbo.DuplicatedTicket d WITH (NOLOCK) WHERE d.TransID = b.TransId)	
 	DROP TABLE #TempData
+	
+	
+	UPDATE bodb02.dbo.SystemSettings WITH (UPDLOCK, ROWLOCK) 
+	SET	   VValue = @MaxTransId
+	WHERE  VName = 'DuplTicketLastID'
+
+	
+	UPDATE bodb02.dbo.SystemSettings WITH (UPDLOCK, ROWLOCK) 
+	SET	   VValue = CURRENT_TIMESTAMP
+	WHERE  VName = 'DuplTicketLastDate' 
 		
 END
 
