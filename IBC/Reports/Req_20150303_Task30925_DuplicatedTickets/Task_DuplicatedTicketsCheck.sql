@@ -17,7 +17,7 @@ BEGIN
 	DECLARE @TransId BIGINT, @MaxTransId BIGINT
 
 	SELECT @TransId = CONVERT(BIGINT,VValue) FROM bodb02.dbo.SystemSettings WITH (NOLOCK) WHERE VName = 'DuplTicketLastID'
-	SELECT @MaxTransId = MAX(TransId) FROM bodb02.dbo.Bettrans WITH (NOLOCK) WHERE MatchId > 0 AND Bettype < 19999 
+	SELECT @MaxTransId = MAX(TransId) FROM bodb02.dbo.Bettrans WITH (NOLOCK)
 
 
  	; WITH AllTicket AS(	 
