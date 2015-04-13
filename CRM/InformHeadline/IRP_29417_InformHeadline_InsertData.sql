@@ -11,5 +11,5 @@ INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsAct
 INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('InformHeadlineStatus', 45007, 'Keep for reference', 8, 1)
           
 GO
-
-
+INSERT INTO crmLogAction (ActionID, SPName, ActionNameEN, IsInternal) VALUES (702, 'Acc_CRM_InformTitleStatusUpd', 'Update Inform Title Status', 0)
+INSERT INTO crmLogAction (ActionID, SPName, ActionNameEN, IsInternal) VALUES (703, 'Acc_CRM_InformHeadlineSearchUpd', 'Update Inform Headline', 0)
