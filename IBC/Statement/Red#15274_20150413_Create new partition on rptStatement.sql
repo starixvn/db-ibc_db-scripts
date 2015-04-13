@@ -1,0 +1,178 @@
+USE [bodb_report]
+GO
+
+/*  
+ Created:	20150503@Tom.Vo
+ Task :		Add new file group and partition
+ DB:		DB06.bodb_report
+ Original:  
+  
+ Revisions:      
+   			
+ Param's Explanation:  
+	 
+ Exam: 
+
+	 
+*/  
+SET NOCOUNT ON
+
+IF @@SERVERNAME NOT IN ('DB06', 'DB215')
+BEGIN
+	SELECT 1000 ErrCode
+		,'Wrong Server Name' ErrorMsg
+
+	RETURN
+END
+
+----------
+--Step 1 Create file group 
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_12M01_03]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_12M04_06]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_12M07_09]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_12M10_12]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_13M01_03]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_13M04_06]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_13M07_09]
+GO
+
+ALTER DATABASE bodb_report ADD filegroup [rptSTATEMENT_13M10_12]
+
+----------
+--Step 2 Create data file
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_12M01_03'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_12M01_03.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_12M01_03]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_12M04_06'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_12M04_06.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_12M04_06]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_12M07_09'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_12M07_09.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_12M07_09]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_12M10_12'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_12M10_12.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_12M10_12]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_13M01_03'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_13M01_03.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_13M01_03]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_13M04_06'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_13M04_06.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_13M04_06]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_13M07_09'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_13M07_09.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_13M07_09]
+GO
+
+ALTER DATABASE bodb_report ADD FILE (
+	NAME = 'rptSTATEMENT_13M10_12'
+	,filename = 'D:\IBC_DB\bodb_Report\rptSTATEMENT_13M10_12.ndf'
+	,SIZE = 2048 MB
+	,FILEGROWTH = 16 MB
+	) TO filegroup [rptSTATEMENT_13M10_12]
+GO
+
+----------
+--Step 3 Modify PARTITION SCHEME & FUNCTION
+/***************** 2012 *****************/
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_12M01_03];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_12M01_03]*/
+	SPLIT RANGE ('2012/03/31 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_12M04_06];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_12M04_06]*/
+	SPLIT RANGE ('2012/06/30 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_12M07_09];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_12M07_09]*/
+	SPLIT RANGE ('2012/09/30 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_12M10_12];
+GO
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_12M10_12]*/
+	SPLIT RANGE ('2012/12/31 00:00:00.000');
+
+/***************** 2013 *****************/	
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_13M01_03];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_13M01_03]*/
+	SPLIT RANGE ('2013/03/31 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_13M04_06];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_13M04_06]*/
+	SPLIT RANGE ('2013/06/30 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_13M07_09];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_13M07_09]*/
+	SPLIT RANGE ('2013/09/30 00:00:00.000');
+GO
+
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_13M10_12];
+GO
+
+ALTER PARTITION FUNCTION pf_rptSTATEMENT_monthly () /*[rptSTATEMENT_13M10_12]*/
+	SPLIT RANGE ('2013/12/31 00:00:00.000');
+	
+GO	
+ALTER PARTITION SCHEME ps_rptSTATEMENT_monthly NEXT USED [rptSTATEMENT_max];
+GO
