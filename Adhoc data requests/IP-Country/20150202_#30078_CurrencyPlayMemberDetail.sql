@@ -1,8 +1,8 @@
---DB052.bodb02
+--DB06.bodb02
 
 declare @from datetime, @to datetime
 
-select @from = '2014-12-1'
+select @from = '2015-3-1'
 select @to = dateadd(MM, 1, @from)
 
 SELECT l.LicenseeID, CountryCode, bettrans.currency,bettrans.custid,
@@ -21,10 +21,10 @@ SELECT l.LicenseeID, CountryCode, bettrans.currency,bettrans.custid,
 			END AS statusID
 INTO #tmp	
 FROM
-	DBARC.bodb_archive.dbo.bettrans_bk bettrans WITH (NOLOCK)
+	bodb_archive.dbo.bettrans_bk bettrans WITH (NOLOCK)
 	INNER JOIN bodb02.dbo.customer WITH (NOLOCK) ON bettrans.custid=customer.custid
 	INNER JOIN bodb02.dbo.dep_custsuper s WITH (NOLOCK) ON customer.srecommend = s.custid
-	INNER JOIN bodb_licensee.dbo.Licensees l WITH (NOLOCK) ON s.site = l.LicenseeName
+	INNER JOIN DB052.bodb_licensee.dbo.Licensees l WITH (NOLOCK) ON s.site = l.LicenseeName
 WHERE
 	bettrans.winlostdate >= @from AND winlostdate < @to AND
 	bettrans.status IN ('WON','LOSE','DRAW') AND
@@ -63,10 +63,10 @@ SELECT
 	sum(BetCount) as betcount
 	--count(CustID) as membercount
 FROM #tmp b WITH (NOLOCK)
-    INNER join bodb_licensee.dbo.Licensees l WITH (NOLOCK) ON l.licenseeid = b.licenseeid
+    INNER join DB052.bodb_licensee.dbo.Licensees l WITH (NOLOCK) ON l.licenseeid = b.licenseeid
     INNER join bodb02.dbo.exchange e WITH (NOLOCK) ON b.currency = e.exchangeid
     INNER join bodb02.dbo.customer c WITH (NOLOCK) ON b.custid = c.custid
-	LEFT JOIN bodb_licensee.dbo.country ct WITH (NOLOCK) ON b.countryCode = ct.countrySHORT
+	LEFT JOIN DB052.bodb_licensee.dbo.country ct WITH (NOLOCK) ON b.countryCode = ct.countrySHORT
 --WHERE
 	--b.Currency IN (2,4,13,15) --MALAYSIA,THAILAND,CHINA,INDONESIA
 GROUP BY l.LicenseeName,b.currency, c.username,
