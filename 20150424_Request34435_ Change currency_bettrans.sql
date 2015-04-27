@@ -25,17 +25,10 @@ BEGIN
 
 
 
-	DECLARE  @ExchangeID int, @actualrate float,@OldCurrency varchar(5)  
+	DECLARE  @ExchangeID int, @actualrate float 
 
-	SELECT @OldCurrency = e.currency   
-	FROM custinfo ci WITH (NOLOCK)  
-	INNER JOIN exchange e WITH (NOLOCK) ON ci.currency = e.exchangeid  
-	WHERE custid = @CustID  
-
-	SELECT @ExchangeID = ExchangeID, @actualrate = actualrate  
-	FROM Exchange WITH (NOLOCK) WHERE currency = @newcurrency  
+	SELECT @ExchangeID=67, @actualrate=0.4
   
-
  --- Update bettrans from DBTrans
  IF (@target = 'DBTRANS' AND @@SERVERNAME = 'DBTRANS')
 BEGIN

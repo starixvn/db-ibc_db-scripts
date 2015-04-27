@@ -26,16 +26,10 @@ BEGIN
 	IF (SELECT COUNT(1) FROM sys.objects WHERE name IN ('Customer','custinfo') AND type = 'U') <> 2
 		RETURN
 
-	DECLARE  @ExchangeID int, @actualrate float,  @OldCurrency varchar(5)  
+	DECLARE  @ExchangeID int, @actualrate float 
 
-	SELECT @OldCurrency = e.currency   
-	FROM custinfo ci WITH (NOLOCK)  
-	INNER JOIN exchange e WITH (NOLOCK) ON ci.currency = e.exchangeid  
-	WHERE custid = @CustID  
-
-	SELECT @ExchangeID = ExchangeID, @actualrate = actualrate  
-	FROM Exchange WITH (NOLOCK) WHERE currency = @newcurrency  
-  
+	Select @ExchangeID=67, @actualrate=0.4
+	  
 	UPDATE Customer WITH (UPDLOCK,ROWLOCK) SET currency = @ExchangeID
 	WHERE srecommend = @CustID  
 	and custid <=@maxcustid
