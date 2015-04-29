@@ -9,7 +9,12 @@ INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsAct
 INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('InformHeadlineStatus', 45005, 'Internal account', 6, 1)
 INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('InformHeadlineStatus', 45006, 'Never touch', 7, 1)
 INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('InformHeadlineStatus', 45007, 'Keep for reference', 8, 1)
+
+GO
+INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('Status', 11013, 'Enabled', 9, 1)
+INSERT INTO crmSetting(SettingName, SettingID, SettingValue, DisplayOrder, IsActive) VALUES ('Status', 11014, 'Disabled', 10, 1)
           
 GO
 INSERT INTO crmLogAction (ActionID, SPName, ActionNameEN, IsInternal) VALUES (702, 'Acc_CRM_InformTitleStatusUpd', 'Update Inform Title Status', 0)
 INSERT INTO crmLogAction (ActionID, SPName, ActionNameEN, IsInternal) VALUES (703, 'Acc_CRM_InformHeadlineSearchUpd', 'Update Inform Headline', 0)
+

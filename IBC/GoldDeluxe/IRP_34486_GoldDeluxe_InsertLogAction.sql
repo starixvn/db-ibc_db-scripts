@@ -18,7 +18,7 @@ INSERT INTO [dbo].[LogAction]
  UNION ALL
  SELECT  239, 2, 'Acc_CustomerUpdMasterGoldDeluxe_Commission',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',N'Update Gold Deluxe Commission for master',0
  UNION ALL
- SELECT  240, 2, 'Acc_CustomerUpdMasterGoldDeluxe_Commission', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent',0
+ SELECT  240, 2, 'Acc_CustomerUpdAgentGoldDeluxe_Commission', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent', N'Update Gold Deluxe Commission for agent',0
  UNION ALL
  SELECT  241, 2, 'Acc_CustomerUpdMemberGoldDeluxe_Commission', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member', N'Update Gold Deluxe Commission for member',0
  UNION ALL

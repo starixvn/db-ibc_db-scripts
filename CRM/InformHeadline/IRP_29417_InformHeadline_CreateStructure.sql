@@ -80,3 +80,20 @@ GO
 
 SET ANSI_PADDING OFF
 GO
+
+/****** Object:  View [dbo].[crmStatus]    Script Date: 4/15/2015 1:48:52 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[crmStation]
+AS
+SELECT	SettingID StationID,
+		SettingValue Name,
+		DisplayOrder,
+		IsActive
+FROM crmSetting WITH (NOLOCK)
+WHERE SettingName = 'Station'
+GO
