@@ -23,7 +23,7 @@ alter table [dbo].[custInfo_old] add HideGoldDeluxe bit null
 
 
 alter table [dbo].[custInfo_old] add DisableGoldDeluxe bit null
-GO
+
 
 
 
