@@ -58,6 +58,9 @@ Begin DataProject = "DBScripts"
    Begin Folder = "Gold Deluxe"
       Script = "Req_20150506_Feature34486_database arrangement for Gold Deluxe.sql"
    End
+   Begin Folder = "GoldDeluxe"
+      
+   End
    Begin Folder = "HRFixedOdds"
       Script = "Req_20131011_Feature6505_AddLogAction.sql"
       Script = "Req_20131011_Feature6505_PrepareStructureHRFixedOdds.sql"
