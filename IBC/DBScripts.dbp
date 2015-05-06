@@ -55,11 +55,9 @@ Begin DataProject = "DBScripts"
    Begin Folder = "E-Sports"
       Script = "Req_20140912_Feature20531_UpdateDisableEsportsForRealAccounts.sql"
    End
-   Begin Folder = "Gold Deluxe"
-      Script = "Req_20150506_Feature34486_database arrangement for Gold Deluxe.sql"
-   End
    Begin Folder = "GoldDeluxe"
-      
+      Script = "IRP_34486_GoldDeluxe_InsertLogAction.sql"
+      Script = "Req_20150506_Feature34486_database arrangement for Gold Deluxe.sql"
    End
    Begin Folder = "HRFixedOdds"
       Script = "Req_20131011_Feature6505_AddLogAction.sql"
