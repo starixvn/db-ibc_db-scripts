@@ -24,10 +24,10 @@ BEGIN
 	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType','CustSettingGame') AND type = 'U' ) <> 3
 		RETURN
 	
-	DECLARE @StakeLevelList_1701 VARCHAR(100)= ''
-			,@StakeLevelList_1702 VARCHAR(100)= ''
-			,@StakeLevelList_1701_new VARCHAR(100)= ''
-			,@StakeLevelList_1702_new VARCHAR(100)= ''
+	DECLARE @StakeLevelList_1701 VARCHAR(50)= ''
+			,@StakeLevelList_1702 VARCHAR(50)= ''
+			,@StakeLevelList_1701_new VARCHAR(50)= ''
+			,@StakeLevelList_1702_new VARCHAR(50)= ''
 			,@currency INT
 			,@custid INT
 			,@uplineID INT
@@ -61,6 +61,11 @@ BEGIN
 		IF @@ROWCOUNT = 0
 			BREAK;
 		
+		SELECT @StakeLevelList_1701_new = ''
+			,@StakeLevelList_1702_new = ''
+			,@StakeLevelList_1701 = ''
+			,@StakeLevelList_1702 = ''
+			
 		IF @syncLiveCasino = 1
 		BEGIN
 			--get stakelevel from LiveCasino
@@ -212,6 +217,8 @@ BEGIN
 		AND ci.custid <= @maxcustid
 		AND cs.sporttype = 162
 		AND cs.bettype = 1101         
+		
+	DROP TABLE #tmpCust	
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
