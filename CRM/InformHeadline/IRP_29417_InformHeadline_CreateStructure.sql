@@ -44,7 +44,8 @@ CREATE TABLE [dbo].[crmInformHeadline](
  CONSTRAINT [PK_crmInformHeadline] PRIMARY KEY CLUSTERED 
 (
 	[HeadlineID] ASC,
-	[TitleID] ASC
+	[TitleID] ASC,
+	[GroupID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [customer_table]
 ) ON [customer_table]
 
@@ -79,4 +80,21 @@ CREATE TABLE [dbo].[crmLogInformHeadline](
 GO
 
 SET ANSI_PADDING OFF
+GO
+
+/****** Object:  View [dbo].[crmStatus]    Script Date: 4/15/2015 1:48:52 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[crmStation]
+AS
+SELECT	SettingID StationID,
+		SettingValue Name,
+		DisplayOrder,
+		IsActive
+FROM crmSetting WITH (NOLOCK)
+WHERE SettingName = 'Station'
 GO
