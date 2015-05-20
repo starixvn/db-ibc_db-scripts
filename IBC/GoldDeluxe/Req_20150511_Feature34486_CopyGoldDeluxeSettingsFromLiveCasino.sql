@@ -260,7 +260,7 @@ BEGIN
 		AND ci.roleid = 1
 		AND cs.sporttype = 255
 		AND cs.bettype = 1701 
-		AND spositiontaking + mposisiontaking + apositiontaking > 0.93
+		AND spositiontaking + mpositiontaking + apositiontaking > 0.93
 		
 	UPDATE cs
 	SET @apos = CASE WHEN apositiontaking > 0.93 THEN 0.93 ELSE apositiontaking END,
@@ -273,7 +273,7 @@ BEGIN
 		AND ci.roleid = 2
 		AND cs.sporttype = 255
 		AND cs.bettype = 1701 
-		AND mposisiontaking + apositiontaking > 0.93	
+		AND mpositiontaking + apositiontaking > 0.93	
 	
 	UPDATE cs
 	SET @mpos = CASE WHEN mpositiontaking > 0.93 THEN 0.93 ELSE mpositiontaking END,
@@ -286,16 +286,16 @@ BEGIN
 		AND ci.roleid = 3
 		AND cs.sporttype = 255
 		AND cs.bettype = 1701 
-		AND mposisiontaking + spositiontaking > 0.93	
+		AND mpositiontaking + spositiontaking > 0.93	
 		
 	UPDATE cs
 	SET spositiontaking = CASE WHEN spositiontaking > 0.93 THEN 0.93 ELSE spositiontaking END 		
 	FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
 		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
-	WHERE ci.custid <= @srecommend		
+	WHERE ci.custid = @srecommend		
 		AND cs.sporttype = 255
 		AND cs.bettype = 1701 
-		AND mposisiontaking + spositiontaking > 0.93	
+		AND mpositiontaking + spositiontaking > 0.93		
 			      	
 	DROP TABLE #tmpCust	
 END	
