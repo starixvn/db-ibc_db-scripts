@@ -1,5 +1,5 @@
 USE [bodb_CustomerLog]
----update data from the beginning of last month to today
+
 DECLARE @MINDATE DATETIME, @MAXDATE DATETIME
 
 SELECT @MAXDATE = GETDATE() 
@@ -23,8 +23,8 @@ WHILE @Date < @MAXDATE + 1
 BEGIN 
 
 	UPDATE	L 
-	SET		L.ActualRate = ED.Actualrate
-	FROM	bodb_CustomerLog.dbo.UserLog_Credit L WITH (NOLOCK)		
+	SET		L.ActualRate =  ED.Actualrate 
+	FROM	bodb_CustomerLog.dbo.UserLog_Credit L WITH (UPDLOCK, ROWLOCK)		
 			INNER JOIN bodb02.dbo.Customer C WITH (NOLOCK) 
 				ON  C.CustID = L.CustId 		
 			INNER JOIN @ExchangeDaily ED 
@@ -36,3 +36,4 @@ BEGIN
 	SELECT @Date = DATEADD (dd, 1, @Date)
 	
 END
+
