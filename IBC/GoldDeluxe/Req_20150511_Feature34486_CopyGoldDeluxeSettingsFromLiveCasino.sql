@@ -10,7 +10,7 @@
  -- BEGIN STEP 1: DEPLOY THIS SP @DBTRANS.CustDB ------
 ------------------------------------------------------
  
- ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
+ ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -21,7 +21,16 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBTRANS') RETURN	-- run at all replicated servers
 	IF (@target = 'DBTRANS' AND @@SERVERNAME <> 'DBTRANS') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType','CustSettingGame') AND type = 'U' ) <> 3
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo') <> 1
+		RETURN
+	--update status for Gold Deluxe
+	UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
+	SET DisableGoldDeluxe = CASE WHEN SyncLiveCasino = 1 THEN 0 ELSE 1 END,
+		HideGoldDeluxe = CASE WHEN SyncLiveCasino = 1 THEN 0 ELSE 1 END
+	WHERE srecommend = @srecommend
+		AND custid <= @maxcustid
+			
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustGameType','CustSettingGame') AND type = 'U' ) <> 2
 		RETURN
 	
 	DECLARE @StakeLevelList_1701 VARCHAR(50)= ''
@@ -216,8 +225,78 @@ BEGIN
 	WHERE ci.srecommend = @srecommend
 		AND ci.custid <= @maxcustid
 		AND cs.sporttype = 162
-		AND cs.bettype = 1101         
+		AND cs.bettype = 1101  
+	       
+	
+	INSERT INTO [dbo].[CustOverrideGame]
+           ([CustID]
+           ,[Bettype]
+           ,[Sporttype]
+           ,[minpositiontaking])
+	SELECT cs.[CustID]
+           ,1701 as [Bettype]
+           ,255 as [Sporttype]
+           ,[minpositiontaking]           
+    FROM  CustOverrideGame cs WITH(NOLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.srecommend = @srecommend
+		AND ci.custid <= @maxcustid
+		AND cs.sporttype = 162
+		AND cs.bettype = 1101  
+	
+	DECLARE @apos SMALLMONEY,
+			@mpos SMALLMONEY
+	
+	UPDATE cs
+	SET @apos = CASE WHEN apositiontaking > 0.93 THEN 0.93 ELSE apositiontaking END,
+		apositiontaking = @apos,
+		@mpos = CASE WHEN @apos + mpositiontaking > 0.93 THEN 0.93- @apos ELSE mpositiontaking END,
+		mpositiontaking = @mpos,
+		spositiontaking = CASE WHEN @apos + @mpos + spositiontaking > 0.93 THEN 0.93 - @mpos -@apos ELSE spositiontaking END
+	FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.srecommend = @srecommend
+		AND ci.custid <= @maxcustid
+		AND ci.roleid = 1
+		AND cs.sporttype = 255
+		AND cs.bettype = 1701 
+		AND spositiontaking + mpositiontaking + apositiontaking > 0.93
 		
+	UPDATE cs
+	SET @apos = CASE WHEN apositiontaking > 0.93 THEN 0.93 ELSE apositiontaking END,
+		apositiontaking = @apos,
+		mpositiontaking = CASE WHEN @apos + mpositiontaking > 0.93 THEN 0.93- @apos ELSE mpositiontaking END		
+	FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.srecommend = @srecommend
+		AND ci.custid <= @maxcustid
+		AND ci.roleid = 2
+		AND cs.sporttype = 255
+		AND cs.bettype = 1701 
+		AND mpositiontaking + apositiontaking > 0.93	
+	
+	UPDATE cs
+	SET @mpos = CASE WHEN mpositiontaking > 0.93 THEN 0.93 ELSE mpositiontaking END,
+		mpositiontaking = @mpos,
+		spositiontaking = CASE WHEN spositiontaking + @mpos > 0.93 THEN 0.93 - @mpos ELSE spositiontaking END 		
+	FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.srecommend = @srecommend
+		AND ci.custid <= @maxcustid
+		AND ci.roleid = 3
+		AND cs.sporttype = 255
+		AND cs.bettype = 1701 
+		AND mpositiontaking + spositiontaking > 0.93	
+		
+	UPDATE cs
+	SET spositiontaking = CASE WHEN spositiontaking > 0.93 THEN 0.93 ELSE spositiontaking END 		
+	FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.custid = @srecommend		
+		AND cs.sporttype = 255
+		AND cs.bettype = 1701 
+		AND mpositiontaking + spositiontaking > 0.93		
+			      	
 	DROP TABLE #tmpCust	
 END	
 GO
@@ -252,7 +331,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
+	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 END			
@@ -287,7 +366,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
+	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBTRANS'
 END			

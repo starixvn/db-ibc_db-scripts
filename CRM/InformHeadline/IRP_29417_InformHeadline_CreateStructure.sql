@@ -1,21 +1,21 @@
 USE [bodb_CRM]
 GO
 
-/****** Object:  Table [dbo].[crmInformTitle]    Script Date: 3/30/2015 3:39:09 PM ******/
+/****** Object:  Table [dbo].[crmInformTitle_New]    Script Date: 3/30/2015 3:39:09 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[crmInformTitle](
+CREATE TABLE [dbo].[crmInformTitle_New](
 	[TitleID] [int] IDENTITY(1,1) NOT NULL,
 	[Title] [nvarchar](2000) NOT NULL,
 	[CreatedDate] [datetime] NOT NULL,
 	[Creator] [int] NOT NULL,
 	[StatusID] [int] NOT NULL,
 	[Filter] [xml] NOT NULL,
- CONSTRAINT [PK_crmInformTitle] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_crmInformTitle_New] PRIMARY KEY CLUSTERED 
 (
 	[TitleID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [customer_table]
@@ -23,14 +23,15 @@ CREATE TABLE [dbo].[crmInformTitle](
 
 GO
 
-/****** Object:  Table [dbo].[crmInformHeadline]    Script Date: 3/30/2015 3:51:04 PM ******/
+/****** Object:  Table [dbo].[crmInformHeadline_New]    Script Date: 3/30/2015 3:51:04 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[crmInformHeadline](
+CREATE TABLE [dbo].[crmInformHeadline_New](
+	[InformHeadlineID] [int] IDENTITY(1,1) NOT NULL,
 	[HeadlineID] [int] NOT NULL,
 	[TitleID] [int] NOT NULL,
 	[InformHeadlineStatusID] [int] NOT NULL,
@@ -41,17 +42,23 @@ CREATE TABLE [dbo].[crmInformHeadline](
 	[Extension] [int] NULL,
 	[ProductStatus] [int] NULL,
 	[IsInform] [bit] NOT NULL,
- CONSTRAINT [PK_crmInformHeadline] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_crmInformHeadline_New] PRIMARY KEY NONCLUSTERED 
 (
-	[HeadlineID] ASC,
-	[TitleID] ASC,
-	[GroupID] ASC
+	[InformHeadlineID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [customer_table]
 ) ON [customer_table]
 
 GO
 
-/****** Object:  Table [dbo].[crmLogInformHeadline]    Script Date: 4/6/2015 2:09:22 PM ******/
+/****** Object:  Index [CIX_TitleID_HeadlineID]    Script Date: 5/18/2015 1:13:50 PM ******/
+CREATE CLUSTERED INDEX [CIX_TitleID_HeadlineID] ON [dbo].[crmInformHeadline_New]
+(
+	[TitleID] ASC, 
+	[HeadlineID] ASC	
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [customer_table]
+GO
+
+/****** Object:  Table [dbo].[crmLogInformHeadline_New]    Script Date: 4/6/2015 2:09:22 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -61,7 +68,7 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[crmLogInformHeadline](
+CREATE TABLE [dbo].[crmLogInformHeadline_New](
 	[LogID] [bigint] IDENTITY(1,1) NOT NULL,
 	[LogDate] [datetime] NOT NULL,
 	[UserID] [int] NOT NULL,
@@ -71,7 +78,7 @@ CREATE TABLE [dbo].[crmLogInformHeadline](
 	[TitleID] [int] NOT NULL,
 	[NewValues] [xml] NULL,
 	[OldValues] [xml] NULL,
- CONSTRAINT [PK_crmLogInformHeadline1] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_crmLogInformHeadline_New] PRIMARY KEY CLUSTERED 
 (
 	[LogID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [customer_table]
