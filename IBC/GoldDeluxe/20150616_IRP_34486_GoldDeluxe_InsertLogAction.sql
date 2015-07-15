@@ -42,6 +42,30 @@ SELECT  507, 1, 'Acc_CustOverrideUpdGoldDeluxe', N'Update Gold Deluxe Min Positi
  
 UNION ALL
 SELECT  1155, NULL, 'Acc_CustomerUpdDisableGoldDeluxe', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', N'Update enable/disable Gold Deluxe status', 0
+GO
+
+
+--insert error message
+USE CustDB
+GO
+
+INSERT INTO [dbo].[MsgError]
+           ([MsgID]
+           ,[MsgGroupID]
+           ,[MsgNameEN]
+           ,[MsgNameCT]
+           ,[MsgNameCS]
+           ,[MsgNameJP]
+           ,[MsgNameTH]
+           ,[MsgNameKO]
+           ,[MsgNameES]
+           ,[MsgNameVI]
+           ,[IsActive])
+SELECT 10031,2,N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',N'This user''s upline does not have Stake Level for',1     
+GO
+
+	
+
 
   
  

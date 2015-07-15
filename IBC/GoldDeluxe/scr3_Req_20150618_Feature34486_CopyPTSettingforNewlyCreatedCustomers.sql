@@ -1,0 +1,137 @@
+﻿ /*
+	Created: Johnson
+	Task: copy pt & comm for Gold Deluxe from Live Casino for newly created customers
+	DB: DBTXN/CustDB
+	Date: 20150618
+*/  
+
+
+CREATE TABLE #supers (custid int)
+
+INSERT INTO #supers(custid)
+SELECT custid
+FROM CustInfo WITH(NOLOCK)
+WHERE roleid = 4 
+	AND currency = 20 
+	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+GO
+
+--step 1: copy settings for newly created customers
+DECLARE @max_custid INT 
+SELECT @max_custid = xx	
+
+
+INSERT INTO [dbo].[CustSettingGame]
+           ([CustID]
+           ,[Bettype]
+           ,[Sporttype]
+           ,[apositiontaking]
+           ,[mpositiontaking]
+           ,[spositiontaking]
+           ,[playerdiscount]
+           ,[discount]
+           ,[adiscount]
+           ,[sdiscount]
+           ,[autopositiontaking]
+           ,[isautopositiontaking]
+           ,[autompositiontaking]
+           ,[isautompositiontaking])
+	SELECT cs.[CustID]
+           ,1701 as [Bettype]
+           ,255 as [Sporttype]
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [apositiontaking] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [mpositiontaking] ELSE 0 END 
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [spositiontaking] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [playerdiscount] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [discount] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [adiscount] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [sdiscount] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [autopositiontaking] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [isautopositiontaking] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [autompositiontaking] ELSE 0 END
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [isautompositiontaking] ELSE 0 END
+	FROM  CustSettingGame cs WITH(NOLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+		LEFT JOIN CustSettingGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
+														AND cs2.sporttype = 255 
+														AND cs2.bettype = 1701
+	WHERE ci.srecommend IN (SELECT custid FROM #supers)
+		AND ci.custid > @max_custid
+		AND cs.sporttype = 162
+		AND cs.bettype = 1101 
+		AND cs2.custid IS NULL 
+	       
+	
+	INSERT INTO [dbo].[CustOverrideGame]
+           ([CustID]
+           ,[Bettype]
+           ,[Sporttype]
+           ,[minpositiontaking])
+	SELECT cs.[CustID]
+           ,1701 as [Bettype]
+           ,255 as [Sporttype]
+           ,CASE WHEN HideGoldDeluxe = 1 THEN [minpositiontaking] ELSE 0 END          
+    FROM  CustOverrideGame cs WITH(NOLOCK) 
+		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+		LEFT JOIN CustOverrideGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
+														AND cs2.sporttype = 255 
+														AND cs2.bettype = 1701
+	WHERE ci.srecommend IN (SELECT custid FROM #supers)
+		AND ci.custid > @max_custid
+		AND cs.sporttype = 162
+		AND cs.bettype = 1101 
+		AND cs2.custid IS NULL  
+GO
+
+--step 2: update pt/comm for different settings 		
+
+
+	UPDATE cs
+	SET
+		cs.apositiontaking = cs2.apositiontaking
+		,cs.mpositiontaking = cs2.mpositiontaking
+		,cs.spositiontaking = cs2.spositiontaking
+		,cs.playerdiscount = cs2.playerdiscount
+		,cs.discount = cs2.discount
+		,cs.adiscount = cs2.adiscount
+		,cs.sdiscount = cs2.sdiscount
+		,cs.autopositiontaking = cs2.autopositiontaking
+		,cs.isautopositiontaking = cs2.isautopositiontaking
+		,cs.autompositiontaking = cs2.autompositiontaking
+		,cs.isautompositiontaking = cs2.isautompositiontaking
+	FROM  custinfo ci WITH(NOLOCK) 		
+		INNER JOIN CustSettingGame cs WITH(UPDLOCK,ROWLOCK) ON ci.custid = cs.custid 
+														AND cs.sporttype = 255 
+														AND cs.bettype = 1701
+		INNER JOIN CustSettingGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid														
+														AND cs2.sporttype = 162
+														AND cs2.bettype = 1101 
+	WHERE ci.srecommend IN (SELECT custid FROM #supers)
+		AND ci.HideGoldDeluxe = 0	
+		AND (cs.apositiontaking <> cs2.apositiontaking
+			OR cs.mpositiontaking <> cs2.mpositiontaking
+			OR cs.spositiontaking <> cs2.spositiontaking
+			OR cs.playerdiscount <> cs2.playerdiscount
+			OR cs.discount <> cs2.discount
+			OR cs.adiscount <> cs2.adiscount
+			OR cs.sdiscount <> cs2.sdiscount
+			OR cs.autopositiontaking <> cs2.autopositiontaking
+			OR cs.isautopositiontaking <> cs2.isautopositiontaking
+			OR cs.autompositiontaking <> cs2.autompositiontaking
+			OR cs.isautompositiontaking <> cs2.isautompositiontaking
+		)
+	GO
+	
+	UPDATE cs
+	SET cs.minpositiontaking = cs2.minpositiontaking
+	FROM  custinfo ci WITH(NOLOCK) 		
+		INNER JOIN CustOverrideGame cs WITH(UPDLOCK,ROWLOCK) ON ci.custid = cs.custid 
+														AND cs.sporttype = 255 
+														AND cs.bettype = 1701
+		INNER JOIN CustOverrideGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid														
+														AND cs2.sporttype = 162
+														AND cs2.bettype = 1101 
+	WHERE ci.srecommend IN (SELECT custid FROM #supers)
+		AND ci.HideGoldDeluxe = 0	
+		AND cs.minpositiontaking <> cs2.minpositiontaking
+			

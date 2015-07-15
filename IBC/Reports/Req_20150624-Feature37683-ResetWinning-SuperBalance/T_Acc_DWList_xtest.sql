@@ -1,0 +1,29 @@
+USE [bodb_ACC]
+GO
+
+/****** Object:  Table [dbo].[Acc_DWLList_xtest]    Script Date: 6/8/2015 9:41:36 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Acc_DWLList_xtest](
+	[custid] [int] NOT NULL,
+	[product] [varchar](50) NOT NULL,
+	[seq] [tinyint] NOT NULL,
+ CONSTRAINT [PK_Acc_DWLList_xtest] PRIMARY KEY CLUSTERED 
+(
+	[custid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [DATA]
+) ON [DATA]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+

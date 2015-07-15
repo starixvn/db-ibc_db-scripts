@@ -21,7 +21,7 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBTRANS') RETURN	-- run at all replicated servers
 	IF (@target = 'DBTRANS' AND @@SERVERNAME <> 'DBTRANS') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo') <> 1
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
 		RETURN
 	--update status for Gold Deluxe
 	UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
