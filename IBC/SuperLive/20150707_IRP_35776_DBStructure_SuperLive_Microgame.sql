@@ -2,7 +2,6 @@
 	Created by: Elodie
 	Date: 2015-07-15
 	Task: Prepare structure for Microgame, SuperLive [Redmine:#36916, 35776]
-	DB: DBTXN/bodb02
 */ 
 ----------------------------------------------------------------
 --Add new fields to DBCUST.CustDB.dbo.custinfo------------------
@@ -15,7 +14,7 @@ ALTER TABLE custinfo ADD DisableSuperLive BIT CONSTRAINT DF_custinfo_DisableSupe
 GO
 
 ----------------------------------------------------------------
---Add new fields to DB05.bodb_Customer.dbo.custinfo_old tables--
+--Add new fields to DB05.bodb_Customer.dbo.custinfo_old table--
 ----------------------------------------------------------------
 USE bodb_customer
 GO
@@ -25,7 +24,7 @@ ALTER TABLE [dbo].[custInfo_old] ADD DisableSuperLive BIT CONSTRAINT DF_custinfo
 GO
 
 --------------------------------------------------------------------------
---Add new fields into DB052/DB054.bodb_CustomerLog.dbo.custinfo_history tables--
+--Add new fields into DB052/DB054.bodb_CustomerLog.dbo.custinfo_history table--
 --------------------------------------------------------------------------
 USE bodb_CustomerLog
 GO
