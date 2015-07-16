@@ -21,7 +21,7 @@ GO
 ALTER TABLE [dbo].[custInfo_old] ADD DisableMicrogame BIT CONSTRAINT DF_custinfo_old_DisableMicrogame DEFAULT(1) NULL
 GO
 ALTER TABLE [dbo].[custInfo_old] ADD DisableSuperLive BIT CONSTRAINT DF_custinfo_old_DisableSuperLive DEFAULT(0) NULL
-GO
+G0
 
 --------------------------------------------------------------------------
 --Add new fields into DB052/DB054.bodb_CustomerLog.dbo.custinfo_history table--
@@ -33,9 +33,22 @@ GO
 ALTER TABLE [CustInfo_history] ADD DisableSuperLive BIT CONSTRAINT DF_custinfo_history_DisableSuperLive DEFAULT(0) NULL
 GO
 
+--------------------------------------------------------------------------
+--Add new fields into DBTP.bodb_CustHistory.dbo.custinfo_history table----
+--------------------------------------------------------------------------
+USE bodb_CustHistory
+GO
+ALTER TABLE [dbo].[CustInfo_history] ADD DisableMicrogame BIT CONSTRAINT DF_custinfo_history_DisableMicrogame DEFAULT(1) NULL
+GO
+ALTER TABLE [CustInfo_history] ADD DisableSuperLive BIT CONSTRAINT DF_custinfo_history_DisableSuperLive DEFAULT(0) NULL
+GO
+
 ----------------------------------------------------------------
 --Modify trigger DBTP.bodb02.dbo.CustInfo_update---------------
 ----------------------------------------------------------------
+USE bodb02
+GO
+
 ALTER TRIGGER [dbo].[CustInfo_update] ON [dbo].[custInfo] AFTER UPDATE
 AS
 /*
@@ -171,4 +184,3 @@ BEGIN
 					  ,DisableSuperLive
 	FROM [DELETED]
 END
-
