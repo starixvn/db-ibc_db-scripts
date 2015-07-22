@@ -44,7 +44,7 @@ FROM bodb_Account.dbo.MasterCube b WITH (NOLOCK)
 		, 6 --RNG Casino
 		)
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily edo WITH (NOLOCK) ON edo.ExchangeDate = b.[rptDate] AND edo.Currency = b.currency
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
 WHERE b.rptdate >= @BalanceUpDay AND b.rptdate <= @MoveBetDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 AND Productid > 11
 GROUP BY b.[rptDate]
 	,pbt.Productid
@@ -74,7 +74,7 @@ FROM bodb_Archive.dbo.MasterCube b WITH (NOLOCK)
 		, 6 --RNG Casino
 		)
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily edo WITH (NOLOCK) ON edo.ExchangeDate = b.[rptDate] AND edo.Currency = b.currency
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
 WHERE b.rptdate >= @datestart AND b.rptdate <= @BalanceUpDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 AND Productid > 11
 GROUP BY b.[rptDate]
 	,pbt.Productid
@@ -113,7 +113,7 @@ FROM bodb_Account.dbo.MasterCube mc WITH (NOLOCK)
 	INNER JOIN bodb_Account.dbo.ProductBettypeSetting pbt WITH (NOLOCK) ON mc.Bettype = pbt.Bettype AND pbt.excluded = 0 AND pbt.Productid = 2
 	INNER JOIN bodb02.dbo.RacingMeeting racing WITH (NOLOCK) ON racing.meetingID = mc.leagueid
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily c WITH (NOLOCK) ON mc.rptDate = c.ExchangeDate AND mc.currency = c.Currency
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON mc.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON mc.currency = vwExcludeCurr.currencyid
 WHERE mc.rptdate >= @BalanceUpDay AND mc.rptdate <= @dateend AND mc.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY mc.[rptDate]
 	,ISNULL(pbt.Productid, 0)
@@ -152,7 +152,7 @@ FROM bodb_Archive.dbo.MasterCube mc WITH (NOLOCK)
 	INNER JOIN bodb_Account.dbo.ProductBettypeSetting pbt WITH (NOLOCK) ON mc.Bettype = pbt.Bettype AND pbt.excluded = 0 AND pbt.Productid = 2
 	INNER JOIN bodb02.dbo.RacingMeeting racing WITH (NOLOCK) ON racing.meetingID = mc.leagueid
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily c WITH (NOLOCK) ON mc.rptDate = c.ExchangeDate AND mc.currency = c.Currency
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON mc.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON mc.currency = vwExcludeCurr.currencyid
 WHERE mc.rptdate >= @datestart AND mc.rptdate <= @BalanceUpDay AND mc.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY mc.[rptDate]
 	,ISNULL(pbt.Productid, 0)
@@ -178,7 +178,7 @@ SELECT b.[rptDate] [rptDate]
 FROM bodb_Account.dbo.rptCustParlayDaily b WITH (NOLOCK)
 	INNER JOIN bodb_Account.dbo.ProductBettypeSetting pbt WITH (NOLOCK) ON pbt.excluded = 0 AND pbt.Productid = - 1000
 	LEFT JOIN bodb_Account.dbo.tbl_Currency_Daily edo WITH (NOLOCK) ON edo.ExchangeDate = b.[rptDate] AND edo.Currency = b.currency
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
 WHERE b.rptdate >= @dateend AND b.rptdate <= @BalanceUpDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY b.[rptDate]
 	,ISNULL(pbt.Productid, 0)
@@ -203,7 +203,7 @@ SELECT b.[rptDate] [rptDate]
 	,0 PartnerAmtDue
 FROM bodb_Account.[dbo].rptCustCasinoDaily b WITH (NOLOCK)
 	INNER JOIN bodb_Account.dbo.ProductBettypeSetting pbt WITH (NOLOCK) ON b.Bettype = pbt.Bettype AND pbt.excluded = 0 AND pbt.Productid = 6
-	LEFT JOIN [bodb_dwrs].[dbo].[DWH_view_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
+	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
 WHERE b.rptdate >= @datestart AND b.rptdate <= @dateend AND b.[statusid] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY b.[rptDate]
 	,ISNULL(pbt.Productid, 0)
