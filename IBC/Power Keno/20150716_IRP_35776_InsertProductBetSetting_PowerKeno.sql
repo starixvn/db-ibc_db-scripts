@@ -12,5 +12,5 @@ GO
 INSERT INTO ProductBetSetting (Sporttype, Bettype, Currency, MinBet, IsDep) 
 SELECT Sporttype, 1515, Currency, MinBet, IsDep
 FROM ProductBetSetting wITH (NOLOCK)
-WHERE Sporttype = 202 AND Bettype = 1501
+WHERE Sporttype = 202 AND Bettype = 1501 AND Currency = 20
 
