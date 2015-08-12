@@ -45,7 +45,8 @@ FROM bodb_Account.dbo.MasterCube b WITH (NOLOCK)
 		)
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily edo WITH (NOLOCK) ON edo.ExchangeDate = b.[rptDate] AND edo.Currency = b.currency
 	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
-WHERE b.rptdate >= @BalanceUpDay AND b.rptdate <= @MoveBetDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 AND Productid > 11
+WHERE b.rptdate >= @BalanceUpDay AND b.rptdate <= @MoveBetDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 
+
 GROUP BY b.[rptDate]
 	,pbt.Productid
 	,b.IsLive
@@ -75,7 +76,8 @@ FROM bodb_Archive.dbo.MasterCube b WITH (NOLOCK)
 		)
 	INNER JOIN bodb_Account.dbo.tbl_Currency_Daily edo WITH (NOLOCK) ON edo.ExchangeDate = b.[rptDate] AND edo.Currency = b.currency
 	LEFT JOIN [bodb_dwrs].[dbo].[DWH_vw_TestCurrency] vwExcludeCurr WITH (NOLOCK) ON b.currency = vwExcludeCurr.currencyid
-WHERE b.rptdate >= @datestart AND b.rptdate <= @BalanceUpDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 AND Productid > 11
+WHERE b.rptdate >= @datestart AND b.rptdate <= @BalanceUpDay AND b.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL AND pbt.excluded = 0 
+
 GROUP BY b.[rptDate]
 	,pbt.Productid
 	,b.IsLive
