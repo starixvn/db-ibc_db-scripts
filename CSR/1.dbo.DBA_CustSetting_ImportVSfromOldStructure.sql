@@ -84,8 +84,9 @@ BEGIN
 		cs.isautopositiontaking,
 		cs.autopositiontaking*100
 		FROM dbo.custSetting3rd cs
+		INNER JOIN custInfo ci ON cs.CustID = ci.custid
 		WHERE cs .custid BETWEEN @i + 1 AND @i + @step 
-		AND cs.bettype BETWEEN 1201 AND 1299
+		AND cs.bettype BETWEEN 1201 AND 1299 AND ci.roleid = 1
 		
 		
 		/*****************************BET LIMIT SETTING**************************/	 
