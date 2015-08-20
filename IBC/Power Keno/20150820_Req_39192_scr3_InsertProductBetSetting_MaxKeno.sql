@@ -14,3 +14,11 @@ SELECT Sporttype, 1515, Currency, MinBet, IsDep
 FROM ProductBetSetting wITH (NOLOCK)
 WHERE Sporttype = 202 AND Bettype = 1501 AND Currency <> 20
 
+----------------------------------------------------------------
+--Update data DBTXN.bodb02.dbo.GameType-------------------------
+----------------------------------------------------------------
+USE bodb02 
+GO
+UPDATE GameType WITH (ROWLOCK,UPDLOCK)
+SET IsDisabled = 0
+WHERE GameTypeID = 15
