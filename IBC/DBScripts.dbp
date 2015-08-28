@@ -63,6 +63,8 @@ Begin DataProject = "DBScripts"
       Script = "scr1_Req_20150619_Feature34486_Delete existing Gold Deluxe settings.sql"
       Script = "scr2_Req_20150618_Feature34486_CopyPTandCommFromLiveCS.sql"
       Script = "scr3_Req_20150618_Feature34486_CopyPTSettingforNewlyCreatedCustomers.sql"
+      Script = "scr4_Req_Feature34486_DeleteExistingBetSetting for GD.sql"
+      Script = "scr5_Req_20150828_Feature34486_MappingStakelevelFromLCSToGD.sql"
    End
    Begin Folder = "HRFixedOdds"
       Script = "Req_20131011_Feature6505_AddLogAction.sql"
