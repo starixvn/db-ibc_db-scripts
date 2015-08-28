@@ -11,8 +11,7 @@ CREATE TABLE #supers (custid int)
 INSERT INTO #supers(custid)
 SELECT custid
 FROM CustInfo WITH(NOLOCK)
-WHERE roleid = 4 
-	AND currency = 20 
+WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 GO
 
@@ -39,17 +38,17 @@ INSERT INTO [dbo].[CustSettingGame]
 	SELECT cs.[CustID]
            ,1701 as [Bettype]
            ,255 as [Sporttype]
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [apositiontaking] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [mpositiontaking] ELSE 0 END 
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [spositiontaking] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [playerdiscount] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [discount] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [adiscount] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [sdiscount] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [autopositiontaking] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [isautopositiontaking] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [autompositiontaking] ELSE 0 END
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [isautompositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [apositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [mpositiontaking] ELSE 0 END 
+           ,CASE WHEN SyncLiveCasino = 1 THEN [spositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [playerdiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [discount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [adiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [sdiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [autopositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [isautopositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [autompositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN [isautompositiontaking] ELSE 0 END
 	FROM  CustSettingGame cs WITH(NOLOCK) 
 		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 		LEFT JOIN CustSettingGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
@@ -70,7 +69,7 @@ INSERT INTO [dbo].[CustSettingGame]
 	SELECT cs.[CustID]
            ,1701 as [Bettype]
            ,255 as [Sporttype]
-           ,CASE WHEN HideGoldDeluxe = 1 THEN [minpositiontaking] ELSE 0 END          
+           ,CASE WHEN SyncLiveCasino = 1 THEN [minpositiontaking] ELSE 0 END          
     FROM  CustOverrideGame cs WITH(NOLOCK) 
 		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 		LEFT JOIN CustOverrideGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
@@ -81,6 +80,25 @@ INSERT INTO [dbo].[CustSettingGame]
 		AND cs.sporttype = 162
 		AND cs.bettype = 1101 
 		AND cs2.custid IS NULL  
+	
+	INSERT INTO CustWinLimit(CustId
+							,SportType
+							,BetType
+							,MaxWinLimit
+							,IsAutoReset)
+		SELECT custid
+			,255
+			,1701
+			,CASE WHEN SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END 
+			,CASE WHEN SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END
+		FROM CustInfo ci WITH(NOLOCK)
+			LEFT JOIN CustWinLimit cw WITH(NOLOCK) ON ci.custid = cw.custid
+													AND cw.sporttype = 255
+													AND cw.bettype = 1701
+		WHERE srecommend IN (SELECT custid FROM #supers)
+			AND ci.custid > @max_custid
+			AND cw.custid IS NULL
+	
 GO
 
 --step 2: update pt/comm for different settings 		

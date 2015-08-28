@@ -21,24 +21,38 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBTRANS') RETURN	-- run at all replicated servers
 	IF (@target = 'DBTRANS' AND @@SERVERNAME <> 'DBTRANS') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType','CustSettingGame')) <> 3
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
 		RETURN
 	
-	DELETE cg
-	FROM custGameType cg WITH(UPDLOCK,ROWLOCK)
-		INNER JOIN custinfo ci WITH(NOLOCK) ON cg.custid = ci.custid
+	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustOverrideGame','CustSettingGame')) = 2
+	BEGIN			
+		DELETE cs
+		FROM custSettingGame cs WITH(UPDLOCK,ROWLOCK)
+			INNER JOIN custinfo ci WITH(NOLOCK) ON cg.custid = ci.custid
+		WHERE ci.srecommend = @srecommend 
+			AND ci.custid <= @maxcustid
+			AND cs.sporttype = 255
+			AND cs.bettype = 1701
+		
+			DELETE cs
+		FROM custOverrideGame cs WITH(UPDLOCK,ROWLOCK)
+			INNER JOIN custinfo ci WITH(NOLOCK) ON cg.custid = ci.custid
+		WHERE ci.srecommend = @srecommend 
+			AND ci.custid <= @maxcustid
+			AND cs.sporttype = 255
+			AND cs.bettype = 1701
+	END
+	
+	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustWinLimit')) <> 1
+		RETURN
+	
+	DELETE cw
+	FROM custWinLimit cw WITH(UPDLOCK,ROWLOCK)
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cw.custid = ci.custid
 	WHERE ci.srecommend = @srecommend 
 		AND ci.custid <= @maxcustid
-		AND cg.gameTypeID IN (1701,1702)	
-	
-	DELETE cs
-	FROM custSettingGame cs WITH(UPDLOCK,ROWLOCK)
-		INNER JOIN custinfo ci WITH(NOLOCK) ON cg.custid = ci.custid
-	WHERE ci.srecommend = @srecommend 
-		AND ci.custid <= @maxcustid
-		AND cs.sporttype = 255
-		AND cs.bettype = 1701
-	
+		AND cw.sporttype = 255
+		AND cw.bettype = 1701
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
@@ -72,7 +86,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 END			
@@ -108,7 +122,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBTRANS'
 END			

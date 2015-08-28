@@ -25,8 +25,26 @@ BEGIN
 		HideGoldDeluxe = @hideGoldDeluxe
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
+		
+	IF EXISTS( SELECT TOP 1 1 FROM sys.objects WHERE NAME IN ('custwinlimit')) 
+	BEGIN
+		INSERT INTO CustWinLimit(CustId
+								,SportType
+								,BetType
+								,MaxWinLimit
+								,IsAutoReset)
+		SELECT custid,
+			,255
+			,1701
+			,CASE WHEN SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END 
+			,CASE WHEN SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END
+		FROM CustInfo WITH(NOLOCK)
+		WHERE srecommend = @srecommend
+			AND custid <= @maxcustid
+									
+	END
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustSettingGame') AND type = 'U' ) <> 1
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustSettingGame','CustOverrideGame') AND type = 'U' ) <> 2
 		RETURN
 		
 	INSERT INTO [dbo].[CustSettingGame]
@@ -152,12 +170,13 @@ DECLARE @srecommend INT, @max_custid INT, @hideGoldDeluxe BIT
 SELECT @max_custid = xx
 
 INSERT INTO #supers(custid, hideGoldDeluxe)
-SELECT custid, CASE WHEN SyncLiveCasino = 1 THEN 0 ELSE 1 END
-FROM CustInfo WITH(NOLOCK)
-WHERE roleid = 4 
-	AND currency = 20 
-	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-
+ SELECT ci.custid, CASE WHEN SyncLiveCasino = 1 AND ci.currency NOT IN (44,45,62) --Hide GD for WON currency
+						AND site <> '789y' THEN 0 --hide for site 789y 
+						ELSE 1 END
+FROM CustInfo ci WITH(NOLOCK)
+INNER join Customer c WITH(NOLOCK) on ci.custid = c.custid
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 
 WHILE (1 = 1)
 BEGIN
@@ -190,11 +209,14 @@ DECLARE @srecommend INT, @max_custid INT,@hideGoldDeluxe BIT
 SELECT @max_custid = xx
 
 INSERT INTO #supers(custid,hideGoldDeluxe)
-SELECT custid, CASE WHEN SyncLiveCasino = 1 THEN 0 ELSE 1 END
-FROM CustInfo WITH(NOLOCK)
-WHERE roleid = 4 
-	AND currency = 20 
-	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+ SELECT ci.custid, CASE WHEN SyncLiveCasino = 1 AND ci.currency NOT IN (44,45,62) --Hide GD for WON currency
+						AND site <> '789y' THEN 0 --hide for site 789y 
+						ELSE 1 END
+FROM CustInfo ci WITH(NOLOCK)
+INNER join Customer c WITH(NOLOCK) on ci.custid = c.custid
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+
 
 WHILE (1 = 1)
 BEGIN
