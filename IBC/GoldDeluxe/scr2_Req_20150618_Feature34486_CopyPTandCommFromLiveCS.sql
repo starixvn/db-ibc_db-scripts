@@ -1,7 +1,7 @@
 ﻿ /*
 	Created: Johnson
 	Task: copy pt & comm for Gold Deluxe from Live Casino
-	DB: DBTXN/CustDB
+	DB: DBCUST/CustDB
 	Date: 20150618
 */ 
  ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
@@ -13,11 +13,12 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBTRANS') RETURN	-- run at all replicated servers
-	IF (@target = 'DBTRANS' AND @@SERVERNAME <> 'DBTRANS') RETURN -- run at dbtrans only
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
-		RETURN
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 		
+	   )
+	  RETURN
 		
 	--update status for Gold Deluxe
 	UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
@@ -25,8 +26,8 @@ BEGIN
 		HideGoldDeluxe = @hideGoldDeluxe
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
-		
-	IF EXISTS( SELECT TOP 1 1 FROM sys.objects WHERE NAME IN ('custwinlimit')) 
+	
+	IF (dbo.f_CheckRepTable('custwinlimit') = 1)	 		
 	BEGIN
 		INSERT INTO CustWinLimit(CustId
 								,SportType
@@ -44,8 +45,11 @@ BEGIN
 									
 	END
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustSettingGame','CustOverrideGame') AND type = 'U' ) <> 2
-		RETURN
+	
+	IF NOT(dbo.f_CheckRepTable('CustSettingGame') = 1
+		AND dbo.f_CheckRepTable('CustOverrideGame') = 1
+	)
+	RETURN
 		
 	INSERT INTO [dbo].[CustSettingGame]
            ([CustID]
@@ -162,7 +166,7 @@ GO
 
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int, hideGoldDeluxe BIT, isfinished bit default(0))
 DECLARE @srecommend INT, @max_custid INT, @hideGoldDeluxe BIT
@@ -194,14 +198,14 @@ BEGIN
 			,@hideGoldDeluxe = @hideGoldDeluxe
 END			
 GO		
--- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/053/054/06 -----
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 -----------------------------------------------------------------------------------
  
  
  
 ---
 ---
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int, hideGoldDeluxe bit, isfinished bit default(0))
 DECLARE @srecommend INT, @max_custid INT,@hideGoldDeluxe BIT
@@ -230,10 +234,10 @@ BEGIN
 
 	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DBTRANS'
+			,@target = 'DBCUST'
 			,@hideGoldDeluxe = @hideGoldDeluxe
 END			
 GO		
--- END STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- END STEP 3: RUN THIS SCRIPT AT DBCUST -----
 -----------------------------------------------------------------------------------
  				

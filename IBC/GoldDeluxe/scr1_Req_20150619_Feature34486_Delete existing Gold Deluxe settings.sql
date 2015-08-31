@@ -7,7 +7,7 @@
  
  
  
- -- BEGIN STEP 1: DEPLOY THIS SP @DBTRANS.CustDB ------
+ -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
  
   ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
@@ -18,13 +18,16 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBTRANS') RETURN	-- run at all replicated servers
-	IF (@target = 'DBTRANS' AND @@SERVERNAME <> 'DBTRANS') RETURN -- run at dbtrans only
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbcust only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
-		RETURN
-	
-	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustOverrideGame','CustSettingGame')) = 2
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 		
+	   )
+	  RETURN
+
+	IF (dbo.f_CheckRepTable('CustOverrideGame') = 1 
+		AND dbo.f_CheckRepTable('CustSettingGame') = 1 
+		)
 	BEGIN			
 		DELETE cs
 		FROM custSettingGame cs WITH(UPDLOCK,ROWLOCK)
@@ -43,7 +46,7 @@ BEGIN
 			AND cs.bettype = 1701
 	END
 	
-	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustWinLimit')) <> 1
+	IF NOT(dbo.f_CheckRepTable('custWinLimit') = 1 )
 		RETURN
 	
 	DELETE cw
@@ -62,7 +65,7 @@ GO
 
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @srecommend INT, @max_custid INT
@@ -91,13 +94,13 @@ BEGIN
 			,@target = 'REPLICATED'
 END			
 GO		
--- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/053/054/06 -----
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 -----------------------------------------------------------------------------------
  
  
 ---
 ---
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
@@ -124,9 +127,9 @@ BEGIN
 
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DBTRANS'
+			,@target = 'DBCUST'
 END			
 GO		
--- END STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- END STEP 3: RUN THIS SCRIPT AT DBCUST -----
 -----------------------------------------------------------------------------------
   
