@@ -7,10 +7,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROCEDURE [dbo].[DataSample_CB_BetTicket_Ins]
 --DECLARE
-	@CustID INT
-	,@Bettype INT
-	,@status VARCHAR(100) = 'RUNNING'
-	,@refno BIGINT = 0
+	@CustID		INT
+	,@Bettype	INT
+	,@status	VARCHAR(100)	= 'RUNNING'
+	,@winAmount	MONEY			= 0
+	,@soldRate	FLOAT			= 0
+	,@refno		BIGINT			= 0 OUTPUT
 	
 AS 
 /*
@@ -237,7 +239,8 @@ BEGIN
 		WHERE custid = @custid
 			and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
 	
-		SELECT @refno_translog = SCOPE_IDENTITY()
+		SELECT @refno_translog 	= SCOPE_IDENTITY()
+			, @refno			= @refno_translog
 		
 		SELECT @refno_translog AS 'translog.translogid'
 
@@ -349,7 +352,8 @@ BEGIN
 	-- insert Prize(18002,18004,18005)
 	IF (@refno_translog > 0 
 		AND @Bettype IN (18002,18004,18005) 
-		AND @status  IN ('WON'))
+		AND @status  IN ('WON')
+		AND @winAmount > 0)
 	BEGIN
 		-- A member can WIN N-Consolation and an unique Jackpot Prize with N-lines
 		-- check existing bettype
@@ -361,30 +365,39 @@ BEGIN
 			SELECT 'Opps! Bettype and status are invalid. It existed already.' AS Warning
 			GOTO FINAL_CHECK;
 		END
-		ELSE IF (EXISTS (SELECT TOP 1 1 FROM dbo.bettransm (nolock) where refno = @refno_translog and Bettype = @Bettype AND @Bettype = 18002))
+		
+		IF (@Bettype = 18002)
 		BEGIN
 			DECLARE @SoldCompleted	FLOAT
 				, @SoldRemainding	FLOAT
-
-			SELECT @SoldCompleted = SUM(hdp1)
-			FROM dbo.bettransm (nolock)
-			where refno = @refno_translog
-			AND bettype = @Bettype
-
-			SET @SoldRemainding = 1 - @SoldCompleted
-
-			SELECT @SoldCompleted		AS SoldCompleted
-				,@SoldRemainding		AS SoldRemainding
-
-			IF(@SoldRemainding = 0) 
+			
+			SELECT @hdp1		= @soldRate
+				, @hdp2			= (1 - @soldRate)
+			
+			IF (EXISTS (SELECT TOP 1 1 FROM dbo.bettransm (nolock) where refno = @refno_translog and Bettype = @Bettype AND @Bettype = 18002))
 			BEGIN
-				SELECT 'Opps! Ticket was sold completely.' AS Warning
-				GOTO FINAL_CHECK;
-			END
-			ELSE
-			BEGIN
-				SELECT @hdp1 = CASE WHEN @SoldCompleted >= 0.5 THEN 0.5 ELSE 0.2 END
-					, @hdp2  = CASE WHEN @SoldCompleted >= 0.5 THEN 0 ELSE 0.5 END
+						
+				SELECT @SoldCompleted = SUM(hdp1)
+				FROM dbo.bettransm (nolock)
+				where refno = @refno_translog
+				AND bettype = @Bettype
+
+				SELECT @SoldRemainding = 1 - @SoldCompleted
+
+
+				IF(@SoldRemainding = 0
+					OR @soldRate > @SoldRemainding
+				) 
+				BEGIN
+					SELECT 'Opps! Sold rate is invalid.' AS Warning
+					GOTO FINAL_CHECK;
+				END
+				
+				SELECT @SoldCompleted 	= (@soldRate + @SoldCompleted)
+					,@hdp2 				= (1 - @SoldCompleted)
+					
+				SELECT @SoldCompleted		AS SoldCompleted
+					,@hdp2					AS SoldRemainding
 			END
 		END
 
@@ -398,23 +411,23 @@ BEGIN
 		;WITH CTE_Consolation (bettype, status, statusID, stake, winlost, hdp1, hdp2)
 		AS (
 			-- Consolation
-			select 18004, 'WON', 112, 0, 1500, 0, 0
+			select 18004, 'WON', 112, 0, @winAmount, 0, 0
 			where @Bettype = 18004
 			union ALL
-			select 18003, 'LOSE', 113, 450, 0, 0, 0
+			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0
 			where @Bettype = 18004
 		), CTE_Jackpot (bettype, status, statusID, stake, winlost, hdp1, hdp2)
 		AS (
 			-- Jackpot
-			select 18005, 'WON', 112, 0, 1000, 0, 0
+			select 18005, 'WON', 112, 0, @winAmount, 0, 0
 			where @Bettype = 18005
 			union ALL
-			select 18003, 'LOSE', 113, 300, 0, 0, 0
+			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0
 			where @Bettype = 18005
 		), CTE_CashOut (bettype, status, statusID, stake, winlost, hdp1, hdp2)
 		AS (
 			-- Cash-Out
-			select 18002, 'WON', 112, 0, 750, @hdp1, @hdp2
+			select 18002, 'WON', 112, 0, @winAmount, @hdp1, @hdp2
 			where @Bettype = 18002
 		)
 		INSERT INTO @tempData
@@ -545,7 +558,7 @@ BEGIN
 
 	SETTLE_BET:
 	BEGIN
-		IF(@Bettype IN (18001) AND @status IN ('WON','LOSE')) 
+		IF(@Bettype IN (18001) AND @status IN ('WON','LOSE') AND @refno_translog > 0) 
 		BEGIN 
 
 			IF(EXISTS(SELECT TOP 1 1 FROM dbo.bettrans (nolock) WHERE refno = @refno_translog))
@@ -561,7 +574,7 @@ BEGIN
 			where refno = @refno_translog 
 				--and bettype not in (18001)
 				--and statuswinlost = 0
-
+			
 			UPDATE b
 			SET status		= @status
 				,statusID	= @statusID
@@ -580,7 +593,9 @@ BEGIN
 			FROM dbo.bettransm b WITH(ROWLOCK, UPDLOCK)
 			WHERE @refno		= @refno_translog
 				--AND bettype		<> 18001
-		
+			
+			SET @maxAmount 	= CASE WHEN @maxAmount < 0 THEN 0 ELSE @maxAmount END
+			
 			--INSERT to bettrans
 			INSERT INTO [dbo].[bettrans]
 					  ([custid]
@@ -757,17 +772,5 @@ BEGIN
 	RETURN
 END
 GO
-EXEC [dbo].[DataSample_CB_BetTicket_Ins]
-	@CustID  	= 2723431
-	,@Bettype 	= 18000
-	,@status  	= 'RUNNING'
-	,@refno 	= 0
-GO
-/*
-SELECT 'translog' AS [Table], * 
-FROM [bodb02].[dbo].[translog] WITH (NOLOCK) WHERE translogid	= 1000000001091	 
-SELECT 'bettransm' AS [Table], * 
-FROM [bodb02].[dbo].[bettransm] WITH (NOLOCK) WHERE refno		= 1000000001091
-SELECT 'bettrans' AS [Table], * 
-FROM [bodb02].[dbo].[bettrans] WITH (NOLOCK) WHERE refno		= 1000000001091
-*/
+
+
