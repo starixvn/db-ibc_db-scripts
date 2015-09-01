@@ -2,7 +2,7 @@
 	Created: Johnson
 	Date: 2015-08-31
 	Task: Copy stake level from LCS to GD
-	DB: DBTP/DB054. bodb02	
+	DB: DBCust.CustDB
 */  
 
 
@@ -19,14 +19,10 @@ BEGIN
 	
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
-		
-	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
-		AND dbo.f_CheckRepTable('CustGameType') = 1
-		AND dbo.f_CheckRepTable('tmpCustGameType') = 1
-		AND dbo.f_CheckRepTable('tmpStakeLevel') = 1
-	   )
-	  RETURN
-
+	
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType','tmpCustGameType','tmpStakeLevel')) <> 4
+		RETURN	
+	
 	DECLARE @StakeLevelList_1701 VARCHAR(50)= ''
 			,@StakeLevelList_1702 VARCHAR(50)= ''
 			,@StakeLevelList_1701_new VARCHAR(50)= ''
@@ -211,6 +207,8 @@ BEGIN
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
+	
+	waitfor delay '00:00:0.280'
 END			
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
@@ -245,6 +243,8 @@ BEGIN
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBTCUST'
+	
+	waitfor delay '00:00:0.280'
 END			
 GO		
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -----

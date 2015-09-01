@@ -16,9 +16,8 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 		
-	   )
-	  RETURN
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
+		RETURN
 		
 	--update status for Gold Deluxe
 	UPDATE CustInfo WITH(UPDLOCK,ROWLOCK)
@@ -27,7 +26,7 @@ BEGIN
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
 	
-	IF (dbo.f_CheckRepTable('custwinlimit') = 1)	 		
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) = 1	 		
 	BEGIN
 		INSERT INTO CustWinLimit(CustId
 								,SportType
@@ -46,10 +45,8 @@ BEGIN
 	END
 	
 	
-	IF NOT(dbo.f_CheckRepTable('CustSettingGame') = 1
-		AND dbo.f_CheckRepTable('CustOverrideGame') = 1
-	)
-	RETURN
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustSettingGame','CustOverrideGame')) <> 2
+		RETURN
 		
 	INSERT INTO [dbo].[CustSettingGame]
            ([CustID]
@@ -196,6 +193,8 @@ BEGIN
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			,@hideGoldDeluxe = @hideGoldDeluxe
+	
+	waitfor delay '00:00:0.280'
 END			
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
@@ -236,6 +235,8 @@ BEGIN
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 			,@hideGoldDeluxe = @hideGoldDeluxe
+	
+	waitfor delay '00:00:0.280'
 END			
 GO		
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -----

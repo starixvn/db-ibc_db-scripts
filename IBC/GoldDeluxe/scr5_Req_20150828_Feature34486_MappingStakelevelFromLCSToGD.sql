@@ -4,6 +4,18 @@
 	Task: Mapping stake level from LCS to GD for preparing GD settings
 	DB: DBTP/DB054. bodb02	
 */ 
+--step 0: prepare structure for tmpStakeLevel on DBTP
+CREATE TABLE [dbo].[tmpStakeLevel](
+	[StakeLevelID] [int] NULL,
+	[GameTypeID] [int] NULL,
+	[MinLabel] [nvarchar](50) NULL,
+	[MaxLabel] [nvarchar](50) NULL,
+	[MinStake] [decimal](19, 8) NULL,
+	[MaxStake] [decimal](19, 8) NULL,
+	[ExchangeId] [int] NULL,
+	[StakeLevelID2] [int] NULL,
+ ) ON [DATA]
+
 
 --step1: import data from LCS to tempdb on DBTP
 

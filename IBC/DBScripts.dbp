@@ -66,6 +66,7 @@ Begin DataProject = "DBScripts"
       Script = "scr4_Req_20150828_Feature34486_DeleteExistingBetSetting for GD.sql"
       Script = "scr5_Req_20150828_Feature34486_MappingStakelevelFromLCSToGD.sql"
       Script = "scr6_Req_20150831_Feature34486_CopyStakeLevelFromLCSToGD.sql"
+      Script = "scr7_Req_20150901_Feature34486_CopyStakeLevelFromLCSForNewlyCreatedCustomer.sql"
       Script = "scr8_Req_20150626_Adjust stake level_gold deluxe.sql"
    End
    Begin Folder = "HRFixedOdds"
