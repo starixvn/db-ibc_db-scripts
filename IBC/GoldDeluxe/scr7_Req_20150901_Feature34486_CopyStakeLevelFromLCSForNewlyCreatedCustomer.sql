@@ -32,7 +32,7 @@ DECLARE @StakeLevelList_1701 VARCHAR(50)= ''
 		,@max_custid2 INT
 
 SELECT @max_custid = xx
-		,,@max_custid2 = yy	
+		,@max_custid2 = yy	
 
 INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID)
 SELECT DISTINCT ci.custid, roleid, syncLiveCasino,

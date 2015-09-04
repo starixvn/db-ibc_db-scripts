@@ -17,8 +17,7 @@ GO
 
 --step 1: copy settings for newly created customers
 DECLARE @max_custid INT 
-SELECT @max_custid = xx	
-
+SELECT @max_custid = xx
 
 INSERT INTO [dbo].[CustSettingGame]
            ([CustID]
@@ -38,17 +37,17 @@ INSERT INTO [dbo].[CustSettingGame]
 	SELECT cs.[CustID]
            ,1701 as [Bettype]
            ,255 as [Sporttype]
-           ,CASE WHEN SyncLiveCasino = 1 THEN [apositiontaking] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [mpositiontaking] ELSE 0 END 
-           ,CASE WHEN SyncLiveCasino = 1 THEN [spositiontaking] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [playerdiscount] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [discount] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [adiscount] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [sdiscount] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [autopositiontaking] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [isautopositiontaking] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [autompositiontaking] ELSE 0 END
-           ,CASE WHEN SyncLiveCasino = 1 THEN [isautompositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[apositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[mpositiontaking] ELSE 0 END 
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[spositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[playerdiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[discount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[adiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[sdiscount] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autopositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautopositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autompositiontaking] ELSE 0 END
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautompositiontaking] ELSE 0 END
 	FROM  CustSettingGame cs WITH(NOLOCK) 
 		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 		LEFT JOIN CustSettingGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
@@ -69,7 +68,7 @@ INSERT INTO [dbo].[CustSettingGame]
 	SELECT cs.[CustID]
            ,1701 as [Bettype]
            ,255 as [Sporttype]
-           ,CASE WHEN SyncLiveCasino = 1 THEN [minpositiontaking] ELSE 0 END          
+           ,CASE WHEN SyncLiveCasino = 1 THEN cs.[minpositiontaking] ELSE 0 END          
     FROM  CustOverrideGame cs WITH(NOLOCK) 
 		INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 		LEFT JOIN CustOverrideGame cs2 WITH(NOLOCK) ON ci.custid = cs2.custid 
@@ -86,7 +85,7 @@ INSERT INTO [dbo].[CustSettingGame]
 							,BetType
 							,MaxWinLimit
 							,IsAutoReset)
-		SELECT custid
+		SELECT ci.custid
 			,255
 			,1701
 			,CASE WHEN SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END 

@@ -33,7 +33,7 @@ BEGIN
 								,BetType
 								,MaxWinLimit
 								,IsAutoReset)
-		SELECT custid,
+		SELECT custid
 			,255
 			,1701
 			,CASE WHEN SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END 
