@@ -1,10 +1,3 @@
-USE [bodb02]
-GO
-/****** Object:  StoredProcedure [dbo].[proc_DataSample_MO_Betticket]    Script Date: 8/27/2015 10:38:59 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 ALTER PROCEDURE [dbo].[DataSample_CB_BetTicket_Ins]
 --DECLARE
 	@CustID		INT
@@ -92,6 +85,7 @@ BEGIN
 		,@oddsType TINYINT = 4
 		,@oddsID INT
 		,@stake MONEY
+		,@actual_stake MONEY
 		,@statusID tinyint
 		,@oddsspread float = NULL
 		,@odds float = NULL
@@ -109,6 +103,7 @@ BEGIN
 		, @oddsType		= 4
 		, @GameId3rd	= ''
 		, @stake		= 20
+		, @actual_stake	= 20
 		, @hdp1			= isnull(@hdp1, 0.3)
 		, @hdp2			= isnull(@hdp2, 0.7)
 		, @maxWinlost	= 200000
@@ -227,7 +222,7 @@ BEGIN
 			,@TranId3rd TranId3rd
 			,@custom1 AS custom1
 		FROM [bodb02].[dbo].[translog] b (nolock)
-			inner join dbo.SportBettypeMatrix bt (nolock) on  b.gameID = bt.bettype
+			----inner join dbo.SportBettypeMatrix bt (nolock) on  b.gameID = bt.bettype
 			OUTER APPLY (
 				select top 1 sdiscount 
 						,adiscount 
@@ -237,7 +232,8 @@ BEGIN
 				where bettype = 18001 and custid = @CustID
 			) AS comRate
 		WHERE custid = @custid
-			and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
+			
+			--and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
 	
 		SELECT @refno_translog 	= SCOPE_IDENTITY()
 			, @refno			= @refno_translog
@@ -567,34 +563,46 @@ BEGIN
 				GOTO FINAL_CHECK;
 			END
 		
-			DECLARE @maxAmount MONEY
+			DECLARE @maxAmount 	MONEY
+				,@totalWinlost	MONEY
+				,@totalStake	MONEY
 
-			select @maxAmount = SUM(winlost-stake)
+			select @maxAmount 	= SUM(winlost-stake)
+				, @totalStake	= SUM(stake)
+				, @totalWinlost = SUM(winlost)
 			from dbo.bettransm (nolock)
 			where refno = @refno_translog 
-				--and bettype not in (18001)
+				and bettype NOT IN (18001,18003)
 				--and statuswinlost = 0
 			
 			UPDATE b
-			SET status		= @status
-				,statusID	= @statusID
+			SET status			= @status
+				,statusID		= @statusID
 			FROM dbo.translog b WITH(ROWLOCK, UPDLOCK)
-			WHERE translogid = @refno_translog
+			WHERE translogid 	= @refno_translog
 
 			UPDATE b
-			SET status		= 'LOSE'
-				,statusID	= 113
+			SET status			= 'LOSE'
+				,statusID		= 113
+				,statuswinlost 	= 0
 			FROM dbo.bettransm b WITH(ROWLOCK, UPDLOCK)
-			WHERE @refno	= @refno_translog
-				AND bettype = 18001
+			WHERE refno		= @refno_translog
+				AND bettype 	IN (18001)
 
 			UPDATE b
-			SET statuswinlost	= CASE WHEN @maxAmount >= @maxwinlost THEN 1 ELSE 0 END
+			SET statuswinlost	= CASE WHEN @maxAmount >= @maxWinlost THEN 1 ELSE 0 END
 			FROM dbo.bettransm b WITH(ROWLOCK, UPDLOCK)
-			WHERE @refno		= @refno_translog
-				--AND bettype		<> 18001
+			WHERE refno		= @refno_translog
+				AND bettype		NOT IN(18001)
 			
-			SET @maxAmount 	= CASE WHEN @maxAmount < 0 THEN 0 ELSE @maxAmount END
+			SELECT @totalWinlost = CASE WHEN @maxAmount < 0 			THEN 0 --LOSE Pool bet without any prizes 
+										WHEN @maxAmount >= @maxWinlost 	THEN 0 --WON|LOSE pool bet with any prizes and total winning amount > win limit
+									ELSE @totalWinlost 
+								END
+				, @actual_stake	= CASE 	WHEN @maxAmount < 0 			THEN @stake 
+										WHEN @maxAmount >= @maxWinlost 	THEN @stake  
+									ELSE (@totalStake + @stake)
+								END
 			
 			--INSERT to bettrans
 			INSERT INTO [dbo].[bettrans]
@@ -667,7 +675,7 @@ BEGIN
 				,odds
 				,stake
 				,@status AS [status]
-				,CASE WHEN @maxAmount >= @maxWinlost THEN 0 ELSE @maxAmount END AS Winlost
+				,@totalWinlost AS Winlost
 				,0 as awinlost
 				,0 as mwinlost
 				,0 as playercomm
@@ -701,7 +709,7 @@ BEGIN
 				,1 modds
 				,gameID as bettype
 				,NULL betdaqid
-				,actual_stake
+				,@actual_stake AS actual_stake
 				,currency
 				,'127.0.0.1' as ip
 				,transdesc
@@ -742,35 +750,5 @@ BEGIN
 		FROM [bodb02].[dbo].[bettrans] WITH (NOLOCK) WHERE custid = @CustID AND refno		= @refno_translog
 	END
 END
-GO
-ALTER PROCEDURE [dbo].[DataSample_CB_BetTicket_Del] 
-	@refno BIGINT
-		
-AS 
-/*
-Task:#40294 - Integration Collosus Bet product
-Creator:20150827@bobby.nguyen
-Params:
-	- @refno: translog.translogid = bettrans.refno = bettransm.refno
-	
-*/
-BEGIN
-	SET NOCOUNT ON;
-
-	DELETE d
-	FROM bettrans d
-	WHERE d.refno = @refno
-
-	DELETE d
-	FROM bettransm d
-	WHERE d.refno = @refno
-
-	DELETE d
-	FROM translog d
-	WHERE d.translogid = @refno	
-
-	RETURN
-END
-GO
 
 
