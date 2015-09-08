@@ -48,7 +48,7 @@ BEGIN
 	IF ISNULL(@stakeLevelList1701_super,'') = '' OR  ISNULL(@stakeLevelList1702_super,'') = ''	
 	BEGIN
 		INSERT INTO CustGameType (custid, GameTypeID, StakeLevelList)
-		SELECT custid, GameTypeID, CASE WHEN SyncLiveCasino = 1 THEN StakeLevelList ELSE '' END
+		SELECT custid, GameTypeID, CASE WHEN SyncLiveCasino = 1 THEN CAST(StakeLevelList AS VARCHAR(100)) ELSE '' END
 		FROM custinfo c WITH(NOLOCK) 
 			CROSS APPLY (
 				SELECT GameTypeID, stakelevelid2 as StakeLevelList
@@ -230,7 +230,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE ci.roleid = 4 	
-	AND ci.username LIKE '3rdSuper%'
+	AND ci.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	and s.islicensee = 0
@@ -273,7 +273,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE ci.roleid = 4 	
-	AND ci.username LIKE '3rdSuper%'
+	AND ci.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	and s.islicensee = 0
