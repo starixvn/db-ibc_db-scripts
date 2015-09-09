@@ -139,7 +139,7 @@ BEGIN
 	IF(@Bettype = 18001 AND @status IN ('RUNNING')) 
 	BEGIN
 		
-		SELECT @Winlostdate	= DATEADD(wk,DATEDIFF(wk,0,GETDATE()),6) -- last date of week
+		SELECT @Winlostdate	=  Convert(Date,GETDATE()) -----------DATEADD(wk,DATEDIFF(wk,0,GETDATE()),6) -- last date of week
 			, @gameID		= 18000
 			, @TransDesc	= '2,3/4/5/6,7'
 			, @TranId3rd	= 'B75051109'
