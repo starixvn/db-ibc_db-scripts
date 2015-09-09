@@ -16,7 +16,8 @@ CREATE TABLE [dbo].[tmpStakeLevel](
 	[StakeLevelID2] [int] NULL,
  ) ON [DATA]
 
-
+create clustered index CIX_tmpStakeLevel on tmpStakeLevel
+(stakeLevelID)
 --step1: import data from LCS to tempdb on DBTP
 
 INSERT INTO [dbo].[tmpStakeLevel]

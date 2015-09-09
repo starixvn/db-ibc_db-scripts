@@ -10,8 +10,7 @@
 ------------------------------------------------------
  
   ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@maxcustid INT
-	,@target VARCHAR(20)
+	@target VARCHAR(20)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -19,13 +18,12 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType')) <> 2
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustGameType')) <> 1
 		RETURN
 	
 	DELETE cg
 	FROM custGameType cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE custid <= @maxcustid		
-		AND GameTypeID IN (1701,1702)
+	WHERE GameTypeID IN (1701,1702)
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
@@ -37,12 +35,8 @@ GO
 ---
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-DECLARE @max_custid INT
-
-SELECT @max_custid = xx
-
-EXEC dbo.[Acc_CustSetting3rd_19] @maxcustid = @max_custid
-		,@target = 'REPLICATED'
+EXEC dbo.[Acc_CustSetting3rd_19] 
+		@target = 'REPLICATED'
 	
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
@@ -53,13 +47,9 @@ GO
 ---
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-DECLARE @max_custid INT
 
-SELECT @max_custid = xx
-
-
-EXEC dbo.[Acc_CustSetting3rd_19] @maxcustid = @max_custid
-		,@target = 'DBCUST'
+EXEC dbo.[Acc_CustSetting3rd_19]
+		@target = 'DBCUST'
 	
 GO		
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -----

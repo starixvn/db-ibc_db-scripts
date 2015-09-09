@@ -102,6 +102,8 @@ BEGIN
 	CREATE TABLE #SyncedDownlines (custid int, syncLiveCasino bit, gametypeID smallint, stakeLevelList varchar(100), uplineID int, roleid tinyint)
 	CREATE TABLE #UnSyncDownlines (custid int, gametypeID smallint)
 	
+	create clustered index CIX_SyncedDownlines on #SyncedDownlines (roleid, custid)
+	
 	INSERT INTO #SyncedDownlines (custid, syncLiveCasino, GameTypeID, roleid, uplineID)
 	SELECT custid, syncLiveCasino, GameTypeID, roleID, 
 		CASE roleID 
@@ -168,6 +170,7 @@ BEGIN
 			GROUP BY b.custid, b.GameTypeID
 		) data
 	WHERE #SyncedDownlines.custid = data.custid AND #SyncedDownlines.gameTypeID = data.gameTypeID
+	option (maxdop 4)
 	
 	-- copy lowest stakelevel from upline for those don't have setting yet
 	-- master: copy from super

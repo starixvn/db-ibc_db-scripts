@@ -26,7 +26,7 @@ BEGIN
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) = 1	 		
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustWinlimit')) = 1	 		
 	BEGIN
 		INSERT INTO CustWinLimit(CustId
 								,SportType
@@ -41,6 +41,7 @@ BEGIN
 		FROM CustInfo WITH(NOLOCK)
 		WHERE srecommend = @srecommend
 			AND custid <= @maxcustid
+			AND enabled = 1
 									
 	END
 	
@@ -83,7 +84,7 @@ BEGIN
 		AND ci.custid <= @maxcustid
 		AND cs.sporttype = 162
 		AND cs.bettype = 1101  
-	       
+	    AND ci.enabled = 1   
 	
 	INSERT INTO [dbo].[CustOverrideGame]
            ([CustID]
@@ -99,7 +100,8 @@ BEGIN
 	WHERE ci.srecommend = @srecommend
 		AND ci.custid <= @maxcustid
 		AND cs.sporttype = 162
-		AND cs.bettype = 1101  
+		AND cs.bettype = 1101
+		and enabled = 1  
 	
 	DECLARE @apos SMALLMONEY,
 			@mpos SMALLMONEY

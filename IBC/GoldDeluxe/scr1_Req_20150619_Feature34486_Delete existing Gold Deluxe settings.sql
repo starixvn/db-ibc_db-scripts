@@ -11,8 +11,7 @@
 ------------------------------------------------------
  
   ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@maxcustid INT
-	,@target VARCHAR(20)
+	@target VARCHAR(20)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -27,14 +26,12 @@ BEGIN
 	BEGIN			
 		DELETE cs
 		FROM custSettingGame cs WITH(UPDLOCK,ROWLOCK)			
-		WHERE cs.custid <= @maxcustid
-			AND cs.sporttype = 255
+		WHERE cs.sporttype = 255
 			AND cs.bettype = 1701
 		
 		DELETE cs
 		FROM custOverrideGame cs WITH(UPDLOCK,ROWLOCK)			
-		WHERE cs.custid <= @maxcustid
-			AND cs.sporttype = 255
+		WHERE cs.sporttype = 255
 			AND cs.bettype = 1701
 	END
 	
@@ -43,8 +40,7 @@ BEGIN
 	
 	DELETE cw
 	FROM custWinLimit cw WITH(UPDLOCK,ROWLOCK)
-	WHERE cw.custid <= @maxcustid
-		AND cw.sporttype = 255
+	WHERE cw.sporttype = 255
 		AND cw.bettype = 1701
 END	
 GO
@@ -58,13 +54,8 @@ GO
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
 
-DECLARE @max_custid INT
-
-SELECT @max_custid = xx
-
 EXEC dbo.[Acc_CustSetting3rd_19] 
-		@maxcustid = @max_custid
-		,@target = 'REPLICATED'
+		@target = 'REPLICATED'
 		
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
@@ -75,13 +66,8 @@ GO
 ---
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-DECLARE @max_custid INT
-
-SELECT @max_custid = xx
-
 EXEC dbo.[Acc_CustSetting3rd_19]
-		@maxcustid = @max_custid
-		,@target = 'DBCUST'
+		@target = 'DBCUST'
 GO		
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -----
 -----------------------------------------------------------------------------------
