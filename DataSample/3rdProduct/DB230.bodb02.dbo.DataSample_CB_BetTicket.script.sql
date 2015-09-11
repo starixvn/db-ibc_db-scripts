@@ -569,12 +569,12 @@ BEGIN
 			
 			SET @WinlostDate	= GETDATE()
 			
-			select @maxAmount 	= SUM(winlost-stake)
+			select @maxAmount 	= SUM(winlost)
 				, @totalStake	= SUM(stake)
 				, @totalWinlost = SUM(winlost)
 			from dbo.bettransm (nolock)
 			where refno = @refno_translog 
-				and bettype NOT IN (18001,18003)
+				and bettype NOT IN (18001)
 				--and statuswinlost = 0
 			
 			UPDATE b
