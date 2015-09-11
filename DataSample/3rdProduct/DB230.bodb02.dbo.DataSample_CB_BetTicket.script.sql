@@ -324,7 +324,7 @@ BEGIN
 					,0 as [acomm]
 					,[actualrate]
 					,b.eventID AS [matchid]
-					,@Winlostdate AS [matchdate]
+					,[winlostdate] AS [matchdate]
 					,0 as [finalodds]
 					,0 as [isfinish]
 					,0 as [statuswinlost]
@@ -522,7 +522,7 @@ BEGIN
 				,0 as [acomm]
 				,[actualrate]
 				,b.eventID AS [matchid]
-				,@Winlostdate AS [matchdate]
+				,[winlostdate] AS [matchdate]
 				,0 as [finalodds]
 				,0 as [isfinish]
 				,0 as [statuswinlost]
@@ -566,7 +566,9 @@ BEGIN
 			DECLARE @maxAmount 	MONEY
 				,@totalWinlost	MONEY
 				,@totalStake	MONEY
-
+			
+			SET @WinlostDate	= GETDATE()
+			
 			select @maxAmount 	= SUM(winlost-stake)
 				, @totalStake	= SUM(stake)
 				, @totalWinlost = SUM(winlost)
@@ -578,6 +580,7 @@ BEGIN
 			UPDATE b
 			SET status			= @status
 				,statusID		= @statusID
+				,WinlostDate	= @WinlostDate
 			FROM dbo.translog b WITH(ROWLOCK, UPDLOCK)
 			WHERE translogid 	= @refno_translog
 
@@ -585,12 +588,14 @@ BEGIN
 			SET status			= 'LOSE'
 				,statusID		= 113
 				,statuswinlost 	= 0
+				,WinlostDate	= @WinlostDate
 			FROM dbo.bettransm b WITH(ROWLOCK, UPDLOCK)
 			WHERE refno		= @refno_translog
 				AND bettype 	IN (18001)
 
 			UPDATE b
 			SET statuswinlost	= CASE WHEN @maxAmount >= @maxWinlost THEN 1 ELSE 0 END
+				,WinlostDate	= @WinlostDate
 			FROM dbo.bettransm b WITH(ROWLOCK, UPDLOCK)
 			WHERE refno		= @refno_translog
 				AND bettype		NOT IN(18001)
@@ -601,7 +606,10 @@ BEGIN
 								END
 				, @actual_stake	= CASE 	WHEN @maxAmount < 0 			THEN @stake 
 										WHEN @maxAmount >= @maxWinlost 	THEN @stake  
-									ELSE (@totalStake + @stake)
+								END
+				, @actual_stake	= CASE 	WHEN @maxAmount < 0 			THEN @stake 
+										WHEN @maxAmount >= @maxWinlost 	THEN @stake  
+									ELSE (ISNULL(@totalStake,0) + @stake)
 								END
 			
 			--INSERT to bettrans
@@ -750,5 +758,6 @@ BEGIN
 		FROM [bodb02].[dbo].[bettrans] WITH (NOLOCK) WHERE custid = @CustID AND refno		= @refno_translog
 	END
 END
+
 
 
