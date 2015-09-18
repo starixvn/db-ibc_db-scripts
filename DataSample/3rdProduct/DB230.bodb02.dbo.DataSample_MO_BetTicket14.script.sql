@@ -300,7 +300,7 @@ BEGIN
 				,balance
 				,NULL SecAcceptFlag
 				,0 transid2
-	FROM [bodb02].[dbo].bettrans14 b WITH (NOLOCK)
+	FROM [bodb02].[dbo].bettrans b WITH (NOLOCK)
 		INNER JOIN dbo.SportBettypeMatrix bt (nolock) on  b.bettype = bt.bettype
 		OUTER APPLY (
 			select top 1 sdiscount 
@@ -311,7 +311,7 @@ BEGIN
 			where bettype = 301 and custid = @CustID
 		) AS comRate
 	WHERE custid = @custid
-		and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
+		--and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
 		--and ([status] = @status OR @status = 'VOID')
 	
 	SELECT @Refno_Bettrans = @transid14

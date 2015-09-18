@@ -320,8 +320,8 @@ BEGIN
 					,[discount]
 					,[adiscount]
 					,0 as [playercomm]
-					,0 as [comm]
-					,0 as [acomm]
+					,(stake * discount) as [comm]
+					,(stake * adiscount) as [acomm]
 					,[actualrate]
 					,b.eventID AS [matchid]
 					,[winlostdate] AS [matchdate]
@@ -333,7 +333,7 @@ BEGIN
 					,0 as [spositiontaking]
 					,0 as [swinlost]
 					,[sdiscount]
-					,0 as [scomm]
+					,(stake * sdiscount) as [scomm]
 					,[statusID]
 					,@transdate AS [recommdate]
 			FROM dbo.translog b with(nolock)
@@ -402,28 +402,30 @@ BEGIN
 			, status varchar(100), statusID tinyint
 			, stake money, winlost money
 			, hdp1 smallmoney, hdp2 smallmoney
+			--, comm money, acomm money, scomm money
+			, oddsspread money
 		)
 
-		;WITH CTE_Consolation (bettype, status, statusID, stake, winlost, hdp1, hdp2)
+		;WITH CTE_Consolation (bettype, status, statusID, stake, winlost, hdp1, hdp2, oddsspread)
 		AS (
 			-- Consolation
-			select 18004, 'WON', 112, 0, @winAmount, 0, 0
+			select 18004, 'WON', 112, 0, @winAmount, 0, 0,0
 			where @Bettype = 18004
 			union ALL
-			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0
+			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0,0
 			where @Bettype = 18004
-		), CTE_Jackpot (bettype, status, statusID, stake, winlost, hdp1, hdp2)
+		), CTE_Jackpot (bettype, status, statusID, stake, winlost, hdp1, hdp2, oddsspread)
 		AS (
 			-- Jackpot
-			select 18005, 'WON', 112, 0, @winAmount, 0, 0
+			select 18005, 'WON', 112, 0, @winAmount, 0, 0,0
 			where @Bettype = 18005
 			union ALL
-			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0
+			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0,0
 			where @Bettype = 18005
-		), CTE_CashOut (bettype, status, statusID, stake, winlost, hdp1, hdp2)
+		), CTE_CashOut (bettype, status, statusID, stake, winlost, hdp1, hdp2, oddsspread)
 		AS (
 			-- Cash-Out
-			select 18002, 'WON', 112, 0, @winAmount, @hdp1, @hdp2
+			select 18002, 'WON', 112, 0, @winAmount, @hdp1, @hdp2, case when @hdp1=0.1 then 20 else 50 end
 			where @Bettype = 18002
 		)
 		INSERT INTO @tempData
@@ -518,8 +520,8 @@ BEGIN
 				,case when temp.bettype = 18002 then isnull(comRate.discount,0.08) else 0 end as [discount]
 				,case when temp.bettype = 18002 then isnull(comRate.adiscount,0.14) else 0 end as [adiscount]
 				,0 as [playercomm]
-				,0 as [comm]
-				,0 as [acomm]
+				,case when temp.bettype in (18002) then (isnull(comRate.discount,0.08) * temp.oddsspread) else (b.discount * temp.[stake])  end as [comm]
+				,case when temp.bettype in (18002) then (isnull(comRate.adiscount,0.08) * temp.oddsspread) else (b.adiscount * temp.[stake])  end as [acomm]
 				,[actualrate]
 				,b.eventID AS [matchid]
 				,[winlostdate] AS [matchdate]
@@ -531,7 +533,7 @@ BEGIN
 				,0 as [spositiontaking]
 				,0 as [swinlost]
 				,case when temp.bettype = 18002 then isnull(comRate.sdiscount,0.225) else 0 end as [sdiscount]
-				,0 as [scomm]
+				,case when temp.bettype in (18002) then (isnull(comRate.sdiscount,0.225) * temp.oddsspread) else (b.sdiscount * temp.[stake])  end as [scomm]
 				,temp.statusID
 				,@transdate AS [recommdate]
 		FROM dbo.translog b with(nolock)
@@ -566,15 +568,21 @@ BEGIN
 			DECLARE @maxAmount 	MONEY
 				,@totalWinlost	MONEY
 				,@totalStake	MONEY
+				,@comm			MONEY
+				,@acomm			MONEY
+				,@scomm			MONEY
 			
 			SET @WinlostDate	= GETDATE()
 			
-			select @maxAmount 	= SUM(winlost)
+			select @maxAmount 	= SUM(case when bettype not in(18001) then winlost else 0 end)
 				, @totalStake	= SUM(stake)
 				, @totalWinlost = SUM(winlost)
+				, @comm			= SUM(comm)
+				, @acomm		= SUM(acomm)
+				, @scomm		= SUM(scomm)
 			from dbo.bettransm (nolock)
 			where refno = @refno_translog 
-				and bettype NOT IN (18001)
+				--and bettype NOT IN (18001)
 				--and statuswinlost = 0
 			
 			UPDATE b
@@ -609,7 +617,7 @@ BEGIN
 								END
 				, @actual_stake	= CASE 	WHEN @maxAmount < 0 			THEN @stake 
 										WHEN @maxAmount >= @maxWinlost 	THEN @stake  
-									ELSE (ISNULL(@totalStake,0) + @stake)
+									ELSE (ISNULL(@totalStake,0))
 								END
 			
 			--INSERT to bettrans
@@ -687,8 +695,8 @@ BEGIN
 				,0 as awinlost
 				,0 as mwinlost
 				,0 as playercomm
-				,0 as comm
-				,0 as acomm
+				,@comm as comm
+				,@acomm as acomm
 				,apositiontaking
 				,mpositiontaking
 				,tpositiontaking
@@ -722,7 +730,7 @@ BEGIN
 				,'127.0.0.1' as ip
 				,transdesc
 				,sdiscount
-				,0 as scomm
+				,@scomm as scomm
 				,spositiontaking
 				,0 as swinlost
 				,srecommend

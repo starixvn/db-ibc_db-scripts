@@ -306,7 +306,7 @@ BEGIN
 			where bettype = 301 and custid = @CustID
 		) AS comRate
 	WHERE custid = @custid
-		and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
+		--and (bt.productid = 1 and bt.sporttype = 1 and bt.enabled = 1)
 		--and ([status] = @status OR @status = 'VOID')
 	
 	SELECT @Refno_Bettrans = SCOPE_IDENTITY()

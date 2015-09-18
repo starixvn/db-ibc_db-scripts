@@ -5,8 +5,8 @@ GO
 DECLARE @status VARCHAR(10)
 	, @custid	INT
 	
-SET @status 	= 'RUNNING'
-	,@custid 	= 374384
+SELECT @status 	= 'RUNNING'
+	,@custid 	= 1176092
 
 EXEC [dbo].[DataSample_MO_Betticket_Ins]
 	@CustID  = @custid
