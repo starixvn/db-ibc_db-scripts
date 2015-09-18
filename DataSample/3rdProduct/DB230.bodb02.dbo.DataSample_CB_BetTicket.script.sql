@@ -517,11 +517,19 @@ BEGIN
 				,0 as [awinlost]
 				,0 as [mwinlost]
 				,case when temp.bettype = 18002 then isnull(comRate.playerdiscount,0) else 0 end as [playerdiscount]
-				,case when temp.bettype = 18002 then isnull(comRate.discount,0.08) else 0 end as [discount]
-				,case when temp.bettype = 18002 then isnull(comRate.adiscount,0.14) else 0 end as [adiscount]
+				,case when temp.bettype = 18002 then isnull(comRate.discount,0.08) 
+						when temp.bettype = 18003 then 0.1
+						else b.discount end as [discount]
+				,case when temp.bettype = 18002 then isnull(comRate.adiscount,0.14) 
+						when temp.bettype = 18003 then 0.2
+						else b.adiscount end as [adiscount]
 				,0 as [playercomm]
-				,case when temp.bettype in (18002) then (isnull(comRate.discount,0.08) * temp.oddsspread) else (b.discount * temp.[stake])  end as [comm]
-				,case when temp.bettype in (18002) then (isnull(comRate.adiscount,0.08) * temp.oddsspread) else (b.adiscount * temp.[stake])  end as [acomm]
+				,case when temp.bettype in (18002) then (isnull(comRate.discount,0.08) * temp.oddsspread) 
+					when temp.bettype in (18003) then (0.1 * temp.stake)
+					else (b.discount * temp.[stake])  end as [comm]
+				,case when temp.bettype in (18002) then (isnull(comRate.adiscount,0.08) * temp.oddsspread) 
+					when temp.bettype in (18003) then (0.2 * temp.stake)
+					else (b.adiscount * temp.[stake])  end as [acomm]
 				,[actualrate]
 				,b.eventID AS [matchid]
 				,[winlostdate] AS [matchdate]
@@ -532,8 +540,12 @@ BEGIN
 				,temp.bettype AS [bettype]
 				,0 as [spositiontaking]
 				,0 as [swinlost]
-				,case when temp.bettype = 18002 then isnull(comRate.sdiscount,0.225) else 0 end as [sdiscount]
-				,case when temp.bettype in (18002) then (isnull(comRate.sdiscount,0.225) * temp.oddsspread) else (b.sdiscount * temp.[stake])  end as [scomm]
+				,case when temp.bettype = 18002 then isnull(comRate.sdiscount,0.225) 	
+						when temp.bettype = 18003 then 0.3
+					else b.sdiscount end as [sdiscount]
+				,case when temp.bettype in (18002) then (isnull(comRate.sdiscount,0.225) * temp.oddsspread) 
+					when temp.bettype in (18003) then (0.3 * temp.stake)
+					else (b.sdiscount * temp.[stake])  end as [scomm]
 				,temp.statusID
 				,@transdate AS [recommdate]
 		FROM dbo.translog b with(nolock)
