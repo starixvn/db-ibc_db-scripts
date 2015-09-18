@@ -402,7 +402,7 @@ BEGIN
 			, status varchar(100), statusID tinyint
 			, stake money, winlost money
 			, hdp1 smallmoney, hdp2 smallmoney
-			--, comm money, acomm money, scomm money
+			--, discount decimal, adiscount decimal, discount decimal
 			, oddsspread money
 		)
 
@@ -525,10 +525,10 @@ BEGIN
 						else b.adiscount end as [adiscount]
 				,0 as [playercomm]
 				,case when temp.bettype in (18002) then (isnull(comRate.discount,0.08) * temp.oddsspread) 
-					when temp.bettype in (18003) then (0.1 * temp.stake)
+					when temp.bettype in (18003) then (0.1 * @winAmount)
 					else (b.discount * temp.[stake])  end as [comm]
-				,case when temp.bettype in (18002) then (isnull(comRate.adiscount,0.08) * temp.oddsspread) 
-					when temp.bettype in (18003) then (0.2 * temp.stake)
+				,case when temp.bettype in (18002) then (isnull(comRate.adiscount,0.14) * temp.oddsspread) 
+					when temp.bettype in (18003) then (0.2 * @winAmount)
 					else (b.adiscount * temp.[stake])  end as [acomm]
 				,[actualrate]
 				,b.eventID AS [matchid]
@@ -544,7 +544,7 @@ BEGIN
 						when temp.bettype = 18003 then 0.3
 					else b.sdiscount end as [sdiscount]
 				,case when temp.bettype in (18002) then (isnull(comRate.sdiscount,0.225) * temp.oddsspread) 
-					when temp.bettype in (18003) then (0.3 * temp.stake)
+					when temp.bettype in (18003) then (0.3 * @winAmount)
 					else (b.sdiscount * temp.[stake])  end as [scomm]
 				,temp.statusID
 				,@transdate AS [recommdate]
