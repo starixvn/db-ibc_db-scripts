@@ -15,16 +15,3 @@ SET @CustID = (SELECT custInfo FROM custInfo WITH (NOLOCK) WHERE username = 'STA
 UPDATE [dbo].[CustSuper] 
 	SET IsMyanmarOdds = 1
 WHERE custid = @CustID
-
-GO	
--- Run on DB06
-Use bodb02
-GO
-
-DECLARE @CustID INT
-
-SET @CustID = (SELECT custInfo FROM custInfo WITH (NOLOCK) WHERE username = 'STAFF')
-
-UPDATE [dbo].[CustSuper] 
-	SET IsMyanmarOdds = 1
-WHERE custid = @CustID
