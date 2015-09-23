@@ -5,6 +5,7 @@
 	DB: DBLOG / bodb_CustomerLog
 */
 USE bodb_CustomerLog
+GO
 
 INSERT INTO dbo.LogAction (ActionID,SPName,ActionNameEN,ActionNameCH,ActionNameCS,ActionNameJP,ActionNameTH,ActionNameKO,IsInternal,ActionNameVI)
 VALUES (1157,'Acc_CustomerUpdDisableColossusBet'
@@ -71,7 +72,7 @@ VALUES (245,'Acc_CustomerUpdColossusBet_Commission'
 		)
 
 GO
-USE 
+
 INSERT INTO dbo.LogAction (ActionID,SPName,ActionNameEN,ActionNameCH,ActionNameCS,ActionNameJP,ActionNameTH,ActionNameKO,IsInternal,ActionNameVI)
 VALUES (246,'Acc_CustomerUpdColossusBet_Commission'
 		,'Update Colossus Bets Cash-In Share For Master'

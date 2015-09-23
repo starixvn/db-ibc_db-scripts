@@ -5,5 +5,6 @@
 	DB: DBCust.CustDB
 
 */ 
-
+USE CustDB
+GO
 ALTER TABLE [dbo].[CustSuper] ADD IsMyanmarOdds BIT CONSTRAINT DF_CustSuper_IsMyanmarOdds DEFAULT(0) NULL
