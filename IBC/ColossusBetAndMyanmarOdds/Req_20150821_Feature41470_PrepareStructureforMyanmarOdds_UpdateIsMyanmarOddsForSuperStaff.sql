@@ -2,7 +2,7 @@
 	Created by: Helen
 	Date: 20150904
 	Task: commission setting for MO [Redmine #41470]
-	DB: DBCust.CustDB - DB06.bodb02
+	DB: DBCust.CustDB 
 
 */ 
 -- Run on DBCUST
