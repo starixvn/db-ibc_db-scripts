@@ -4,11 +4,11 @@
     Created Date: Aug 18, 2015
     Description: # Colossus Bet Product - [Redmine: #42208]
     
-    DB: DBTXN/bodb02  
+    DB: DBCust/CustDB
 */  
 
 
-USE bodb02
+USE CustDB
 GO
 CREATE TABLE VendorGlobalSetting (VendorID INT,VName VARCHAR(50),NumberValue DECIMAL(19,6))
 
