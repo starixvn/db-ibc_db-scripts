@@ -100,7 +100,13 @@ INSERT INTO [dbo].[CustSettingGame]
 	
 GO
 
---step 2: update pt/comm for different settings 		
+--step 2: update pt/comm for different settings not adjust for line super who take pt LCS more than 93%  		
+DELETE s
+FROM #supers s
+	INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid
+												AND cs.sporttype = 162
+												AND cs.bettype = 1101
+WHERE spositiontaking > 0.93
 
 
 	UPDATE cs
@@ -124,7 +130,8 @@ GO
 														AND cs2.sporttype = 162
 														AND cs2.bettype = 1101 
 	WHERE ci.srecommend IN (SELECT custid FROM #supers)
-		AND ci.HideGoldDeluxe = 0	
+		AND ci.enabled = 1
+		AND ci.SyncLiveCasino = 1
 		AND (cs.apositiontaking <> cs2.apositiontaking
 			OR cs.mpositiontaking <> cs2.mpositiontaking
 			OR cs.spositiontaking <> cs2.spositiontaking
@@ -149,6 +156,7 @@ GO
 														AND cs2.sporttype = 162
 														AND cs2.bettype = 1101 
 	WHERE ci.srecommend IN (SELECT custid FROM #supers)
-		AND ci.HideGoldDeluxe = 0	
+		AND ci.enabled = 1
+		AND ci.SyncLiveCasino = 1	
 		AND cs.minpositiontaking <> cs2.minpositiontaking
-			
+GO
