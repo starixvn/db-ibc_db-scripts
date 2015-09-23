@@ -51,6 +51,11 @@ FROM tmpStakeLevel lcs
 							AND lcs.GameTypeID = s.GameTypeID
 							AND lcs.ExchangeID = s.ExchangeID
 
-							
+GO
+
+--check mapping stake level
+--if no row , mapping successful
+SELECT * FROM tmpStakeLevel WHERE stakeLevelID2 IS NULL	
+						
 							
 							 

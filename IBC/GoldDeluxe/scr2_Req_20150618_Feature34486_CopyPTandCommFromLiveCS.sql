@@ -16,7 +16,7 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','Customer')) <> 2
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
 		RETURN
 	
 	--agents list need to enable 
@@ -455,7 +455,7 @@ BEGIN
 	DROP TABLE #tmpDownlineEnable		
 END
 GO
--- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
+-- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
 ------------------------------------------------------	
 
 

@@ -16,6 +16,20 @@ WHERE roleid = 4
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 GO
 
+--check settings before copy
+DECLARE @max_custid INT = xx
+
+SELECT COUNT(1)
+FROM custinfo ci WITH(NOLOCK)
+	LEFT JOIN custgameType cg WITH(NOLOCK) ON ci.custid = cg.custid
+											AND cg.GameTypeID IN (1701,1702)
+WHERE srecommend IN (select custid FROM #Supers)
+	AND ci.custid > @max_custid	
+	AND cg.custid IS NULL
+
+GO
+
+
 --step 1: copy settings for newly created customers
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT)
 
