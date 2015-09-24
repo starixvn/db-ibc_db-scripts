@@ -15,7 +15,7 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','customer')) <> 1
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','customer')) <> 2
 		RETURN
 	
 	--exclude customers from site 789y 
