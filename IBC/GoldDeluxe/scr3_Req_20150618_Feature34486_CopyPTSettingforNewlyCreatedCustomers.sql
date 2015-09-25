@@ -119,11 +119,7 @@ WHERE spositiontaking > 0.93
 	SET
 		cs.apositiontaking = cs2.apositiontaking
 		,cs.mpositiontaking = cs2.mpositiontaking
-		,cs.spositiontaking = cs2.spositiontaking
-		,cs.playerdiscount = cs2.playerdiscount
-		,cs.discount = cs2.discount
-		,cs.adiscount = cs2.adiscount
-		,cs.sdiscount = cs2.sdiscount
+		,cs.spositiontaking = cs2.spositiontaking		
 		,cs.autopositiontaking = cs2.autopositiontaking
 		,cs.isautopositiontaking = cs2.isautopositiontaking
 		,cs.autompositiontaking = cs2.autompositiontaking
@@ -140,11 +136,7 @@ WHERE spositiontaking > 0.93
 		AND ci.SyncLiveCasino = 1
 		AND (cs.apositiontaking <> cs2.apositiontaking
 			OR cs.mpositiontaking <> cs2.mpositiontaking
-			OR cs.spositiontaking <> cs2.spositiontaking
-			OR cs.playerdiscount <> cs2.playerdiscount
-			OR cs.discount <> cs2.discount
-			OR cs.adiscount <> cs2.adiscount
-			OR cs.sdiscount <> cs2.sdiscount
+			OR cs.spositiontaking <> cs2.spositiontaking			
 			OR cs.autopositiontaking <> cs2.autopositiontaking
 			OR cs.isautopositiontaking <> cs2.isautopositiontaking
 			OR cs.autompositiontaking <> cs2.autompositiontaking

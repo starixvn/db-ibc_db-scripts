@@ -459,6 +459,98 @@ BEGIN
 		AND cs.sporttype = 255
 		AND cs.bettype = 1701 
 		AND spositiontaking > 0.93	
+		
+	--adjust commission Super = [0; 0.007]	
+	--correct for super level
+	IF EXISTS(
+			SELECT 1 
+			FROM custSettingGame cs WITH(NOLOCK) 
+			WHERE cs.custid = @srecommend		
+				AND cs.sporttype = 255
+				AND cs.bettype = 1701 
+				AND cs.sdiscount > 0.007
+			)
+	BEGIN
+		UPDATE cs
+		SET cs.sdiscount = 0.007
+		FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+		WHERE ci.custid = @srecommend		
+			AND cs.sporttype = 255
+			AND cs.bettype = 1701 
+			AND cs.sdiscount > 0.007
+		
+		UPDATE cs
+		SET cs.adiscount = 0.007
+		FROM  CustSettingGame cs WITH(UPDLOCK,ROWLOCK) 
+			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+		WHERE ci.srecommend = @srecommend		
+			AND roleid = 3
+			AND ci.custid <= @maxcustid
+			AND cs.sporttype = 255
+			AND cs.bettype = 1701 
+			AND cs.adiscount > 0.007
+		
+		UPDATE cs
+		SET cs.discount = 0.007
+		FROM dbo.CustSettingGame cs WITH(UPDLOCK, ROWLOCK)
+			INNER JOIN dbo.CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend
+		   AND ci.roleid     = 2
+		   AND ci.Enabled    = 1
+		   AND ci.custid <= @maxcustid
+		   AND bettype       = 1701
+		   AND cs.sporttype  = 255
+		   AND cs.discount   > 0.007
+		
+		UPDATE cs
+		SET cs.sdiscount = 0.007
+		FROM dbo.CustSettingGame cs WITH(UPDLOCK, ROWLOCK)
+			INNER JOIN dbo.CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend
+		   AND ci.roleid     = 1
+		   AND ci.Enabled    = 1
+		   AND ci.custid <= @maxcustid
+		   AND bettype       = 1701
+		   AND cs.sporttype  = 255
+		   AND cs.sdiscount   > 0.007
+		   
+		UPDATE cs
+		SET cs.adiscount = cs.sdiscount
+		FROM dbo.CustSettingGame cs WITH(UPDLOCK, ROWLOCK)
+			INNER JOIN dbo.CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend
+		   AND ci.roleid     = 1
+		   AND ci.Enabled    = 1
+		   AND ci.custid <= @maxcustid
+		   AND bettype       = 1701
+		   AND cs.sporttype  = 255
+		   AND cs.adiscount > cs.sdiscount
+		
+		UPDATE cs
+		SET cs.discount = cs.adiscount
+		FROM dbo.CustSettingGame cs WITH(UPDLOCK, ROWLOCK)
+			INNER JOIN dbo.CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend
+		   AND ci.roleid     = 1
+		   AND ci.Enabled    = 1
+		   AND ci.custid <= @maxcustid
+		   AND bettype       = 1701
+		   AND cs.sporttype  = 255
+		   AND cs.discount > cs.adiscount
+		
+		UPDATE cs
+		SET cs.playerdiscount = cs.discount 
+		FROM dbo.CustSettingGame cs WITH(UPDLOCK, ROWLOCK)
+			INNER JOIN dbo.CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend
+		   AND ci.roleid     = 1
+		   AND ci.Enabled    = 1
+		   AND ci.custid <= @maxcustid
+		   AND bettype       = 1701
+		   AND cs.sporttype  = 255
+		   AND cs.playerdiscount > cs.discount  
+	END		
 	
 	DROP TABLE #tmpEnableAgent
 	DROP TABLE #tmpSuperOnly
