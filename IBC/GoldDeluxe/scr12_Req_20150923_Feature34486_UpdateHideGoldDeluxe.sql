@@ -49,7 +49,7 @@ CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
+SELECT c.custid
 FROM Customer c WITH(NOLOCK)	
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
@@ -89,7 +89,7 @@ CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
+SELECT c.custid
 FROM Customer c WITH(NOLOCK)	
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
