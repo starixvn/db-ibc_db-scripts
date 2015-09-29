@@ -158,3 +158,36 @@ WHERE spositiontaking > 0.93
 		AND ci.SyncLiveCasino = 1	
 		AND cs.minpositiontaking <> cs2.minpositiontaking
 GO
+
+
+--step 3: correct enable status for newly created customers
+CREATE TABLE #tmpCust(custid INT, roleid INT)
+
+DECLARE @max_custid INT 
+SELECT @max_custid = xx
+
+INSERT INTO #tmpCust(custid,roleid)
+SELECT custid,roleid
+FROM custinfo WITH(NOLOCK)
+WHERE srecommend IN (SELECT custid from #supers)				
+	AND custid > @max_custid
+	AND DisableGoldDeluxe IS NULL
+GO
+
+UPDATE ci
+SET ci.DisableGoldDeluxe = upline.DisableGoldDeluxe
+FROM Custinfo ci WITH(UPDLOCK, ROWLOCK)	
+	INNER JOIN custinfo upline WITH(NOLOCK) ON upline.Custid = ci.srecommend
+WHERE ci.custid IN (SELECT custid FROM #tmpCust WHERE roleid = 3)
+
+UPDATE ci
+SET ci.DisableGoldDeluxe = upline.DisableGoldDeluxe
+FROM Custinfo ci WITH(UPDLOCK, ROWLOCK)	
+	INNER JOIN custinfo upline WITH(NOLOCK) ON upline.Custid = ci.mrecommend
+WHERE ci.custid IN (SELECT custid FROM #tmpCust WHERE roleid = 2)	
+	
+UPDATE ci
+SET ci.DisableGoldDeluxe = upline.DisableGoldDeluxe
+FROM Custinfo ci WITH(UPDLOCK, ROWLOCK)	
+	INNER JOIN custinfo upline WITH(NOLOCK) ON upline.Custid = ci.recommend
+WHERE ci.custid IN (SELECT custid FROM #tmpCust WHERE roleid = 1)				

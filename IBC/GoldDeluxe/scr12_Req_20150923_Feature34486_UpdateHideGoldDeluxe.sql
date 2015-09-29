@@ -57,7 +57,7 @@ WHERE c.roleid = 4
 	AND c.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND c.site <> '789y'
 	AND currency NOT IN (44,45,62) 
-	AND ci.username NOT LIKE '3rdSuper%'
+	AND c.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	and s.islicensee = 0
 	
@@ -97,7 +97,7 @@ WHERE c.roleid = 4
 	AND c.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND c.site <> '789y'
 	AND currency NOT IN (44,45,62) 
-	AND ci.username NOT LIKE '3rdSuper%'
+	AND c.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	and s.islicensee = 0
 	
