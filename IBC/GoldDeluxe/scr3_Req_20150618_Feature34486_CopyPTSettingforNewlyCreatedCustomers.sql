@@ -106,13 +106,51 @@ INSERT INTO [dbo].[CustSettingGame]
 	
 GO
 
---step 2: update pt/comm for different settings not adjust for line super who take pt LCS more than 93%  		
+--step 2: correct comm for newly created customers have comm > 0.007
+CREATE TABLE #tmpCust(custid INT, roleid INT)
+DECLARE @max_custid INT 
+SELECT @max_custid = xx
+
+INSERT INTO #tmpCust(custid,roleid)
+SELECT ci.custid, ci.roleid
+FROM custSettingGame cs WITH(NOLOCK)
+	INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+											AND cs.sporttype = 255
+											AND cs.bettype = 1701
+WHERE ci.srecommend IN (SELECT custid FROM #supers)											
+	AND ci.custid > @max_custid
+	AND (cs.sdiscount > 0.007 OR cs.adiscount > 0.007 
+		OR cs.discount > 0.007 OR cs.playerdiscount > 0.007)
+
+UPDATE CustSettingGame WITH(UPDLOCK,ROWLOCK)
+SET adiscount = CASE WHEN adiscount > 0.007 THEN 0.007 ELSE adiscount END
+WHERE custid IN (SELECT custid FROM #tmpCust WHERE roleid =3)
+	AND sporttype = 255
+	AND bettype = 1701
+	
+UPDATE CustSettingGame WITH(UPDLOCK,ROWLOCK)
+SET discount = CASE WHEN discount > 0.007 THEN 0.007 ELSE discount END
+WHERE custid IN (SELECT custid FROM #tmpCust WHERE roleid = 2)
+	AND sporttype = 255
+	AND bettype = 1701	
+
+UPDATE CustSettingGame WITH(UPDLOCK,ROWLOCK)
+SET sdiscount = CASE WHEN sdiscount > 0.007 THEN 0.007 ELSE sdiscount END,
+	adiscount = CASE WHEN adiscount > 0.007 THEN 0.007 ELSE adiscount END,
+	discount = CASE WHEN discount > 0.007 THEN 0.007 ELSE discount END,
+	playerdiscount = CASE WHEN playerdiscount > 0.007 THEN 0.007 ELSE playerdiscount END
+WHERE custid IN (SELECT custid FROM #tmpCust WHERE roleid = 1)
+	AND sporttype = 255
+	AND bettype = 1701		
+GO
+
+--step 3: update pt/comm for different settings not adjust for line super who take pt LCS more than 93%  		
 DELETE s
 FROM #supers s
 	INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid
 												AND cs.sporttype = 162
 												AND cs.bettype = 1101
-WHERE spositiontaking > 0.93
+WHERE spositiontaking > 0.93 
 
 
 	UPDATE cs
@@ -160,7 +198,7 @@ WHERE spositiontaking > 0.93
 GO
 
 
---step 3: correct enable status for newly created customers
+--step 4: correct enable status for newly created customers
 CREATE TABLE #tmpCust(custid INT, roleid INT)
 
 DECLARE @max_custid INT 

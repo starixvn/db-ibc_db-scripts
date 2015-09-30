@@ -19,7 +19,7 @@ BEGIN
 		RETURN
 	
 	--exclude customers from site 789y 
-	CREATE #tmp789y TABLE (custid INT, roleid INT)
+	CREATE TABLE #tmp789y  (custid INT, roleid INT)
 	
 	INSERT INTO #tmp789y(custid,roleid)
 	SELECT custid, roleid
