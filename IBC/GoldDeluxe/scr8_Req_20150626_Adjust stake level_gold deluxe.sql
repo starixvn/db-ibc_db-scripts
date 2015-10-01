@@ -647,6 +647,20 @@ UNION ALL
 SELECT 	329 AS stakelevelid, 1702 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
 SELECT 	330 AS stakelevelid, 1702 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+UNION ALL
+Select 331 AS stakelevelid,1701 AS gametypeid, '10' AS minlabel,'1,000' AS maxlabel ,10  AS minstake, 1000 AS maxstake 
+UNION ALL 
+Select 332 AS stakelevelid,1701 AS gametypeid, '100' AS minlabel,'5,000' AS maxlabel ,100 AS minstake, 5000 AS maxstake 
+UNION ALL 
+Select 333 AS stakelevelid,1701 AS gametypeid, '2'  AS minlabel,'500' AS maxlabel ,2  AS minstake, 500 AS maxstake 
+UNION ALL 
+Select 334 AS stakelevelid,1701 AS gametypeid, '50' AS minlabel,'2,500' AS maxlabel ,50  AS minstake, 2500 AS maxstake 
+UNION ALL 
+Select 335 AS stakelevelid,1702 AS gametypeid, '1'  AS minlabel,'500' AS maxlabel ,1  AS minstake, 500 AS maxstake 
+UNION ALL 
+Select 336 AS stakelevelid,1702 AS gametypeid, '2'  AS minlabel,'2,500' AS maxlabel ,2  AS minstake, 2500 AS maxstake 
+UNION ALL 
+Select 337 AS stakelevelid,1702 AS gametypeid, '5'  AS minlabel,'5,000' AS maxlabel ,5  AS minstake, 5000 AS maxstake
 
 UPDATE stakenew WITH(ROWLOCK,UPDLOCK)
 SET stakenew.MinLabel=u.minlabel,
