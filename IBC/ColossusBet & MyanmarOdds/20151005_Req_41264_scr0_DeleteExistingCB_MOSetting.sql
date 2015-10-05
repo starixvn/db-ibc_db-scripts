@@ -19,9 +19,9 @@ BEGIN
 		  AND dbo.f_CheckRepTable('CustCommRate') = 1)
 		RETURN
 
-	DELETE FROM AgentCommRate WITH(UPDLOCK,ROWLOCK)		
+	DELETE FROM AgentCommRate 	
 
-	DELETE FROM CustCommRate WITH(UPDLOCK,ROWLOCK)	
+	DELETE FROM CustCommRate 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------

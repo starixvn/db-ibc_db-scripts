@@ -23,14 +23,14 @@ BEGIN
 		RETURN		
 		
 	INSERT INTO dbo.AgentCommRate WITH (ROWLOCK) (CustID,SportType,BetType,CommRate) 
-	SELECT custid,204,18001,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid IN (2,3,4)
+	SELECT custid,204,18001,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid IN (2,3,4) AND custid <= @maxcustid
 	UNION ALL 
-	SELECT custid,204,18002,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid IN (2,3,4)
+	SELECT custid,204,18002,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid IN (2,3,4) AND custid <= @maxcustid
 
 	INSERT INTO dbo.CustCommRate WITH (ROWLOCK) (CustID,SportType,BetType,sdiscount,adiscount,discount,playerdiscount) 
-	SELECT custid,204,18001,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid = 1
+	SELECT custid,204,18001,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid = 1 AND custid <= @maxcustid
 	UNION ALL 
-	SELECT custid,204,18002,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid = 1
+	SELECT custid,204,18002,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend = @srecommend and roleid = 1 AND custid <= @maxcustid
 		
 END
 GO

@@ -5,7 +5,7 @@
 	DB: DBCUST/CustDB
 */ 
 
---STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -----
+--STEP 1: DEPLOY THIS SP @DBCUST.CustDB -----
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT
