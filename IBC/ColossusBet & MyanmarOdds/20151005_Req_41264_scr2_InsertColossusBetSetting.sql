@@ -19,6 +19,7 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('AgentCommRate') = 1 
 			AND dbo.f_CheckRepTable('CustCommRate') = 1
+			AND dbo.f_CheckRepTable('CustInfo') = 1
 			)
 		RETURN		
 		
@@ -29,7 +30,7 @@ BEGIN
 	WHERE srecommend = @srecommend and roleid IN (2,3,4) AND custid <= @maxcustid	
 
 	INSERT INTO dbo.CustCommRate WITH (ROWLOCK) (CustID,SportType,BetType,sdiscount,adiscount,discount,playerdiscount) 
-	SELECT custid,204,18001,0,0,0,0 
+	SELECT custid,204,bt.bettype,0,0,0,0 
 	FROM CustInfo WITH (NOLOCK) 
 		CROSS JOIN (select 18001 AS bettype UNION ALL select 18002 AS bettype) bt
 	WHERE srecommend = @srecommend and roleid = 1 AND custid <= @maxcustid	
