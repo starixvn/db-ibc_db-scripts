@@ -73,7 +73,7 @@ BEGIN
 		UPDATE main WITH(ROWLOCK, UPDLOCK)
 		SET main.[SuperPT] = mb.[SuperPT]
 		   ,main.[MasterPT] = mb.[MasterPT]
-		   ,main.[AgentPT] = mb.[IsAutoMasterPT]
+		   ,main.[AgentPT] = mb.[AgentPT]
 		   ,main.[IsAutoMasterPT] = mb.[IsAutoMasterPT]
 		   ,main.[AutoMasterPT] = mb.[AutoMasterPT]
 		   ,main.[IsAutoSuperPT] = mb.[IsAutoSuperPT]
@@ -86,7 +86,7 @@ BEGIN
 		AND (
 			main.[SuperPT] <> mb.[SuperPT]
 		   OR main.[MasterPT] <> mb.[MasterPT]
-		   OR main.[AgentPT] <> mb.[IsAutoMasterPT]
+		   OR main.[AgentPT] <> mb.[AgentPT]
 		   OR main.[IsAutoMasterPT] <> mb.[IsAutoMasterPT]
 		   OR main.[AutoMasterPT] <> mb.[AutoMasterPT]
 		   OR main.[IsAutoSuperPT] <> mb.[IsAutoSuperPT]
