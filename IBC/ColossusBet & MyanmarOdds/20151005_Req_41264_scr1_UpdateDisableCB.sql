@@ -25,7 +25,8 @@ BEGIN
 	UPDATE custInfo WITH(ROWLOCK, UPDLOCK)
 	   SET DisableColossusBet = 1, HideColossusBet = 1
 	 WHERE srecommend = @srecommend
-	   AND custid <= @max_custid	   
+	   AND custid <= @max_custid	
+	   
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
@@ -44,8 +45,9 @@ SELECT @max_custid = xx
 INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
- WHERE ci.custid <= @max_custid
-   AND roleid = 4
+ WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND ci.custid <= @max_custid
+	AND roleid = 4
 
 
 WHILE (1 = 1)
@@ -83,8 +85,9 @@ SELECT @max_custid = xx
 INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
- WHERE ci.custid <= @max_custid
-   AND roleid = 4
+ WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND ci.custid <= @max_custid
+	AND roleid = 4
 
 
 WHILE (1 = 1)

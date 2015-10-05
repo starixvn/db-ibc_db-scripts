@@ -19,13 +19,15 @@ DECLARE @maxcustid INT
 SELECT @maxcustid = xx --lastest custid
 
 INSERT INTO dbo.AgentCommRate WITH (ROWLOCK) (CustID,SportType,BetType,CommRate) 
-SELECT custid,204,18001,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend IN (SELECT custid FROM #supers) and roleid IN (2,3,4) AND custid > @maxcustid
-UNION ALL 
-SELECT custid,204,18002,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend IN (SELECT custid FROM #supers) and roleid IN (2,3,4) AND custid > @maxcustid
+SELECT custid,204,18001,0 
+FROM CustInfo WITH (NOLOCK) 
+	CROSS JOIN (select 18001 AS bettype UNION ALL select 18002 AS bettype) bt
+WHERE srecommend IN (SELECT custid FROM #supers) and roleid IN (2,3,4) AND custid > @maxcustid
 
 INSERT INTO dbo.CustCommRate WITH (ROWLOCK) (CustID,SportType,BetType,sdiscount,adiscount,discount,playerdiscount) 
-SELECT custid,204,18001,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend IN (SELECT custid FROM #supers) and roleid = 1 AND custid > @maxcustid
-UNION ALL 
-SELECT custid,204,18002,0,0,0,0 FROM CustInfo WITH (NOLOCK) WHERE srecommend IN (SELECT custid FROM #supers) and roleid = 1 AND custid > @maxcustid
+SELECT custid,204,18001,0,0,0,0 
+FROM CustInfo WITH (NOLOCK) 
+	CROSS JOIN (select 18001 AS bettype UNION ALL select 18002 AS bettype) bt
+WHERE srecommend IN (SELECT custid FROM #supers) and roleid = 1 AND custid > @maxcustid
 	
 GO		 
