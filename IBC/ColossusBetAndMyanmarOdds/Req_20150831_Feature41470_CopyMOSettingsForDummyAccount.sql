@@ -2,7 +2,7 @@
 Created: Helen
 Date: 2015-08-31
 Task: Copy MO settings for dummy account - [Redmine: #41264]
-DB: DBCUST.CustDB
+DB: DBCUST/CustDB
 */
 
  INSERT INTO AgentCommRate (CustId,Sporttype,Bettype,CommRate)
