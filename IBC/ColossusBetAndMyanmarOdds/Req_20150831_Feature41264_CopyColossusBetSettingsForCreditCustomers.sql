@@ -3,7 +3,7 @@
 Created: Helen
 Date: 2015-08-31
 Task: Copy Colossus Bet settings for credit customers - [Redmine: #41264]
-DB: DBTXN/CustDB
+DB: DBCust/CustDB 
 */
 
 -- FOR TESTING ONLY
@@ -165,7 +165,7 @@ BEGIN
 	DROP TABLE #tmpCust	
 END	
 GO
--- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
+-- END STEP 1: DEPLOY THIS SP DBCust.CustDB --------
 ------------------------------------------------------	
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP) -----
@@ -199,10 +199,10 @@ BEGIN
 END	
 DROP TABLE #supers		
 GO		
--- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/053/054/06 -----
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB06/DBTP)
 -----------------------------------------------------------------------------------
 
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCust -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int, isfinished BIT DEFAULT(0))
 DECLARE @srecommend INT, @max_custid INT
@@ -228,11 +228,11 @@ BEGIN
 
 	EXEC dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DBTRANS'
+			,@target = 'DBCust'
 END	
 
 DROP TABLE #supers		
 		
 GO		
--- END STEP 3: RUN THIS SCRIPT AT DBTRANS -----
+-- END STEP 3: RUN THIS SCRIPT AT DBCust
 -----------------------------------------------------------------------------------
