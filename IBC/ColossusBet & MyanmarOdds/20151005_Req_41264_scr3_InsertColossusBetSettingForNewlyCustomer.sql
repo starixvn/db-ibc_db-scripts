@@ -13,7 +13,7 @@ SELECT custid
 FROM custinfo WITH(NOLOCK)
 WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND roleid = 4
-GO
+GOk
 
 DECLARE @maxcustid INT 
 SELECT @maxcustid = xx --lastest custid
