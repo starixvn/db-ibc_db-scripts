@@ -38,11 +38,11 @@ BEGIN
 
 	SELECT @stakeLevelList1701_super = stakeLevelList		
 	FROM dbo.tmpCustGameType WITH(NOLOCK)
-	WHERE custid = @srecommend AND GameTypeID = 108
+	WHERE custid = @srecommend AND GameTypeID = 1701
 	
 	SELECT @stakeLevelList1702_super = stakeLevelList		
 	FROM dbo.tmpCustGameType WITH(NOLOCK)
-	WHERE custid = @srecommend AND GameTypeID = 109
+	WHERE custid = @srecommend AND GameTypeID = 1702
 		
 	--If don't have stake level for this line yet, get the lowest stakelevel from currency
 	IF ISNULL(@stakeLevelList1701_super,'') = '' OR  ISNULL(@stakeLevelList1702_super,'') = ''	

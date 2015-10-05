@@ -10,7 +10,8 @@
 ------------------------------------------------------
  
   ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@target VARCHAR(20)
+	@target VARCHAR(20),
+	@maxcustid INT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -24,6 +25,7 @@ BEGIN
 	DELETE cg
 	FROM custGameType cg WITH(UPDLOCK,ROWLOCK)		
 	WHERE GameTypeID IN (1701,1702)
+		AND custid <= @maxcustid
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
@@ -35,8 +37,13 @@ GO
 ---
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
+DECLARE @maxcustid INT 
+
+SELECT @maxcustid = xxx
+
 EXEC dbo.[Acc_CustSetting3rd_19] 
-		@target = 'REPLICATED'
+		@target = 'REPLICATED',
+		@maxcustid = @maxcustid
 	
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
@@ -47,9 +54,13 @@ GO
 ---
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
+DECLARE @maxcustid INT 
+
+SELECT @maxcustid = xxx
 
 EXEC dbo.[Acc_CustSetting3rd_19]
-		@target = 'DBCUST'
+		@target = 'DBCUST',
+		@maxcustid = @maxcustid
 	
 GO		
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -----

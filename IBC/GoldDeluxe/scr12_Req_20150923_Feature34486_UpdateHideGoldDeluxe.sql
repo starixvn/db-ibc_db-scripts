@@ -15,11 +15,11 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','customer')) <> 1
+	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','customer')) <> 2
 		RETURN
 	
 	--exclude customers from site 789y 
-	CREATE #tmp789y TABLE (custid INT, roleid INT)
+	CREATE TABLE #tmp789y  (custid INT, roleid INT)
 	
 	INSERT INTO #tmp789y(custid,roleid)
 	SELECT custid, roleid
@@ -49,7 +49,7 @@ CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
+SELECT c.custid
 FROM Customer c WITH(NOLOCK)	
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
@@ -57,7 +57,7 @@ WHERE c.roleid = 4
 	AND c.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND c.site <> '789y'
 	AND currency NOT IN (44,45,62) 
-	AND ci.username NOT LIKE '3rdSuper%'
+	AND c.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	and s.islicensee = 0
 	
@@ -89,7 +89,7 @@ CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
+SELECT c.custid
 FROM Customer c WITH(NOLOCK)	
 	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
@@ -97,7 +97,7 @@ WHERE c.roleid = 4
 	AND c.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND c.site <> '789y'
 	AND currency NOT IN (44,45,62) 
-	AND ci.username NOT LIKE '3rdSuper%'
+	AND c.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
 	and s.islicensee = 0
 	

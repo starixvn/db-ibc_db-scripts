@@ -30,7 +30,7 @@ inner join DBBingoAdmin.LiveCasinoAdmin.dbo.gameStakeLevel gs with(nolock)
 on gt.gameTemplateid = gs.gameTemplateid 
 where gt.GameTypeid in (108,109)
 and gt.gameTemplateid in (193,210)
-AND exchangeID in (68,69)--POS MMK
+AND exchangeID in (68)--POS MMK
 )t    
 inner join DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
 --order by exchangeid 
