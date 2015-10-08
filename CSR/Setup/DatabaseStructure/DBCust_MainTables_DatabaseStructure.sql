@@ -134,7 +134,7 @@ BEGIN
 	ALTER DATABASE CustDB 
 	ADD FILE 
 	(
-		NAME = CustBetSetting3rd_Agent_table_01,
+		NAME = CustDiscount3rd_Member_table_01,
 		FILENAME = 'H:\USER_DB\CustDB\CustDiscount3rd_Member_table_01.NDF'
 	)
 	TO FILEGROUP CustDiscount3rd_Member_table;

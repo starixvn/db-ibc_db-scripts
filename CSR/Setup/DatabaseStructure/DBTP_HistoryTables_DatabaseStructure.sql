@@ -136,7 +136,7 @@ BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
 	(
-		NAME = CustBetSetting3rd_Agent_table_01,
+		NAME = CustDiscount3rd_Member_table_01,
 		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustDiscount3rd_Member_table_01.NDF'
 	)
 	TO FILEGROUP CustDiscount3rd_Member_table;

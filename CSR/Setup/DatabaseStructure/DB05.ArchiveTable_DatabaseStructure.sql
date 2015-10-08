@@ -85,25 +85,6 @@ BEGIN
 	TO FILEGROUP CustSettingMode3rd_table;
 END
 GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustSettingMode3rd_table')
-BEGIN
-	ALTER DATABASE bodb_Customer
-	ADD FILEGROUP CustSettingMode3rd_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustSettingMode3rd_table_01')
-BEGIN
-	ALTER DATABASE bodb_Customer 
-	ADD FILE 
-	(
-		NAME = CustSettingMode3rd_table_01,
-		FILENAME = 'G:\IBC_DB\bodb_Customer\CustSettingMode3rd_table_01.NDF'
-	)
-	TO FILEGROUP CustSettingMode3rd_table;
-END
-GO
 -------
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustBetSetting3rd_Member_table')
 BEGIN
@@ -155,7 +136,7 @@ BEGIN
 	ALTER DATABASE bodb_Customer 
 	ADD FILE 
 	(
-		NAME = CustBetSetting3rd_Agent_table_01,
+		NAME = CustDiscount3rd_Member_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustDiscount3rd_Member_table_01.NDF'
 	)
 	TO FILEGROUP CustDiscount3rd_Member_table;
