@@ -161,8 +161,7 @@ SELECT @custid = xx,
 							END + typenamee 
 					FROM DBTXN.bodb02.dbo.bettype WITH(NOLOCK)
 					WHERE TypeID = @GameTypeID
-				END CATCH	
-				RETURN	
+				END CATCH						
 			END	
 		
 			UPDATE @tmpStake
