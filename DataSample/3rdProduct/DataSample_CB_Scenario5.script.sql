@@ -4,15 +4,17 @@
 --5.3. Cash out: 10%
 --5.4. Settlement: ticket loses (total cash out amount >= max amount)
 DECLARE @refno	BIGINT
+	, @CustID	INT
+SELECT @CustID  = 1176092
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
-	@CustID  	= 2723431
+	@CustID  	= @CustID
 	,@Bettype 	= 18000
 	,@status  	= 'RUNNING'
 	,@refno		= @refno OUTPUT
 
 -- add cash out ticket 30%
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
-	@CustID  	= 2723431
+	@CustID  	= @CustID
 	,@Bettype 	= 18002
 	,@status  	= 'WON'
 	,@winAmount = 200000
@@ -21,7 +23,7 @@ EXEC [dbo].[DataSample_CB_BetTicket_Ins]
 
 -- add cash out ticket 10%
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
-	@CustID  	= 2723431
+	@CustID  	= @CustID
 	,@Bettype 	= 18002
 	,@status  	= 'WON'
 	,@winAmount = 100000
@@ -30,7 +32,7 @@ EXEC [dbo].[DataSample_CB_BetTicket_Ins]
 
 ---settle pool bet
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
-	@CustID  	= 2723431
+	@CustID  	= @CustID
 	,@Bettype 	= 18000
 	,@status  	= 'LOSE'
 	,@refno 	= @refno
