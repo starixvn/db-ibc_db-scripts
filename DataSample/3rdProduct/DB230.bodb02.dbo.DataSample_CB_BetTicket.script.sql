@@ -765,6 +765,30 @@ BEGIN
 			SELECT 'Settle' AS [Action]
 				,@refno_translog AS 'translog.translogid'
 				,@Refno_Bettrans AS 'bettrans.transid'
+			IF(@maxAmount >= @maxWinlost)
+			BEGIN
+				--INSERT INTO PayoutTrans
+				INSERT INTO [dbo].[PayoutTrans]
+				   ([PayoutTransId]
+				   ,[CustId]
+				   ,[CreatedDate]
+				   ,[WinAmount]
+				   ,[PayCode]
+				   ,[StatusId]
+				   ,[PayStatus]
+				   ,[LastModifyDate]
+				   ,[LastModifyBy])
+				VALUES
+				   (@refno_translog
+				   ,@custid
+				   ,GETDATE()
+				   ,@maxAmount
+				   ,NEWID()
+				   ,0
+				   ,'Open'
+				   ,NULL
+				   ,NULL)
+			 END
 		END
 	END
 
