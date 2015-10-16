@@ -191,5 +191,13 @@ BEGIN
 			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
 	FROM dbo.custInfo ci WITH(NOLOCK)
 	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	
+	/*******************************CUSTSETTING MODE TABLE*******************************/
+	INSERT INTO [dbo].[CustSettingMode3rd]
+			   ([CustID]
+			   ,[IsGrouped])
+	SELECT custid,0
+	FROM dbo.custInfo ci WITH(NOLOCK)
+	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1
 
 END
