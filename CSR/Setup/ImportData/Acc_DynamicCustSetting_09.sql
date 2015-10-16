@@ -148,8 +148,8 @@ CREATE TABLE #supers (custid int,isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT
 
-SELECT @max_custid = MAX(CustID)
-FROM CustInfo ci WITH(NOLOCK)
+SELECT @max_custid = xxx
+
 
 INSERT INTO #supers
 SELECT ci.custid
@@ -181,8 +181,7 @@ CREATE TABLE #supers (custid int,isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT
 
-SELECT @max_custid = MAX(CustID)
-FROM CustInfo ci WITH(NOLOCK)
+SELECT @max_custid = xxx
 
 INSERT INTO #supers
 SELECT ci.custid
