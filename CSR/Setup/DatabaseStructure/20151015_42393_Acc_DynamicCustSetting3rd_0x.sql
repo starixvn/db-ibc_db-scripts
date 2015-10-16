@@ -1,0 +1,57 @@
+/*
+	Created: Elodie
+	Date: 20151015
+	Task: Create exec rep SPs Acc_DynamicCustomerInfo_00~09 for DCS
+	DB: DBCust/DB06/DBTP
+*/
+USE [CustDB]
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_00]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_01]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_02]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_03]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_04]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_05]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_06]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_07]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_08]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
+AS
+SELECT CURRENT_TIMESTAMP
