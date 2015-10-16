@@ -1,0 +1,157 @@
+/*
+	Created: Dominic
+	Date: 2015-10-15
+	Task: Insert Master Data: dbo.ProductSettingDetail, dbo.ProductStatusProfile, dbo.ProductBetSetting, dbo.SettingSystem
+	DB: Run at DBCust.CustDB
+*/  
+USE [CustDB]
+Go
+
+INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
+           ([SettingType]
+           ,[SportType]
+           ,[BetType]
+           ,[IsLive]
+           ,[ProductID]
+           ,[MaxPT]
+           ,[MaxDiscount]
+           ,[IsSync]
+           ,[IsHidden]
+           ,[IsDisabled]
+           ,[SettingLevel]
+           ,[DisplayOrder]
+           ,[SettingStatus])
+     VALUES
+			--PT
+           (1 --<SettingType, smallint,>
+           ,44 --<SportType, smallint,>
+           ,3 --<BetType, smallint,>
+           ,0 --<IsLive, bit,>
+           ,16 --<ProductID, tinyint,>
+           ,90 --<MaxPT, tinyint,>
+           ,NULL --<MaxDiscount, decimal(9,8),>
+           ,NULL --<IsSync, bit,>
+           ,NULL --<IsHidden, bit,>
+           ,NULL --<IsDisabled, bit,>
+           ,4 --<SettingLevel, tinyint,>
+           ,3 --<DisplayOrder, tinyint,>
+           ,0),
+           
+           (1 --<SettingType, smallint,>
+           ,44 --<SportType, smallint,>
+           ,20 --<BetType, smallint,>
+           ,0 --<IsLive, bit,>
+           ,16 --<ProductID, tinyint,>
+           ,90 --<MaxPT, tinyint,>
+           ,NULL --<MaxDiscount, decimal(9,8),>
+           ,NULL --<IsSync, bit,>
+           ,NULL --<IsHidden, bit,>
+           ,NULL --<IsDisabled, bit,>
+           ,4 --<SettingLevel, tinyint,>
+           ,3 --<DisplayOrder, tinyint,>
+           ,0),
+           
+           --Bet Setting
+           (2 --<SettingType, smallint,>
+           ,44 --<SportType, smallint,>
+           ,3 --<BetType, smallint,>
+           ,0 --<IsLive, bit,>
+           ,16 --<ProductID, tinyint,>
+           ,NULL --<MaxPT, tinyint,>
+           ,NULL --<MaxDiscount, decimal(9,8),>
+           ,NULL --<IsSync, bit,>
+           ,NULL --<IsHidden, bit,>
+           ,NULL --<IsDisabled, bit,>
+           ,2 --<SettingLevel, tinyint,>
+           ,2 --<DisplayOrder, tinyint,>
+           ,0),
+           
+           --Product Status
+           (4 --<SettingType, smallint,>
+           ,44 --<SportType, smallint,>
+           ,3 --<BetType, smallint,>
+           ,0 --<IsLive, bit,>
+           ,16 --<ProductID, tinyint,>
+           ,NULL --<MaxPT, tinyint,>
+           ,NULL --<MaxDiscount, decimal(9,8),>
+           ,1 --<IsSync, bit,>
+           ,0 --<IsHidden, bit,>
+           ,0 --<IsDisabled, bit,>
+           ,2 --<SettingLevel, tinyint,>
+           ,1 --<DisplayOrder, tinyint,>
+           ,0)
+GO
+
+
+--Status Bitmap
+INSERT INTO [dbo].[ProductStatusProfile]
+           ([Sporttype]
+           ,[Bettype]
+           ,[bitmapOrder])
+     VALUES
+           (44
+           ,3
+           ,1)
+GO
+
+--Insert Default Minimum Bet by currencies
+DECLARE  @DestinationSportBetType TABLE(SportType INT, BetType INT)
+INSERT INTO @DestinationSportBetType
+VALUES
+(44	,3) --Bet Limit
+
+SELECT DISTINCT Currency 
+INTO #Currency
+FROM dbo.ProductBetSetting cs with(nolock) 
+
+INSERT INTO [dbo].[ProductBetSetting]
+           ([Sporttype]
+           ,[Bettype]
+           ,[Currency]
+           ,[MinBet]
+           ,[IsDep])
+SELECT sbt.SportType,sbt.BetType,Currency,0,0 
+FROM #Currency 
+	CROSS JOIN @DestinationSportBetType sbt
+
+
+INSERT INTO [dbo].[SettingSystem]
+           ([SystemID]
+           ,[SystemName]
+           ,[Description]
+           ,[SystemPrefix])
+     VALUES
+           (1
+           ,'NAP'
+           ,'Nap Accounting Site'
+           ,'INAP'),
+           (2
+           ,'Alpha'
+           ,'Alpla For Agents'
+           ,'EALP'),
+           (3
+           ,'Internal Alpha'
+           ,'Alpha For Interal Login'
+           ,'IALP'),
+           (4
+           ,'External NAP'
+           ,'External NAP'
+           ,'ENAP')
+GO
+
+INSERT INTO [dbo].[ProductSettingSystemDisplay]
+           ([SystemID]
+           ,[ProductID]
+           ,[SettingType]
+           ,[DisplayMode])
+     VALUES
+           (2 --Alpha
+           ,16
+           ,4
+           ,3), --Hidden
+           (3 --Internal Alpha
+           ,16
+           ,4
+           ,3)--Hidden
+GO
+

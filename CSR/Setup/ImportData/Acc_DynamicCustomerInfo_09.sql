@@ -1,3 +1,11 @@
+/*
+	Created: Dominic
+	Date: 2015-10-15
+	Task: Initialize Product Statuses of Muay Thai in DCS structure
+	DB: DBCust.CustDB
+*/   
+-- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
+------------------------------------------------------
 ALTER PROCEDURE Acc_DynamicCustomerInfo_09
 	@srecommend INT	
 	,@maxcustid INT
@@ -82,4 +90,69 @@ BEGIN
 	FROM dbo.custInfo ci WITH(NOLOCK)
 	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
 
+END
+
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
+
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid = MAX(CustID)
+FROM CustInfo ci WITH(NOLOCK)
+
+INSERT INTO #supers
+SELECT ci.custid
+FROM CustInfo ci WITH(NOLOCK)
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid 
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
+			,@maxcustid = @max_custid
+			,@target = 'REPLICATED'
+			
+			
+	waitfor delay '00:00:0.280'
+END
+
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
+
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid = MAX(CustID)
+FROM CustInfo ci WITH(NOLOCK)
+
+INSERT INTO #supers
+SELECT ci.custid
+FROM CustInfo ci WITH(NOLOCK)
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid 
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
+			,@maxcustid = @max_custid
+			,@target = 'DBCUST'
+						
+	waitfor delay '00:00:0.280'
 END

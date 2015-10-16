@@ -1,3 +1,11 @@
+/*
+	Created: Dominic
+	Date: 2015-10-15
+	Task: Initialize PT/Bet Limit of Muay Thai in DCS structure
+	DB: DBCust.CustDB
+*/  
+-- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
+------------------------------------------------------
 ALTER PROCEDURE Acc_DynamicCustSetting_09
 	@srecommend INT	
 	,@maxcustid INT
@@ -12,76 +20,21 @@ BEGIN
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
 	   AND dbo.f_CheckRepTable('CustSetting') = 1
 	   AND dbo.f_CheckRepTable('custOverride') = 1 
-	   AND dbo.f_CheckRepTable('CustProductStatus') = 1
 	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Agent') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
 	   )
 	  RETURN
-	
-	--Default status
-	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1, @DefaultBitMap BINARY(32) = 0x00
+
 
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
 	(99, 3, 44	,3, 0, 1), --PT
 	(99, 20,44	,20,0, 1), --PT
-	(99, 3, 44	,3, 0, 2), --Bet Limit
-	(44, 3, 44	,3, 0, 4) --Product Status
+	(99, 3, 44	,3, 0, 2) --Bet Limit
 
-
-	DECLARE @xmlDisabled VARCHAR(MAX)
-	SET @xmlDisabled = CAST( (
-			SELECT (
-					SELECT dic.bitmapOrder	AS '@b'
-						, @IsDisabled	AS '@s'
-					FROM #DestinationSportBetType tmp
-						INNER JOIN ProductStatusProfile dic 
-								ON tmp.tSporttype = dic.SportType 
-								AND tmp.tBettype = dic.BetType
-					WHERE tmp.SettingType = 4
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-			) AS VARCHAR(MAX))
-			
-	DECLARE @xmlHidden VARCHAR(MAX)
-	SET @xmlHidden = CAST((
-			SELECT (
-					SELECT dic.bitmapOrder	AS '@b'
-						, @IsHidden	AS '@s'
-					FROM #DestinationSportBetType tmp
-						INNER JOIN ProductStatusProfile dic 
-								ON tmp.tSporttype = dic.SportType 
-								AND tmp.tBettype = dic.BetType
-					WHERE tmp.SettingType = 4
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-			) AS VARCHAR(MAX))
-			
-	DECLARE @xmlSync VARCHAR(MAX)
-	SET @xmlSync = CAST((
-			SELECT (
-					SELECT dic.bitmapOrder	AS '@b'
-						, @IsSync	AS '@s'
-					FROM #DestinationSportBetType tmp
-						INNER JOIN ProductStatusProfile dic 
-								ON tmp.tSporttype = dic.SportType 
-								AND tmp.tBettype = dic.BetType
-					WHERE tmp.SettingType = 4
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-			) AS VARCHAR(MAX))
 				
 	/*****************************POSITION TAKING**************************/
 	--AGENT LEVEL
@@ -151,7 +104,14 @@ BEGIN
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
 	WHERE ci.roleid = 1 AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid 
-		
+	
+	
+	INSERT INTO [dbo].[CustSettingMode3rd]
+			   ([CustID]
+			   ,[IsGrouped])
+	SELECT custid,0
+	FROM dbo.custInfo ci WITH(NOLOCK)
+	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1	
 	
 	/*****************************BET LIMIT SETTING**************************/	
 	--Agent Level
@@ -180,14 +140,69 @@ BEGIN
 	 WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND ci.roleid = 1
 
 
-	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	INSERT INTO [dbo].[CustProductStatus]
-           ([CustID], bitmapHasSynced, bitmapIsHidden, bitmapIsDisabled)
-    SELECT custid
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlSync))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlHidden))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
-	FROM dbo.custInfo ci WITH(NOLOCK)
-	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+END
 
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
+
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid = MAX(CustID)
+FROM CustInfo ci WITH(NOLOCK)
+
+INSERT INTO #supers
+SELECT ci.custid
+FROM CustInfo ci WITH(NOLOCK)
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid 
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
+			,@maxcustid = @max_custid
+			,@target = 'REPLICATED'
+			
+			
+	waitfor delay '00:00:0.280'
+END
+
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
+
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid = MAX(CustID)
+FROM CustInfo ci WITH(NOLOCK)
+
+INSERT INTO #supers
+SELECT ci.custid
+FROM CustInfo ci WITH(NOLOCK)
+WHERE ci.roleid = 4 	
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid 
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+
+	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
+			,@maxcustid = @max_custid
+			,@target = 'DBCUST'
+						
+	waitfor delay '00:00:0.280'
 END
