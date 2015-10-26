@@ -6,10 +6,8 @@
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
-ALTER PROCEDURE Acc_DynamicCustSetting_09
-	@srecommend INT	
-	,@maxcustid INT
-	,@target VARCHAR(20)
+ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
+	@target VARCHAR(20)
 AS
 BEGIN   
 	SET NOCOUNT ON
@@ -31,97 +29,46 @@ BEGIN
 	DELETE cs
 	FROM [dbo].CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid IN (2,3,4) AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 		
 		
 	DELETE cs
 	FROM [dbo].CustPTSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 		
 	DELETE cs
 	FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.agentid = ci.custid
-	WHERE ci.roleid = 2 AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid = 2 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid IN (2,3,4) AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 
 	DELETE cs
 	FROM [dbo].CustSettingMode3rd cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
+	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		AND  ci.Currency = 20
 END
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'REPLICATED'
 
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
-	AND ci.Currency = 20 --UUS
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-			
-	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
-			
-			
-	waitfor delay '00:00:0.280'
-END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
-	AND ci.Currency = 20 --UUS
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
-						
-	waitfor delay '00:00:0.280'
-END
+EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'DBCUST'

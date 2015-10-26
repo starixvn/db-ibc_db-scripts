@@ -6,7 +6,7 @@
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
-ALTER PROCEDURE Acc_DynamicCustSetting_09
+ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -169,7 +169,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
+	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
@@ -202,7 +202,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustSetting_09 @srecommend = @srecommend
+	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 						
