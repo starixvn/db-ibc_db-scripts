@@ -75,6 +75,7 @@ SELECT custid
 FROM custinfo WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid
+	AND currency = 20
 
 
 WHILE (1 = 1)
@@ -110,6 +111,7 @@ SELECT custid
 FROM custinfo WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid
+	AND currency = 20
 
 
 WHILE (1 = 1)
