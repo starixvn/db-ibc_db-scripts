@@ -43,6 +43,7 @@ INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
  WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND currency = 20
 
 
 WHILE (1 = 1)
@@ -78,6 +79,7 @@ INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
  WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND currency = 20
 
 WHILE (1 = 1)
 BEGIN
