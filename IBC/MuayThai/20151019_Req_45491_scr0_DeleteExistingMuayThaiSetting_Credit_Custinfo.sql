@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Delete existing settings of Muay Thai
+	Task: Delete existing settings of Muay Thai (before UM)
 	DB: DBCust.CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
@@ -43,6 +43,7 @@ FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid 
+	AND ci.Currency = 20 --UUS
 	
 WHILE (1 = 1)
 BEGIN
@@ -75,6 +76,7 @@ FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid 
+	AND ci.Currency = 20 --UUS
 	
 WHILE (1 = 1)
 BEGIN
