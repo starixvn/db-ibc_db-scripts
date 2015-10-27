@@ -19,6 +19,7 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
 	   AND dbo.f_CheckRepTable('CustProductStatus') = 1
+	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
 	   )
 	  RETURN
 	
