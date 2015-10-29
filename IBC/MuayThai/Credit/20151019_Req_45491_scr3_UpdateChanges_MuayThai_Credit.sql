@@ -174,7 +174,7 @@ DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
 
-INSERT INTO #supers
+INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
@@ -207,7 +207,7 @@ DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid = xxx
 
-INSERT INTO #supers
+INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
