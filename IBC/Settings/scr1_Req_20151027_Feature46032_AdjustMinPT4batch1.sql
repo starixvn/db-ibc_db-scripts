@@ -218,7 +218,7 @@ SELECT @max_custid = xx
 
 --677 customers
 INSERT INTO ##tmpCust(custid)
-		union all select 	16129	--	2	7899HK
+		select 	16129	--	2	7899HK
 union all select 	4204369	--	4	79AR
 union all select 	1528422	--	4	B11T
 union all select 	1538183	--	4	B15T
