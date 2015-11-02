@@ -933,6 +933,14 @@ union all select 	11734366	--	4	SSF
 union all select 	1993804	--	4	YKH
 union all select 	5931469	--	4	YKM
 union all select 	1993818	--	4	YKR
+--20151102@XKM, MTRE,M16RMB
+union all select 	3712	--	2	166HK
+union all select 	262188	--	3	M16RMB
+union all select 	1166414	--	3	MTRE
+union all select 	4708570	--	3	MTRU
+union all select 	10346439	--	4	XKH
+union all select 	10346359	--	4	XKM
+union all select 	19272511	--	4	YSM
 
 WHILE (1 = 1)
 BEGIN
@@ -1092,6 +1100,14 @@ union all select 	11734366	--	4	SSF
 union all select 	1993804	--	4	YKH
 union all select 	5931469	--	4	YKM
 union all select 	1993818	--	4	YKR
+--20151102@XKM, MTRE,M16RMB
+union all select 	3712	--	2	166HK
+union all select 	262188	--	3	M16RMB
+union all select 	1166414	--	3	MTRE
+union all select 	4708570	--	3	MTRU
+union all select 	10346439	--	4	XKH
+union all select 	10346359	--	4	XKM
+union all select 	19272511	--	4	YSM
 		
 
 WHILE (1 = 1)

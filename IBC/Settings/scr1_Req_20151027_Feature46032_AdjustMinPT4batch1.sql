@@ -895,6 +895,21 @@ union all select 	18364243	--	4	WJ
 union all select 	17058130	--	4	XKS
 union all select 	10529214	--	4	YHA
 union all select 	16016306	--	4	YM
+--20151030@S79RM
+union all select 	987102	--	4	S799H
+union all select 	900371	--	4	S79AHH
+union all select 	592998	--	4	S79AR
+union all select 	3360316	--	4	S79C
+union all select 	836410	--	4	S79H
+union all select 	1859089	--	4	S79HG
+union all select 	935097	--	4	S79HH
+union all select 	2775382	--	4	S79HS
+union all select 	2188063	--	4	S79hz
+union all select 	729244	--	4	S79R
+union all select 	356941	--	4	s79rrr
+union all select 	989898	--	4	S79SH
+union all select 	3498094	--	4	WD1
+union all select 	5358729	--	4	WDR
 
 
 WHILE (1 = 1)
@@ -1713,6 +1728,21 @@ union all select 	18364243	--	4	WJ
 union all select 	17058130	--	4	XKS
 union all select 	10529214	--	4	YHA
 union all select 	16016306	--	4	YM
+--20151030@S79RM
+union all select 	987102	--	4	S799H
+union all select 	900371	--	4	S79AHH
+union all select 	592998	--	4	S79AR
+union all select 	3360316	--	4	S79C
+union all select 	836410	--	4	S79H
+union all select 	1859089	--	4	S79HG
+union all select 	935097	--	4	S79HH
+union all select 	2775382	--	4	S79HS
+union all select 	2188063	--	4	S79hz
+union all select 	729244	--	4	S79R
+union all select 	356941	--	4	s79rrr
+union all select 	989898	--	4	S79SH
+union all select 	3498094	--	4	WD1
+union all select 	5358729	--	4	WDR
 
 
 WHILE (1 = 1)
