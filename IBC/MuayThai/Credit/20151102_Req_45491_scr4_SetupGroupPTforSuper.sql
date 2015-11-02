@@ -20,8 +20,6 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	SET NOCOUNT ON
-
 	;WITH _s as (
 		SELECT c.recommend, c.custid	
 			,rdSetting = CAST(DENSE_RANK() OVER(ORDER BY sporttype, bettype, islive, superPT, masterPT, agentPT, isAutoMasterPT, AutoMasterPT, isAutoSuperPT, AutoSuperPT) as INT)
