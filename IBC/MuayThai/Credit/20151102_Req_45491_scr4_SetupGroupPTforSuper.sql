@@ -95,8 +95,7 @@ BEGIN
 	
 	TRUNCATE TABLE #tempdata
 	TRUNCATE TABLE #tempGroup
-		
-	waitfor delay '00:00:0.280'
+
 END
 
 DROP TABLE #tempdata
