@@ -1,3 +1,8 @@
+/*
+	Created By: Dominic@20151029
+	Description: Setup PT Group for UUS customers 
+	Run at DBCUST.CustDB on 20151106 (UM)
+*/
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 CREATE TABLE #tempData (recommend int, custid int, cs1 bigint, cs2 int)
 CREATE TABLE #tempGroup(recommend int, cs1 bigint, cs2 int, memberCNT int, repCustID int)
