@@ -1,7 +1,7 @@
 /*
-	Created by: Helen
-	Created Date: 20151007
-	Description: DCS - #5 - Create Trigger on replicated table to insert data into DCS History tables
+	CREATEd by: Helen
+	CREATEd Date: 20151007
+	Description: DCS - #5 - CREATE Trigger on replicated table to insert data into DCS History tables
 	
 	Database: DBTP/bodb02 (local dev: server232 -   local test: server234)
 	
@@ -21,7 +21,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustPTSetting3rd_Member] (
+	INSERT INTO bodb_CustHistory.dbo.[CustPTSetting3rd_Member_History] (
 		[CustID],
 		[SportType],
 		[BetType],
@@ -64,7 +64,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustPTSetting3rd_Agent] (
+	INSERT INTO bodb_CustHistory.dbo.[CustPTSetting3rd_Agent_History] (
 		[CustID] ,
 		[SportType] ,
 		[BetType] ,
@@ -110,7 +110,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustPTGroupSetting3rd_Member] (
+	INSERT INTO bodb_CustHistory.dbo.[CustPTGroupSetting3rd_Member_History] (
 		[AgentID] ,
 		[SportType] ,
 		[BetType] ,
@@ -152,7 +152,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustSettingMode3rd] (
+	INSERT INTO bodb_CustHistory.dbo.[CustSettingMode3rd_History] (
 		[CustID] ,
 		[IsGrouped] 
 	)
@@ -176,7 +176,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustBetSetting3rd_Member] (
+	INSERT INTO bodb_CustHistory.dbo.[CustBetSetting3rd_Member_History] (
 		[CustID] ,
 		[SportType] ,
 		[BetType] ,
@@ -208,7 +208,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustBetSetting3rd_Agent] (
+	INSERT INTO bodb_CustHistory.dbo.[CustBetSetting3rd_Agent_History] (
 		[CustID] ,
 		[SportType] ,
 		[BetType] ,
@@ -239,7 +239,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustDiscount3rd_Member] (
+	INSERT INTO bodb_CustHistory.dbo.[CustDiscount3rd_Member_History] (
 		[CustID] ,
 		[SportType] ,
 		[BetType] ,
@@ -272,7 +272,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustDiscount3rd_Agent] (
+	INSERT INTO bodb_CustHistory.dbo.[CustDiscount3rd_Agent_History] (
 		[CustID] ,
 		[SportType] ,
 		[BetType] ,
@@ -299,7 +299,7 @@ AS
 BEGIN 
 	SET NOCOUNT ON
 	
-	INSERT INTO bodb_CustHistory.dbo.[CustProductStatus] (
+	INSERT INTO bodb_CustHistory.dbo.[CustProductStatus_History] (
 		[CustID] ,
 		[bitmapHasSynced] ,
 		[bitmapIsHidden] ,
@@ -313,74 +313,3 @@ BEGIN
 	FROM [DELETED]
 END
 GO
-
-
-CREATE TRIGGER [dbo].[ProductSettingDetail_update] ON [dbo].[ProductSettingDetail] AFTER UPDATE
-AS
-/*
-	Created by: 20151029@Helen
-	Task: Trigger for updating [ProductSettingDetail] table 
-	DB: DBTP/bodb02
-
-*/
-BEGIN 
-	SET NOCOUNT ON
-	
-	INSERT INTO bodb_CustHistory.dbo.[ProductSettingDetail] (
-		[SettingType] ,
-		[SportType] ,
-		[BetType] ,
-		[IsLive] ,
-		[ProductID] ,
-		[MaxPT] ,
-		[MaxDiscount] ,
-		[IsSync] ,
-		[IsHidden] ,
-		[IsDisabled] ,
-		[SettingLevel] ,
-		[DisplayOrder] ,
-		[SettingStatus] 
-	)
-	SELECT
-		[SettingType] ,
-		[SportType] ,
-		[BetType] ,
-		[IsLive] ,
-		[ProductID] ,
-		[MaxPT] ,
-		[MaxDiscount] ,
-		[IsSync] ,
-		[IsHidden] ,
-		[IsDisabled] ,
-		[SettingLevel] ,
-		[DisplayOrder] ,
-		[SettingStatus] 
-	FROM [DELETED]
-END
-GO
-
-CREATE TRIGGER [dbo].[ProductStatusProfile_update] ON [dbo].[ProductStatusProfile] AFTER UPDATE
-AS
-/*
-	Created by: 20151029@Helen
-	Task: Trigger for updating [ProductStatusProfile] table 
-	DB: DBTP/bodb02
-
-*/
-BEGIN 
-	SET NOCOUNT ON
-	
-	INSERT INTO bodb_CustHistory.dbo.[ProductStatusProfile] (
-		[Sporttype] ,
-		[Bettype] ,
-		[bitmapOrder] 
-	)
-	SELECT
-		[Sporttype] ,
-		[Bettype] ,
-		[bitmapOrder] 
-	FROM [DELETED]
-END
-GO
-
-

@@ -227,32 +227,6 @@ BEGIN
 END
 GO
 
-
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='ProductSettingDetail_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP ProductSettingDetail_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='ProductSettingDetail_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = ProductSettingDetail_table_01,
-		--local Test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\ProductSettingDetail_table_01.NDF'
-		--Local Dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\ProductSettingDetail_table_01.NDF'
-		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\ProductSettingDetail_table_01.NDF'
-	)
-	TO FILEGROUP ProductSettingDetail_table;
-END
-
-GO
 USE bodb_CustHistory
 GO
 CREATE TABLE [dbo].[CustPTSetting3rd_Member_history](
@@ -558,106 +532,6 @@ CREATE CLUSTERED INDEX [CustProductStatus_His_Index] ON [dbo].[CustProductStatus
 	[CustID] ASC
 ) 
 GO
-
------------------
-CREATE TABLE [dbo].[ProductSettingDetail_history](
-	[UpdateTime] [datetime] NOT NULL,
-	[SettingType] [smallint] NOT NULL,
-	[SportType] [smallint] NOT NULL,
-	[BetType] [smallint] NOT NULL,
-	[IsLive] [bit] NOT NULL,
-	[ProductID] [tinyint] NOT NULL,
-	[MaxPT] [tinyint] NULL,
-	[MaxDiscount] [decimal](9, 8) NULL,
-	[IsSync] [bit] NULL,
-	[IsHidden] [bit] NULL,
-	[IsDisabled] [bit] NULL,
-	[SettingLevel] [tinyint] NULL,
-	[DisplayOrder] [tinyint] NOT NULL,
-	[SettingStatus] [tinyint] NULL
-) ON [ProductSettingDetail_table]
-
-GO
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  CONSTRAINT [DF_ProductSettingDetail_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
-GO
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0.9)) FOR [MaxPT]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0.01)) FOR [MaxDiscount]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0)) FOR [IsSync]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((1)) FOR [IsHidden]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0)) FOR [IsDisabled]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0)) FOR [DisplayOrder]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_history] ADD  DEFAULT ((0)) FOR [SettingStatus]
-GO
-CREATE CLUSTERED INDEX [ProductSettingDetail_His_Index] ON [dbo].[ProductSettingDetail_history] 
-(
-	[UpdateTime] ASC
-) 
-GO
-
-CREATE TABLE [dbo].[ProductSettingSystemDisplay_history](
-	[UpdateTime] [datetime] NOT NULL,
-	[SystemID] [tinyint] NOT NULL,
-	[ProductID] [tinyint] NOT NULL,
-	[SettingType] [smallint] NOT NULL,
-	[DisplayMode] [tinyint] NULL
-) ON [ProductSettingDetail_table]
-
-GO
-ALTER TABLE [dbo].[ProductSettingSystemDisplay_history] ADD  CONSTRAINT [DF_ProductSettingSystemDisplay_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
-GO
-CREATE CLUSTERED INDEX [ProductSettingSystemDisplay_His_Index] ON [dbo].[ProductSettingSystemDisplay_history] 
-(
-	[UpdateTime] ASC
-) 
-GO
-CREATE TABLE [dbo].[SettingSystem_history](
-	[UpdateTime] [datetime] NOT NULL,
-	[SystemID] [tinyint] NOT NULL,
-	[SystemName] [varchar](50) NULL,
-	[Description] [varchar](100) NULL,
-	[SystemPrefix] [varchar](10) NULL
-) ON [ProductSettingDetail_table]
-
-GO
-ALTER TABLE [dbo].[SettingSystem_history] ADD  CONSTRAINT [DF_SettingSystem_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
-GO
-CREATE CLUSTERED INDEX [SettingSystem_His_Index] ON [dbo].[SettingSystem_history] 
-(
-	[UpdateTime] ASC
-) 
-GO
-
-CREATE TABLE [dbo].[ProductStatusProfile_history](
-	[UpdateTime] [datetime] NOT NULL,
-	[Sporttype] [smallint] NOT NULL,
-	[Bettype] [smallint] NOT NULL,
-	[bitmapOrder] [tinyint] NOT NULL
- 
-) ON [ProductSettingDetail_table]
-
-GO
-
-
-ALTER TABLE [dbo].[ProductStatusProfile_history] ADD  CONSTRAINT [DF_ProductStatusProfile_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
-GO
-CREATE CLUSTERED INDEX [ProductStatusProfile_His_Index] ON [dbo].[ProductStatusProfile_history] 
-(
-	[UpdateTime] ASC
-) 
-GO
-
 
 
 

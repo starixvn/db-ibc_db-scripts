@@ -9,7 +9,7 @@
 ALTER PROCEDURE Acc_DynamicCustomerInfo_09
 	@srecommend INT	
 	,@maxcustid INT
-	,@target VARCHAR(20)
+	,@target VARCHAR(30)
 AS
 BEGIN   
 	SET NOCOUNT ON
