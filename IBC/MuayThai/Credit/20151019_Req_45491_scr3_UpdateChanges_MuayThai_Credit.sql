@@ -9,7 +9,7 @@
 ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
 	@srecommend INT	
 	,@maxcustid INT
-	,@target VARCHAR(20)
+	,@target VARCHAR(30)
 AS
 BEGIN   
 	SET NOCOUNT ON
@@ -174,7 +174,7 @@ DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
 
-INSERT INTO #supers
+INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
@@ -207,7 +207,7 @@ DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid = xxx
 
-INSERT INTO #supers
+INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
