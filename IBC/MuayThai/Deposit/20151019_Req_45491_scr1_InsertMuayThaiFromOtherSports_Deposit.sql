@@ -72,10 +72,8 @@ SELECT @max_custid= xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid
-	AND site <> '12Bet'
-
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')
+	AND custid <= @max_custid	
 
 WHILE (1 = 1)
 BEGIN
@@ -108,10 +106,8 @@ SELECT @max_custid= xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid
-	AND site <> '12Bet'
-
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')
+	AND custid <= @max_custid	
 
 WHILE (1 = 1)
 BEGIN
