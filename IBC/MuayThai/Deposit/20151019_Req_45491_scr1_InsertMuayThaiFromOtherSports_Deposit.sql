@@ -1,7 +1,7 @@
 /*
 	Created: Elodie
 	Date: 2015-10-19
-	Task: Insert Muay Thai settings for 12BET
+	Task: Insert Muay Thai settings for deposit customers
 	DB: DBCUST/CustDB
 */ 
 --Step 1: add customer settings into Dep_CustSetting
@@ -13,7 +13,7 @@ ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 AS
 BEGIN	
 	SET NOCOUNT ON
-	DECLARE @BetLimit TABLE (Currency)
+	
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
