@@ -9,7 +9,7 @@ CREATE TABLE #tempGroup(recommend int, cs1 bigint, cs2 int, memberCNT int, repCu
 DECLARE @srecommend INT
 
 
-INSERT INTO #supers
+INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN dbo.CustPTSetting3rd_Agent cs WITH(NOLOCK)
@@ -103,4 +103,5 @@ END
 
 DROP TABLE #tempdata
 DROP TABLE #tempGroup
+DROP TABLE #supers
 
