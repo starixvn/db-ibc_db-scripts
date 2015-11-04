@@ -117,7 +117,7 @@ BEGIN
 	/*****************************BET LIMIT SETTING**************************/	
 	--Agent Level
 	INSERT INTO dbo.CustBetSetting3rd_Agent
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch
+	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
 	FROM dbo.CustSetting cs WITH(NOLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) 
 			ON  ci.custid = cs.custid
@@ -130,7 +130,7 @@ BEGIN
 	 
 	--Member Level
 	INSERT INTO dbo.CustBetSetting3rd_Member
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch
+	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
 	FROM dbo.CustSetting cs WITH(NOLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) 
 			ON  ci.custid = cs.custid
