@@ -116,7 +116,7 @@ BEGIN
 	SET
 		csa.MinBet = cs.minbet,
 		csa.MaxBet = cs.maxbet,
-		csa.MaxPerMatch = cs.maxpermatch
+		csa.MaxPerMatch = ci.maxpermatch99
 	FROM custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
 		INNER JOIN dbo.CustBetSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
@@ -133,7 +133,7 @@ BEGIN
 				OR
 				cs.maxbet <> csa.MaxBet
 				OR
-				cs.maxpermatch <> csa.MaxPerMatch
+				ci.maxpermatch99 <> csa.MaxPerMatch
 			)
 			
 
@@ -143,7 +143,7 @@ BEGIN
 	SET
 		csm.MinBet = cs.minbet,
 		csm.MaxBet = cs.maxbet,
-		csm.MaxPerMatch = cs.maxpermatch
+		csm.MaxPerMatch = ci.maxpermatch99
 	FROM custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
 		INNER JOIN dbo.CustBetSetting3rd_Member csm WITH(UPDLOCK,ROWLOCK)
@@ -160,7 +160,7 @@ BEGIN
 				OR
 				cs.maxbet <> csm.MaxBet
 				OR
-				cs.maxpermatch <> csm.MaxPerMatch
+				ci.maxpermatch99 <> csm.MaxPerMatch
 			)
 
 END
