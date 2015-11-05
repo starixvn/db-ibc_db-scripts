@@ -110,11 +110,16 @@ CREATE TABLE #supers (custid int,isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-	SELECT ci.custid
-	FROM CustInfo ci WITH(NOLOCK)
-		INNER JOIN dbo.CustPTSetting3rd_Agent cs WITH(NOLOCK)
-			ON ci.custid = cs.CustID AND cs.SportType = 44 AND cs.BetType = 1 AND cs.IsLive = 0
-	WHERE ci.roleid = 4 
+VALUES(1338545),
+(1176070),
+(615976),
+(20),
+(14182461),
+(1426163),
+(17556333),
+(14521687),
+(18888872),
+(19235084)
 	
 WHILE (1 = 1)
 BEGIN
@@ -139,11 +144,18 @@ CREATE TABLE #supers (custid int,isfinished bit default(0))
 DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
-	SELECT ci.custid
-	FROM CustInfo ci WITH(NOLOCK)
-		INNER JOIN dbo.CustPTSetting3rd_Agent cs WITH(NOLOCK)
-			ON ci.custid = cs.CustID AND cs.SportType = 44 AND cs.BetType = 1 AND cs.IsLive = 0
-	WHERE ci.roleid = 4 
+VALUES(1338545),
+(1176070),
+(615976),
+(20),
+(14182461),
+(1426163),
+(17556333),
+(14521687),
+(18888872),
+(19235084)
+
+
 	
 WHILE (1 = 1)
 BEGIN
