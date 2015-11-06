@@ -22,6 +22,7 @@ ADD FILE
 (
 	NAME = CustPTSetting3rd_Member_table_01,
 	FILENAME = 'G:\IBC_DB\bodb_Customer\CustPTSetting3rd_Member_table_01.NDF'
+	, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 )
 TO FILEGROUP CustPTSetting3rd_Member_table;
 END
@@ -41,6 +42,7 @@ ADD FILE
 (
 	NAME = CustPTSetting3rd_Agent_table_01,
 	FILENAME = 'G:\IBC_DB\bodb_Customer\CustPTSetting3rd_Agent_table_01.NDF'
+	, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 )
 TO FILEGROUP CustPTSetting3rd_Agent_table;
 END
@@ -60,6 +62,7 @@ BEGIN
 	(
 		NAME = CustPTGroupSetting3rd_Member_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustPTGroupSetting3rd_Member_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustPTGroupSetting3rd_Member_table;
 END
@@ -81,6 +84,7 @@ BEGIN
 	(
 		NAME = CustSettingMode3rd_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustSettingMode3rd_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustSettingMode3rd_table;
 END
@@ -100,6 +104,7 @@ BEGIN
 	(
 		NAME = CustBetSetting3rd_Member_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustBetSetting3rd_Member_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustBetSetting3rd_Member_table;
 END
@@ -119,6 +124,7 @@ BEGIN
 	(
 		NAME = CustBetSetting3rd_Agent_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustBetSetting3rd_Agent_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustBetSetting3rd_Agent_table;
 END
@@ -138,6 +144,7 @@ BEGIN
 	(
 		NAME = CustDiscount3rd_Member_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustDiscount3rd_Member_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustDiscount3rd_Member_table;
 END
@@ -157,6 +164,7 @@ BEGIN
 	(
 		NAME = CustDiscount3rd_Agent_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustDiscount3rd_Agent_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustDiscount3rd_Agent_table;
 END
@@ -176,27 +184,49 @@ BEGIN
 	(
 		NAME = CustProductStatus_table_01,
 		FILENAME = 'G:\IBC_DB\bodb_Customer\CustProductStatus_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustProductStatus_table;
 END
 GO
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='ProductSettingDetail_table')
+
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='AgentCommRate_table')
 BEGIN
 	ALTER DATABASE bodb_Customer
-	ADD FILEGROUP ProductSettingDetail_table;
+	ADD FILEGROUP AgentCommRate_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='ProductSettingDetail_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='AgentCommRate_table_01')
 BEGIN
 	ALTER DATABASE bodb_Customer 
 	ADD FILE 
 	(
-		NAME = ProductSettingDetail_table_01,
-		FILENAME = 'G:\IBC_DB\bodb_Customer\ProductSettingDetail_table_01.NDF'
+		NAME = AgentCommRate_table_01,
+		FILENAME = 'G:\IBC_DB\bodb_Customer\AgentCommRate_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
-	TO FILEGROUP ProductSettingDetail_table;
+	TO FILEGROUP AgentCommRate_table;
+END
+GO
+
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustCommRate_table')
+BEGIN
+	ALTER DATABASE bodb_Customer
+	ADD FILEGROUP CustCommRate_table;
+END
+GO
+
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustCommRate_table_01')
+BEGIN
+	ALTER DATABASE bodb_Customer 
+	ADD FILE 
+	(
+		NAME = CustCommRate_table_01,
+		FILENAME = 'G:\IBC_DB\bodb_Customer\CustCommRate_table_01.NDF'
+		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
+	)
+	TO FILEGROUP CustCommRate_table;
 END
 GO
 ------- Creating Talbes 
@@ -226,25 +256,25 @@ CREATE TABLE [dbo].[CustPTSetting3rd_Member_old](
 
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [SuperPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_MasterPT] DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_AgentPT] DEFAULT ((0)) FOR [AgentPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [IsAutoMasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_IsAutoMasterPT] DEFAULT ((0)) FOR [IsAutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AutoMasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_AutoMasterPT] DEFAULT ((0)) FOR [AutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [IsAutoSuperPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_IsAutoSuperPT] DEFAULT ((0)) FOR [IsAutoSuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AutoSuperPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Member_AutoSuperPT] DEFAULT ((0)) FOR [AutoSuperPT]
 
 GO
 
@@ -273,31 +303,33 @@ CREATE TABLE [dbo].[CustPTSetting3rd_Agent_old](
 
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [SuperPT]
+
+
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old]  ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_MasterPT]  DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_AgentPT] DEFAULT ((0)) FOR [AgentPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [IsAutoMasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  CONSTRAINT [DF_CustPTSetting3rd_Agent_IsAutoMasterPT] DEFAULT ((0)) FOR [IsAutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [AutoMasterPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_AutoMasterPT] DEFAULT ((0)) FOR [AutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [IsAutoSuperPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_IsAutoSuperPT] DEFAULT ((0)) FOR [IsAutoSuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [AutoSuperPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_AutoSuperPT] DEFAULT ((0)) FOR [AutoSuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [MinPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_MinPT] DEFAULT ((0)) FOR [MinPT]
 GO
 
-ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD  DEFAULT ((0.9)) FOR [MaxPT]
+ALTER TABLE [dbo].[CustPTSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustPTSetting3rd_Agent_MaxPT] DEFAULT ((0.9)) FOR [MaxPT]
 GO
 
 
@@ -324,25 +356,25 @@ CREATE TABLE [dbo].[CustPTGroupSetting3rd_Member_old](
 
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [SuperPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_MasterPT]  DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_AgentPT]  DEFAULT ((0)) FOR [AgentPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [IsAutoMasterPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_IsAutoMasterPT]  DEFAULT ((0)) FOR [IsAutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AutoMasterPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_AutoMasterPT]  DEFAULT ((0)) FOR [AutoMasterPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [IsAutoSuperPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_IsAutoSuperPT]  DEFAULT ((0)) FOR [IsAutoSuperPT]
 GO
 
-ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [AutoSuperPT]
+ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_old] ADD CONSTRAINT [DF_CustPTGroupSetting3rd_Member_AutoSuperPT]  DEFAULT ((0)) FOR [AutoSuperPT]
 GO
 
 
@@ -357,7 +389,7 @@ CREATE TABLE [dbo].[CustSettingMode3rd_old](
 
 GO
 
-ALTER TABLE [dbo].[CustSettingMode3rd_old] ADD  DEFAULT ((1)) FOR [IsGrouped]
+ALTER TABLE [dbo].[CustSettingMode3rd_old] ADD  CONSTRAINT [DF_CustSettingMode3rd_IsGrouped] DEFAULT ((1)) FOR [IsGrouped]
 GO
 
 CREATE TABLE [dbo].[CustBetSetting3rd_Member_old](
@@ -377,13 +409,13 @@ CREATE TABLE [dbo].[CustBetSetting3rd_Member_old](
 
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [MinBet]
+ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD CONSTRAINT [DF_CustBetSetting3rd_Member_MinBet] DEFAULT ((0)) FOR [MinBet]
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [MaxBet]
+ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD CONSTRAINT [DF_CustBetSetting3rd_Member_MaxBet] DEFAULT ((0)) FOR [MaxBet]
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD  DEFAULT ((0)) FOR [MaxPerMatch]
+ALTER TABLE [dbo].[CustBetSetting3rd_Member_old] ADD  CONSTRAINT [DF_CustBetSetting3rd_Member_MaxPerMatch] DEFAULT ((0)) FOR [MaxPerMatch]
 GO
 
 CREATE TABLE [dbo].[CustBetSetting3rd_Agent_old](
@@ -403,13 +435,13 @@ CREATE TABLE [dbo].[CustBetSetting3rd_Agent_old](
 
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [MinBet]
+ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustBetSetting3rd_Agent_MinBet]  DEFAULT ((0)) FOR [MinBet]
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [MaxBet]
+ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustBetSetting3rd_Agent_MaxBet]  DEFAULT ((0)) FOR [MaxBet]
 GO
 
-ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD  DEFAULT ((0)) FOR [MaxPerMatch]
+ALTER TABLE [dbo].[CustBetSetting3rd_Agent_old] ADD CONSTRAINT [DF_CustBetSetting3rd_Agent_MaxPerMatch]  DEFAULT ((0)) FOR [MaxPerMatch]
 GO
 
 
@@ -431,16 +463,16 @@ CREATE TABLE [dbo].[CustDiscount3rd_Member_old](
 
 GO
 
-ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD  DEFAULT ((0)) FOR [PlayerDiscount]
+ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD CONSTRAINT [DF_CustDiscount3rd_Member_PlayerDiscount] DEFAULT ((0)) FOR [PlayerDiscount]
 GO
 
-ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD  DEFAULT ((0)) FOR [AgentDiscount]
+ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD CONSTRAINT [DF_CustDiscount3rd_Member_AgentDiscount]  DEFAULT ((0)) FOR [AgentDiscount]
 GO
 
-ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD  DEFAULT ((0)) FOR [MasterDiscount]
+ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD CONSTRAINT [DF_CustDiscount3rd_Member_MasterDiscount]  DEFAULT ((0)) FOR [MasterDiscount]
 GO
 
-ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD  DEFAULT ((0)) FOR [SuperDiscount]
+ALTER TABLE [dbo].[CustDiscount3rd_Member_old] ADD CONSTRAINT [DF_CustDiscount3rd_Member_SuperDiscount]  DEFAULT ((0)) FOR [SuperDiscount]
 GO
 
 CREATE TABLE [dbo].[CustDiscount3rd_Agent_old](
@@ -458,7 +490,7 @@ CREATE TABLE [dbo].[CustDiscount3rd_Agent_old](
 
 GO
 
-ALTER TABLE [dbo].[CustDiscount3rd_Agent_old] ADD  DEFAULT ((0)) FOR [Discount]
+ALTER TABLE [dbo].[CustDiscount3rd_Agent_old] ADD CONSTRAINT [DF_CustDiscount3rd_Agent_Discount] DEFAULT ((0)) FOR [Discount]
 GO
 
 CREATE TABLE [dbo].[CustProductStatus_old](
@@ -474,100 +506,51 @@ CREATE TABLE [dbo].[CustProductStatus_old](
 
 GO
 
-ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_old_bitmapHasSynced]  DEFAULT (0x00) FOR [bitmapHasSynced]
+ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_bitmapHasSynced]  DEFAULT (0x00) FOR [bitmapHasSynced]
 GO
 
-ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_old_bitmapIsHidden]  DEFAULT (0x00) FOR [bitmapIsHidden]
+ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_bitmapIsHidden]  DEFAULT (0x00) FOR [bitmapIsHidden]
 GO
 
-ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_old_bitmapIsDisabled]  DEFAULT (0x00) FOR [bitmapIsDisabled]
-GO
------------------
-CREATE TABLE [dbo].[ProductSettingDetail_old](
-	[SettingType] [smallint] NOT NULL,
-	[SportType] [smallint] NOT NULL,
-	[BetType] [smallint] NOT NULL,
-	[IsLive] [bit] NOT NULL,
-	[ProductID] [tinyint] NOT NULL,
-	[MaxPT] [tinyint] NULL,
-	[MaxDiscount] [decimal](9, 8) NULL,
-	[IsSync] [bit] NULL,
-	[IsHidden] [bit] NULL,
-	[IsDisabled] [bit] NULL,
-	[SettingLevel] [tinyint] NULL,
-	[DisplayOrder] [tinyint] NOT NULL,
-	[SettingStatus] [tinyint] NULL,
- CONSTRAINT [PK_ProductSettingDetail_old] PRIMARY KEY CLUSTERED 
-(
-	[SettingType] ASC,
-	[SportType] ASC,
-	[BetType] ASC,
-	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [ProductSettingDetail_table]
-) ON [ProductSettingDetail_table]
-
+ALTER TABLE [dbo].[CustProductStatus_old] ADD  CONSTRAINT [DF_CustProductStatus_bitmapIsDisabled]  DEFAULT (0x00) FOR [bitmapIsDisabled]
 GO
 
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0.9)) FOR [MaxPT]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0.01)) FOR [MaxDiscount]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0)) FOR [IsSync]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((1)) FOR [IsHidden]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0)) FOR [IsDisabled]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0)) FOR [DisplayOrder]
-GO
-
-ALTER TABLE [dbo].[ProductSettingDetail_old] ADD  DEFAULT ((0)) FOR [SettingStatus]
-GO
-CREATE TABLE [dbo].[ProductSettingSystemDisplay_old](
-	[SystemID] [tinyint] NOT NULL,
-	[ProductID] [tinyint] NOT NULL,
-	[SettingType] [smallint] NOT NULL,
-	[DisplayMode] [tinyint] NULL,
- CONSTRAINT [PK_ProductSettingSystemDisplay_old] PRIMARY KEY CLUSTERED 
-(
-	[SystemID] ASC,
-	[ProductID] ASC,
-	[SettingType] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [ProductSettingDetail_table]
-) ON [ProductSettingDetail_table]
-
-GO
-
-CREATE TABLE [dbo].[SettingSystem_old](
-	[SystemID] [tinyint] NOT NULL,
-	[SystemName] [varchar](50) NULL,
-	[Description] [varchar](100) NULL,
-	[SystemPrefix] [varchar](10) NULL,
- CONSTRAINT [PK_SettingSystem] PRIMARY KEY CLUSTERED 
-(
-	[SystemID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [ProductSettingDetail_table]
-) ON [ProductSettingDetail_table]
-
-GO
-
-CREATE TABLE [dbo].[ProductStatusProfile_old](
+CREATE TABLE [dbo].[AgentCommRate_old](
+	[CustId] [int] NOT NULL,
 	[Sporttype] [smallint] NOT NULL,
 	[Bettype] [smallint] NOT NULL,
-	[bitmapOrder] [tinyint] NOT NULL,
- CONSTRAINT [PK_ProductStatusProfile_old] PRIMARY KEY NONCLUSTERED 
+	[CommRate] [decimal](9, 8) NULL,
+ CONSTRAINT [PK_AgentCommRate] PRIMARY KEY CLUSTERED 
 (
+	[CustId] ASC,
 	[Sporttype] ASC,
 	[Bettype] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [ProductSettingDetail_table]
-) ON [ProductSettingDetail_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [AgentCommRate_table]
+) ON [AgentCommRate_table]
 
 GO
+
+
+CREATE TABLE [dbo].[CustCommRate_old](
+	[CustId] [int] NOT NULL,
+	[Sporttype] [smallint] NOT NULL,
+	[Bettype] [smallint] NOT NULL,
+	[sdiscount] [decimal](9, 8) NULL,
+	[adiscount] [decimal](9, 8) NULL,
+	[discount] [decimal](9, 8) NULL,
+	[playerdiscount] [decimal](9, 8) NULL,
+ CONSTRAINT [PK_CustCommRate] PRIMARY KEY CLUSTERED 
+(
+	[CustId] ASC,
+	[Sporttype] ASC,
+	[Bettype] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustCommRate_table]
+) ON [CustCommRate_table]
+
+GO
+
+
+
 
 
 
