@@ -10,14 +10,14 @@
 USE bodb_CustHistory
 GO
 --- CREATING FILE GROUP AND DATA FILE
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTSetting3rd_Member_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
 	ADD FILEGROUP CustPTSetting3rd_Member_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustPTSetting3rd_Member_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustPTSetting3rd_table_01')
 BEGIN
 ALTER DATABASE bodb_CustHistory 
 ADD FILE 
@@ -35,39 +35,15 @@ TO FILEGROUP CustPTSetting3rd_Member_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTSetting3rd_Agent_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustPTSetting3rd_Agent_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustPTSetting3rd_Agent_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = CustPTSetting3rd_Agent_table_01,
-		--local test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustPTSetting3rd_Agent_table_01.NDF'
-		--local dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustPTSetting3rd_Agent_table_01.NDF'--local dev
-		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustPTSetting3rd_Agent_table_01.NDF'
-		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
-	)
-	TO FILEGROUP CustPTSetting3rd_Agent_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTGroupSetting3rd_Member_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTGroupSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
 	ADD FILEGROUP CustPTGroupSetting3rd_Member_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustPTGroupSetting3rd_Member_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustPTGroupSetting3rd_table_01')
 BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
@@ -86,40 +62,15 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustSettingMode3rd_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustSettingMode3rd_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustSettingMode3rd_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = CustSettingMode3rd_table_01,
-		-- Local test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustSettingMode3rd_table_01.NDF'--local test
-		--Local dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustSettingMode3rd_table_01.NDF'--local dev
-		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustSettingMode3rd_table_01.NDF'
-		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
-	)
-	TO FILEGROUP CustSettingMode3rd_table;
-END
-GO
-
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustBetSetting3rd_Member_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustBetSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
 	ADD FILEGROUP CustBetSetting3rd_Member_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustBetSetting3rd_Member_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustBetSetting3rd_table_01')
 BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
@@ -130,46 +81,21 @@ BEGIN
 		-- Local dev
 		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_Member_table_01.NDF'
 		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_Member_table_01.NDF'
+		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustBetSetting3rd_Member_table;
 END
 GO
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustBetSetting3rd_Agent_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustBetSetting3rd_Agent_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustBetSetting3rd_Agent_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = CustBetSetting3rd_Agent_table_01,
-		-- Local Test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustBetSetting3rd_Agent_table_01.NDF'
-		-- Local Dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_Agent_table_01.NDF'
-		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_Agent_table_01.NDF'
-		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
-	)
-	TO FILEGROUP CustBetSetting3rd_Agent_table;
-END
-GO
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustDiscount3rd_Member_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustDiscount3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
 	ADD FILEGROUP CustDiscount3rd_Member_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustDiscount3rd_Member_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustDiscount3rd_table_01')
 BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
@@ -180,38 +106,13 @@ BEGIN
 		-- Local Dev
 		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustDiscount3rd_Member_table_01.NDF'
 		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustDiscount3rd_Member_table_01.NDF'
+		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustDiscount3rd_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
 	TO FILEGROUP CustDiscount3rd_Member_table;
 END
 GO
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustDiscount3rd_Agent_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustDiscount3rd_Agent_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='CustDiscount3rd_Agent_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = CustDiscount3rd_Agent_table_01,
-		-- Local Test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustDiscount3rd_Agent_table_01.NDF'
-		--Local Dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustDiscount3rd_Agent_table_01.NDF'
-		-- Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustDiscount3rd_Agent_table_01.NDF'
-		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
-	)
-	TO FILEGROUP CustDiscount3rd_Agent_table;
-END
-GO
-------
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustProductStatus_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
@@ -237,26 +138,6 @@ BEGIN
 END
 GO
 
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='AgentCommRate_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP AgentCommRate_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='AgentCommRate_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = AgentCommRate_table_01,
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\AgentCommRate_table_01.NDF'
-		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
-	)
-	TO FILEGROUP AgentCommRate_table;
-END
-GO
 
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustCommRate_table')
 BEGIN
@@ -294,7 +175,7 @@ CREATE TABLE [dbo].[CustPTSetting3rd_Member_history](
 	[IsAutoSuperPT] [bit] NOT NULL,
 	[AutoSuperPT] [tinyint] NOT NULL
  
-) ON [CustPTSetting3rd_Member_Table]
+) ON [CustPTSetting3rd_Table]
 
 GO
 ALTER TABLE [dbo].[CustPTSetting3rd_Member_history] ADD  CONSTRAINT [DF_CustPTSetting3rd_Member_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -341,7 +222,7 @@ CREATE TABLE [dbo].[CustPTSetting3rd_Agent_history](
 	[AutoSuperPT] [tinyint] NOT NULL,
 	[MinPT] [tinyint] NOT NULL,
 	[MaxPT] [tinyint] NOT NULL
-) ON [CustPTSetting3rd_Agent_Table]
+) ON [CustPTSetting3rd_Table]
 
 GO
 
@@ -396,7 +277,7 @@ CREATE TABLE [dbo].[CustPTGroupSetting3rd_Member_history](
 	[IsAutoSuperPT] [bit] NOT NULL,
 	[AutoSuperPT] [tinyint] NOT NULL
  
-) ON [CustPTGroupSetting3rd_Member_table]
+) ON [CustPTGroupSetting3rd_table]
 
 GO
 ALTER TABLE [dbo].[CustPTGroupSetting3rd_Member_history] ADD  CONSTRAINT [DF_CustPTGroupSetting3rd_Member_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -433,7 +314,7 @@ CREATE TABLE [dbo].[CustSettingMode3rd_history](
 	[UpdateTime] [datetime] NOT NULL,
 	[CustID] [int] NOT NULL,
 	[IsGrouped] [bit] NOT NULL
-) ON [CustSettingMode3rd_table]
+) ON [CustPTGroupSetting3rd_table]
 
 GO
 ALTER TABLE [dbo].[CustSettingMode3rd_history] ADD  CONSTRAINT [DF_CustSettingMode3rd_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -456,7 +337,7 @@ CREATE TABLE [dbo].[CustBetSetting3rd_Member_history](
 	[MinBet] [money] NULL,
 	[MaxBet] [money] NULL,
 	[MaxPerMatch] [money] NULL
-) ON [CustBetSetting3rd_Member_Table]
+) ON [CustBetSetting3rd_Table]
 
 GO
 
@@ -486,7 +367,7 @@ CREATE TABLE [dbo].[CustBetSetting3rd_Agent_history](
 	[MaxBet] [money] NULL,
 	[MaxPerMatch] [money] NULL
 
-) ON [CustBetSetting3rd_Agent_Table]
+) ON [CustBetSetting3rd_Table]
 
 GO
 ALTER TABLE [dbo].[CustBetSetting3rd_Agent_history] ADD  CONSTRAINT [DF_CustBetSetting3rd_Agent_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -517,7 +398,7 @@ CREATE TABLE [dbo].[CustDiscount3rd_Member_history](
 	[AgentDiscount] [decimal](9, 8) NOT NULL,
 	[MasterDiscount] [decimal](9, 8) NOT NULL,
 	[SuperDiscount] [decimal](9, 8) NOT NULL
-) ON [CustDiscount3rd_Member_Table]
+) ON [CustDiscount3rd_Table]
 
 GO
 ALTER TABLE [dbo].[CustDiscount3rd_Member_history] ADD  CONSTRAINT [DF_CustDiscount3rd_Member_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -546,7 +427,7 @@ CREATE TABLE [dbo].[CustDiscount3rd_Agent_history](
 	[BetType] [smallint] NOT NULL,
 	[Discount] [decimal](9, 8) NOT NULL
 
-) ON [CustDiscount3rd_Agent_Table]
+) ON [CustDiscount3rd_Table]
 
 GO
 ALTER TABLE [dbo].[CustDiscount3rd_Agent_history] ADD  CONSTRAINT [DF_CustDiscount3rd_Agent_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
@@ -598,7 +479,7 @@ CREATE TABLE [dbo].[AgentCommRate_history](
 	[Sporttype] ASC,
 	[Bettype] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [AgentCommRate_table]
-) ON [AgentCommRate_table]
+) ON [CustCommRate_table]
 
 ALTER TABLE [dbo].[AgentCommRate_history] ADD  CONSTRAINT [DF_AgentCommRate_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
 
