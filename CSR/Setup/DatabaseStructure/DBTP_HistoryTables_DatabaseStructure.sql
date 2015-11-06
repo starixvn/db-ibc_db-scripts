@@ -13,7 +13,7 @@ GO
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustPTSetting3rd_Member_table;
+	ADD FILEGROUP CustPTSetting3rd_table;
 END
 GO
 
