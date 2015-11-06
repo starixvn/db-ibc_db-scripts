@@ -22,16 +22,16 @@ BEGIN
 ALTER DATABASE bodb_CustHistory 
 ADD FILE 
 (
-	NAME = CustPTSetting3rd_Member_table_01,
+	NAME = CustPTSetting3rd_table_01,
 	--local test
 	--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustPTSetting3rd_Member_table_01.NDF' 
 	--local dev
 	--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustPTSetting3rd_Member_table_01.NDF' 
 	--Production 
-	FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustPTSetting3rd_Member_table_01.NDF'
+	FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustPTSetting3rd_table_01.NDF'
 	, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 )
-TO FILEGROUP CustPTSetting3rd_Member_table;
+TO FILEGROUP CustPTSetting3rd_table;
 END
 GO
 
@@ -39,7 +39,7 @@ GO
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustPTGroupSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustPTGroupSetting3rd_Member_table;
+	ADD FILEGROUP CustPTGroupSetting3rd_table;
 END
 GO
 
@@ -48,17 +48,17 @@ BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
 	(
-		NAME = CustPTGroupSetting3rd_Member_table_02,
+		NAME = CustPTGroupSetting3rd_table_02,
 		--Local Test
 		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustPTGroupSetting3rd_Member_table_01.NDF'--local test
 		-- Local dev
 		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\CustPTGroupSetting3rd_Member_table_02.NDF'
 		--, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 		--Production
-		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustPTGroupSetting3rd_Member_table_01.NDF'
+		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustPTGroupSetting3rd_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
-	TO FILEGROUP CustPTGroupSetting3rd_Member_table;
+	TO FILEGROUP CustPTGroupSetting3rd_table;
 END
 GO
 
@@ -66,7 +66,7 @@ GO
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustBetSetting3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustBetSetting3rd_Member_table;
+	ADD FILEGROUP CustBetSetting3rd_table;
 END
 GO
 
@@ -75,7 +75,7 @@ BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
 	(
-		NAME = CustBetSetting3rd_Member_table_01,
+		NAME = CustBetSetting3rd_table_01,
 		-- Local test
 		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustBetSetting3rd_Member_table_01.NDF'
 		-- Local dev
@@ -84,14 +84,14 @@ BEGIN
 		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustBetSetting3rd_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
-	TO FILEGROUP CustBetSetting3rd_Member_table;
+	TO FILEGROUP CustBetSetting3rd_table;
 END
 GO
 
 IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='CustDiscount3rd_table')
 BEGIN
 	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP CustDiscount3rd_Member_table;
+	ADD FILEGROUP CustDiscount3rd_table;
 END
 GO
 
@@ -100,7 +100,7 @@ BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
 	(
-		NAME = CustDiscount3rd_Member_table_01,
+		NAME = CustDiscount3rd_table_01,
 		-- Local Test
 		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustDiscount3rd_Member_table_01.NDF'
 		-- Local Dev
@@ -109,7 +109,7 @@ BEGIN
 		FILENAME = 'P:\IBC_DB\bodb_CustHistory\CustDiscount3rd_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB
 	)
-	TO FILEGROUP CustDiscount3rd_Member_table;
+	TO FILEGROUP CustDiscount3rd_table;
 END
 GO
 
