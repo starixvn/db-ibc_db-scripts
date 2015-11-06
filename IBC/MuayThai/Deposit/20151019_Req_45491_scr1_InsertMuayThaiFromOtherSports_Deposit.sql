@@ -1,7 +1,7 @@
 /*
 	Created: Elodie
 	Date: 2015-10-19
-	Task: Insert Muay Thai settings for 12BET
+	Task: Insert Muay Thai settings for deposit customers
 	DB: DBCUST/CustDB
 */ 
 --Step 1: add customer settings into Dep_CustSetting
@@ -13,7 +13,7 @@ ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 AS
 BEGIN	
 	SET NOCOUNT ON
-	DECLARE @BetLimit TABLE (Currency)
+	
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
@@ -72,10 +72,8 @@ SELECT @max_custid= xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid
-	AND site <> '12Bet'
-
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')
+	AND custid <= @max_custid	
 
 WHILE (1 = 1)
 BEGIN
@@ -108,10 +106,8 @@ SELECT @max_custid= xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid
-	AND site <> '12Bet'
-
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')
+	AND custid <= @max_custid	
 
 WHILE (1 = 1)
 BEGIN

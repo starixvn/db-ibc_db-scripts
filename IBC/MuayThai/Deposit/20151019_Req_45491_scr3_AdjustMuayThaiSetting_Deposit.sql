@@ -11,7 +11,7 @@ CREATE TABLE #supers (custid int)
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')	
 GO
 
 DECLARE @maxcustid INT 

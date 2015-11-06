@@ -121,4 +121,5 @@ END
 
 DROP TABLE #tempdata
 DROP TABLE #tempGroup
+DROP TABLE #supers
 
