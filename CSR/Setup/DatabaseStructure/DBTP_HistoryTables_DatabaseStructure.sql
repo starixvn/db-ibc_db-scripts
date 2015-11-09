@@ -472,16 +472,18 @@ CREATE TABLE [dbo].[AgentCommRate_history](
 	[CustId] [int] NOT NULL,
 	[Sporttype] [smallint] NOT NULL,
 	[Bettype] [smallint] NOT NULL,
-	[CommRate] [decimal](9, 8) NULL,
- CONSTRAINT [PK_AgentCommRate] PRIMARY KEY CLUSTERED 
-(
-	[UpdateTime],
-	[CustId] ASC 
-	
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [AgentCommRate_table]
+	[CommRate] [decimal](9, 8) NULL
+ 
 ) ON [CustCommRate_table]
 
 ALTER TABLE [dbo].[AgentCommRate_history] ADD  CONSTRAINT [DF_AgentCommRate_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+
+CREATE CLUSTERED INDEX [AgentCommRate_His_Index] ON [dbo].[AgentCommRate_history] 
+(
+	[UpdateTime] ASC,
+	[CustID] ASC
+) 
+GO
 
 GO
 CREATE TABLE [dbo].[CustCommRate_history](
@@ -492,15 +494,15 @@ CREATE TABLE [dbo].[CustCommRate_history](
 	[sdiscount] [decimal](9, 8) NULL,
 	[adiscount] [decimal](9, 8) NULL,
 	[discount] [decimal](9, 8) NULL,
-	[playerdiscount] [decimal](9, 8) NULL,
- CONSTRAINT [PK_CustCommRate] PRIMARY KEY CLUSTERED 
-(
-	[UpdateTime],
-	[CustId] ASC
-	
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustCommRate_table]
+	[playerdiscount] [decimal](9, 8) NULL
+ 
 ) ON [CustCommRate_table]
 go
 ALTER TABLE [dbo].[CustCommRate_history] ADD  CONSTRAINT [DF_CustCommRate_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
 
-
+CREATE CLUSTERED INDEX [CustCommRate_His_Index] ON [dbo].[CustCommRate_history] 
+(
+	[UpdateTime] ASC,
+	[CustID] ASC
+) 
+GO
