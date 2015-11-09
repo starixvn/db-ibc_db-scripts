@@ -48,7 +48,7 @@ BEGIN
 	ALTER DATABASE bodb_CustHistory 
 	ADD FILE 
 	(
-		NAME = CustPTGroupSetting3rd_table_02,
+		NAME = CustPTGroupSetting3rd_table_01,
 		--Local Test
 		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\CustPTGroupSetting3rd_Member_table_01.NDF'--local test
 		-- Local dev
@@ -475,9 +475,9 @@ CREATE TABLE [dbo].[AgentCommRate_history](
 	[CommRate] [decimal](9, 8) NULL,
  CONSTRAINT [PK_AgentCommRate] PRIMARY KEY CLUSTERED 
 (
-	[CustId] ASC,
-	[Sporttype] ASC,
-	[Bettype] ASC
+	[UpdateTime],
+	[CustId] ASC 
+	
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [AgentCommRate_table]
 ) ON [CustCommRate_table]
 
@@ -495,9 +495,9 @@ CREATE TABLE [dbo].[CustCommRate_history](
 	[playerdiscount] [decimal](9, 8) NULL,
  CONSTRAINT [PK_CustCommRate] PRIMARY KEY CLUSTERED 
 (
-	[CustId] ASC,
-	[Sporttype] ASC,
-	[Bettype] ASC
+	[UpdateTime],
+	[CustId] ASC
+	
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustCommRate_table]
 ) ON [CustCommRate_table]
 go

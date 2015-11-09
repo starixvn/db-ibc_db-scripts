@@ -313,3 +313,62 @@ BEGIN
 	FROM [DELETED]
 END
 GO
+
+CREATE TRIGGER [dbo].[AgentCommRate_update] ON [dbo].[AgentCommRate] AFTER UPDATE
+AS
+/*
+	Created by: 20151029@Helen
+	Task: Trigger for updating [AgentCommRate] table 
+	DB: DBTP/bodb02
+
+*/
+BEGIN 
+	SET NOCOUNT ON
+	
+	INSERT INTO bodb_CustHistory.dbo.[AgentCommRate_History] (
+		[CustId],
+		[Sporttype],
+		[Bettype],
+		[CommRate])
+	SELECT
+		[CustId],
+		[Sporttype],
+		[Bettype],
+		[CommRate]
+	FROM [DELETED]
+END
+
+GO
+
+
+CREATE TRIGGER [dbo].[CustCommRate_update] ON [dbo].[CustCommRate] AFTER UPDATE
+AS
+/*
+	Created by: 20151029@Helen
+	Task: Trigger for updating [CustCommRate] table 
+	DB: DBTP/bodb02
+
+*/
+BEGIN 
+	SET NOCOUNT ON
+	
+	INSERT INTO bodb_CustHistory.dbo.[CustCommRate_History] (
+		[CustId],
+		[Sporttype] ,
+		[Bettype],
+		[sdiscount],
+		[adiscount],
+		[discount],
+		[playerdiscount] 
+	)
+	SELECT
+		[CustId],
+		[Sporttype] ,
+		[Bettype],
+		[sdiscount],
+		[adiscount],
+		[discount],
+		[playerdiscount] 
+	FROM [DELETED]
+END
+
