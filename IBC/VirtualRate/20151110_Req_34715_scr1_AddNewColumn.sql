@@ -13,11 +13,5 @@ GO
   
 -- Add new column to ProfileVirtualSetting table --
 ALTER TABLE [dbo].[ProfileVirtualSetting]
-ADD isActive BIT NOT NULL
-GO
-
--- Add default constraint for new column of ProfileVirtualSetting table --
-ALTER TABLE [dbo].[ProfileVirtualSetting] 
-ADD CONSTRAINT [DF_ProfileVirtualSetting_isActive]  
-    DEFAULT (0) FOR [isActive]
+ADD isActive BIT NOT NULL DEFAULT 0
 GO
