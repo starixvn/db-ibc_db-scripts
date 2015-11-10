@@ -3,27 +3,28 @@
 	Description: Setup PT Group for UUS customers 
 	Run at DBCUST.CustDB on 20151106 (UM)
 */
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-CREATE TABLE #tempData (recommend int, custid int, cs1 bigint, cs2 int)
-CREATE TABLE #tempGroup(recommend int, cs1 bigint, cs2 int, memberCNT int, repCustID int)
-DECLARE @srecommend INT
-
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-	INNER JOIN dbo.CustPTSetting3rd_Agent cs WITH(NOLOCK)
-		ON ci.custid = cs.CustID AND cs.SportType = 44 AND cs.BetType = 1 AND cs.IsLive = 0
-WHERE ci.roleid = 4 	
+-- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
+ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
+	@srecommend INT	
+	,@target VARCHAR(30)
+AS
+BEGIN   
+	SET NOCOUNT ON
 	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
-	IF @@ROWCOUNT = 0 BREAK
+	IF NOT (dbo.f_CheckRepTable('CustInfo') = 1 
+			AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
+			AND dbo.f_CheckRepTable('CustSettingMode3rd') = 1
+			AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
+			AND dbo.f_CheckRepTable('CustPTGroupSetting3rd_Member') = 1
+	    
+	   )
+	  RETURN
+	  
+	CREATE TABLE #tempData (recommend int, custid int, cs1 bigint, cs2 int)
+	CREATE TABLE #tempGroup(recommend int, cs1 bigint, cs2 int, memberCNT int, repCustID int)
 
 	;WITH _s as (
 		SELECT c.recommend, c.custid	
@@ -96,12 +97,78 @@ BEGIN
 		ON cs.CustID = m.CustID
 	WHERE m.IsGrouped = 1
 	
-	TRUNCATE TABLE #tempdata
-	TRUNCATE TABLE #tempGroup
+
+	DROP TABLE #tempdata
+	DROP TABLE #tempGroup
 
 END
 
-DROP TABLE #tempdata
-DROP TABLE #tempGroup
-DROP TABLE #supers
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
 
+DECLARE @srecommend INT
+
+INSERT INTO #supers(custid)
+VALUES(1338545),
+(1176070),
+(615976),
+(20),
+(14182461),
+(1426163),
+(17556333),
+(14521687),
+(18888872),
+(19235084)
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
+			,@target = 'REPLICATED'
+			
+			
+	waitfor delay '00:00:0.280'
+END
+
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #supers (custid int,isfinished bit default(0))
+
+DECLARE @srecommend INT
+
+INSERT INTO #supers(custid)
+VALUES(1338545),
+(1176070),
+(615976),
+(20),
+(14182461),
+(1426163),
+(17556333),
+(14521687),
+(18888872),
+(19235084)
+
+
+	
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Supers
+	SET isfinished = 1
+		,@srecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
+			,@target = 'DBCUST'
+			
+			
+	waitfor delay '00:00:0.280'
+END

@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Initialize Product Statuses of Muay Thai in DCS structure, for new Customer > @MaxCustID
+	Task: Initialize Product Status of MuayThai for Newly created Credit customers
 			(In UM)
 	DB: DBCust.CustDB
 */   
