@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Delete existing settings of Muay Thai (before UM)
+	Task: Delete existing Product Status of MuayThai
 	DB: DBCust.CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------

@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Initialize PT/Bet Limit of Muay Thai in DCS structure (Before UM)
+	Task: Delete existing Bet Setting/ Position Taking of MuayThai
 	DB: DBCust.CustDB
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------

@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Update settings for customers if their ones are modified before UM
+	Task: Update Bet Setting / Position Taking of MuayThai for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------

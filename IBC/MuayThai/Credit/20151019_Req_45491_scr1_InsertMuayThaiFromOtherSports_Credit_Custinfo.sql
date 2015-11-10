@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Initialize Product Statuses of Muay Thai in DCS structure (before UM)
+	Task: Initialize Product Status of MuayThai for Credit customers
 	DB: DBCust.CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
