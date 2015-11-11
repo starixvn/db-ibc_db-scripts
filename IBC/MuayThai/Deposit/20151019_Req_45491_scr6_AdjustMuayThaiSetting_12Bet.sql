@@ -39,10 +39,10 @@ SELECT cs.[custid]
         ,[apositiontaking]
         ,[mpositiontaking]
         ,[spositiontaking]
-        ,0 AS playerdiscount
-		,0 AS discount
-        ,0 AS adiscount
-        ,0 AS sdiscount
+        ,[playerdiscount]
+        ,[discount]
+        ,[adiscount]
+        ,[sdiscount]
         ,CASE	WHEN currency = 2 THEN 5  -- MYR
 				WHEN currency IN (15,22,33,34,47) THEN 15  --IDR
 				WHEN currency = 61 THEN 75  --INR
@@ -124,10 +124,10 @@ SELECT cs.[custid]
         ,[apositiontaking]
         ,[mpositiontaking]
         ,[spositiontaking]
-        ,0 AS playerdiscount
-		,0 AS discount
-        ,0 AS adiscount
-        ,0 AS sdiscount
+        ,[playerdiscount]
+        ,[discount]
+        ,[adiscount]
+        ,[sdiscount]
         ,1
 		,500
 FROM [Dep_CustSetting] cs WITH(NOLOCK)
@@ -160,10 +160,10 @@ SELECT cs.[custid]
         ,[apositiontaking]
         ,[mpositiontaking]
         ,[spositiontaking]
-        ,0 AS playerdiscount
-		,0 AS discount
-        ,0 AS adiscount
-        ,0 AS sdiscount
+        ,[playerdiscount]
+        ,[discount]
+        ,[adiscount]
+        ,[sdiscount]
         ,1
 		,100
 FROM [Dep_CustSetting] cs WITH(NOLOCK)

@@ -43,10 +43,10 @@ BEGIN
            ,[apositiontaking]
            ,[mpositiontaking]
            ,[spositiontaking]
-           ,0 AS playerdiscount
-		   ,0 AS discount
-		   ,0 AS adiscount
-		   ,0 AS sdiscount
+           ,[playerdiscount]
+           ,[discount]
+           ,[adiscount]
+           ,[sdiscount]
            ,[minbet]
            ,[maxbet]
     FROM [Dep_CustSetting] cs WITH(NOLOCK)
