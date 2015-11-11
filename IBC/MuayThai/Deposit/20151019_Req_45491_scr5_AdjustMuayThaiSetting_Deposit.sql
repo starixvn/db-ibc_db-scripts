@@ -10,8 +10,10 @@ CREATE TABLE #supers (custid int)
 
 INSERT INTO #supers(custid)
 SELECT custid
-FROM custinfo WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site <> '12Bet')	
+FROM customer WITH(NOLOCK)
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))	
+	AND (site <> '12Bet' AND currency NOT IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68))
+
 GO
 
 DECLARE @maxcustid INT 

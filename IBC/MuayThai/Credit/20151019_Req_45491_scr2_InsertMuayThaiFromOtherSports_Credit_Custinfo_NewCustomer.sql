@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Initialize Product Statuses of Muay Thai in DCS structure, for new Customer > @MaxCustID
+	Task: Initialize Product Status of MuayThai for Newly created Credit customers
 			(In UM)
 	DB: DBCust.CustDB
 */   
@@ -108,7 +108,6 @@ SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.Currency = 20 --UUS 
 	
 WHILE (1 = 1)
 BEGIN
@@ -140,7 +139,6 @@ SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.Currency = 20 --UUS
 	
 WHILE (1 = 1)
 BEGIN
