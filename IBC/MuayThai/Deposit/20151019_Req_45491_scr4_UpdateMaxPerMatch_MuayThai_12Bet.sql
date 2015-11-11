@@ -112,10 +112,15 @@ SELECT @currency = 2	--MYR
 	--@currency = 66	--CNY
 	--@currency = 68	--USD
 
+DECLARE @max_custid INT
+
+SELECT @max_custid= xx
+
 INSERT INTO #list (custid, isfinished)
 SELECT custid, 0
 FROM customer WITH(NOLOCK)
 WHERE roleid in (1,2,3,4)
+	AND custid <= @max_custid
 	and srecommend in (
 		select custid 
 		from dep_custsuper with(nolock)
