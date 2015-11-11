@@ -72,4 +72,12 @@ WHERE ci.srecommend IN (SELECT custid FROM #supers)
 		   OR cs1.[mpositiontaking] <> cs2.[mpositiontaking]
 		   OR cs1.[spositiontaking] <> cs2.[spositiontaking])	
 GO
+
+--adjust [CustInfo]
+UPDATE ci
+SET	ci.MaxPerMatch44 = ci.maxpermatch99
+FROM custinfo ci WITH(NOLOCK)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)		
+	AND ci.MaxPerMatch44 <> ci.maxpermatch99
+GO
 --------------------------------------------------------------------

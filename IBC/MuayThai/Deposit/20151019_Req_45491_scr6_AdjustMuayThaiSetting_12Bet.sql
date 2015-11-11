@@ -203,4 +203,13 @@ WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ( cs1.[apositiontaking] = cs2.[apositiontaking]
 		   OR cs1.[mpositiontaking] = cs2.[mpositiontaking]
 		   OR cs1.[spositiontaking] = cs2.[spositiontaking])
+
+--adjust [CustInfo]
+UPDATE ci
+SET	ci.MaxPerMatch44 = ci.maxpermatch99
+FROM custinfo ci WITH(NOLOCK)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)	
+	AND currency IN (3,16,17,35,36,40,64,65,68) --USD
+	AND roleid IN (4,3)	
+	AND ci.MaxPerMatch44 <> ci.maxpermatch99
 GO		 
