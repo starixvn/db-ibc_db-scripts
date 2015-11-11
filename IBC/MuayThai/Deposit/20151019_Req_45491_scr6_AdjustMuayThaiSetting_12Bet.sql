@@ -174,4 +174,33 @@ WHERE ci.srecommend IN (SELECT custid FROM #supers)
 		AND ci.custid > @maxcustid
 		AND sporttype = 99 and bettype = 3	
 		AND recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05	
+
+--STEP 2: Adjust settings for super, master 12Bet
+
+--adjust [Dep_CustSetting]
+UPDATE cs1
+SET	cs1.[minbet] = cs2.[minbet]
+	,cs1.[maxbet] = cs2.[maxbet]	
+FROM custinfo ci WITH(NOLOCK)
+	INNER JOIN [Dep_CustSetting] cs1 WITH(UPDLOCK,ROWLOCK) ON cs1.custid = ci.custid AND cs1.sporttype  = 44 AND cs1.bettype = 3
+	INNER JOIN [Dep_CustSetting] cs2 WITH(NOLOCK) ON cs2.custid = ci.custid AND cs2.sporttype = 99 AND cs2.bettype = 3
+WHERE ci.srecommend IN (SELECT custid FROM #supers)	
+	AND currency IN (3,16,17,35,36,40,64,65,68) --USD
+	AND roleid IN (4,3)
+	AND ci.custid > @maxcustid
+	AND ( cs1.[minbet] <> cs2.[minbet]
+		   OR cs1.[maxbet] <> cs2.[maxbet])
+
+UPDATE cs1
+SET	cs1.[apositiontaking] = cs2.[apositiontaking]
+	,cs1.[mpositiontaking] = cs2.[mpositiontaking]
+	,cs1.[spositiontaking] = cs2.[spositiontaking]
+FROM custinfo ci WITH(NOLOCK)
+	INNER JOIN [Dep_CustSetting] cs1 WITH(UPDLOCK,ROWLOCK) ON cs1.custid = ci.custid AND cs1.sporttype  = 44 AND cs1.bettype = 3
+	INNER JOIN [Dep_CustSetting] cs2 WITH(NOLOCK) ON cs2.custid = ci.custid AND cs2.sporttype = 99 AND cs2.bettype = 3
+WHERE ci.srecommend IN (SELECT custid FROM #supers)	
+	AND ci.custid > @maxcustid
+	AND ( cs1.[apositiontaking] = cs2.[apositiontaking]
+		   OR cs1.[mpositiontaking] = cs2.[mpositiontaking]
+		   OR cs1.[spositiontaking] = cs2.[spositiontaking])
 GO		 

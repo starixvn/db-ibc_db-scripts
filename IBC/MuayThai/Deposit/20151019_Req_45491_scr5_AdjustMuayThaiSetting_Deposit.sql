@@ -68,8 +68,8 @@ FROM custinfo ci WITH(NOLOCK)
 WHERE ci.srecommend IN (SELECT custid FROM #supers)		
 	AND ( cs1.[minbet] <> cs2.[minbet]
 		   OR cs1.[maxbet] <> cs2.[maxbet]
-		   OR cs1.[apositiontaking] = cs2.[apositiontaking]
-		   OR cs1.[mpositiontaking] = cs2.[mpositiontaking]
-		   OR cs1.[spositiontaking] = cs2.[spositiontaking])	
+		   OR cs1.[apositiontaking] <> cs2.[apositiontaking]
+		   OR cs1.[mpositiontaking] <> cs2.[mpositiontaking]
+		   OR cs1.[spositiontaking] <> cs2.[spositiontaking])	
 GO
 --------------------------------------------------------------------
