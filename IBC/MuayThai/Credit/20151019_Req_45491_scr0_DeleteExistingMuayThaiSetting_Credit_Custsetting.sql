@@ -7,7 +7,7 @@
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
 ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
-	@target VARCHAR(20)
+	@target VARCHAR(30)
 AS
 BEGIN   
 	SET NOCOUNT ON
@@ -30,38 +30,32 @@ BEGIN
 	FROM [dbo].CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
 	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 		
 		
 	DELETE cs
 	FROM [dbo].CustPTSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
 	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 		
 	DELETE cs
 	FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.agentid = ci.custid
 	WHERE ci.roleid = 2 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
 	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
 	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 
 	DELETE cs
 	FROM [dbo].CustSettingMode3rd cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
 	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 END
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----

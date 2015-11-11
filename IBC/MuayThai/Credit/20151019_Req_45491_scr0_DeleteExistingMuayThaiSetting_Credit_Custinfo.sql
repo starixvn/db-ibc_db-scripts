@@ -7,7 +7,7 @@
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
 ALTER PROCEDURE Acc_DynamicCustomerInfo_09
-	@target VARCHAR(20)
+	@target VARCHAR(30)
 AS
 BEGIN   
 	SET NOCOUNT ON
@@ -24,7 +24,6 @@ BEGIN
 	FROM [dbo].[CustProductStatus] stat WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON stat.custid = ci.custid
 	WHERE ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-		AND  ci.Currency = 20
 
 END
 
