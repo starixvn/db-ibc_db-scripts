@@ -13,7 +13,23 @@ GO
   
 -- Add new column to ProfileVirtualSetting table --
 ALTER TABLE [dbo].[ProfileVirtualSetting]
-ADD isActive BIT NOT NULL DEFAULT 0
+ADD isActive BIT NULL
+GO
+
+-- Add constraint for new added [isActive] column --
+ALTER TABLE ProfileVirtualSetting
+ADD CONSTRAINT DF_ProfileVirtualSetting_isActive
+	DEFAULT 0 FOR isActive
+GO
+
+-- Update values for all existing record in [ProfileVirtualSetting] table --
+UPDATE ProfileVirtualSetting
+SET isActive = 1
+GO
+
+-- Change [isActive] to NOT NULL column --
+ALTER TABLE ProfileVirtualSetting
+ALTER COLUMN isActive BIT NOT NULL
 GO
 
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBCUST/CustDB	--
