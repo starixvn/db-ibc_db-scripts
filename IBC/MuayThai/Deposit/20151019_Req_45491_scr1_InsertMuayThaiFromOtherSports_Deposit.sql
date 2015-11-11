@@ -43,10 +43,10 @@ BEGIN
            ,[apositiontaking]
            ,[mpositiontaking]
            ,[spositiontaking]
-           ,[playerdiscount]
-           ,[discount]
-           ,[adiscount]
-           ,[sdiscount]
+           ,0 AS playerdiscount
+		   ,0 AS discount
+		   ,0 AS adiscount
+		   ,0 AS sdiscount
            ,[minbet]
            ,[maxbet]
     FROM [Dep_CustSetting] cs WITH(NOLOCK)
@@ -74,7 +74,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND (site <> '12Bet' AND currency NOT IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68))
+	AND NOT(site = '12Bet' AND currency IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68))
 
 WHILE (1 = 1)
 BEGIN
@@ -109,7 +109,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND (site <> '12Bet' AND currency NOT IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68))
+	AND NOT(site = '12Bet' AND currency IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68))
 
 WHILE (1 = 1)
 BEGIN
