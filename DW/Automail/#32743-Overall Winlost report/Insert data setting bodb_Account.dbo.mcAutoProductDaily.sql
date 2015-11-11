@@ -23,7 +23,7 @@ TRUNCATE TABLE bodb_Account.dbo.mcAutoProductDaily
 INSERT INTO  bodb_Account.dbo.mcAutoProductDaily(rptDate,ProductID,livestat,WinlossIBC,TurnoverIBC,BetCount,PartnerAmtDue)
 SELECT b.[rptDate] [rptDate]
 	,pbt.Productid
-	,b.IsLive [livestat]
+	,CAST(b.IsLive AS INT) [livestat]
 	,SUM(CASE 
 			WHEN pbt.excluded_WL = 1 THEN 0
 			ELSE b.[WinlossIBC] * edo.Rate
@@ -49,12 +49,12 @@ WHERE b.rptdate >= @BalanceUpDay AND b.rptdate <= @MoveBetDay AND b.[status] NOT
 
 GROUP BY b.[rptDate]
 	,pbt.Productid
-	,b.IsLive
+	,CAST(b.IsLive AS INT)
 
 INSERT INTO  bodb_Account.dbo.mcAutoProductDaily(rptDate,ProductID,livestat,WinlossIBC,TurnoverIBC,BetCount,PartnerAmtDue)
 SELECT b.[rptDate] [rptDate]
 	,pbt.Productid
-	,b.IsLive [livestat]
+	,CAST(b.IsLive AS INT) [livestat]
 	,SUM(CASE 
 			WHEN pbt.excluded_WL = 1 THEN 0
 			ELSE b.[WinlossIBC] * edo.Rate
@@ -80,12 +80,12 @@ WHERE b.rptdate >= @datestart AND b.rptdate <= @BalanceUpDay AND b.[status] NOT 
 
 GROUP BY b.[rptDate]
 	,pbt.Productid
-	,b.IsLive
+	,CAST(b.IsLive AS INT)
 
 INSERT INTO  bodb_Account.dbo.mcAutoProductDaily(rptDate,ProductID,livestat,WinlossIBC,TurnoverIBC,BetCount,PartnerAmtDue)
 SELECT mc.[rptDate]
 	,ISNULL(pbt.Productid, 0) ProductID
-	,mc.isLive livestat
+	,CAST(mc.IsLive AS INT) livestat
 	,- SUM(CASE 
 			WHEN pbt.excluded_WL = 1 THEN 0
 			ELSE (
@@ -119,12 +119,12 @@ FROM bodb_Account.dbo.MasterCube mc WITH (NOLOCK)
 WHERE mc.rptdate >= @BalanceUpDay AND mc.rptdate <= @dateend AND mc.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY mc.[rptDate]
 	,ISNULL(pbt.Productid, 0)
-	,mc.isLive
+	,CAST(mc.IsLive AS INT)
 
 INSERT INTO  bodb_Account.dbo.mcAutoProductDaily(rptDate,ProductID,livestat,WinlossIBC,TurnoverIBC,BetCount,PartnerAmtDue)
 SELECT mc.[rptDate]
 	,ISNULL(pbt.Productid, 0) ProductID
-	,mc.isLive livestat
+	,CAST(mc.IsLive AS INT) livestat
 	,- SUM(CASE 
 			WHEN pbt.excluded_WL = 1 THEN 0
 			ELSE (
@@ -158,7 +158,7 @@ FROM bodb_Archive.dbo.MasterCube mc WITH (NOLOCK)
 WHERE mc.rptdate >= @datestart AND mc.rptdate <= @BalanceUpDay AND mc.[status] NOT IN (- 1, 18, 9, 10, 14, 3) AND vwExcludeCurr.currencyid IS NULL
 GROUP BY mc.[rptDate]
 	,ISNULL(pbt.Productid, 0)
-	,mc.isLive
+	,CAST(mc.IsLive AS INT)
 
 INSERT INTO  bodb_Account.dbo.mcAutoProductDaily(rptDate,ProductID,livestat,WinlossIBC,TurnoverIBC,BetCount,PartnerAmtDue)
 SELECT b.[rptDate] [rptDate]
