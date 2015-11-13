@@ -9,7 +9,7 @@
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT
-  , @target     VARCHAR(20)
+  , @target     VARCHAR(30)
 AS
 BEGIN	
 	SET NOCOUNT ON
