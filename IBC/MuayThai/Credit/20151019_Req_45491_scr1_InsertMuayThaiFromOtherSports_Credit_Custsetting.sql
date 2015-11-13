@@ -63,7 +63,7 @@ BEGIN
 		,cs.isautopositiontaking 
 		,cs.autopositiontaking  *100
 		,co.minpositiontaking  *100
-		,co.maxpositiontaking  *100
+		,90
 	FROM dbo.CustSetting cs WITH(NOLOCK) 
 		INNER JOIN dbo.custOverride co WITH(NOLOCK) 
 			ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype

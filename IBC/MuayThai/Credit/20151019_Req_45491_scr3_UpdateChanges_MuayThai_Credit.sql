@@ -47,8 +47,7 @@ BEGIN
 		csa.AutoMasterPT = cs.autompositiontaking *100, 
 		csa.IsAutoSuperPT = cs.isautopositiontaking, 
 		csa.AutoSuperPT = cs.autopositiontaking  *100, 
-		csa.MinPT = co.minpositiontaking  *100,
-		csa.MaxPT = co.maxpositiontaking  *100
+		csa.MinPT = co.minpositiontaking  *100
 	FROM custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
 		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
@@ -74,7 +73,6 @@ BEGIN
 				OR cs.isautopositiontaking <> csa.IsAutoSuperPT
 				OR cs.autopositiontaking  *100 <> csa.AutoSuperPT
 				OR co.minpositiontaking  *100 <> csa.MinPT
-				OR co.maxpositiontaking  *100 <> csa.MaxPT
 			)
 
 	
