@@ -1,7 +1,7 @@
 /*
 	Created: Elodie
 	Date: 2015-10-19
-	Task: Copy Muay Thai settings from Other Sports for deposit customer
+	Task: Copy Muay Thai settings for 12Bet customer
 	DB: DBCUST/CustDB
 */ 
 
@@ -40,38 +40,29 @@ BEGIN
 							WHEN @currency IN (9,6,12) THEN 300 --AUD,EUR,GBP
 							WHEN @currency IN (3,16,17,35,36,40,64,65,68) THEN 300  --USD
 					   ELSE 0 END
+	
+	--Copy setting from Other Sports for super, master
+	UPDATE ci 
+	SET ci.MaxPerMatch44 = ci.maxpermatch99
+	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+	WHERE ci.custid IN (SELECT custid FROM @res)
+		AND roleid IN (4,3)
+	
+	--Insert setting with specific value for agent, member except 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	UPDATE ci 
+	SET ci.MaxPerMatch44 = @maxPerMatch
+	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+	WHERE ci.custid IN (SELECT custid FROM @res)
+		AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+		AND roleid IN (2,1)
 
-	IF @currency IN (3,16,17,35,36,40,64,65,68) --USD
-	BEGIN
-		UPDATE ci 
-		SET ci.MaxPerMatch44 = ci.maxpermatch99
-		FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			AND roleid IN (4,3)
-
-		UPDATE ci 
-		SET ci.MaxPerMatch44 = @maxPerMatch
-		FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-			AND roleid IN (2,1)
-
-		UPDATE ci 
-		SET ci.MaxPerMatch44 = 1500
-		FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-			AND roleid IN (2,1)
-
-	END
-	ELSE
-	BEGIN
-		--custInfo
-		UPDATE ci 
-		SET ci.MaxPerMatch44 = ci.maxpermatch99
-		FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-		WHERE ci.custid IN (SELECT custid FROM @res)
-	 END
+	--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	UPDATE ci 
+	SET ci.MaxPerMatch44 = 1500
+	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+	WHERE ci.custid IN (SELECT custid FROM @res)
+		AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+		AND roleid IN (2,1)	
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------

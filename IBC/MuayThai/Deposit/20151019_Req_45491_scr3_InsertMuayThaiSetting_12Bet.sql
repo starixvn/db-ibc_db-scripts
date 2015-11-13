@@ -56,144 +56,110 @@ BEGIN
 					   ELSE 0 END
 
 	IF (@minbet = 0) RETURN
+	
+	--Copy setting from Other Sports for super, master
+	INSERT INTO [dbo].[Dep_CustSetting]
+			([custid]
+			,[bettype]
+			,[sporttype]
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,[minbet]
+			,[maxbet])		   	
+	SELECT cs.[custid]
+			,[bettype]
+			,44
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,[minbet]
+			,[maxbet]
+	FROM [Dep_CustSetting] cs WITH(NOLOCK)
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+	WHERE ci.custid IN (SELECT custid FROM @res)
+			AND sporttype = 99 and bettype = 3
+			AND roleid IN (4,3)	
 
-	IF @currency IN (3,16,17,35,36,40,64,65,68) --USD
-	BEGIN
-		INSERT INTO [dbo].[Dep_CustSetting]
-			   ([custid]
-			   ,[bettype]
-			   ,[sporttype]
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,[minbet]
-			   ,[maxbet])		   	
-		SELECT cs.[custid]
-			   ,[bettype]
-			   ,44
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,1 AS minbet
-			   ,500 AS maxbet
-		FROM [Dep_CustSetting] cs WITH(NOLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			 AND sporttype = 99 and bettype = 3
-			 AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-			 AND roleid IN (2,1) 
-
-		INSERT INTO [dbo].[Dep_CustSetting]
-			   ([custid]
-			   ,[bettype]
-			   ,[sporttype]
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,[minbet]
-			   ,[maxbet])		   	
-		SELECT cs.[custid]
-			   ,[bettype]
-			   ,44
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,@minbet
-			   ,@maxbet
-		FROM [Dep_CustSetting] cs WITH(NOLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			 AND sporttype = 99 and bettype = 3
-			 AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) AND roleid IN (2,1)
-
-		INSERT INTO [dbo].[Dep_CustSetting]
-			   ([custid]
-			   ,[bettype]
-			   ,[sporttype]
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,[minbet]
-			   ,[maxbet])		   	
-		SELECT cs.[custid]
-			   ,[bettype]
-			   ,44
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,[minbet]
-			   ,[maxbet]
-		FROM [Dep_CustSetting] cs WITH(NOLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			 AND sporttype = 99 and bettype = 3
-			 AND roleid IN (4,3)
-	END
-	ELSE
-	BEGIN
-		INSERT INTO [dbo].[Dep_CustSetting]
-			   ([custid]
-			   ,[bettype]
-			   ,[sporttype]
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,[minbet]
-			   ,[maxbet])		   	
-		SELECT cs.[custid]
-			   ,[bettype]
-			   ,44
-			   ,[islive]
-			   ,[apositiontaking]
-			   ,[mpositiontaking]
-			   ,[spositiontaking]
-			   ,[playerdiscount]
-			   ,[discount]
-			   ,[adiscount]
-			   ,[sdiscount]
-			   ,@minbet
-			   ,@maxbet
-		FROM [Dep_CustSetting] cs WITH(NOLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-		WHERE ci.custid IN (SELECT custid FROM @res)
-			 AND sporttype = 99 and bettype = 3
-	END 
-		
+	--Insert setting with specific value for agent, member except 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	INSERT INTO [dbo].[Dep_CustSetting]
+			([custid]
+			,[bettype]
+			,[sporttype]
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,[minbet]
+			,[maxbet])		   	
+	SELECT cs.[custid]
+			,[bettype]
+			,44
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,@minbet
+			,@maxbet
+	FROM [Dep_CustSetting] cs WITH(NOLOCK)
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+	WHERE ci.custid IN (SELECT custid FROM @res)
+			AND sporttype = 99 and bettype = 3
+			AND roleid IN (2,1)
+			AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) 
+	
+	--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	INSERT INTO [dbo].[Dep_CustSetting]
+			([custid]
+			,[bettype]
+			,[sporttype]
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,[minbet]
+			,[maxbet])		   	
+	SELECT cs.[custid]
+			,[bettype]
+			,44
+			,[islive]
+			,[apositiontaking]
+			,[mpositiontaking]
+			,[spositiontaking]
+			,[playerdiscount]
+			,[discount]
+			,[adiscount]
+			,[sdiscount]
+			,1 AS minbet
+			,500 AS maxbet
+	FROM [Dep_CustSetting] cs WITH(NOLOCK)
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+	WHERE ci.custid IN (SELECT custid FROM @res)
+			AND sporttype = 99 and bettype = 3
+			AND roleid IN (2,1) 
+			AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05						
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
@@ -204,8 +170,8 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #list (custid INT PRIMARY KEY, isfinished bit)
 
-declare @currency int
- --2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68
+declare @currency int --2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68
+ 
 SELECT @currency = 2	--MYR
 	--@currency = 3		--USD
 	--@currency = 4		--THB

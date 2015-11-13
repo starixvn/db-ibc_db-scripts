@@ -57,20 +57,28 @@ GO
 
 --adjust [Dep_CustSetting]
 UPDATE cs1
-SET	cs1.[minbet] = cs2.[minbet]
-	,cs1.[maxbet] = cs2.[maxbet]
-	,cs1.[apositiontaking] = cs2.[apositiontaking]
+SET	cs1.[apositiontaking] = cs2.[apositiontaking]
 	,cs1.[mpositiontaking] = cs2.[mpositiontaking]
 	,cs1.[spositiontaking] = cs2.[spositiontaking]
+	,cs1.[playerdiscount] = cs2.[playerdiscount]	
+	,cs1.[discount] = cs2.[discount]	
+	,cs1.[adiscount] = cs2.[adiscount]	
+	,cs1.[sdiscount] = cs2.[sdiscount]	
+	,cs1.[minbet] = cs2.[minbet]
+	,cs1.[maxbet] = cs2.[maxbet]
 FROM custinfo ci WITH(NOLOCK)
 	INNER JOIN [Dep_CustSetting] cs1 WITH(UPDLOCK,ROWLOCK) ON cs1.custid = ci.custid AND cs1.sporttype  = 44 AND cs1.bettype = 3
 	INNER JOIN [Dep_CustSetting] cs2 WITH(NOLOCK) ON cs2.custid = ci.custid AND cs2.sporttype = 99 AND cs2.bettype = 3
 WHERE ci.srecommend IN (SELECT custid FROM #supers)		
-	AND ( cs1.[minbet] <> cs2.[minbet]
-		   OR cs1.[maxbet] <> cs2.[maxbet]
-		   OR cs1.[apositiontaking] <> cs2.[apositiontaking]
-		   OR cs1.[mpositiontaking] <> cs2.[mpositiontaking]
-		   OR cs1.[spositiontaking] <> cs2.[spositiontaking])	
+	AND ( cs1.[apositiontaking] <> cs2.[apositiontaking]
+			OR cs1.[mpositiontaking] <> cs2.[mpositiontaking]
+			OR cs1.[spositiontaking] <> cs2.[spositiontaking]
+			OR cs1.[playerdiscount] <> cs2.[playerdiscount]	
+			OR cs1.[discount] <> cs2.[discount]	
+			OR cs1.[adiscount] <> cs2.[adiscount]	
+			OR cs1.[sdiscount] <> cs2.[sdiscount]
+			OR cs1.[minbet] <> cs2.[minbet]
+			OR cs1.[maxbet] <> cs2.[maxbet])
 GO
 
 --adjust [CustInfo]
