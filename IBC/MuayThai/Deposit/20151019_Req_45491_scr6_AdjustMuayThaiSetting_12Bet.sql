@@ -87,7 +87,7 @@ SELECT cs.[custid]
 				WHEN currency IN (4,43) THEN 50  --THB
 				WHEN currency = 51 THEN 30  --VND
 				WHEN currency IN (9,6,12) THEN 1 --AUD,EUR,GBP
-				WHEN @currency IN (3,16,17,35,36,40,64,65,68) THEN 1  --USD
+				WHEN currency IN (3,16,17,35,36,40,64,65,68) THEN 1  --USD
 			ELSE minbet END
         ,CASE	WHEN currency = 2 THEN 2000  --RM
 				WHEN currency IN (15,22,33,34,47) THEN 5000  --IDR
@@ -97,7 +97,7 @@ SELECT cs.[custid]
 				WHEN currency IN (4,43) THEN 20000  --THB
 				WHEN currency = 51 THEN 10000  --VND
 				WHEN currency IN (9,6,12) THEN 100 --AUD,EUR,GBP
-				WHEN @currency IN (3,16,17,35,36,40,64,65,68) THEN 100  --USD
+				WHEN currency IN (3,16,17,35,36,40,64,65,68) THEN 100  --USD
 				ELSE maxbet END
 FROM [Dep_CustSetting] cs WITH(NOLOCK)
 	INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
