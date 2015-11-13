@@ -157,7 +157,7 @@ BEGIN
 
 	SELECT @counter = (SELECT COUNT(1) FROM Customer WHERE srecommend = @srecommend)
 
-	WHILE @srecommend >= 0
+	WHILE @counter >= 0
 	BEGIN
 		INSERT INTO CustVirtualSetting(custid, seqNo, bitmapVirtual)
 		SELECT custid, seqNo, bitmapVirtual
