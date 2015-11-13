@@ -8,7 +8,7 @@
 --STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -----
 ------------------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]	
-	@target VARCHAR(20)
+	@target VARCHAR(30)
 AS
 BEGIN	
 	SET NOCOUNT ON

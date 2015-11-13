@@ -9,7 +9,8 @@
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT
-  , @target     VARCHAR(20)
+	,@target     VARCHAR(30)
+	,@maxcustid INT
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -25,6 +26,7 @@ BEGIN
 	   SET ci.MaxPerMatch44 = ci.maxpermatch99
 	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
 	 WHERE srecommend = @srecommend
+		AND ci.custid <= @maxcustid
 	   
 END
 GO
@@ -58,8 +60,9 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.Acc_ExecRep_Cust_09
-	    @srecommend = @srecommend
-	  , @target = 'REPLICATED'
+	   @srecommend = @srecommend
+	  ,@target = 'REPLICATED'
+	  ,@maxcustid = @max_custid
 
     WAITFOR DELAY '00:00:00.280'
 END
@@ -95,9 +98,10 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_ExecRep_Cust_09
-	    @srecommend = @srecommend
-	  , @target = 'DBCUST'
+	EXEC dbo.Acc_ExecRep_Cust_09	
+	  @srecommend = @srecommend
+	  ,@target = 'DBCUST'
+	  ,@maxcustid = @max_custid
 	  
 	WAITFOR DELAY '00:00:00.280'
 END

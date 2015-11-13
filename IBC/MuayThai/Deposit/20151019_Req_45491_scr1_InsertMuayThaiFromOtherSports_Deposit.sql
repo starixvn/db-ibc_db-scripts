@@ -9,7 +9,8 @@
 ------------------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@srecommend INT	
-	,@target VARCHAR(20)
+	,@target VARCHAR(30)
+	,@maxcustid INT
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -53,6 +54,7 @@ BEGIN
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
     WHERE ci.srecommend = @srecommend
 		 AND sporttype = 99 and bettype = 3
+		 AND  ci.custid <= @maxcustid
 		
 END
 GO
