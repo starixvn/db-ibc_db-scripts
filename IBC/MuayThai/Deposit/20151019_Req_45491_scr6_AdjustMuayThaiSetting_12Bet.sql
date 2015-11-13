@@ -144,6 +144,41 @@ WHERE ci.srecommend IN (SELECT custid FROM #supers)
 		AND currency IN (3,16,17,35,36,40,64,65,68) --USD
 		AND recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05	
 
+--Copy setting from Other Sports for super, master
+UPDATE ci 
+SET ci.MaxPerMatch44 = ci.maxpermatch99
+FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
+	AND roleid IN (4,3)
+	AND ci.custid > @maxcustid
+	
+--Insert setting with specific value for agent, member except 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+UPDATE ci 
+SET ci.MaxPerMatch44 = CASE 
+							WHEN currency = 2 THEN 5000  -- MYR
+							WHEN currency IN (15,22,33,34,47) THEN 15000  --IDR
+							WHEN currency = 61 THEN 75000  --INR
+							WHEN currency IN (44,45,62) THEN 1500000  --KRW
+							WHEN currency IN (13,66) THEN 10000  --CNY
+							WHEN currency IN (4,43) THEN 50000  --THB
+							WHEN currency = 51 THEN 30000  --VND
+							WHEN currency IN (9,6,12) THEN 300 --AUD,EUR,GBP
+							WHEN currency IN (3,16,17,35,36,40,64,65,68) THEN 300  --USD
+							END
+FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
+	AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	AND roleid IN (2,1)
+	AND ci.custid > @maxcustid
+
+--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+UPDATE ci 
+SET ci.MaxPerMatch44 = 1500
+FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
+	AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+	AND roleid IN (2,1)	
+	AND ci.custid > @maxcustid
 --STEP 2: Adjust settings for super, master 12Bet
 
 --adjust [Dep_CustSetting]
