@@ -8,7 +8,6 @@
 -----------------------------------------------------------
 
 -- Insert data to [ProfileVirtualSetting] table --
--- If [ProfileVirtualSetting] table has not replicated yet, run this script on DBACC/bodb02 also --
 INSERT INTO [dbo].[ProfileVirtualSetting] (sporttype, bettype, islive, isActive)
 SELECT sporttype, bettype, islive, isActive
 FROM (
