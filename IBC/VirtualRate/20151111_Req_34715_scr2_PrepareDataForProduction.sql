@@ -155,7 +155,7 @@ BEGIN
 		) <> 3
 		RETURN
 
-	SELECT @counter = (SELECT COUNT(1) FROM Customer WHERE srecommend = @srecommend)
+	SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE srecommend = @srecommend)
 
 	WHILE @counter >= 0
 	BEGIN
