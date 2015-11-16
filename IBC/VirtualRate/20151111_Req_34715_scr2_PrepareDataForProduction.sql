@@ -13,80 +13,80 @@ SELECT sporttype, bettype, islive, isActive
 FROM (
     SELECT TOP 120 sporttype, bettype, islive
     FROM (
-        SELECT sporttype, bettype
+        SELECT sporttype, bettype		
         FROM (
-            SELECT 1    AS sporttype
+            SELECT 1    AS sporttype				-- Soccer
             UNION ALL
-            SELECT 2    AS sporttype
+            SELECT 2    AS sporttype				-- Basketball
             UNION ALL
-            SELECT 3    AS sporttype
+            SELECT 3    AS sporttype				-- Football
             UNION ALL
-            SELECT 99   AS sporttype
+            SELECT 99   AS sporttype				-- Other sports
         ) st
         CROSS APPLY (
-            SELECT 1    AS bettype
+            SELECT 1    AS bettype					-- Handicap
             UNION ALL
-            SELECT 2    AS bettype
+            SELECT 2    AS bettype					-- Odd/Even
             UNION ALL
-            SELECT 3    AS bettype
+            SELECT 3    AS bettype					-- Over/Under
             UNION ALL
-            SELECT 7    AS bettype
+            SELECT 7    AS bettype					-- 1H Handicap
             UNION ALL
-            SELECT 8    AS bettype
+            SELECT 8    AS bettype					-- 1H Over/Under
             UNION ALL
-            SELECT 12   AS bettype
+            SELECT 12   AS bettype					-- 1H Odd/Even
         ) bt
         
         UNION ALL
-        SELECT sporttype, bettype
+        SELECT sporttype, bettype		
         FROM (
-            SELECT 4    AS sporttype
+            SELECT 4    AS sporttype				-- Ice Hockey
             UNION ALL
-            SELECT 5    AS sporttype
+            SELECT 5    AS sporttype				-- Tennis
             UNION ALL
-            SELECT 6    AS sporttype
+            SELECT 6    AS sporttype				-- Volleyball
             UNION ALL
-            SELECT 7    AS sporttype
+            SELECT 7    AS sporttype				-- Snooker/Pool
             UNION ALL
-            SELECT 9    AS sporttype
+            SELECT 9    AS sporttype				-- Badminton
             UNION ALL
-            SELECT 11   AS sporttype
+            SELECT 11   AS sporttype				-- Motorsports
             UNION ALL
-            SELECT 27   AS sporttype
+            SELECT 27   AS sporttype				-- Cricket
         ) st
         CROSS APPLY (
-            SELECT 1    AS bettype
+            SELECT 1    AS bettype					-- Handicap
             UNION ALL
-            SELECT 2    AS bettype
+            SELECT 2    AS bettype					-- Odd/Even
             UNION ALL
-            SELECT 3    AS bettype
+            SELECT 3    AS bettype					-- Over/Under
             UNION ALL
-            SELECT 20   AS bettype
+            SELECT 20   AS bettype					-- Moneyline
         ) bt
 
         UNION ALL
-        SELECT sporttype, bettype
+        SELECT sporttype, bettype		
         FROM (
-            SELECT 8    AS sporttype
+            SELECT 8    AS sporttype				-- Baseball
         ) st
         CROSS APPLY (
-            SELECT 1    AS bettype
+            SELECT 1    AS bettype					-- Handicap
             UNION ALL
-            SELECT 3    AS bettype
+            SELECT 3    AS bettype					-- Over/Under
             UNION ALL
-            SELECT 7    AS bettype
+            SELECT 7    AS bettype					-- 1H Handicap
             UNION ALL
-            SELECT 8   AS bettype
+            SELECT 8    AS bettype					-- 1H Over/Under
             UNION ALL
-            SELECT 20   AS bettype
+            SELECT 20   AS bettype					-- Moneyline
             UNION ALL
-            SELECT 21   AS bettype
+            SELECT 21   AS bettype					-- 1st Moneyline
         ) bt
 
         UNION ALL
-        SELECT 5  AS sporttype, 1324 AS bettype
-        UNION ALL
-        SELECT 99 AS sporttype, 20   AS bettype
+        SELECT 5  AS sporttype, 1324 AS bettype		-- Tennis - Set x Game y Winner
+        UNION ALL									
+        SELECT 99 AS sporttype, 20   AS bettype		-- Other Sports - Moneyline
     ) sbt
     CROSS APPLY (
         SELECT 0 AS islive
