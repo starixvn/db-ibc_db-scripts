@@ -1,7 +1,7 @@
 /*
 	Created By: Dominic@20151029
 	Description: Setup PT Group for dedicated credit customer
-	Run at DBCUST.CustDB on 20151106 (UM) Redmine #47039 
+	Run at DBCUST.CustDB on 20151106 (UM)  Redmine #47039 
 */
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
