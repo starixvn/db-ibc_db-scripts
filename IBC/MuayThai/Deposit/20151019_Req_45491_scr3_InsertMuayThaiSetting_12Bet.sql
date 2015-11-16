@@ -122,42 +122,45 @@ BEGIN
 			AND sporttype = 99 and bettype = 3
 			AND roleid IN (2,1)
 			AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) 
-	
-	--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-	INSERT INTO [dbo].[Dep_CustSetting]
-			([custid]
-			,[bettype]
-			,[sporttype]
-			,[islive]
-			,[apositiontaking]
-			,[mpositiontaking]
-			,[spositiontaking]
-			,[playerdiscount]
-			,[discount]
-			,[adiscount]
-			,[sdiscount]
-			,[minbet]
-			,[maxbet])		   	
-	SELECT cs.[custid]
-			,[bettype]
-			,44
-			,[islive]
-			,[apositiontaking]
-			,[mpositiontaking]
-			,[spositiontaking]
-			,[playerdiscount]
-			,[discount]
-			,[adiscount]
-			,[sdiscount]
-			,1 AS minbet
-			,500 AS maxbet
-	FROM [Dep_CustSetting] cs WITH(NOLOCK)
-		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.srecommend = @srecommend -- 12BETSuperUS$
-			AND  ci.custid <= @maxcustid
-			AND sporttype = 99 and bettype = 3
-			AND roleid IN (2,1) 
-			AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05						
+
+	IF @srecommend = 791080
+	BEGIN
+		--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+		INSERT INTO [dbo].[Dep_CustSetting]
+				([custid]
+				,[bettype]
+				,[sporttype]
+				,[islive]
+				,[apositiontaking]
+				,[mpositiontaking]
+				,[spositiontaking]
+				,[playerdiscount]
+				,[discount]
+				,[adiscount]
+				,[sdiscount]
+				,[minbet]
+				,[maxbet])		   	
+		SELECT cs.[custid]
+				,[bettype]
+				,44
+				,[islive]
+				,[apositiontaking]
+				,[mpositiontaking]
+				,[spositiontaking]
+				,[playerdiscount]
+				,[discount]
+				,[adiscount]
+				,[sdiscount]
+				,1 AS minbet
+				,500 AS maxbet
+		FROM [Dep_CustSetting] cs WITH(NOLOCK)
+			INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		WHERE ci.srecommend = @srecommend -- 12BETSuperUS$
+				AND  ci.custid <= @maxcustid
+				AND sporttype = 99 and bettype = 3
+				AND roleid IN (2,1) 
+				AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05	
+	END					
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
