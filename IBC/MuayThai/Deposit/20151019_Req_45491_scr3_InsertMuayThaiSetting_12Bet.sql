@@ -153,7 +153,7 @@ BEGIN
 			,500 AS maxbet
 	FROM [Dep_CustSetting] cs WITH(NOLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.srecommend = 791080 -- 12BETSuperUS$
+	WHERE ci.srecommend = @srecommend -- 12BETSuperUS$
 			AND  ci.custid <= @maxcustid
 			AND sporttype = 99 and bettype = 3
 			AND roleid IN (2,1) 
