@@ -79,7 +79,7 @@ DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid= xx
 
-INSERT INTO #supers(custid)
+INSERT INTO #CustSuper(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
@@ -119,7 +119,7 @@ DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid= xx
 
-INSERT INTO #supers(custid)
+INSERT INTO #CustSuper(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
