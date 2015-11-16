@@ -8,26 +8,21 @@
 --STEP 1: DEPLOY THIS SP @DBCUST.CustDB -----
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
-	@ids varchar(max),
-    @currency INT
+	@srecommend INT
+	,@target     VARCHAR(30)
+	,@maxcustid INT
 AS
 BEGIN	
 	SET NOCOUNT ON
 	
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
+
 	IF dbo.f_CheckRepTable('Custinfo') = 0
-		RETURN		
+		RETURN			
 
-	declare @string varchar(max), @splitter char(1), @xml XML
-	select @splitter = ',' ,@string = @ids
-
-	SET @XML = N'<root><r>' + REPLACE(@string, @splitter, '</r><r>') + '</r></root>'
-
-	declare @res AS TABLE(custid INT)
-	INSERT INTO @res(custid)
-	SELECT r.value('.','VARCHAR(12)')
-	FROM @xml.nodes('//root/r') AS RECORDS(r)
-
-	DECLARE @maxPerMatch MONEY
+	DECLARE @maxPerMatch MONEY, @currency INT
+	SELECT @currency = currency FROM CustInfo WITH (NOLOCK) WHERE custid = @srecommend
 
 	SELECT	@maxPerMatch =  CASE 
 							WHEN @currency = 2 THEN 5000  -- MYR
@@ -45,24 +40,30 @@ BEGIN
 	UPDATE ci 
 	SET ci.MaxPerMatch44 = ci.maxpermatch99
 	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-	WHERE ci.custid IN (SELECT custid FROM @res)
+	WHERE srecommend = @srecommend
+		AND ci.custid <= @maxcustid
 		AND roleid IN (4,3)
 	
 	--Insert setting with specific value for agent, member except 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
 	UPDATE ci 
 	SET ci.MaxPerMatch44 = @maxPerMatch
 	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-	WHERE ci.custid IN (SELECT custid FROM @res)
+	WHERE srecommend = @srecommend
+		AND ci.custid <= @maxcustid
 		AND ci.recommend NOT IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
 		AND roleid IN (2,1)
-
-	--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-	UPDATE ci 
-	SET ci.MaxPerMatch44 = 1500
-	FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
-	WHERE ci.custid IN (SELECT custid FROM @res)
-		AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
-		AND roleid IN (2,1)	
+	
+	IF @srecommend = 791080
+	BEGIN
+		--Insert setting with specific value for 12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+		UPDATE ci 
+		SET ci.MaxPerMatch44 = 1500
+		FROM custInfo ci WITH(ROWLOCK, UPDLOCK)
+		WHERE srecommend = @srecommend
+			AND ci.custid <= @maxcustid
+			AND ci.recommend IN (18839496,18839497,13880633,13880635,10393717,10842822) --12betUS$INR, 12betUS$INR01, 12BETUS$JP, 12BETUS$JP01, 12betUS$KR, 12BETUS$KR05
+			AND roleid IN (2,1)	
+	END
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
@@ -70,75 +71,82 @@ GO
 
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #list (custid INT PRIMARY KEY, isfinished bit)
+CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))	
 
-declare @currency int
- --2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68
-SELECT @currency = 2	--MYR
-	--@currency = 3		--USD
-	--@currency = 4		--THB
-	--@currency = 6		--EUR
-	--@currency = 9		--AUD
-	--@currency = 12	--GBP
-	--@currency = 13	--CNY
-	--@currency = 15	--IDR
-	--@currency = 16	--USD
-	--@currency = 17	--USD
-	--@currency = 22	--IDR
-	--@currency = 33	--IDR
-	--@currency = 34	--IDR
-	--@currency = 35	--USD
-	--@currency = 36	--USD
-	--@currency = 40	--USD
-	--@currency = 43	--THB
-	--@currency = 44	--KRW
-	--@currency = 45	--KRW
-	--@currency = 47	--IDR
-	--@currency = 51	--VND
-	--@currency = 61	--INR
-	--@currency = 62	--KRW
-	--@currency = 64	--USD
-	--@currency = 65	--USD
-	--@currency = 66	--CNY
-	--@currency = 68	--USD
-
-DECLARE @max_custid INT
+DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid= xx
 
-INSERT INTO #list (custid, isfinished)
-SELECT custid, 0
+INSERT INTO #CustSuper(custid)
+SELECT custid
 FROM customer WITH(NOLOCK)
-WHERE roleid in (1,2,3,4)
-	AND custid <= @max_custid
-	and srecommend in (
-		select custid 
-		from dep_custsuper with(nolock)
-		where currency = @currency
-			and site='12Bet'	
-	)
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid	
+	AND site = '12Bet' 
+	AND currency IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68)
 
-declare @ids varchar(max), @rowcnt int
-
-while (1=1)
-begin
-	select @ids = ''
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #CustSuper
+	   SET isfinished = 1
+		 , @srecommend = srecommend
+	 WHERE isfinished = 0
 	
-	update TOP (1000) #list
-	set @ids = @ids + case @ids when '' then '' else ',' end + cast(custid as varchar(12))
-		,isfinished = 1
-	from #list
-	where isfinished = 0
-	
-	select @rowcnt = @@rowcount
+	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC Acc_ExecRep_Cust_09 @ids = @ids, @currency = @currency
-	
-	if @rowcnt < 1000 Break
+	EXEC dbo.Acc_ExecRep_Cust_09
+	   @srecommend = @srecommend
+	  ,@target = 'REPLICATED'
+	  ,@maxcustid = @max_custid
 
+    WAITFOR DELAY '00:00:00.280'
+END
+
+DROP TABLE #CustSuper
+
+GO		
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+-----------------------------------------------------------------------------------
+
+---
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+-------------------------------------------------
+CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))	
+
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid= xx
+
+INSERT INTO #CustSuper(custid)
+SELECT custid
+FROM customer WITH(NOLOCK)
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND custid <= @max_custid	
+	AND site = '12Bet' 
+	AND currency IN (2,3,4,6,9,12,13,15,16,17,22,33,34,35,36,40,43,44,45,47,51,61,62,64,65,66,68)
+
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #CustSuper
+	   SET isfinished = 1
+		 , @srecommend = srecommend			
+	 WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+
+	EXEC dbo.Acc_ExecRep_Cust_09	
+	  @srecommend = @srecommend
+	  ,@target = 'DBCUST'
+	  ,@maxcustid = @max_custid
+	  
 	WAITFOR DELAY '00:00:00.280'
-end	
+END
 
-DROP TABLE #list
+DROP TABLE #CustSuper
+
+GO	
+
+-- END STEP 3: RUN THIS SCRIPT AT DBCUST -------
+-------------------------------------------------
