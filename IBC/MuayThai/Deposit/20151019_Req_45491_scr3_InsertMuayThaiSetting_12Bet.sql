@@ -193,7 +193,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_CustSetting3rd_19] 
-			srecommend = @srecommend
+			@srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 	
