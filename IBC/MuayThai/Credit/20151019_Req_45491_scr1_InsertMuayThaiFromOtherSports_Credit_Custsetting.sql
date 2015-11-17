@@ -55,7 +55,7 @@ BEGIN
 	WHERE srecommend = @srecommend AND roleid = 1 AND ci.custid <= @maxcustid 
 	
 	
-	INSERT INTO #SMATemp (CustID)
+	INSERT INTO #SMATemp (CustID,maxpermatch99)
 	SELECT custid,maxpermatch99
 	FROM Custinfo WITH (NOLOCK)
 	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND ci.custid <= @maxcustid 
