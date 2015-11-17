@@ -40,7 +40,8 @@ BEGIN
 	/*****************************POSITION TAKING**************************/
 	CREATE TABLE #MemberTemp
 	(
-		CustID INT PRIMARY KEY CLUSTERED
+		CustID INT PRIMARY KEY CLUSTERED,
+		maxpermatch99 MONEY
 	)
 
 	CREATE TABLE #SMATemp
@@ -49,16 +50,16 @@ BEGIN
 		maxpermatch99 MONEY
 	)
 	
-	INSERT INTO #MemberTemp (CustID)
-	SELECT custid
+	INSERT INTO #MemberTemp (CustID,maxpermatch99)
+	SELECT custid,maxpermatch99
 	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid = 1 AND ci.custid <= @maxcustid 
+	WHERE srecommend = @srecommend AND roleid = 1 AND custid <= @maxcustid 
 	
 	
 	INSERT INTO #SMATemp (CustID,maxpermatch99)
 	SELECT custid,maxpermatch99
 	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND ci.custid <= @maxcustid 
+	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND custid <= @maxcustid 
 
 
 	--AGENT LEVEL
