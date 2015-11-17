@@ -182,7 +182,7 @@ WHERE custid IN (
 	WHERE UpdateTime >= '2015-11-15 00:00:00.000'						-- Correct this time with the time begin running import data script
 )
 
--- Import virtual setting from old structure to new structure for selected super lines --
+-- Import virtual setting from old structure to new structure for selected customer lines --
 WHILE (0 = 0)
 BEGIN
 	UPDATE TOP(1) #customers
@@ -223,7 +223,7 @@ WHERE custid IN (
 	WHERE UpdateTime >= '2015-11-15 00:00:00.000'						-- Correct this time with the time begin running import data script
 )
 
--- Import virtual setting from old structure to new structure for selected super lines --
+-- Import virtual setting from old structure to new structure for selected customer lines --
 WHILE (0 = 0)
 BEGIN
 	UPDATE TOP(1) #customers
