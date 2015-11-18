@@ -7,7 +7,7 @@
 */   
 	DECLARE @max_custid INT
 
-	SELECT @max_custid = 19900124
+	SELECT @max_custid = xxx
 	--Default status
 	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1, @DefaultBitMap BINARY(32) = 0x00
 
