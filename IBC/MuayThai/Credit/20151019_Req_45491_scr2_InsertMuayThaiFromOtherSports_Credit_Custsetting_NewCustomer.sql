@@ -4,30 +4,10 @@
 	Task: Copy Bet Setting / Position Taking from Other Sports to MuayThai for newly created Credit customers 
 	DB: DBCust.CustDB
 */  
--- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
-------------------------------------------------------
-ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
-	@srecommend INT	
-	,@maxcustid INT
-	,@target VARCHAR(30)
-AS
-BEGIN   
-	SET NOCOUNT ON
-	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
-	
-	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
-	   AND dbo.f_CheckRepTable('CustSetting') = 1
-	   AND dbo.f_CheckRepTable('custOverride') = 1 
-	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Member') = 1
-	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Agent') = 1
-	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
-	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
-	   AND dbo.f_CheckRepTable('CustSettingMode3rd') = 1
-	   )
-	  RETURN
 
+	DECLARE @max_custid INT
+
+	SELECT @max_custid = xxx
 
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
@@ -53,13 +33,15 @@ BEGIN
 	INSERT INTO #MemberTemp (CustID,maxpermatch99)
 	SELECT custid,maxpermatch99
 	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid = 1 AND custid > @maxcustid 
+	WHERE srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND CustID > @max_custid AND roleid = 1 
 	
 	
 	INSERT INTO #SMATemp (CustID,maxpermatch99)
 	SELECT custid,maxpermatch99
 	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND custid > @maxcustid 
+	WHERE srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND CustID > @max_custid AND roleid IN (2,3,4) 
 
 
 	--AGENT LEVEL
@@ -162,68 +144,5 @@ BEGIN
 	
 	DROP TABLE #MemberTemp
 	DROP TABLE #SMATemp
+	DROP TABLE #DestinationSportBetType
 
-
-END
-
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
---------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
-			
-			
-	waitfor delay '00:00:0.280'
-END
-
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
---------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
-						
-	waitfor delay '00:00:0.280'
-END

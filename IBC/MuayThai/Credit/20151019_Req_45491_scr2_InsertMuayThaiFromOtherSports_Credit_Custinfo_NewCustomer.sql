@@ -85,3 +85,5 @@
 			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
 	FROM #CustomerTemp ci WITH(NOLOCK)
 
+	DROP TABLE #CustomerTemp
+	DROP TABLE #DestinationSportBetType
