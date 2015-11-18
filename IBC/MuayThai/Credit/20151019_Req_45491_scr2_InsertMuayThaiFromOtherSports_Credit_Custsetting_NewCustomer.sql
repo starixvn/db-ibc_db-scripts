@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-10-15
-	Task: Copy Bet Setting / Position Taking from Other Sports to MuayThai for newly created Credit customers
+	Task: Copy Bet Setting / Position Taking from Other Sports to MuayThai for newly created Credit customers 
 	DB: DBCust.CustDB
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
