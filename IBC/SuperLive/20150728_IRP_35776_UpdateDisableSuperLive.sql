@@ -1,16 +1,17 @@
 /*
 	Created: Elodie
-	Date: 2015-27-28
-	Task: Update DisableSuperLive = 0 for real accounts
+	Date: 2015-07-28
+	Task: Update DisableSuperLive = 1 for real accounts
 	DB: DBCUST/CustDB
 */ 
 
---STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -----
+--STEP 1: DEPLOY THIS SP @DBCUST.CustDB -----
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT
-  , @max_custid INT
-  , @target     VARCHAR(20)
+	,@DisableSuperLive BIT
+	,@max_custid INT
+	,@target     VARCHAR(30)
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -23,20 +24,19 @@ BEGIN
 
     --custInfo
 	UPDATE custInfo WITH(ROWLOCK, UPDLOCK)
-	   SET DisableSuperLive = 0
+	   SET DisableSuperLive = @DisableSuperLive
 	 WHERE srecommend = @srecommend
 	   AND custid <= @max_custid
-	   AND DisableSuperLive IS NULL
 END
 GO
--- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
+-- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB -------
 ------------------------------------------------------	
-
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP)----
 --------------------------------------------------------------------------------------
 CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))	
+CREATE TABLE #CustEnableSuperLive(srecommend INT)	
 
 DECLARE @max_custid INT, @srecommend INT
 
@@ -44,10 +44,18 @@ SELECT @max_custid = xx
 
 INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
-  FROM custinfo ci WITH(NOLOCK)
- WHERE ci.custid <= @max_custid
-   AND roleid = 4
+FROM Customer ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND roleid = 4
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 
+INSERT INTO #CustEnableSuperLive(srecommend)
+SELECT ci.custid
+FROM Customer ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND roleid = 4
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND site IN ('KORIBC','INDO')
 
 WHILE (1 = 1)
 BEGIN
@@ -57,16 +65,25 @@ BEGIN
 	 WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_ExecRep_Cust_09
-	    @srecommend = @srecommend
-	  , @max_custid = @max_custid
-	  , @target = 'REPLICATED'
+	
+	IF EXISTS (SELECT 1 FROM #CustEnableSuperLive WHERE srecommend = @srecommend)
+		EXEC dbo.Acc_ExecRep_Cust_09
+			@srecommend = @srecommend
+			,@DisableSuperLive = 0
+			,@max_custid = @max_custid
+			,@target = 'REPLICATED'
+	ELSE
+		EXEC dbo.Acc_ExecRep_Cust_09
+			@srecommend = @srecommend
+			,@DisableSuperLive = 1
+			,@max_custid = @max_custid
+			,@target = 'REPLICATED'
 
     WAITFOR DELAY '00:00:00.280'
 END
 
 DROP TABLE #CustSuper
+DROP TABLE #CustEnableSuperLive
 
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
@@ -76,6 +93,7 @@ GO
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 -------------------------------------------------
 CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))	
+CREATE TABLE #CustEnableSuperLive(srecommend INT)	
 
 DECLARE @max_custid INT, @srecommend INT
 
@@ -83,10 +101,18 @@ SELECT @max_custid = xx
 
 INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
-  FROM custinfo ci WITH(NOLOCK)
- WHERE ci.custid <= @max_custid
-   AND roleid = 4
+FROM custinfo ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND roleid = 4
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 
+INSERT INTO #CustEnableSuperLive(srecommend)
+SELECT ci.custid
+FROM Customer ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND roleid = 4
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND site IN ('KORIBC','INDO')
 
 WHILE (1 = 1)
 BEGIN
@@ -97,10 +123,18 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_ExecRep_Cust_09
-	    @srecommend = @srecommend
-	  , @max_custid = @max_custid
-	  , @target = 'DBCUST'
+	IF EXISTS (SELECT 1 FROM #CustEnableSuperLive WHERE srecommend = @srecommend)
+		EXEC dbo.Acc_ExecRep_Cust_09
+			@srecommend = @srecommend
+			,@DisableSuperLive = 0
+			,@max_custid = @max_custid
+			,@target = 'DBCUST'
+	ELSE
+		EXEC dbo.Acc_ExecRep_Cust_09
+			@srecommend = @srecommend
+			,@DisableSuperLive = 1
+			,@max_custid = @max_custid
+			,@target = 'DBCUST'
 	  
 	WAITFOR DELAY '00:00:00.280'
 END
