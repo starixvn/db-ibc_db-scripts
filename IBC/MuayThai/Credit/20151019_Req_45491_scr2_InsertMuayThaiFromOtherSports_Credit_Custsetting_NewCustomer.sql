@@ -38,6 +38,30 @@ BEGIN
 
 				
 	/*****************************POSITION TAKING**************************/
+	CREATE TABLE #MemberTemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED,
+		maxpermatch99 MONEY
+	)
+
+	CREATE TABLE #SMATemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED,
+		maxpermatch99 MONEY
+	)
+	
+	INSERT INTO #MemberTemp (CustID,maxpermatch99)
+	SELECT custid,maxpermatch99
+	FROM Custinfo WITH (NOLOCK)
+	WHERE srecommend = @srecommend AND roleid = 1 AND custid > @maxcustid 
+	
+	
+	INSERT INTO #SMATemp (CustID,maxpermatch99)
+	SELECT custid,maxpermatch99
+	FROM Custinfo WITH (NOLOCK)
+	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND custid > @maxcustid 
+
+
 	--AGENT LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		([CustID]
@@ -67,13 +91,12 @@ BEGIN
 	FROM dbo.CustSetting cs WITH(NOLOCK) 
 		INNER JOIN dbo.custOverride co WITH(NOLOCK) 
 			ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
-		INNER JOIN dbo.custInfo ci WITH(NOLOCK) 
+		INNER JOIN #SMATemp ci WITH(NOLOCK) 
 			ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
 			ON dest.SettingType = 1
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
-	WHERE ci.roleid IN (2,3,4) AND ci.srecommend = @srecommend AND  ci.custid > @maxcustid
 	
 	
 	--MEMBER LEVEL
@@ -99,46 +122,46 @@ BEGIN
 		,cs.isautopositiontaking 
 		,cs.autopositiontaking  *100
 	FROM dbo.custSetting cs WITH(NOLOCK)
-		INNER JOIN custInfo ci WITH(NOLOCK) ON cs.CustID = ci.custid
+		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
 			ON dest.SettingType = 1
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
-	WHERE ci.roleid = 1 AND ci.srecommend = @srecommend AND  ci.custid > @maxcustid 
 	
 	
 	INSERT INTO [dbo].[CustSettingMode3rd]
 			   ([CustID]
 			   ,[IsGrouped])
 	SELECT custid,0
-	FROM dbo.custInfo ci WITH(NOLOCK)
-	WHERE ci.srecommend = @srecommend AND  ci.custid > @maxcustid AND  ci.roleid = 1	
+	FROM #MemberTemp ci WITH(NOLOCK)
+	--WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1	
 	
 	/*****************************BET LIMIT SETTING**************************/	
 	--Agent Level
 	INSERT INTO dbo.CustBetSetting3rd_Agent
 	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
 	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN dbo.custInfo ci WITH(NOLOCK) 
+		INNER JOIN #SMATemp ci WITH(NOLOCK) 
 			ON  ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
 			ON dest.SettingType = 2
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
-	 WHERE ci.srecommend = @srecommend AND  ci.custid > @maxcustid AND ci.roleid IN (2,3,4)
 
 	 
 	--Member Level
 	INSERT INTO dbo.CustBetSetting3rd_Member
 	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
 	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN dbo.custInfo ci WITH(NOLOCK) 
+		INNER JOIN #MemberTemp ci WITH(NOLOCK) 
 			ON  ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
 			ON dest.SettingType = 2
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
-	 WHERE ci.srecommend = @srecommend AND  ci.custid > @maxcustid AND ci.roleid = 1
+	
+	DROP TABLE #MemberTemp
+	DROP TABLE #SMATemp
 
 
 END
