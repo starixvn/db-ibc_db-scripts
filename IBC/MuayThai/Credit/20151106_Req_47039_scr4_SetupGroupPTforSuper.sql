@@ -1,7 +1,7 @@
 /*
 	Created By: Dominic@20151029
 	Description: Setup PT Group for dedicated credit customer
-	Run at DBCUST.CustDB on 20151106 (UM) Redmine #47039 
+	Run at DBCUST.CustDB on 20151106 (UM)  Redmine #47039 
 */
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
@@ -43,7 +43,7 @@ BEGIN
 	INSERT INTO #tempGroup(recommend, cs1, cs2, memberCNT, repCustID)
 	SELECT recommend, cs1, cs2, memberCnt, repCustID
 	FROM (
-		SELECT recommend, cs1, cs2, rn = ROW_NUMBER() OVER (partition by recommend ORDER BY count(1) desc), memberCnt = count(1), repCustID = max(custid)
+		SELECT recommend, cs1, cs2, rn = ROW_NUMBER() OVER (partition by recommend ORDER BY count(1) desc, max(custid) desc), memberCnt = count(1), repCustID = max(custid)
 		FROM #tempdata
 		GROUP BY recommend, cs1, cs2
 	) x
