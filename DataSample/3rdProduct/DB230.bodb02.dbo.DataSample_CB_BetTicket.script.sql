@@ -583,6 +583,7 @@ BEGIN
 				,@comm			MONEY
 				,@acomm			MONEY
 				,@scomm			MONEY
+				,@payoutAmount	MONEY
 			
 			SET @WinlostDate	= GETDATE()
 			
@@ -592,6 +593,7 @@ BEGIN
 				, @comm			= SUM(comm)
 				, @acomm		= SUM(acomm)
 				, @scomm		= SUM(scomm)
+				, @payoutAmount	= sum(case when bettype not in(18001) THEN [winlost] - stake ELSE 0 END)
 			from dbo.bettransm (nolock)
 			where refno = @refno_translog 
 				--and bettype NOT IN (18001)
@@ -769,24 +771,30 @@ BEGIN
 			BEGIN
 				--INSERT INTO PayoutTrans
 				INSERT INTO [dbo].[PayoutTrans]
-				   ([PayoutTransId]
-				   ,[CustId]
-				   ,[CreatedDate]
+				    ([CustId]
+				   ,[UserName]
+				   ,[RefNo]
+				   ,[ProductId]
+				   ,[VendorId]
+				   ,[TransDate]
+				   ,[WinlostDate]
 				   ,[WinAmount]
-				   ,[PayCode]
-				   ,[StatusId]
-				   ,[PayStatus]
-				   ,[LastModifyDate]
-				   ,[LastModifyBy])
+				   ,[PayoutCode]
+				   ,[PayoutStatusId]
+				   ,[PayoutStatus]
+				   ,[GameId])
 				VALUES
-				   (@refno_translog
-				   ,@custid
-				   ,GETDATE()
-				   ,@maxAmount
-				   ,NEWID()
-				   ,0
+				   (@custid
+				   ,@UserName
+				   ,@refno_translog
+				   ,@sportType
+				   ,@vendorID
+				   ,@transdate
+				   ,@WinlostDate
+				   ,@payoutAmount
+				   ,CAST(NEWID() AS nvarchar(255)) + ',113476092'
+				   ,1
 				   ,'Open'
-				   ,NULL
 				   ,NULL)
 			 END
 		END
@@ -805,3 +813,11 @@ END
 
 
 
+
+
+--use bodb02
+--go
+--exec [dbo].[NAP_ColossusBets_PayoutList]
+--exec [dbo].[NAP_ColossusBets_PayoutDetail] 1100000002407
+
+--exec [dbo].[NAP_ColossusBets_TicketDetail] 1100000002407, 1176092

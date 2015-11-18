@@ -149,10 +149,10 @@ BEGIN
 	IF (@target = 'DBCUST'	   AND @@SERVERNAME <> 'DBCUST')	-- Run at DBCUST only
 		RETURN
 
-	IF	(	SELECT	COUNT(*)
+	IF	(	SELECT	COUNT(1)
 			FROM	sys.tables WITH(NOLOCK)
-			WHERE	name IN ('CustVirtualSetting', 'ProfileVirtualSetting', 'CustInfo')
-		) <> 3
+			WHERE	name IN ('CustVirtualRate', 'CustVirtualSetting', 'ProfileVirtualSetting', 'CustInfo')
+		) <> 4
 		RETURN
 
 	SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE srecommend = @srecommend)
