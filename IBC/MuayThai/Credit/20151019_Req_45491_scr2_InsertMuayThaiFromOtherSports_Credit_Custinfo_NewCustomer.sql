@@ -5,25 +5,9 @@
 			(In UM)
 	DB: DBCust.CustDB
 */   
--- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
-------------------------------------------------------
-ALTER PROCEDURE Acc_DynamicCustomerInfo_09
-	@srecommend INT	
-	,@maxcustid INT
-	,@target VARCHAR(30)
-AS
-BEGIN   
-	SET NOCOUNT ON
-	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
-	
-	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
-	   AND dbo.f_CheckRepTable('CustProductStatus') = 1
-	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
-	   )
-	  RETURN
-	
+	DECLARE @max_custid INT
+
+	SELECT @max_custid = xxx
 	--Default status
 	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1, @DefaultBitMap BINARY(32) = 0x00
 
@@ -32,6 +16,16 @@ BEGIN
 	VALUES
 	(44	,3) --Product Status
 
+	CREATE TABLE #CustomerTemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED
+	)
+	
+	INSERT #CustomerTemp(CustID)
+	SELECT CustID
+	FROM dbo.CustInfo WITH(NOLOCK)
+	WHERE srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND CustID > @max_custid
 
 	DECLARE @xmlDisabled VARCHAR(MAX)
 	SET @xmlDisabled = CAST( (
@@ -89,69 +83,7 @@ BEGIN
 			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlSync))
 			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlHidden))
 			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
-	FROM dbo.custInfo ci WITH(NOLOCK)
-	WHERE ci.srecommend = @srecommend AND  ci.custid > @maxcustid
-		AND ci.CustID NOT IN (SELECT CustID FROM [dbo].[CustProductStatus])
+	FROM #CustomerTemp ci WITH(NOLOCK)
 
-END
-
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
---------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-			
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
-			
-			
-	waitfor delay '00:00:0.280'
-END
-
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
---------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
-						
-	waitfor delay '00:00:0.280'
-END
+	DROP TABLE #CustomerTemp
+	DROP TABLE #DestinationSportBetType
