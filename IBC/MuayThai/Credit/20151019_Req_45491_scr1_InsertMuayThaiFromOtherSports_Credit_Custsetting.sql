@@ -133,8 +133,8 @@ BEGIN
 			   ([CustID]
 			   ,[IsGrouped])
 	SELECT custid,0
-	FROM dbo.custInfo ci WITH(NOLOCK)
-	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1	
+	FROM #MemberTemp ci WITH(NOLOCK)
+	--WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1	
 	
 	/*****************************BET LIMIT SETTING**************************/	
 	--Agent Level
