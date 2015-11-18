@@ -4,33 +4,22 @@
 	Task: Update Bet Setting / Position Taking of MuayThai for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
-	DECLARE @max_custid INT
-	SELECT @max_custid = xxx
-	
-	CREATE TABLE #supers (custid int)
 	CREATE TABLE #SMAPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
 	CREATE TABLE #MemberPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
 	CREATE TABLE #SMABetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	CREATE TABLE #MemberBetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	
 
-	INSERT INTO #supers(custid)
-	SELECT ci.custid
-	FROM dbo.CustInfo ci WITH(NOLOCK)
-	WHERE ci.roleid = 4 	
-		AND ci.custid NOT IN (SELECT custid FROM dbo.Dep_CustSuper WITH(NOLOCK))
-		AND custid <= @max_custid 
-
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
 	(99, 3, 44	,3, 0, 1), --PT
-	(99, 1, 44	,1,0, 1), --PT
+	(99, 1, 44	,1, 0, 1), --PT
 	(99, 3, 44	,3, 0, 2) --Bet Limit
 	
 	/*****************************STEP 1 : Get Affected Customers**************************/
 	--SMA PT
-	INSERT INTO #SMAPTCust
+	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
 	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
 	FROM dbo.custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
@@ -47,7 +36,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE ci.srecommend IN (SELECT custid FROM #supers)	AND map.SettingType = 1 AND ci.roleid IN (2,3,4) AND ci.custid <= @max_custid
+	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
 			AND (
 				cs.spositiontaking  *100 <> csa.SuperPT
 				OR cs.mpositiontaking  *100 <> csa.MasterPT
@@ -59,7 +48,7 @@
 				OR co.minpositiontaking  *100 <> csa.MinPT
 			)
 	--Member PT
-	INSERT INTO #MemberPTCust
+	INSERT INTO #MemberPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
 	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
 	FROM dbo.custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
@@ -72,7 +61,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE ci.srecommend IN (SELECT custid FROM #supers)	AND map.SettingType = 1 AND ci.roleid = 1 AND ci.custid <= @max_custid
+	WHERE map.SettingType = 1 AND ci.roleid = 1
 			AND (
 				cs.spositiontaking  *100 <> csm.SuperPT
 				OR cs.mpositiontaking  *100 <> csm.MasterPT
@@ -83,7 +72,7 @@
 				OR cs.autopositiontaking  *100 <> csm.AutoSuperPT
 			)
 	--SMA Bet Limit
-	INSERT INTO #SMABetLimitCust
+	INSERT INTO #SMABetLimitCust(CustID,fSportType,fBetType,tSportType,tBetType,maxpermatch99)
 	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,ci.maxpermatch99
 	FROM dbo.custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
@@ -95,7 +84,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE ci.srecommend IN (SELECT custid FROM #supers)	AND map.SettingType = 2 AND ci.roleid IN (2,3,4) AND ci.custid <= @max_custid
+	WHERE map.SettingType = 2 AND ci.roleid IN (2,3,4)
 			AND (
 				cs.minbet <> csa.MinBet
 				OR
@@ -105,7 +94,7 @@
 			)	
 			
 	--Member Bet Limit		
-	INSERT INTO #MemberBetLimitCust
+	INSERT INTO #MemberBetLimitCust(CustID,fSportType,fBetType,tSportType,tBetType,maxpermatch99)
 	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,ci.maxpermatch99
 	FROM custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
@@ -117,7 +106,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE ci.srecommend IN (SELECT custid FROM #supers)	AND map.SettingType = 2 AND ci.roleid = 1 AND ci.custid <= @max_custid
+	WHERE map.SettingType = 2 AND ci.roleid = 1
 			AND (
 				cs.minbet <> csm.MinBet
 				OR
