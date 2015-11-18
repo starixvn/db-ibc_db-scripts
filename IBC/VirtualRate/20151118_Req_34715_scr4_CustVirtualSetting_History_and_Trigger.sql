@@ -76,7 +76,7 @@ AS
 /*
 	Created by: 20151118@Billy
 	Task: Trigger for updating [CustVirtualSetting] table 
-	DB: DBTP/bodb02
+	DB: DB06/bodb02
 
 	Revisions: 
 	
