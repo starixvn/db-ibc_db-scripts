@@ -18,6 +18,10 @@ FROM [dbo].CustPTSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 WHERE cs.CustID > @maxcustID
 
 DELETE cs
+FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
+WHERE cs.AgentID > @maxcustID
+
+DELETE cs
 FROM [dbo].CustSettingMode3rd cs WITH(UPDLOCK,ROWLOCK)
 WHERE cs.CustID > @maxcustID
 
