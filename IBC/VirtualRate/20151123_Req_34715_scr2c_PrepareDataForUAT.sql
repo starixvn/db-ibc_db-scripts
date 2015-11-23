@@ -1,6 +1,6 @@
 /*
 	Created: 20151111@Billy
-	Task: Initial data on Production environment (Non-UM Time)
+	Task: Initial data on UAT environment (Non-UM Time)
 	DB: DBCUST.CustDB
 */
 
