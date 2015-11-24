@@ -204,7 +204,7 @@ DECLARE @srecommend INT
 INSERT INTO	#supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
-WHERE	username IN ('supertestuat6')
+WHERE	username IN ('supertestuat6', 'staff')
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
@@ -238,7 +238,7 @@ DECLARE @srecommend INT
 INSERT INTO #supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
-WHERE	username IN ('supertestuat6')
+WHERE	username IN ('supertestuat6', 'staff')
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
