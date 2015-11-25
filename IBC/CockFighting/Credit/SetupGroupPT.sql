@@ -15,7 +15,6 @@ CREATE TABLE #UnGroupedCustomer
 CREATE TABLE #GroupedCustomer
 (
 	CustID INT PRIMARY KEY CLUSTERED,
-	Recommend INT
 )
 
 CREATE TABLE #tempData (recommend int, custid int, cs1 bigint, cs2 int)
@@ -52,8 +51,8 @@ FROM (
 WHERE rn = 1
 
 --Get a list of customers that do not continue using PT Group 
-INSERT INTO #UnGroupedCustomer
-SELECT c.CustID
+INSERT INTO #UnGroupedCustomer(CustID,Recommend)
+SELECT c.CustID,c.Recommend
 FROM #CustomerTemp c WITH(NOLOCK)
 	INNER JOIN #tempdata tmp1 WITH(NOLOCK)
 		ON tmp1.custid = c.CustID
@@ -62,7 +61,7 @@ FROM #CustomerTemp c WITH(NOLOCK)
 WHERE tmp1.cs2 <> tmp2.cs2 OR tmp1.cs1 <> tmp2.cs1
 
 --Get a list of customers that continue using PT Group 
-INSERT INTO #GroupedCustomer
+INSERT INTO #GroupedCustomer(CustID)
 SELECT c.CustID
 FROM #CustomerTemp c WITH(NOLOCK)
 	INNER JOIN #tempdata tmp1 WITH(NOLOCK)
