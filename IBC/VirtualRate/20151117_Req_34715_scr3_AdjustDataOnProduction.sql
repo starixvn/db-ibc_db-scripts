@@ -31,7 +31,7 @@ BEGIN
 
 	IF @roldid = 4
 	BEGIN
-		SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE srecommend = @custid)
+		SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE srecommend = @custid) * 2
 
 		WHILE @counter >= 0
 		BEGIN
