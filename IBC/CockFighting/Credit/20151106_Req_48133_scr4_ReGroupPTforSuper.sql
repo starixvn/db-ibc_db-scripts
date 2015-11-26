@@ -68,7 +68,7 @@ FROM #CustomerTemp c WITH(NOLOCK)
 		ON tmp1.custid = c.CustID
 	INNER JOIN #tempGroup tmp2 WITH(NOLOCK)
 		ON tmp1.recommend = tmp2.recommend
-WHERE tmp1.cs2 = tmp2.cs2 OR tmp1.cs1 = tmp2.cs1
+WHERE tmp1.cs2 = tmp2.cs2 AND tmp1.cs1 = tmp2.cs1
 
 
 --Insert Individual PT for customers that do not continue using PT Group 

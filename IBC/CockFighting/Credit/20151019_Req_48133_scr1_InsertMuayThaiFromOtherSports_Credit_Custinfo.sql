@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-10-15
-	Task: Initialize Product Status of MuayThai for Credit customers
+	Date: 2015-10-25
+	Task: Initialize Product Status of CockFighting for Credit customers
 	DB: DBCust.CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
@@ -24,12 +24,12 @@ BEGIN
 	  RETURN
 	
 	--Default status
-	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1, @DefaultBitMap BINARY(32) = 0x00
+	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1
 
 	CREATE TABLE #DestinationSportBetType(tSportType SMALLINT, tBetType SMALLINT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
-	(44	,3) --Product Status
+	(206	,1003) --Product Status
 
 
 	DECLARE @xmlDisabled VARCHAR(MAX)
@@ -82,13 +82,13 @@ BEGIN
 
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	INSERT INTO [dbo].[CustProductStatus]
-           ([CustID], bitmapHasSynced, bitmapIsHidden, bitmapIsDisabled)
-    SELECT custid
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlSync))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlHidden))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
-	FROM dbo.custInfo ci WITH(NOLOCK)
+	UPDATE cs
+    SET
+			bitmapHasSynced = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapHasSynced, @xmlSync)),
+			bitmapIsHidden = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsHidden, @xmlHidden)),
+			bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, @xmlDisabled))
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
 		AND ci.CustID NOT IN (SELECT CustID FROM [dbo].[CustProductStatus])
 

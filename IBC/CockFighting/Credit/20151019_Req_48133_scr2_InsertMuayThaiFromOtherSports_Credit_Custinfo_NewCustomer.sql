@@ -9,12 +9,12 @@
 
 	SELECT @max_custid = xxx
 	--Default status
-	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1, @DefaultBitMap BINARY(32) = 0x00
+	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1
 
 	CREATE TABLE #DestinationSportBetType(tSportType SMALLINT, tBetType SMALLINT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
-	(44	,3) --Product Status
+	(206	,1003) --Product Status
 
 	CREATE TABLE #CustomerTemp
 	(
@@ -77,13 +77,13 @@
 
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	INSERT INTO [dbo].[CustProductStatus]
-           ([CustID], bitmapHasSynced, bitmapIsHidden, bitmapIsDisabled)
-    SELECT custid
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlSync))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlHidden))
-			,(select bitmap from dbo.f_GenerateProductStatus_multiple (@DefaultBitMap, @xmlDisabled))
-	FROM #CustomerTemp ci WITH(NOLOCK)
-
+	UPDATE cs
+    SET
+			bitmapHasSynced = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapHasSynced, @xmlSync)),
+			bitmapIsHidden = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsHidden, @xmlHidden)),
+			bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, @xmlDisabled))
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN #CustomerTemp ci WITH(NOLOCK) ON ci.CustID = cs.CustID
+		
 	DROP TABLE #CustomerTemp
 	DROP TABLE #DestinationSportBetType

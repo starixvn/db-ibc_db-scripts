@@ -8,14 +8,17 @@
 	CREATE TABLE #MemberPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
 	CREATE TABLE #SMABetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	CREATE TABLE #MemberBetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
+	CREATE TABLE #MemberDiscountCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT)
+	CREATE TABLE #SMADiscountCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT)
 	
 
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
-	(99, 3, 44	,3, 0, 1), --PT
-	(99, 1, 44	,1, 0, 1), --PT
-	(99, 3, 44	,3, 0, 2) --Bet Limit
+	(99, 3, 206	,1003, 0, 1), --PT
+	(99, 3, 206	,1003, 0, 2), --Bet Limit
+	(99, 3, 206	,1003, 0, 3) --Discount
+
 	
 	/*****************************STEP 1 : Get Affected Customers**************************/
 	--SMA PT
@@ -114,7 +117,46 @@
 				OR
 				ci.maxpermatch99 <> csm.MaxPerMatch
 			)
-	/*****************************STEP 2: Update affecte customers**************************/
+			
+	--SMA Discount
+	INSERT INTO #SMADiscountCust(CustID,fSportType,fBetType,tSportType,tBetType)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType
+	FROM dbo.custinfo ci WITH(NOLOCK)
+		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
+		INNER JOIN dbo.CustDiscount3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = map.tSportType 
+					AND csa.BetType = map.tBetType 
+		INNER JOIN dbo.CustSetting cs WITH(NOLOCK) 
+				ON cs.custid = ci.custid 
+					AND cs.sporttype = map.fSportType 
+					AND cs.bettype = map.fBetType
+	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
+			AND (
+				cs.Discount <> csa.Discount
+			)
+			
+	--SMA Discount
+	INSERT INTO #MemberDiscountCust(CustID,fSportType,fBetType,tSportType,tBetType)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType
+	FROM dbo.custinfo ci WITH(NOLOCK)
+		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
+		INNER JOIN dbo.CustDiscount3rd_Member csm WITH(UPDLOCK,ROWLOCK)
+			ON csm.CustID = ci.custid 
+					AND csm.SportType = map.tSportType 
+					AND csm.BetType = map.tBetType 
+		INNER JOIN dbo.CustSetting cs WITH(NOLOCK) 
+				ON cs.custid = ci.custid 
+					AND cs.sporttype = map.fSportType 
+					AND cs.bettype = map.fBetType
+	WHERE map.SettingType = 1 AND ci.roleid = 1
+			AND (
+				cs.playerdiscount <> csm.PlayerDiscount
+				OR cs.discount <> csm.AgentDiscount
+				OR cs.adiscount <> csm.MasterDiscount
+				OR cs.sdiscount <> csm.SuperDiscount
+			)
+	/*****************************STEP 2: Update affected customers**************************/
 	--PT of SMA
 	UPDATE csa
 	SET
@@ -197,3 +239,18 @@
 					AND cs.sporttype = ci.fSportType 
 					AND cs.bettype = ci.fBetType
 
+	--Discount of SMA 
+	UPDATE csa
+	SET
+		csa.MinBet = cs.minbet,
+		csa.MaxBet = cs.maxbet,
+		csa.MaxPerMatch = ci.maxpermatch99
+	FROM #SMABetLimitCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustBetSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = ci.tSportType 
+					AND csa.BetType = ci.tBetType 
+		INNER JOIN dbo.CustSetting cs WITH(NOLOCK) 
+				ON cs.custid = ci.custid 
+					AND cs.sporttype = ci.fSportType 
+					AND cs.bettype = ci.fBetType

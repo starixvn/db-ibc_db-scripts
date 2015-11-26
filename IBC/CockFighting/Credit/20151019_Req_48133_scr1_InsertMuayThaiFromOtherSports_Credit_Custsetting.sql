@@ -32,9 +32,9 @@ BEGIN
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
-	(99, 3, 44	,3, 0, 1), --PT
-	(99, 1, 44	,1,0, 1), --PT
-	(99, 3, 44	,3, 0, 2) --Bet Limit
+	(99, 3, 206	,1003, 0, 1), --PT
+	(99, 3, 206	,1003, 0, 2), --Bet Limit
+	(99, 3, 206	,1003, 0, 3) --Discount
 
 				
 	/*****************************POSITION TAKING**************************/
@@ -157,6 +157,30 @@ BEGIN
 			ON  ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
 			ON dest.SettingType = 2
+				AND cs.bettype = dest.fBetType
+				AND cs.sporttype = dest.fSportType
+				
+	/*****************************DISCOUNT SETTING**************************/	
+	--Agent Level
+	INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
+	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.Discount
+	FROM dbo.CustSetting cs WITH(NOLOCK)
+		INNER JOIN #SMATemp ci WITH(NOLOCK) 
+			ON  ci.custid = cs.custid
+		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
+			ON dest.SettingType = 3
+				AND cs.bettype = dest.fBetType
+				AND cs.sporttype = dest.fSportType
+
+	 
+	--Member Level
+	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
+	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.PlayerDiscount,cs.discount,cs.adiscount,cs.sdiscount
+	FROM dbo.CustSetting cs WITH(NOLOCK)
+		INNER JOIN #MemberTemp ci WITH(NOLOCK) 
+			ON  ci.custid = cs.custid
+		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
+			ON dest.SettingType = 3
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
 	
