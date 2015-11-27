@@ -10,17 +10,15 @@
 
 -- Create new table for saving checksum value of old VirtualRate --
 CREATE TABLE #VirtualRateCheckSumOLD (
-	custID INT,
-	VRSum INT,
-	CONSTRAINT PK_VROld PRIMARY KEY CLUSTERED (custID ASC)
+	custID INT PRIMARY KEY CLUSTERED,
+	VRSum INT
 )
 GO
 
 -- Create new table for saving checksum value of new VirtualRate --
 CREATE TABLE #VirtualRateCheckSumNEW (
-	custID INT,
-	VRSum INT,
-	CONSTRAINT PK_VRNew PRIMARY KEY CLUSTERED (custID ASC)
+	custID INT PRIMARY KEY CLUSTERED,
+	VRSum INT
 )
 GO
 
@@ -49,14 +47,14 @@ SELECT	vrcso.custID OldCustID,
 		vrcsn.custID NewCustID,
 		vrcsn.VRSum NewCheckSum,
 		CASE WHEN vrcsn.custID IS NULL THEN 1	-- No new settings (maybe caused by creating new customers)
-			 WHEN vrcso.custID IS NULL THEN 2	-- No old settings (maybe caused by data from testing - SHOULD NEVER HAPPENED)
+			 WHEN vrcso.custID IS NULL THEN 2	-- maybe caused by new default data for existing customers that not have data yet
 			 ELSE 3								-- The settings' checksum are not match
 			 END Grp
 FROM #VirtualRateCheckSumOLD vrcso WITH(NOLOCK)
 FULL OUTER JOIN #VirtualRateCheckSumNEW vrcsn WITH(NOLOCK)
 ON vrcso.custID = vrcsn.custID
 WHERE vrcso.VRSum IS NULL
-OR vrcso.VRSum IS NULL
+OR vrcsn.VRSum IS NULL
 OR vrcso.VRSum <> vrcsn.VRSum
 ORDER BY Grp, OldCustID, NewCustID
 GO
