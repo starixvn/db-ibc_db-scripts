@@ -56,7 +56,6 @@ FULL OUTER JOIN #VirtualRateCheckSumNEW vrcsn WITH(NOLOCK)
 WHERE	vrcsn.VRSum IS NULL
 --	OR	vrcso.VRSum IS NULL
 	OR	vrcso.VRSum <> vrcsn.VRSum
-ORDER BY Grp, OldCustID, NewCustID
 GO
 
 -- View validate result --
