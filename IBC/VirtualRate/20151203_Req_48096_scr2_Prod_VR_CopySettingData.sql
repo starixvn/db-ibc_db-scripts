@@ -1,7 +1,7 @@
 /*
 	Created: 20151126@Billy
 	Task: Initial data on Production environment (Non-UM Time)
-	DB: DBCUST.CustDB & DBACC.bodb02
+	DB: DBCUST/CustDB & DBACC/bodb02
 */
 
 -- BEGIN STEP 1: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --

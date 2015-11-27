@@ -61,5 +61,11 @@ OR vrcso.VRSum <> vrcsn.VRSum
 ORDER BY Grp, OldCustID, NewCustID
 GO
 
+-- View validate result --
+SELECT OldCustID, OldCheckSum, NewCustID, NewCheckSum, Grp
+FROM AdjustVirtualRate avr WITH(NOLOCK)
+ORDER BY Grp, OldCustID, NewCustID
+GO
+
 --DROP TABLE #VirtualRateCheckSumNEW
 --DROP TABLE #VirtualRateCheckSumOLD
