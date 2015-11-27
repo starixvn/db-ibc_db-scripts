@@ -68,6 +68,9 @@ BEGIN
 	INNER JOIN BitmapData bd
 	ON cvs.custid = bd.custid
 	AND cvs.seqNo = bd.seqNo
+
+	DELETE FROM AdjustVirtualRate
+	WHERE Grp = 3
 END
 GO
 

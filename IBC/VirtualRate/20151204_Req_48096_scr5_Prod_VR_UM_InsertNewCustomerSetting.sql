@@ -62,6 +62,8 @@ BEGIN
 							)
 		) AS P;
 
+	DELETE FROM AdjustVirtualRate
+	WHERE Grp = 1
 END
 GO
 
