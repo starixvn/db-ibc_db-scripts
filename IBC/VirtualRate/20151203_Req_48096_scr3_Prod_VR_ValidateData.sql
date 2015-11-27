@@ -78,7 +78,7 @@ GROUP BY cvs.custid
 GO
 
 -- Validate data --
-INSERT INTO AdjustVirtualRate (OldCustID, OldCheckSum, NewCustID, NewCheckSum)
+INSERT INTO AdjustVirtualRate (OldCustID, OldCheckSum, NewCustID, NewCheckSum, Grp)
 SELECT	vrcso.custID OldCustID,
 		vrcso.VRSum OldCheckSum,
 		vrcsn.custID NewCustID,
