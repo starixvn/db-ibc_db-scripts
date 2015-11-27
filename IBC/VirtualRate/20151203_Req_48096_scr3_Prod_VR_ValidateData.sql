@@ -49,6 +49,16 @@ CREATE TABLE #VirtualRateCheckSumNEW (
 )
 GO
 
+-- Create new physical table for saving need-to-adjust-settings customers --
+CREATE TABLE dbo.AdjustVirtualRate (
+	OldCustID INT,
+	OldCheckSum INT,
+	NewCustID INT,
+	NewCheckSum INT,
+	Grp TINYINT
+)
+GO
+
 -- Calculate and insert checksum values into #VirtualRateCheckSumOLD table --
 INSERT INTO #VirtualRateCheckSumOLD (custID, VRSum)
 SELECT cvr.custid, SUM(CAST(cvr.virtualMultiplier*100 AS INT)) VRSum
@@ -68,6 +78,7 @@ GROUP BY cvs.custid
 GO
 
 -- Validate data --
+INSERT INTO AdjustVirtualRate (OldCustID, OldCheckSum, NewCustID, NewCheckSum)
 SELECT	vrcso.custID OldCustID,
 		vrcso.VRSum OldCheckSum,
 		vrcsn.custID NewCustID,
