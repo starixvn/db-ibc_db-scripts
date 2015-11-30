@@ -9,7 +9,8 @@
 
 -- Execrep SP for importing Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@maxCustID	INT
+	@maxCustID	INT,
+	@maxCustID2	INT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -31,7 +32,7 @@ BEGIN
 				ON	i.custID = cvr.custid 
 				AND pvs.bettype = cvr.bettype
 				AND pvs.islive = cvr.isLive
-		WHERE i.custid > @maxCustID
+		WHERE i.custid BETWEEN @maxCustID AND @maxCustID2
 	)
 	INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
 	SELECT custid, seqNo,
@@ -59,8 +60,10 @@ GO
 
 -- BEGIN STEP 2: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
-DECLARE @maxCustID INT
+DECLARE @maxCustID INT,
+		@maxCustID2 INT
 
-SET @maxCustID = xxx
+SET @maxCustID = xxx,
+	@maxCustID2 = yyy
 
-EXECUTE Acc_CustSetting3rd_19 @maxCustID = @maxCustID
+EXECUTE Acc_CustSetting3rd_19 @maxCustID = @maxCustID, @maxCustID2 = @maxCustID2
