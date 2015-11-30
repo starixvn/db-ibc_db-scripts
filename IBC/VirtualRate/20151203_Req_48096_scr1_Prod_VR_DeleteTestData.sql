@@ -12,6 +12,12 @@ ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 AS
 BEGIN
 	SET NOCOUNT ON
+	
+	IF	(	SELECT	COUNT(1)
+			FROM	sys.tables WITH(NOLOCK)
+			WHERE	name IN ('CustVirtualSetting')
+		) <> 1
+		RETURN
 
 	DELETE FROM CustVirtualSetting
 
