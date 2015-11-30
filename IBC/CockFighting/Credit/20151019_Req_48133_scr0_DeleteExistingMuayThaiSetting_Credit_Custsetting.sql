@@ -1,8 +1,8 @@
 /*
 	Created: Dominic
-	Date: 2015-10-15
-	Task: Delete existing Bet Setting/ Position Taking of MuayThai
-	DB: DBCust.CustDB
+	Date: 2015-11-25
+	Task: Delete existing Bet Setting/ Position Taking of CockFighting
+	DB: DBCust.CustDB (DB06/ DBTP)
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
@@ -21,7 +21,8 @@ BEGIN
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
 	   AND dbo.f_CheckRepTable('CustPTGroupSetting3rd_Member') = 1
-	   AND dbo.f_CheckRepTable('CustSettingMode3rd') = 1
+	   AND dbo.f_CheckRepTable('CustDiscount3rd_Agent') = 1
+	   AND dbo.f_CheckRepTable('CustDiscount3rd_Member') = 1
 	   )
 	  RETURN
 

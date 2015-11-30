@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-10-15
-	Task: Copy Bet Setting / Position Taking from Other Sports to MuayThai for Credit customers
+	Date: 2015-11-25
+	Task: Copy Bet Setting / Position Taking / Discount from Other Sports to CockFighting for Credit customers
 	DB: DBCust.CustDB
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
@@ -25,6 +25,8 @@ BEGIN
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
 	   AND dbo.f_CheckRepTable('CustSettingMode3rd') = 1
+	   AND dbo.f_CheckRepTable('CustDiscount3rd_Agent') = 1
+	   AND dbo.f_CheckRepTable('CustDiscount3rd_Member') = 1
 	   )
 	  RETURN
 

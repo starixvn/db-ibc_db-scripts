@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-10-15
-	Task: Copy Bet Setting / Position Taking from Other Sports to MuayThai for newly created Credit customers 
+	Date: 2015-11-25
+	Task: Copy Bet Setting / Position Taking / Discount from Other Sports to CockFighting for newly created Credit customers 
 	DB: DBCust.CustDB
 */  
 

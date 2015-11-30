@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-10-25
-	Task: Insert Master Data for Cock Fighting: dbo.ProductSettingDetail, dbo.ProductStatusProfile, dbo.ProductBetSetting, dbo.SettingSystem
+	Date: 2015-11-25
+	Task: Insert Master Data for Cock Fighting: dbo.ProductSettingDetail, dbo.ProductBetSetting, dbo.SettingSystem
 	DB: Run at DBCust.CustDB
 */  
 USE [CustDB]
@@ -85,15 +85,15 @@ GO
 
 
 --Status Bitmap
-INSERT INTO [dbo].[ProductStatusProfile]
-           ([Sporttype]
-           ,[Bettype]
-           ,[bitmapOrder])
-     VALUES
-           (206
-           ,1003
-           ,2)
-GO
+--INSERT INTO [dbo].[ProductStatusProfile]
+--           ([Sporttype]
+--           ,[Bettype]
+--           ,[bitmapOrder])
+--     VALUES
+--           (206
+--           ,1003
+--           ,2)
+--GO
 
 --Insert Default Minimum Bet by currencies
 DECLARE  @DestinationSportBetType TABLE(SportType INT, BetType INT)

@@ -1,6 +1,6 @@
 /*
 	Created: Dominic
-	Date: 2015-10-25
+	Date: 2015-11-25
 	Task: Initialize Product Status of CockFighting for Credit customers
 	DB: DBCust.CustDB
 */   

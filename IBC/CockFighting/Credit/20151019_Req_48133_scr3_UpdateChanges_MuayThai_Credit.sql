@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-10-15
-	Task: Update Bet Setting / Position Taking of MuayThai for credit customer if there are any changes
+	Date: 2015-11-25
+	Task: Update Bet Setting / Position Taking / Discount of CockFighting for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
 	CREATE TABLE #SMAPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
@@ -242,14 +242,29 @@
 	--Discount of SMA 
 	UPDATE csa
 	SET
-		csa.MinBet = cs.minbet,
-		csa.MaxBet = cs.maxbet,
-		csa.MaxPerMatch = ci.maxpermatch99
-	FROM #SMABetLimitCust ci WITH(NOLOCK)
-		INNER JOIN dbo.CustBetSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+		csa.Discount = cs.discount
+	FROM #SMADiscountCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustDiscount3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
 			ON csa.CustID = ci.custid 
 					AND csa.SportType = ci.tSportType 
 					AND csa.BetType = ci.tBetType 
+		INNER JOIN dbo.CustSetting cs WITH(NOLOCK) 
+				ON cs.custid = ci.custid 
+					AND cs.sporttype = ci.fSportType 
+					AND cs.bettype = ci.fBetType
+					
+	--Discount of Member 
+	UPDATE csm
+	SET
+		csm.PlayerDiscount = cs.playerdiscount,
+		csm.AgentDiscount = cs.discount,
+		csm.MasterDiscount = cs.adiscount,
+		csm.SuperDiscount = cs.sdiscount
+	FROM #MemberDiscountCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustDiscount3rd_Member csm WITH(UPDLOCK,ROWLOCK)
+			ON csm.CustID = ci.custid 
+					AND csm.SportType = ci.tSportType 
+					AND csm.BetType = ci.tBetType 
 		INNER JOIN dbo.CustSetting cs WITH(NOLOCK) 
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = ci.fSportType 
