@@ -78,12 +78,13 @@ CREATE TABLE	#supers (
 DECLARE @srecommend INT,
 		@maxCustID INT
 
+SET @maxCustID = xxx
+
 INSERT INTO	#supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
-WHERE	roleid = 4
-
-SET @maxCustID = xxx
+WHERE	ci.roleid = 4
+	AND	ci.custid <= @maxCustID
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
@@ -115,12 +116,13 @@ CREATE TABLE	#supers (
 DECLARE @srecommend INT,
 		@maxCustID INT
 
+SET @maxCustID = xxx
+
 INSERT INTO #supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
 WHERE	roleid = 4
-
-SET @maxCustID = xxx
+	AND	ci.custid <= @maxCustID
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
