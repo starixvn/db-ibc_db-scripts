@@ -32,7 +32,8 @@ BEGIN
 				ON	i.custID = cvr.custid 
 				AND pvs.bettype = cvr.bettype
 				AND pvs.islive = cvr.isLive
-		WHERE i.custid BETWEEN @maxCustID AND @maxCustID2
+		WHERE	i.custid > @maxCustID 
+			AND i.custid <= @maxCustID2
 	)
 	INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
 	SELECT custid, seqNo,
