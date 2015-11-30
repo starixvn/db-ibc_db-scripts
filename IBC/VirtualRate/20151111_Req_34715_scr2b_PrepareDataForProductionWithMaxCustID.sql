@@ -223,7 +223,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend, @maxcustid, 'REPLICATED'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @maxcustid = @maxcustid, @target = 'REPLICATED'
 
 	WAITFOR DELAY '00:00:00.280'
 END
@@ -261,7 +261,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend, @maxcustid, 'DBCUST'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @maxcustid = @maxcustid, @target = 'DBCUST'
 
 	WAITFOR DELAY '00:00:00.280'
 END

@@ -77,9 +77,9 @@ GO
 
 -- BEGIN STEP 2: DEPLOY THIS SCRIPT ON REPLICATED SERVER --
 -----------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 '2015-12-03 00:00:00.000', 'REPLICATED'
+EXECUTE Acc_CustSetting3rd_19 @time = '2015-12-03 00:00:00.000', @target = 'REPLICATED'
 GO
 
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 '2015-12-03 00:00:00.000', 'DBCUST'
+EXECUTE Acc_CustSetting3rd_19 @time = '2015-12-03 00:00:00.000', @target = 'DBCUST'

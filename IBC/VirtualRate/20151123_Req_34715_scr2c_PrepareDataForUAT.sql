@@ -217,7 +217,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend, 'REPLICATED'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @target = 'REPLICATED'
 
 	WAITFOR DELAY '00:00:00.280'
 END
@@ -251,7 +251,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend, 'DBCUST'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @target = 'DBCUST'
 
 	WAITFOR DELAY '00:00:00.280'
 END

@@ -10,7 +10,7 @@
 -- Execrep SP for adjusting Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@custid		INT,
-	@roldid		TINYINT,
+	@roleid		TINYINT,
 	@target		VARCHAR(30)
 AS
 BEGIN
@@ -29,7 +29,7 @@ BEGIN
 		) <> 4
 		RETURN
 
-	IF @roldid = 4
+	IF @roleid = 4
 	BEGIN
 		SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE srecommend = @custid) * 2
 
@@ -68,7 +68,7 @@ BEGIN
 			SET @counter = @counter - 20000
 		END
 	END
-	ELSE IF @roldid = 3
+	ELSE IF @roleid = 3
 	BEGIN
 		SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE mrecommend = @custid)
 
@@ -107,7 +107,7 @@ BEGIN
 			SET @counter = @counter - 20000
 		END
 	END
-	ELSE IF @roldid = 2
+	ELSE IF @roleid = 2
 	BEGIN
 		SELECT @counter = (SELECT COUNT(1) FROM custInfo WHERE recommend = @custid)
 
@@ -146,7 +146,7 @@ BEGIN
 			SET @counter = @counter - 20000
 		END
 	END
-	ELSE IF @roldid = 1
+	ELSE IF @roleid = 1
 	BEGIN
 		UPDATE cvs
 		SET bitmapVirtual = newdata.bitmapVirtual
@@ -194,7 +194,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @custid, @roleid, 'REPLICATED'
+	EXECUTE Acc_CustSetting3rd_19 @custid = @custid, @roleid = @roleid, @target = 'REPLICATED'
 
 	WAITFOR DELAY '00:00:00.280'
 END
@@ -235,7 +235,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @custid, @roleid, 'DBCUST'
+	EXECUTE Acc_CustSetting3rd_19 @custid = @custid, @roleid = @roleid, @target = 'DBCUST'
 
 	WAITFOR DELAY '00:00:00.280'
 END

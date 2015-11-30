@@ -69,12 +69,12 @@ GO
 -- BEGIN STEP 5: DEPLOY THIS SCRIPT ON REPLICATED SERVER --
 -----------------------------------------------------------
 
-EXECUTE Acc_CustSetting3rd_19 2, 'REPLICATED'
+EXECUTE Acc_CustSetting3rd_19 @srecommend = 2, @target = 'REPLICATED'
 GO
 
 
 -- BEGIN STEP 6: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
 
-EXECUTE Acc_CustSetting3rd_19 2, 'DBCUST'
+EXECUTE Acc_CustSetting3rd_19 @srecommend = 2, @target = 'DBCUST'
 GO
