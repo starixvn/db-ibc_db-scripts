@@ -64,7 +64,7 @@ GO
 DECLARE @maxCustID INT,
 		@maxCustID2 INT
 
-SET @maxCustID = xxx,
-	@maxCustID2 = yyy
+SET	@maxCustID = xxx,		-- @maxCustID is the old maxCustID used for previous copy data step
+	@maxCustID2 = yyy		-- @maxCustID2 is the NEW maxCustID used for this copy data step (@maxCustID < @maxCustID2)
 
 EXECUTE Acc_CustSetting3rd_19 @maxCustID = @maxCustID, @maxCustID2 = @maxCustID2
