@@ -29,33 +29,66 @@ BEGIN
 	DELETE cs
 	FROM [dbo].CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	WHERE ci.roleid IN (2,3,4) 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND cs.IsLive = 0
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	
 		
 		
 	DELETE cs
 	FROM [dbo].CustPTSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	WHERE ci.roleid = 1 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND cs.IsLive = 0
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 		
 	DELETE cs
 	FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.agentid = ci.custid
-	WHERE ci.roleid = 2 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	WHERE ci.roleid = 2 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND cs.IsLive = 0
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid IN (2,3,4) AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	WHERE ci.roleid IN (2,3,4) 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 	
 	DELETE cs
 	FROM [dbo].CustBetSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-
+	WHERE ci.roleid = 1 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+		
+		
 	DELETE cs
-	FROM [dbo].CustSettingMode3rd cs WITH(UPDLOCK,ROWLOCK)
+	FROM [dbo].CustDiscount3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
-	WHERE ci.roleid = 1 AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	WHERE ci.roleid IN (2,3,4) 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
+	
+	DELETE cs
+	FROM [dbo].CustDiscount3rd_Member cs WITH(UPDLOCK,ROWLOCK)
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+	WHERE ci.roleid = 1 
+		AND cs.Sporttype = 206
+		AND cs.Bettype = 1003
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+
+
 END
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----

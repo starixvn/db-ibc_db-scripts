@@ -110,13 +110,7 @@
 				AND cs.bettype = dest.fBetType
 				AND cs.sporttype = dest.fSportType
 	
-	
-	INSERT INTO [dbo].[CustSettingMode3rd]
-			   ([CustID]
-			   ,[IsGrouped])
-	SELECT custid,0
-	FROM #MemberTemp ci WITH(NOLOCK)
-	--WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid AND  ci.roleid = 1	
+
 	
 	/*****************************BET LIMIT SETTING**************************/	
 	--Agent Level
