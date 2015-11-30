@@ -10,17 +10,10 @@
 -- Execrep SP for importing Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@time		DATETIME,
-	@target		VARCHAR(30)
+	@maxCustID	INT
 AS
 BEGIN
 	SET NOCOUNT ON
-
-	DECLARE @counter INT
-
-	IF (@target = 'REPLICATED' AND @@SERVERNAME =  'DBCUST')	-- Run at all replicated servers
-		RETURN
-	IF (@target = 'DBCUST'	   AND @@SERVERNAME <> 'DBCUST')	-- Run at DBCUST only
-		RETURN
 
 	IF	(	SELECT	COUNT(1)
 			FROM	sys.tables WITH(NOLOCK)
@@ -32,6 +25,7 @@ BEGIN
 	INTO #ModifiedCustomers
 	FROM DB06.bodb_CustHistory.dbo.CustVirtualRate_History cvrh WITH(NOLOCK)
 	WHERE UpdateTime >= @time
+	AND cvrh.custid <= @maxCustID
 		
 	;WITH PivotData AS (
 		SELECT cvr.custid, seqNo, profileID,		
@@ -75,11 +69,11 @@ BEGIN
 END
 GO
 
--- BEGIN STEP 2: DEPLOY THIS SCRIPT ON REPLICATED SERVER --
------------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @time = '2015-12-03 00:00:00.000', @target = 'REPLICATED'
-GO
-
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @time = '2015-12-03 00:00:00.000', @target = 'DBCUST'
+DECLARE @maxCustID INT
+
+SET @maxCustID = xxx
+
+EXECUTE Acc_CustSetting3rd_19 @time = '2015-12-03 00:00:00.000', @maxCustID = @maxCustID
+GO

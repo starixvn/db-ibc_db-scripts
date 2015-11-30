@@ -22,6 +22,21 @@ CREATE TABLE #VirtualRateCheckSumNEW (
 )
 GO
 
+-- Create new physical table for saving need-to-adjust-settings customers --
+CREATE TABLE ##AdjustVirtualRate (
+	OldCustID	INT,
+	OldCheckSum INT,
+	NewCustID	INT,
+	NewCheckSum INT,
+	Grp			TINYINT
+)
+GO
+
+-- Variable to store MaxCustID
+DECLARE @maxCustID INT
+
+SET @maxCustID = xxx
+
 -- Calculate and insert checksum values into #VirtualRateCheckSumOLD table --
 INSERT INTO #VirtualRateCheckSumOLD (custID, VRSum)
 SELECT	cvr.custid, SUM(CAST(cvr.virtualMultiplier*100 AS INT)) VRSum
@@ -30,13 +45,15 @@ INNER JOIN	CustVirtualRate cvr WITH(NOLOCK)
 		ON	((pvs.sporttype = cvr.sporttype) OR (pvs.sporttype <> 1 AND cvr.sporttype = 99))
 		AND pvs.bettype = cvr.bettype
 		AND pvs.islive = cvr.isLive
+WHERE	cvr.custid <= @maxCustID
 GROUP BY cvr.custid
-GO
+
 
 -- Calculate and insert checksum values into #VirtualRateCheckSumNEW table --
 INSERT INTO #VirtualRateCheckSumNEW (custID, VRSum)
 SELECT	cvs.custid, SUM(dbo.f_VirtualRateBitmapChecksum(cvs.bitmapVirtual))
 FROM	CustVirtualSetting cvs WITH(NOLOCK)
+WHERE	cvs.custid <= @maxCustID
 GROUP BY cvs.custid
 GO
 

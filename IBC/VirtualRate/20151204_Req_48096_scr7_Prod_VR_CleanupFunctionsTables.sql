@@ -16,9 +16,3 @@ GO
 IF EXISTS (SELECT OBJECT_ID('dbo.f_VirtualRateBitmapChecksum'))
 	DROP FUNCTION dbo.f_VirtualRateBitmapChecksum
 GO
-
-
--- Temporary physical tables used for Virtual Rate deployment --
-IF EXISTS (SELECT OBJECT_ID('dbo.AdjustVirtualRate'))
-	DROP TABLE dbo.AdjustVirtualRate
-GO

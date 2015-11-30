@@ -9,22 +9,14 @@
 
 -- Execrep SP for importing Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@target		VARCHAR(30)
 AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @counter INT
-
-	IF (@target = 'REPLICATED' AND @@SERVERNAME =  'DBCUST')	-- Run at all replicated servers
-		RETURN
-	IF (@target = 'DBCUST'	   AND @@SERVERNAME <> 'DBCUST')	-- Run at DBCUST only
-		RETURN
-
 	IF	(	SELECT	COUNT(1)
 			FROM	sys.tables WITH(NOLOCK)
-			WHERE	name IN ('CustVirtualRate', 'CustVirtualSetting', 'ProfileVirtualSetting', 'AdjustVirtualRate')
-		) <> 4
+			WHERE	name IN ('CustVirtualRate', 'CustVirtualSetting', 'ProfileVirtualSetting')
+		) <> 3
 		RETURN
 
 		
@@ -34,7 +26,7 @@ BEGIN
 		FROM 		ProfileVirtualSetting AS pvs WITH(NOLOCK)
 		LEFT JOIN 	CustVirtualRate AS cvr WITH(NOLOCK)	
 				ON 	((pvs.sporttype = cvr.sporttype) OR (pvs.sporttype <> 1 AND cvr.sporttype = 99))
-		INNER JOIN	AdjustVirtualRate avr WITH(NOLOCK) 
+		INNER JOIN	##AdjustVirtualRate avr WITH(NOLOCK) 
 				ON	avr.OldCustID = cvr.custid 
 				AND pvs.bettype = cvr.bettype
 				AND pvs.islive = cvr.isLive
@@ -69,16 +61,11 @@ BEGIN
 	ON cvs.custid = bd.custid
 	AND cvs.seqNo = bd.seqNo
 
-	DELETE FROM AdjustVirtualRate
+	DELETE FROM ##AdjustVirtualRate
 	WHERE Grp = 3
 END
 GO
 
--- BEGIN STEP 2: DEPLOY THIS SCRIPT ON REPLICATED SERVER --
------------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @target = 'REPLICATED'
-GO
-
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @target = 'DBCUST'
+EXECUTE Acc_CustSetting3rd_19

@@ -10,12 +10,11 @@
 -- Execrep SP for importing Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@srecommend	INT,
+	@maxCustID	INT,
 	@target		VARCHAR(30)
 AS
 BEGIN
 	SET NOCOUNT ON
-
-	DECLARE @counter INT
 
 	IF (@target = 'REPLICATED' AND @@SERVERNAME =  'DBCUST')	-- Run at all replicated servers
 		RETURN
@@ -38,6 +37,7 @@ BEGIN
 			AND pvs.bettype = cvr.bettype
 			AND pvs.islive = cvr.isLive
 		WHERE ci.srecommend = @srecommend
+		AND ci.custid <= @maxCustID
 		AND [Enabled] = 1
 	)
 	INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
@@ -75,12 +75,15 @@ CREATE TABLE	#supers (
 					isfinished BIT DEFAULT(0)
 				)
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT,
+		@maxCustID INT
 
 INSERT INTO	#supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
 WHERE	roleid = 4
+
+SET @maxCustID = xxx
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
@@ -93,7 +96,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @target = 'REPLICATED'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @maxCustID = @maxCustID, @target = 'REPLICATED'
 
 	WAITFOR DELAY '00:00:00.280'
 END
@@ -109,12 +112,15 @@ CREATE TABLE	#supers (
 					isfinished BIT DEFAULT(0)
 				)
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT,
+		@maxCustID INT
 
 INSERT INTO #supers (custid)
 SELECT	ci.custid
 FROM	custInfo AS ci WITH(NOLOCK)
 WHERE	roleid = 4
+
+SET @maxCustID = xxx
 
 -- Import virtual setting from old structure to new structure for selected super lines --
 WHILE (0 = 0)
@@ -127,7 +133,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 
-	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @target = 'DBCUST'
+	EXECUTE Acc_CustSetting3rd_19 @srecommend = @srecommend, @maxCustID = @maxCustID, @target = 'DBCUST'
 
 	WAITFOR DELAY '00:00:00.280'
 END

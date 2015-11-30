@@ -9,21 +9,14 @@
 
 -- Execrep SP for importing Virtual Rate settings from old table [CustVirtualRate] to new table [CustVirtualSetting] --
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
-	@target		VARCHAR(30)
+	@maxCustID	INT
 AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @counter INT
-
-	IF (@target = 'REPLICATED' AND @@SERVERNAME =  'DBCUST')	-- Run at all replicated servers
-		RETURN
-	IF (@target = 'DBCUST'	   AND @@SERVERNAME <> 'DBCUST')	-- Run at DBCUST only
-		RETURN
-
 	IF	(	SELECT	COUNT(1)
 			FROM	sys.tables WITH(NOLOCK)
-			WHERE	name IN ('CustVirtualRate', 'CustVirtualSetting', 'ProfileVirtualSetting', 'AdjustVirtualRate')
+			WHERE	name IN ('CustVirtualRate', 'CustVirtualSetting', 'ProfileVirtualSetting', 'custInfo')
 		) <> 4
 		RETURN
 
@@ -34,11 +27,11 @@ BEGIN
 		FROM 		ProfileVirtualSetting AS pvs WITH(NOLOCK)
 		LEFT JOIN 	CustVirtualRate AS cvr WITH(NOLOCK)	
 				ON 	((pvs.sporttype = cvr.sporttype) OR (pvs.sporttype <> 1 AND cvr.sporttype = 99))
-		INNER JOIN	AdjustVirtualRate avr WITH(NOLOCK) 
-				ON	avr.OldCustID = cvr.custid 
+		INNER JOIN	custInfo i WITH(NOLOCK) 
+				ON	i.custID = cvr.custid 
 				AND pvs.bettype = cvr.bettype
 				AND pvs.islive = cvr.isLive
-		WHERE avr.Grp = 1
+		WHERE i.custid > @maxCustID
 	)
 	INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
 	SELECT custid, seqNo,
@@ -61,17 +54,13 @@ BEGIN
 								[111], [112], [113], [114], [115], [116], [117], [118], [119], [120]
 							)
 		) AS P;
-
-	DELETE FROM AdjustVirtualRate
-	WHERE Grp = 1
 END
 GO
 
--- BEGIN STEP 2: DEPLOY THIS SCRIPT ON REPLICATED SERVER --
+-- BEGIN STEP 2: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
 -----------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @target = 'REPLICATED'
-GO
+DECLARE @maxCustID INT
 
--- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
------------------------------------------------------------
-EXECUTE Acc_CustSetting3rd_19 @target = 'DBCUST'
+SET @maxCustID = xxx
+
+EXECUTE Acc_CustSetting3rd_19 @maxCustID = @maxCustID
