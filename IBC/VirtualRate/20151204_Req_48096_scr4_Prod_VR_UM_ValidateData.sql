@@ -1,11 +1,37 @@
 /*
-	Created: 20151127@Billy
-	Task: Validate copied data then adjust mismatch settings on Production environment (UM Time)
+	Created: 20151126@Billy
+	Task: Validate copied data then adjust mismatch settings on Production environment (Non-UM Time)
 	DB: DBCUST/CustDB
 */
 
--- BEGIN STEP 1: DEPLOY THIS SCRIPT	--
---------------------------------------
+-- BEGIN STEP 1: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
+-----------------------------------------------------------
+CREATE FUNCTION dbo.f_VirtualRateBitmapChecksum (
+	@bitmap BINARY(64)
+)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @result INT
+
+	;WITH Data AS (
+		SELECT pvs.profileID, s.vm
+		FROM ProfileVirtualSetting pvs WITH(NOLOCK)
+		CROSS APPLY (
+			SELECT CAST(SUBSTRING(@bitmap, pvs.profileID, 1) AS INT) vm
+		) s
+		WHERE pvs.profileID <= 64
+	)
+	SELECT @result = SUM(vm)
+	FROM Data
+
+	RETURN @result
+END 
+GO
+
+
+-- BEGIN STEP 2: DEPLOY THIS SCRIPT ON DBCUST/CustDB	 --
+-----------------------------------------------------------
 
 -- Create new table for saving checksum value of old VirtualRate --
 CREATE TABLE #VirtualRateCheckSumOLD (
@@ -32,71 +58,30 @@ CREATE TABLE ##AdjustVirtualRate (
 GO
 
 -- Variable to store MaxCustID
-DECLARE @maxCustID INT,
-		@srecommend INT
+DECLARE @maxCustID INT
 
 SET @maxCustID = xxx
 
 -- Calculate and insert checksum values into #VirtualRateCheckSumOLD table --
-SELECT	i.custid, CAST(0 AS BIT) isFinished
-INTO	#custOld
-FROM	custInfo i WITH(NOLOCK)
-WHERE	i.roleid = 4
-	AND	i.custid <= @maxCustID
-
-WHILE (0 = 0)
-BEGIN
-	UPDATE TOP(1) #custOld
-	SET	isFinished = 1,
-		@srecommend = custid
-	WHERE isFinished = 0
-
-	IF @@rowcount = 0
-		BREAK
-
-	INSERT INTO #VirtualRateCheckSumOLD (custID, VRSum)
-	SELECT	cvr.custid, SUM(CAST(cvr.virtualMultiplier*100 AS INT)) VRSum
-	FROM		ProfileVirtualSetting pvs WITH(NOLOCK)
-	INNER JOIN	CustVirtualRate cvr WITH(NOLOCK)
-			ON	((pvs.sporttype = cvr.sporttype) OR (pvs.sporttype <> 1 AND cvr.sporttype = 99))
-			AND pvs.bettype = cvr.bettype
-			AND pvs.islive = cvr.isLive
-	INNER JOIN	custInfo i WITH(NOLOCK)
-			ON	i.srecommend = @srecommend
-			AND	cvr.custid = i.custid
-			AND	i.[Enabled] = 1
-	WHERE	cvr.custid <= @maxCustID
-	GROUP BY cvr.custid
-END
+INSERT INTO #VirtualRateCheckSumOLD (custID, VRSum)
+SELECT	cvr.custid, SUM(CAST(cvr.virtualMultiplier*100 AS INT)) VRSum
+FROM		ProfileVirtualSetting pvs WITH(NOLOCK)
+INNER JOIN	CustVirtualRate cvr WITH(NOLOCK)
+		ON	((pvs.sporttype = cvr.sporttype) OR (pvs.sporttype <> 1 AND cvr.sporttype = 99))
+		AND pvs.bettype = cvr.bettype
+		AND pvs.islive = cvr.isLive
+WHERE	cvr.custid <= @maxCustID
+GROUP BY cvr.custid
+OPTION (MAXDOP 4)
 
 
 -- Calculate and insert checksum values into #VirtualRateCheckSumNEW table --
-SELECT	i.custid, CAST(0 AS BIT) isFinished
-INTO	#custNew
-FROM	custInfo i WITH(NOLOCK)
-WHERE	i.roleid = 4
-	AND	i.custid <= @maxCustID
-
-WHILE (0 = 0)
-BEGIN
-	UPDATE TOP(1) #custNew
-	SET	isFinished = 1,
-		@srecommend = custid
-	WHERE isFinished = 0
-
-	IF @@rowcount = 0
-		BREAK
-
-	INSERT INTO ##VirtualRateCheckSumNEW (custID, VRSum)
-	SELECT	cvs.custid, SUM(dbo.f_VirtualRateBitmapChecksum(cvs.bitmapVirtual))
-	FROM	CustVirtualSetting cvs WITH(NOLOCK)
-	INNER JOIN	custInfo i WITH(NOLOCK)
-			ON	i.srecommend = @srecommend
-			AND	cvs.custid = i.custid
-			AND [i].[Enabled] = 1
-	WHERE	cvs.custid <= @maxCustID
-	GROUP BY cvs.custid
-END
+INSERT INTO ##VirtualRateCheckSumNEW (custID, VRSum)
+SELECT	cvs.custid, SUM(dbo.f_VirtualRateBitmapChecksum(cvs.bitmapVirtual))
+FROM	CustVirtualSetting cvs WITH(NOLOCK)
+WHERE	cvs.custid <= @maxCustID
+GROUP BY cvs.custid
+OPTION (MAXDOP 4)
 GO
 
 -- Validate data --
@@ -175,6 +160,4 @@ GO
 
 --DROP TABLE #VirtualRateCheckSumNEW
 --DROP TABLE #VirtualRateCheckSumOLD
---DROP TABLE #custOld
---DROP TABLE #custNew
 --DROP TABLE ##AdjustVirtualRate
