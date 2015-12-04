@@ -14,7 +14,7 @@ INNER JOIN	ProfileVirtualSetting pvs WITH(NOLOCK)
 		AND pvs.bettype = cvr.bettype
 		AND pvs.islive = cvr.isLive
 
-SELECT	cvs.custid, pvs.sporttype, pvs.bettype, pvs.islive, CAST(SUBSTRING(cvs.bitmapVirtual, pvs.profileID, 1) AS INT) virtualMultiplier
+SELECT	cvs.custid, pvs.sporttype, pvs.bettype, pvs.islive, CAST(SUBSTRING(cvs.bitmapVirtual, (pvs.profileID - 1) % 64 + 1, 1) AS INT) virtualMultiplier
 INTO #NewData
 FROM		##AdjustVirtualRate avr
 INNER JOIN	CustVirtualSetting cvs WITH(NOLOCK)
