@@ -1,5 +1,5 @@
 DELETE FROM CustVirtualSetting
-WHERE custid IN (1619090, 1622431, 1622572, 1639418, 1639461, 1840719, 1846370, 1870011, 1909821, 1910426, 1913561, 1976092)
+WHERE custid IN (SELECT OldCustID FROM ##AdjustVirtualRate)
 
 ;WITH PivotData AS (
 	SELECT cvr.custid, seqNo, profileID,		
@@ -11,7 +11,7 @@ WHERE custid IN (1619090, 1622431, 1622572, 1639418, 1639461, 1840719, 1846370, 
 			ON	i.custID = cvr.custid 
 			AND pvs.bettype = cvr.bettype
 			AND pvs.islive = cvr.isLive
-	WHERE	i.custid IN (1619090, 1622431, 1622572, 1639418, 1639461, 1840719, 1846370, 1870011, 1909821, 1910426, 1913561, 1976092)
+	WHERE	i.custid IN (SELECT OldCustID FROM ##AdjustVirtualRate)
 )
 INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
 SELECT custid, seqNo,
