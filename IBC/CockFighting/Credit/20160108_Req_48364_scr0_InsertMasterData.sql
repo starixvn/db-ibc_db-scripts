@@ -27,7 +27,7 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,206 --<SportType, smallint,>
            ,1003 --<BetType, smallint,>
            ,0 --<IsLive, bit,>
-           ,17 --<ProductID, tinyint,>
+           ,19 --<ProductID, tinyint,>
            ,90 --<MaxPT, tinyint,>
            ,NULL --<MaxDiscount, decimal(9,8),>
            ,NULL --<IsSync, bit,>
@@ -42,7 +42,7 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,206 --<SportType, smallint,>
            ,1003 --<BetType, smallint,>
            ,0 --<IsLive, bit,>
-           ,17 --<ProductID, tinyint,>
+           ,19 --<ProductID, tinyint,>
            ,NULL --<MaxPT, tinyint,>
            ,NULL --<MaxDiscount, decimal(9,8),>
            ,NULL --<IsSync, bit,>
@@ -57,9 +57,9 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,206 --<SportType, smallint,>
            ,1003 --<BetType, smallint,>
            ,0 --<IsLive, bit,>
-           ,17 --<ProductID, tinyint,>
+           ,19 --<ProductID, tinyint,>
            ,NULL --<MaxPT, tinyint,>
-           ,0.01 --<MaxDiscount, decimal(9,8),>
+           ,0.0025 --<MaxDiscount, decimal(9,8),>
            ,NULL --<IsSync, bit,>
            ,NULL --<IsHidden, bit,>
            ,NULL --<IsDisabled, bit,>
@@ -72,7 +72,7 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,206 --<SportType, smallint,>
            ,1003 --<BetType, smallint,>
            ,0 --<IsLive, bit,>
-           ,17 --<ProductID, tinyint,>
+           ,19 --<ProductID, tinyint,>
            ,NULL --<MaxPT, tinyint,>
            ,NULL --<MaxDiscount, decimal(9,8),>
            ,1 --<IsSync, bit,>
@@ -83,17 +83,6 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,1)
 GO
 
-
---Status Bitmap
---INSERT INTO [dbo].[ProductStatusProfile]
---           ([Sporttype]
---           ,[Bettype]
---           ,[bitmapOrder])
---     VALUES
---           (206
---           ,1003
---           ,2)
---GO
 
 --Insert Default Minimum Bet by currencies
 DECLARE  @DestinationSportBetType TABLE(SportType INT, BetType INT)
@@ -115,44 +104,4 @@ SELECT sbt.SportType,sbt.BetType,Currency,0,0
 FROM #Currency 
 	CROSS JOIN @DestinationSportBetType sbt
 
-
---INSERT INTO [dbo].[SettingSystem]
---           ([SystemID]
---           ,[SystemName]
---           ,[Description]
---           ,[SystemPrefix])
---     VALUES
---           (1
---           ,'NAP'
---           ,'Nap Accounting Site'
---           ,'INAP'),
---           (2
---           ,'Alpha'
---           ,'Alpla For Agents'
---           ,'EALP'),
---           (3
---           ,'Internal Alpha'
---           ,'Alpha For Interal Login'
---           ,'IALP'),
---           (4
---           ,'External NAP'
---           ,'External NAP'
---           ,'ENAP')
---GO
-
---INSERT INTO [dbo].[ProductSettingSystemDisplay]
---           ([SystemID]
---           ,[ProductID]
---           ,[SettingType]
---           ,[DisplayMode])
---     VALUES
---           (2 --Alpha
---           ,16
---           ,4
---           ,3), --Hidden
---           (3 --Internal Alpha
---           ,16
---           ,4
---           ,3)--Hidden
---GO
 

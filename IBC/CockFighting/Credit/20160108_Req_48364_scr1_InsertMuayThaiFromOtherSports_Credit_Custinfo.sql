@@ -90,7 +90,6 @@ BEGIN
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND  ci.custid <= @maxcustid
-		AND ci.CustID NOT IN (SELECT CustID FROM [dbo].[CustProductStatus])
 
 END
 

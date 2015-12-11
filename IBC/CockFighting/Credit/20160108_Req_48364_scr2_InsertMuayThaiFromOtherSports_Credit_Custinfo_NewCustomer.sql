@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
-	Date: 2015-11-15
-	Task: Initialize Product Status of MuayThai for Newly created Credit customers
+	Date: 2015-11-25
+	Task: Initialize Product Status of CockFighting for Newly created Credit customers
 			(In UM)
 	DB: DBCust.CustDB
 */   

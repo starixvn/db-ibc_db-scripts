@@ -15,9 +15,9 @@
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
-	(99, 3, 206	,1003, 0, 1), --PT
-	(99, 3, 206	,1003, 0, 2), --Bet Limit
-	(99, 3, 206	,1003, 0, 3) --Discount
+	(99, 1, 206	,1003, 0, 1), --PT
+	(99, 1, 206	,1003, 0, 2), --Bet Limit
+	(99, 1, 206	,1003, 0, 3) --Discount
 
 	
 	/*****************************STEP 1 : Get Affected Customers**************************/
@@ -133,7 +133,7 @@
 					AND cs.bettype = map.fBetType
 	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
 			AND (
-				cs.Discount <> csa.Discount
+				cs.groupa <> csa.Discount
 			)
 			
 	--SMA Discount
@@ -242,7 +242,7 @@
 	--Discount of SMA 
 	UPDATE csa
 	SET
-		csa.Discount = cs.discount
+		csa.Discount = cs.groupa
 	FROM #SMADiscountCust ci WITH(NOLOCK)
 		INNER JOIN dbo.CustDiscount3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
 			ON csa.CustID = ci.custid 
