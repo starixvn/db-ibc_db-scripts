@@ -20,8 +20,7 @@ WHERE cs.CustID > @maxcustID
 
 DELETE cs
 FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
-WHERE cs.AgentID > @maxcustID
-		AND cs.Sporttype = 206
+WHERE cs.Sporttype = 206
 		AND cs.Bettype = 1003
 		AND cs.IsLive = 0
 
