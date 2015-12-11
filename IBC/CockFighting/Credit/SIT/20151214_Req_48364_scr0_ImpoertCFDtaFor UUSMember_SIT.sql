@@ -38,9 +38,9 @@ WHERE ci.roleid = 2 AND ci.currency = 20
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT,  SettingType INT)
 INSERT INTO #DestinationSportBetType
 VALUES
-(44, 3, 206	,1004,  1), --PT
-(44, 3, 206	,1004,  2), --Bet Limit
-(44, 3, 206	,1004,  3) --Discount
+(44, 3, 206	,1003,  1), --PT
+(44, 3, 206	,1003,  2), --Bet Limit
+(44, 3, 206	,1003,  3) --Discount
 
 --PT
 INSERT INTO [dbo].[CustPTSetting3rd_Member]
