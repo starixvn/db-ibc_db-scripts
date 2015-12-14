@@ -29,6 +29,17 @@ GO
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBTP/bodb_CustHistory	--
 ------------------------------------------------------------------
 
+USE [bodb_CustomerLog]
+GO
+  
+ALTER TABLE [dbo].[CustInfo_History]
+ADD DisableBinaryOptions BIT CONSTRAINT DF_custInfo_History_DisableBinaryOptions DEFAULT(1) NULL
+GO
+
+
+-- BEGIN STEP 4: DEPLOY THIS SCRIPT ON DBTP/bodb_CustHistory	--
+------------------------------------------------------------------
+
 USE [bodb_CustHistory]
 GO
   
