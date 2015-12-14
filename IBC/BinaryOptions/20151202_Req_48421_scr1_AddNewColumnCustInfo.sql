@@ -48,7 +48,7 @@ ADD DisableBinaryOptions BIT CONSTRAINT DF_custInfo_History_DisableBinaryOptions
 GO
 
 
--- BEGIN STEP 4: DEPLOY THIS SCRIPT ON DBTP/bodb02				--
+-- BEGIN STEP 5: DEPLOY THIS SCRIPT ON DBTP/bodb02				--
 ------------------------------------------------------------------
 
 USE [bodb02]
