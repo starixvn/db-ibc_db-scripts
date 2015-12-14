@@ -26,7 +26,7 @@ ADD DisableBinaryOptions BIT CONSTRAINT DF_custInfo_Old_DisableBinaryOptions DEF
 GO
 
 
--- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBTP/bodb_CustHistory	--
+-- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBLOG/bodb_CustomerLog	--
 ------------------------------------------------------------------
 
 USE [bodb_CustomerLog]
