@@ -1,3 +1,4 @@
+---DBPRO
 Use bodb02
 GO
 
