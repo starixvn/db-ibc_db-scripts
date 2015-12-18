@@ -2,7 +2,7 @@
 USE [bodb02]
 
 CREATE TABLE [dbo].[EventInfo3rd](
- [ID] [int] IDENTITY(1,1)  NOT FOR REPLICATION NOT NULL,
+ [EventInfoID] [int] IDENTITY(1,1)  NOT FOR REPLICATION NOT NULL,
  [ArenaID] [int] NOT NULL,
  [FightNo] [int] NOT NULL,
  [EventDate] [smalldatetime] NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE [dbo].[EventInfo3rd](
  [AwayOwner] [nvarchar](256) NULL,
  CONSTRAINT [PK_EventInfo3rd] PRIMARY KEY NONCLUSTERED 
 (
- [ID] ASC
+ [EventInfoID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Event_index]
 ) ON [Event_table]
 

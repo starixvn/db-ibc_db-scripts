@@ -1,7 +1,7 @@
 --DBPRO
 USE [bodb02]
 CREATE TABLE [dbo].[EventInfo3rd14](
- [ID] [int] NOT NULL,
+ [EventInfoID] [int] NOT NULL,
  [ArenaID] [int] NOT NULL,
  [FightNo] [int] NOT NULL,
  [EventDate] [smalldatetime] NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[EventInfo3rd14](
  [AwayOwner] [nvarchar](256) NULL,
  CONSTRAINT [PK_EventInfo3rd14] PRIMARY KEY NONCLUSTERED 
 (
- [ID] ASC
+ [EventInfoID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Event14_index]
 ) ON [Event14_table]
 
