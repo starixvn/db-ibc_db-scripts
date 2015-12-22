@@ -1,15 +1,13 @@
 /*
 	Created: Dominic
 	Date: 2015-11-25
-	Task: Copy Bet Setting / Position Taking / Discount from Other Sports to CockFighting for Credit customers
+	Task: Initialize setting of CF for UUS Customers
 	DB: DBCust.CustDB
 */  
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
 ALTER PROCEDURE Acc_DynamicCustSetting3rd_09
-	@srecommend INT	
-	,@maxcustid INT
-	,@target VARCHAR(30)
+	@target VARCHAR(30)
 AS
 BEGIN   
 	SET NOCOUNT ON
@@ -18,233 +16,266 @@ BEGIN
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
-	   AND dbo.f_CheckRepTable('CustSetting') = 1
-	   AND dbo.f_CheckRepTable('custOverride') = 1 
 	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustBetSetting3rd_Agent') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 1
 	   AND dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 1
-	   AND dbo.f_CheckRepTable('CustSettingMode3rd') = 1
 	   AND dbo.f_CheckRepTable('CustDiscount3rd_Agent') = 1
 	   AND dbo.f_CheckRepTable('CustDiscount3rd_Member') = 1
 	   )
 	  RETURN
 
-
-	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
-	INSERT INTO #DestinationSportBetType
-	VALUES
-	(99, 1, 206	,1003, 0, 1), --PT
-	(99, 1, 206	,1003, 0, 2), --Bet Limit
-	(99, 1, 206	,1003, 0, 3) --Discount
-
-				
-	/*****************************POSITION TAKING**************************/
 	CREATE TABLE #MemberTemp
 	(
-		CustID INT PRIMARY KEY CLUSTERED,
-		maxpermatch99 MONEY
+		CustID INT PRIMARY KEY CLUSTERED
 	)
 
 	CREATE TABLE #SMATemp
 	(
-		CustID INT PRIMARY KEY CLUSTERED,
-		maxpermatch99 MONEY
+		AgentID INT PRIMARY KEY CLUSTERED,
+		RoleID  TINYINT
 	)
-	
-	INSERT INTO #MemberTemp (CustID,maxpermatch99)
-	SELECT custid,maxpermatch99
-	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid = 1 AND custid <= @maxcustid 
-	
-	
-	INSERT INTO #SMATemp (CustID,maxpermatch99)
-	SELECT custid,maxpermatch99
-	FROM Custinfo WITH (NOLOCK)
-	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND custid <= @maxcustid 
+
+	INSERT #MemberTemp(CustID)
+	SELECT CustID
+	FROM dbo.custInfo ci WITH(NOLOCK)
+	WHERE ci.roleid = 1 AND ci.currency = 20 
+		AND ci.srecommend (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.CustID NOT IN
+		(
+			5856063,
+			14242456,
+			14242815,
+			14242821,
+			14242825,
+			14242830,
+			14242834,
+			14242839,
+			14242878,
+			14242879,
+			14242912,
+			14242913,
+			14242914,
+			14242917,
+			14307171,
+			14307173,
+			14307199,
+			14307202,
+			14307217,
+			19096660,
+			19096669,
+			19096700,
+			19096713
+		)
+
+	INSERT #SMATemp(AgentID,RoleID)
+	SELECT CustID,RoleID
+	FROM dbo.custInfo ci WITH(NOLOCK)
+	WHERE ci.roleid IN (2,3,4) AND ci.currency = 20 
+		AND ci.srecommend (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+
+	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT,  SettingType INT)
+	INSERT INTO #DestinationSportBetType
+	VALUES
+	(44, 3, 206	,1003,  1), --PT
+	(44, 3, 206	,1003,  2), --Bet Limit
+	(44, 3, 206	,1003,  3) --Discount
+
+	/******PT******/
+		--SMA        
+		INSERT INTO [dbo].[CustPTSetting3rd_Agent]
+				   ([CustID]
+				   ,[SportType]
+				   ,[BetType]
+				   ,[IsLive]
+				   ,[SuperPT]
+				   ,[MasterPT]
+				   ,[AgentPT]
+				   ,[IsAutoMasterPT]
+				   ,[AutoMasterPT]
+				   ,[IsAutoSuperPT]
+				   ,[AutoSuperPT]
+				   ,[MinPT]
+				   ,[MaxPT])
+		SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,[IsLive]
+				   ,[SuperPT]
+				   ,[MasterPT]
+				   ,[AgentPT]
+				   ,[IsAutoMasterPT]
+				   ,[AutoMasterPT]
+				   ,[IsAutoSuperPT]
+				   ,[AutoSuperPT]
+				   ,[MinPT]
+				   ,[MaxPT]
+		FROM dbo.CustPTSetting3rd_Agent cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 1
+		WHERE cs.IsLive = 0 AND cs.custid IN (SELECT AgentID FROM #SMATemp)
+		
+		--Member
+		INSERT INTO [dbo].[CustPTSetting3rd_Member]
+				   ([CustID]
+				   ,[SportType]
+				   ,[BetType]
+				   ,[IsLive]
+				   ,[SuperPT]
+				   ,[MasterPT]
+				   ,[AgentPT]
+				   ,[IsAutoMasterPT]
+				   ,[AutoMasterPT]
+				   ,[IsAutoSuperPT]
+				   ,[AutoSuperPT])
+		SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,[IsLive]
+				  ,[SuperPT]
+				  ,[MasterPT]
+				  ,[AgentPT]
+				  ,[IsAutoMasterPT]
+				  ,[AutoMasterPT]
+				  ,[IsAutoSuperPT]
+				  ,[AutoSuperPT]
+		FROM dbo.CustPTSetting3rd_Member cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 1
+		WHERE cs.IsLive = 0 AND cs.custid IN (SELECT CustID FROM #MemberTemp)
+
+		INSERT INTO [dbo].[CustPTGroupSetting3rd_Member]
+				   ([AgentID]
+				   ,[SportType]
+				   ,[BetType]
+				   ,[IsLive]
+				   ,[SuperPT]
+				   ,[MasterPT]
+				   ,[AgentPT]
+				   ,[IsAutoMasterPT]
+				   ,[AutoMasterPT]
+				   ,[IsAutoSuperPT]
+				   ,[AutoSuperPT])
+		SELECT	[AgentID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,[IsLive]
+				  ,[SuperPT]
+				  ,[MasterPT]
+				  ,[AgentPT]
+				  ,[IsAutoMasterPT]
+				  ,[AutoMasterPT]
+				  ,[IsAutoSuperPT]
+				  ,[AutoSuperPT]
+		FROM dbo.CustPTGroupSetting3rd_Member cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 1
+		WHERE cs.IsLive = 0 AND cs.AgentID IN (SELECT AgentID FROM #SMATemp Where RoleID = 2)
+
+	/****Bet Limit*****/
+		--SMA
+		INSERT INTO [dbo].[CustBetSetting3rd_Agent]
+			   ([CustID]
+			   ,[SportType]
+			   ,[BetType]
+			   ,[MinBet]
+			   ,[MaxBet]
+			   ,[MaxPerMatch])
+		 SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,[MinBet]
+				  ,[MaxBet]
+				  ,[MaxPerMatch]
+		FROM dbo.CustBetSetting3rd_Agent cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 2
+		WHERE cs.custid IN (SELECT AgentID FROM #SMATemp)
+		
+
+		--Member
+		INSERT INTO [dbo].[CustBetSetting3rd_Member]
+				   ([CustID]
+				   ,[SportType]
+				   ,[BetType]
+				   ,[MinBet]
+				   ,[MaxBet]
+				   ,[MaxPerMatch])
+		SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,[MinBet]
+				  ,[MaxBet]
+				  ,[MaxPerMatch]
+		FROM dbo.CustBetSetting3rd_Member cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 2
+		WHERE cs.custid IN (SELECT CustID FROM #MemberTemp)
+			
+	/******Discount********/
+		--SMA
+		INSERT INTO [dbo].[CustDiscount3rd_Agent]
+			   ([CustID]
+			   ,[SportType]
+			   ,[BetType]
+			   ,[Discount])
+		SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,0.0025
+		FROM dbo.CustBetSetting3rd_Agent cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 3
+		WHERE cs.custid IN (SELECT AgentID FROM #SMATemp)
 
 
-	--AGENT LEVEL
-	INSERT INTO dbo.CustPTSetting3rd_Agent
-		([CustID]
-		   ,[SportType]
-		   ,[BetType]
-		   ,[IsLive]
-		   ,[SuperPT]
-		   ,[MasterPT]
-		   ,[AgentPT]
-		   ,[IsAutoMasterPT]
-		   ,[AutoMasterPT]
-		   ,[IsAutoSuperPT]
-		   ,[AutoSuperPT]
-		   ,[MinPT]
-		   ,[MaxPT])
-	SELECT 
-		cs.custid,dest.tsporttype,dest.tbettype,dest.IsLive
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-		,co.minpositiontaking  *100
-		,90
-	FROM dbo.CustSetting cs WITH(NOLOCK) 
-		INNER JOIN dbo.custOverride co WITH(NOLOCK) 
-			ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
-		INNER JOIN #SMATemp ci WITH(NOLOCK) 
-			ON ci.custid = cs.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 1
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
-	
-	
-	--MEMBER LEVEL
-	INSERT INTO dbo.CustPTSetting3rd_Member
-			([custid]
-		  ,[sporttype]
-		  ,[bettype]
-		  ,[islive]
-		  ,[superPT]
-		  ,[masterPT]
-		  ,[agentPT]
-		  ,[IsAutoMasterPT]
-		  ,[AutoMasterPT]
-		  ,[IsAutoSuperPT]
-		  ,[AutoSuperPT])
-	SELECT 
-		cs.custid,dest.tsporttype,dest.tbettype,dest.IsLive
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-	FROM dbo.custSetting cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 1
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
-	
-	
-	/*****************************BET LIMIT SETTING**************************/	
-	--Agent Level
-	INSERT INTO dbo.CustBetSetting3rd_Agent
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
-	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN #SMATemp ci WITH(NOLOCK) 
-			ON  ci.custid = cs.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 2
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
+		--Member
+		INSERT INTO [dbo].[CustDiscount3rd_Member]
+				   ([CustID]
+				   ,[SportType]
+				   ,[BetType]
+				   ,[PlayerDiscount]
+				   ,[AgentDiscount]
+				   ,[MasterDiscount]
+				   ,[SuperDiscount])		
+		SELECT	[CustID]
+				  ,f.tSportType
+				  ,f.tBetType
+				  ,0.0025
+				  ,0.0025
+				  ,0.0025
+				  ,0.0025
+		FROM dbo.CustBetSetting3rd_Member cs WITH(NOLOCK) 
+		INNER JOIN #DestinationSportBetType f WITH(NOLOCK)
+			ON cs.SportType = f.fSportType
+				AND cs.BetType = f.fBetType
+				AND f.SettingType = 3
+		WHERE cs.custid IN (SELECT CustID FROM #MemberTemp)
 
-	 
-	--Member Level
-	INSERT INTO dbo.CustBetSetting3rd_Member
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.minbet,cs.maxbet,ci.maxpermatch99
-	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) 
-			ON  ci.custid = cs.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 2
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
-				
-	/*****************************DISCOUNT SETTING**************************/	
-	--Agent Level
-	INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.groupa
-	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN #SMATemp ci WITH(NOLOCK) 
-			ON  ci.custid = cs.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 3
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
-
-	 
-	--Member Level
-	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
-	SELECT cs.custid,dest.tsporttype,dest.tbettype,cs.PlayerDiscount,cs.discount,cs.adiscount,cs.sdiscount
-	FROM dbo.CustSetting cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) 
-			ON  ci.custid = cs.custid
-		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK)
-			ON dest.SettingType = 3
-				AND cs.bettype = dest.fBetType
-				AND cs.sporttype = dest.fSportType
-	
 	DROP TABLE #MemberTemp
 	DROP TABLE #SMATemp
+	DROP TABLE #DestinationSportBetType
+
 END
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'REPLICATED'
 
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
-	AND ci.currency = 20
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
-			
-			
-	waitfor delay '00:00:0.280'
-END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'DBCUST'
 
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
-	AND ci.currency = 20
-	
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #Supers
-	SET isfinished = 1
-		,@srecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
-						
-	waitfor delay '00:00:0.280'
-END
