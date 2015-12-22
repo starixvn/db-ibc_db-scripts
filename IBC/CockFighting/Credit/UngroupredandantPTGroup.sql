@@ -101,7 +101,7 @@ BEGIN
 
 	UPDATE CustSettingMode3rd
 	SET IsGrouped = 0
-	WHERE CustID IN (Select CustID IN #tmp)
+	WHERE CustID IN (Select CustID FROM #tmp)
 
 END
 
