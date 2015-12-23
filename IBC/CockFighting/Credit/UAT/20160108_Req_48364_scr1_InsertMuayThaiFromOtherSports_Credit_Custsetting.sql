@@ -40,7 +40,7 @@ BEGIN
 	SELECT CustID
 	FROM dbo.custInfo ci WITH(NOLOCK)
 	WHERE ci.roleid = 1 AND ci.currency = 20 
-		AND ci.srecommend (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.CustID NOT IN
 		(
 			5856063,
@@ -87,7 +87,7 @@ BEGIN
 	SELECT CustID,RoleID
 	FROM dbo.custInfo ci WITH(NOLOCK)
 	WHERE ci.roleid IN (2,3,4) AND ci.currency = 20 
-		AND ci.srecommend (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.srecommend NOT IN  (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
