@@ -40,7 +40,7 @@ BEGIN
 	SELECT CustID
 	FROM dbo.custInfo ci WITH(NOLOCK)
 	WHERE ci.roleid = 1 AND ci.currency = 20 
-		AND ci.srecommend (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.CustID NOT IN
 		(
 			5856063,
