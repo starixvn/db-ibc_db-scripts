@@ -76,8 +76,8 @@ INSERT INTO [CustDB].[dbo].[ProductSettingDetail]
            ,NULL --<MaxPT, tinyint,>
            ,NULL --<MaxDiscount, decimal(9,8),>
            ,1 --<IsSync, bit,>
-           ,0 --<IsHidden, bit,>
-           ,0 --<IsDisabled, bit,>
+           ,1 --<IsHidden, bit,>
+           ,1 --<IsDisabled, bit,>
            ,2 --<SettingLevel, tinyint,>
            ,1 --<DisplayOrder, tinyint,>
            ,1)
