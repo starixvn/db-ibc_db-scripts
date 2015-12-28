@@ -1,7 +1,7 @@
 /*
 	Created: Dominic
 	Date: 2015-11-25
-	Task: Initialize Product Status of CockFighting for Credit customers
+	Task: Initialize Product Status of CockFighting for Credit customers (Not Under 789y)
 	DB: DBCust.CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
@@ -24,7 +24,7 @@ BEGIN
 	  RETURN
 	
 	--Default status
-	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1
+	DECLARE @IsDisabled BIT = 1, @IsHidden BIT = 1, @IsSync BIT = 1
 
 	CREATE TABLE #DestinationSportBetType(tSportType SMALLINT, tBetType SMALLINT)
 	INSERT INTO #DestinationSportBetType
@@ -103,10 +103,11 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
+FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+	AND ci.custid <= @max_custid 
+	AND ci.site <> '789y'
 	
 WHILE (1 = 1)
 BEGIN
@@ -135,10 +136,11 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
+FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+	AND ci.custid <= @max_custid 
+	AND ci.site <> '789y' 
 	
 WHILE (1 = 1)
 BEGIN

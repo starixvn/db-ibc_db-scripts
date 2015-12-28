@@ -1,15 +1,27 @@
 /*
 	Created: Dominic
 	Date: 2015-11-25
-	Task: Initialize Product Status of CockFighting for Newly created Credit customers
+	Task: Initialize Product Status of CockFighting for Newly created Credit customers (Not under 789y)
 			(In UM)
 	DB: DBCust.CustDB
 */   
 	DECLARE @max_custid INT
-
+	
 	SELECT @max_custid = xxx
+	
+	CREATE TABLE #supers (custid int)
+	
+	INSERT INTO #supers(custid)
+	SELECT ci.custid
+	FROM dbo.Customer ci WITH(NOLOCK)
+	WHERE ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.custid > @max_custid 
+		AND ci.site <> '789y'
+
+	
 	--Default status
-	DECLARE @IsDisabled BIT = 0, @IsHidden BIT = 0, @IsSync BIT = 1
+	DECLARE @IsDisabled BIT = 1, @IsHidden BIT = 1, @IsSync BIT = 1
 
 	CREATE TABLE #DestinationSportBetType(tSportType SMALLINT, tBetType SMALLINT)
 	INSERT INTO #DestinationSportBetType
@@ -21,10 +33,11 @@
 		CustID INT PRIMARY KEY CLUSTERED
 	)
 	
+	
 	INSERT #CustomerTemp(CustID)
 	SELECT CustID
-	FROM dbo.CustInfo WITH(NOLOCK)
-	WHERE srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	FROM dbo.customer WITH(NOLOCK)
+	WHERE srecommend IN (SELECT CustID FROM #supers)
 		AND CustID > @max_custid
 
 	DECLARE @xmlDisabled VARCHAR(MAX)

@@ -11,7 +11,15 @@
 	CREATE TABLE #MemberDiscountCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT)
 	CREATE TABLE #SMADiscountCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT)
 	
-
+	CREATE TABLE #supers (custid int)
+	
+	INSERT INTO #supers(custid)
+	SELECT ci.custid
+	FROM dbo.Customer ci WITH(NOLOCK)
+	WHERE ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.site <> '789y'
+		
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 	INSERT INTO #DestinationSportBetType
 	VALUES
@@ -40,6 +48,7 @@
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
 	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
+			AND ci.srecommend NOT IN (SELECT CustID FROM #supers)
 			AND (
 				cs.spositiontaking  *100 <> csa.SuperPT
 				OR cs.mpositiontaking  *100 <> csa.MasterPT
@@ -64,7 +73,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 1 AND ci.roleid = 1
+	WHERE map.SettingType = 1 AND ci.roleid = 1 AND ci.srecommend NOT IN (SELECT CustID FROM #supers)
 			AND (
 				cs.spositiontaking  *100 <> csm.SuperPT
 				OR cs.mpositiontaking  *100 <> csm.MasterPT

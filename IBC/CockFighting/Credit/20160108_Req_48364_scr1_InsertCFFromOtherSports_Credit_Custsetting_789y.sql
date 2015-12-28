@@ -89,7 +89,7 @@ BEGIN
 		,cs.isautopositiontaking 
 		,cs.autopositiontaking  *100
 		,co.minpositiontaking  *100
-		,90
+		,80
 	FROM dbo.CustSetting cs WITH(NOLOCK) 
 		INNER JOIN dbo.custOverride co WITH(NOLOCK) 
 			ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
@@ -194,10 +194,11 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
+FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+	AND ci.custid <= @max_custid 
+	AND ci.site = '789y'
 	
 WHILE (1 = 1)
 BEGIN
@@ -226,10 +227,11 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
+FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+	AND ci.custid <= @max_custid 
+	AND ci.site = '789y'
 	
 WHILE (1 = 1)
 BEGIN
