@@ -15,7 +15,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[mcCustNumGameDaily_tmp](
-	[rptDate] [datetime] NOT NULL,
+	[rptDate] [date] NOT NULL,
 	[CustID] [int] NOT NULL,
 	[recommend] [int] NOT NULL,
 	[mrecommend] [int] NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE [dbo].[mcCustNumGameDaily_tmp](
 	[leagueid] ASC,
 	[matchid] ASC,
 	[status] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [mcCustNumGameDaily]
+)WITH (DATA_COMPRESSION = PAGE , PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [mcCustNumGameDaily]
 ) ON [mcCustNumGameDaily]
 
 GO
