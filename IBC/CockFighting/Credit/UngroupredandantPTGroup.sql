@@ -44,6 +44,7 @@ BEGIN
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
 		Recommend INT
+		IsSucceed BIT DEFAULT(0)
 	)
 
 	INSERT #tmp(CustID,	Recommend)
@@ -105,10 +106,11 @@ BEGIN
 
 END
 
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+-- BEGIN STEP 3: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
+	
 EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'REPLICATED'
 
--- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+-- BEGIN STEP 4: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
 EXEC dbo.Acc_DynamicCustSetting3rd_09 @target = 'DBCUST'

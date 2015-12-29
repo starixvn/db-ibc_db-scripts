@@ -18,6 +18,7 @@
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid > @max_custid 
 		AND ci.site = '789y'
+		AND ci.Currency = 20
 	
 
 	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
