@@ -107,7 +107,7 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	AND ci.site <> '789y'
+	AND ci.currency <> 20
 	
 WHILE (1 = 1)
 BEGIN
@@ -140,7 +140,7 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	AND ci.site <> '789y' 
+	AND ci.currency <> 20
 	
 WHILE (1 = 1)
 BEGIN

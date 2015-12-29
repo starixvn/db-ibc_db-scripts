@@ -176,8 +176,26 @@ DECLARE @srecommend INT
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+WHERE ci.custid IN (
+		13869621,
+		5340162,
+		12262401,
+		12141653,
+		4138910,
+		6379932,
+		16112208,
+		12141529,
+		1539339,
+		720475
+		--UUS
+		,17287861
+		,18879367
+		,14373244
+		,18362423
+		,18479460
+		,18289591
+	)
+	AND ci.Currency = 20
 	
 WHILE (1 = 1)
 BEGIN
@@ -204,8 +222,26 @@ DECLARE @srecommend INT
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+WHERE ci.custid IN (
+		13869621,
+		5340162,
+		12262401,
+		12141653,
+		4138910,
+		6379932,
+		16112208,
+		12141529,
+		1539339,
+		720475
+		--UUS
+		,17287861
+		,18879367
+		,14373244
+		,18362423
+		,18479460
+		,18289591
+	)
+	AND ci.Currency = 20
 	
 WHILE (1 = 1)
 BEGIN

@@ -233,6 +233,7 @@ WHERE ci.roleid = 4
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
 	AND ci.site <> '789y'
+	AND ci.Currency = 20
 	
 WHILE (1 = 1)
 BEGIN
@@ -266,6 +267,7 @@ WHERE ci.roleid = 4
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
 	AND ci.site <> '789y'
+	AND ci.Currency = 20
 	
 WHILE (1 = 1)
 BEGIN
