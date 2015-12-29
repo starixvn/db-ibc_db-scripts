@@ -1,8 +1,8 @@
 USE [master]
 GO
-ALTER DATABASE [bodb_Account] ADD FILEGROUP [mcCustNumGameDaily2]
+ALTER DATABASE [bodb_Account] ADD FILEGROUP [mcCustNumGameDaily]
 GO
-ALTER DATABASE [bodb_Account] ADD FILE ( NAME = N'mcCustNumGameDaily2', FILENAME = N'D:\IBC_DB\bodb_Account\mcCustNumGameDaily2.ndf' , SIZE = 1048576KB , FILEGROWTH = 32768KB ) TO FILEGROUP [mcCustNumGameDaily2]
+ALTER DATABASE [bodb_Account] ADD FILE ( NAME = N'mcCustNumGameDaily', FILENAME = N'D:\IBC_DB\bodb_Account\mcCustNumGameDaily.ndf' , SIZE = 1048576KB , FILEGROWTH = 32768KB ) TO FILEGROUP [mcCustNumGameDaily]
 GO
 
 USE [bodb_Account]
@@ -51,7 +51,7 @@ CREATE TABLE [dbo].[mcCustNumGameDaily_tmp](
 	[BetCount] [int] NULL,
 	[BetCountH] [int] NULL,
 	[BetCountA] [int] NULL,
- CONSTRAINT [PK_mcCustNumGameDaily2] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_mcCustNumGameDaily] PRIMARY KEY CLUSTERED 
 (
 	[rptDate] ASC,
 	[CustID] ASC,
@@ -65,8 +65,8 @@ CREATE TABLE [dbo].[mcCustNumGameDaily_tmp](
 	[leagueid] ASC,
 	[matchid] ASC,
 	[status] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [mcCustNumGameDaily2]
-) ON [mcCustNumGameDaily2]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [mcCustNumGameDaily]
+) ON [mcCustNumGameDaily]
 
 GO
 
