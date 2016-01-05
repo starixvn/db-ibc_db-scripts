@@ -44,7 +44,6 @@ BEGIN
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
 		Recommend INT
-		IsSucceed BIT DEFAULT(0)
 	)
 
 	INSERT #tmp(CustID,	Recommend)
