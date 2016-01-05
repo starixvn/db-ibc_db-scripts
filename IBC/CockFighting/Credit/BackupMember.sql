@@ -5,11 +5,13 @@
 	Run at: DBCUST.CustDB
 */  
 
+--Step 1 : Create physical table
 CREATE TABLE BkCustomer49344 (
 	CustID INT PRIMARY KEY CLUSTERED
 	, Recommend INT
 	)
 
+--Step 2 : Insert a list of members
 INSERT BkCustomer49344 (
 	CustID
 	, Recommend
