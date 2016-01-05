@@ -6,6 +6,7 @@
 DECLARE @refno	BIGINT
 	, @CustID	INT
 SELECT @CustID  = 1176092
+
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
 	@CustID  	= @CustID
 	,@Bettype 	= 18000
@@ -34,6 +35,6 @@ EXEC [dbo].[DataSample_CB_BetTicket_Ins]
 EXEC [dbo].[DataSample_CB_BetTicket_Ins]
 	@CustID  	= @CustID
 	,@Bettype 	= 18000
-	,@status  	= 'LOSE'
+	,@status  	= 'WON'
 	,@refno 	= @refno
 GO

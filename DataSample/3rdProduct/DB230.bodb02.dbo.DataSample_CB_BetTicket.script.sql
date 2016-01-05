@@ -19,6 +19,7 @@ Params:
 		+ 18003: Winning Share			- LOSE
 		+ 18004: Consolation Prize		- WON
 		+ 18005: Jackpot Prize			- WON
+		+ 18006: Bonus Prize			- WON/LOSE
 	- @refno: translog.translogid. Idicating a Cash-Out, Consolation, Jackpot ticket will belong to what CB's bet ticket.
 	
 */
@@ -32,7 +33,7 @@ BEGIN
 	SELECT @Bettype = CASE WHEN @Bettype = 18000 THEN 18001 ELSE @Bettype END
 		, @status	= UPPER(@status)
 
-	IF(@Bettype NOT BETWEEN 18000 AND 18005)
+	IF(@Bettype NOT BETWEEN 18000 AND 18006)
 	BEGIN
 		SELECT 'Opps! Bettype is invalid.' AS Warning
 		GOTO FINAL_CHECK;
@@ -345,11 +346,12 @@ BEGIN
 		END
 	END	
 	
-	-- insert Prize(18002,18004,18005)
+	-- insert Prize(18002,18004,18005,18006)
 	IF (@refno_translog > 0 
-		AND @Bettype IN (18002,18004,18005) 
-		AND @status  IN ('WON')
-		AND @winAmount > 0)
+		AND @Bettype IN (18002,18004,18005,18006) 
+		--AND @status  IN ('WON')
+		--AND @winAmount > 0
+	)
 	BEGIN
 		-- A member can WIN N-Consolation and an unique Jackpot Prize with N-lines
 		-- check existing bettype
@@ -428,6 +430,15 @@ BEGIN
 			select 18002, 'WON', 112, 0, @winAmount, @hdp1, @hdp2, case when @hdp1=0.1 then 20 else 50 end
 			where @Bettype = 18002
 		)
+		, CTE_Bonus (bettype, status, statusID, stake, winlost, hdp1, hdp2, oddsspread)
+		AS (
+			-- Bonus Prize
+			select 18006, @status, @statusId, 0, @winAmount, 0, 0, 0
+			where @Bettype = 18006
+			union ALL
+			select 18003, 'LOSE', 113, (@winAmount * 0.3), 0, 0, 0,0
+			where @Bettype = 18006
+		)
 		INSERT INTO @tempData
 		SELECT *
 		FROM CTE_Consolation
@@ -441,6 +452,13 @@ BEGIN
 		UNION ALL
 		SELECT *
 		FROM CTE_CashOut
+		
+		UNION ALL
+		SELECT *
+		FROM CTE_Bonus
+		WHERE 1 = CASE WHEN @status = 'WON' AND Bettype IN(18006,18003) THEN 1 
+					WHEN @status = 'LOSE' AND Bettype IN(18006) THEN 1 
+				ELSE 0 END
 
 		INSERT INTO [dbo].[bettransm]
 				([custid]
@@ -565,7 +583,9 @@ BEGIN
 
 		SELECT COUNT(1) AS NumTrans FROM @tempData
 	END
-
+	
+	DECLARE @payoutAmount	MONEY
+	
 	SETTLE_BET:
 	BEGIN
 		IF(@Bettype IN (18001) AND @status IN ('WON','LOSE') AND @refno_translog > 0) 
@@ -583,7 +603,8 @@ BEGIN
 				,@comm			MONEY
 				,@acomm			MONEY
 				,@scomm			MONEY
-				,@payoutAmount	MONEY
+				,@totalCashOut  smallmoney
+				
 			
 			SET @WinlostDate	= GETDATE()
 			
@@ -594,6 +615,7 @@ BEGIN
 				, @acomm		= SUM(acomm)
 				, @scomm		= SUM(scomm)
 				, @payoutAmount	= sum(case when bettype not in(18001) THEN [winlost] - stake ELSE 0 END)
+				, @totalCashOut = SUM(case when bettype in(18002) THEN hdp1 ELSE 0 END)
 			from dbo.bettransm (nolock)
 			where refno = @refno_translog 
 				--and bettype NOT IN (18001)
@@ -704,7 +726,7 @@ BEGIN
 				,0 as hdp2
 				,odds
 				,stake
-				,@status AS [status]
+				,CASE WHEN @maxAmount >= @maxWinlost OR (@statusID = 112 AND @totalCashOut < 1) THEN 'running' ELSE @status END AS [status]
 				,@totalWinlost AS Winlost
 				,0 as awinlost
 				,0 as mwinlost
@@ -733,7 +755,7 @@ BEGIN
 				,@sportType as matchid
 				,recommend
 				,mrecommend
-				,1 ruben
+				,CASE WHEN @maxAmount >= @maxWinlost OR (@statusID = 112 AND @totalCashOut < 1) THEN 0 ELSE 1 END ruben
 				,NULL betid
 				,NULL statuswinlost
 				,1 modds
@@ -752,7 +774,7 @@ BEGIN
 				,CurrencyName
 				,virtualrate
 				,0 AS oddstype
-				,@statusID
+				,CASE WHEN @maxAmount >= @maxWinlost OR (@statusID = 112 AND @totalCashOut < 1) THEN 0 ELSE @statusID END statusID
 				,NULL currency2
 				,balance
 				,NULL SecAcceptFlag
@@ -786,7 +808,7 @@ BEGIN
 				VALUES
 				   (@custid
 				   ,@UserName
-				   ,@refno_translog
+				   ,@Refno_Bettrans
 				   ,@sportType
 				   ,@vendorID
 				   ,@transdate
@@ -799,15 +821,104 @@ BEGIN
 			 END
 		END
 	END
+	
+	--UPDATE change pwd
+	DECLARE @potetinalWL 	MONEY
+		
+	select @potetinalWL	= SUM(case when bettype not in(18001) then winlost else 0 end)
+		, @payoutAmount	= sum(case when bettype not in(18001) THEN [winlost] - stake ELSE 0 END)
+	from dbo.bettransm (nolock)
+	where refno = @refno_translog 
+	
+	SELECT @Refno_Bettrans = transid 
+	FROM bettrans b (NOLOCK) 
+	WHERE custid 		= @custid 
+		AND b.refno 	= @refno_translog 
+			
+	-- settle bonus LOSE
+	IF( @Refno_Bettrans > 0 AND @Bettype = 18006 AND @status  = 'LOSE' AND @potetinalWL < @maxWinlost)
+	BEGIN
+		UPDATE b
+		SET status = 'WON', statusID = 112, winlostdate = @winlostdate
+		FROM dbo.bettrans b WITH(ROWLOCK, UPDLOCK)
+		WHERE transid = @Refno_Bettrans
+	END
+	
+	IF(@potetinalWL >= @maxWinlost)
+	BEGIN
 
+		IF(@Refno_Bettrans 	> 0 
+			AND NOT EXISTS(
+				SELECT 1 
+				FROM [dbo].[PayoutTrans] 
+				WHERE refno = @Refno_Bettrans
+			)
+		)
+		BEGIN
+			--INSERT INTO PayoutTrans
+			INSERT INTO [dbo].[PayoutTrans]
+				([CustId]
+			   ,[UserName]
+			   ,[RefNo]
+			   ,[ProductId]
+			   ,[VendorId]
+			   ,[TransDate]
+			   ,[WinlostDate]
+			   ,[WinAmount]
+			   ,[PayoutCode]
+			   ,[PayoutStatusId]
+			   ,[PayoutStatus]
+			   ,[GameId])
+				VALUES(
+				@custid
+			   ,@UserName
+			   ,@Refno_Bettrans
+			   ,@sportType
+			   ,@vendorID
+			   ,@transdate
+			   ,@WinlostDate
+			   ,@payoutAmount
+			   ,CAST(NEWID() AS nvarchar(255)) + ',113476092'
+			   ,1
+			   ,'Open'
+			   ,NULL
+			)
+		END
+		ELSE
+		BEGIN
+			UPDATE p
+			SET WinAmount = @payoutAmount
+			FROM [dbo].[PayoutTrans] p WITH(ROWLOCK, UPDLOCK)
+			WHERE custid 	= @custid 
+				AND refno 	= @Refno_Bettrans
+		END
+		-- UPD to not allow to change member pwd
+		UPDATE c
+		SET LockUpd = 1
+		FROM OPENQUERY(DBCUST, 'SELECT * FROM CustDB.dbo.custinfo WHERE custid = 1176092') AS c
+	END
+	
 	FINAL_CHECK:
 	BEGIN
+		-- ticket info
 		SELECT 'translog' AS [Table], * 
 		FROM [bodb02].[dbo].[translog] WITH (NOLOCK) WHERE custid = @CustID AND translogid	= @refno_translog	 
 		SELECT 'bettransm' AS [Table], * 
 		FROM [bodb02].[dbo].[bettransm] WITH (NOLOCK) WHERE custid = @CustID AND refno		= @refno_translog
 		SELECT 'bettrans' AS [Table], * 
-		FROM [bodb02].[dbo].[bettrans] WITH (NOLOCK) WHERE custid = @CustID AND refno		= @refno_translog
+		FROM [bodb02].[dbo].[bettrans] WITH (NOLOCK) WHERE custid = @CustID AND custid = @custid and refno		= @refno_translog
+		
+		--member info
+		select LockUpd, c.* 
+		FROM DBCUST.CustDB.dbo.custinfo c WITH(NOLOCK)
+		WHERE custid = @custid
+		
+		--payout info
+		SELECT * 
+		FROM [dbo].[PayoutTrans] p WITH(NOLOCK)
+		WHERE custid = @custid 
+		AND refno = @Refno_Bettrans
+		
 	END
 END
 
