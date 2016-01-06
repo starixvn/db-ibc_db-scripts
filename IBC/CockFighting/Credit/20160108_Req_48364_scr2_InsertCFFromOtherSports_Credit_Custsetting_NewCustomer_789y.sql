@@ -16,7 +16,6 @@
 	FROM dbo.Customer ci WITH(NOLOCK)
 	WHERE ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid > @max_custid 
 		AND ci.site = '789y'
 		AND ci.Currency = 20
 	
@@ -81,7 +80,7 @@
 		,cs.isautopositiontaking 
 		,cs.autopositiontaking  *100
 		,co.minpositiontaking  *100
-		,90
+		,80
 	FROM dbo.CustSetting cs WITH(NOLOCK) 
 		INNER JOIN dbo.custOverride co WITH(NOLOCK) 
 			ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
