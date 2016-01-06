@@ -85,7 +85,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
+	WHERE map.SettingType = 3 AND ci.roleid IN (2,3,4)
 			AND (
 				cs.groupa <> csa.Discount
 			)
@@ -103,7 +103,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 1 AND ci.roleid = 1
+	WHERE map.SettingType = 3 AND ci.roleid = 1
 			AND (
 				cs.playerdiscount <> csm.PlayerDiscount
 				OR cs.discount <> csm.AgentDiscount
