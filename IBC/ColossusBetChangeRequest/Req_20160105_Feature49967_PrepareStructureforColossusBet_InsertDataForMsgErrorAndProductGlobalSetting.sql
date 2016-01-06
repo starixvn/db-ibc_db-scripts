@@ -4,6 +4,13 @@
 	Task: # Colossus Bet Product - Disallow SMA changes password or updates account status of members [Redmine: #49967]
 	DB: DBCUST / CustDB
 */
+/*
+	Created by: Helen
+	Date: 2016-01-05
+	Task: # Colossus Bet Product - [Redmine: #49967]
+	DB: DBCust/CustDB
+*/ 
+
 USE CustDB
 GO
 INSERT INTO MsgError (MsgID,MsgGroupID,MsgNameEN,IsActive) VALUES (40033,5,'You are currently not authorized to perform this action. Please contact the Customer Service Department for further assistance.',1)
