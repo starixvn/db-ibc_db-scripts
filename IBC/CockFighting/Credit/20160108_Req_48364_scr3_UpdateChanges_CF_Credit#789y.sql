@@ -1,6 +1,6 @@
 /*
 	Created: Dominic
-	Date: 2015-11-25
+	Date: 2015-11-25 
 	Task: Update Bet Setting / Position Taking / Discount of CockFighting for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
