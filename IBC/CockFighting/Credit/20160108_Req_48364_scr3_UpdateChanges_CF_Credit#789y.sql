@@ -4,6 +4,8 @@
 	Task: Update Bet Setting / Position Taking / Discount of CockFighting for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
+	CREATE TABLE #SMAPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
+	CREATE TABLE #MemberPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
 	CREATE TABLE #SMABetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	CREATE TABLE #MemberBetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	CREATE TABLE #MemberDiscountCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT)
@@ -28,6 +30,72 @@
 
 	
 	/*****************************STEP 1 : Get Affected Customers**************************/
+	--Super PT
+	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
+	FROM dbo.custinfo ci WITH(NOLOCK)
+		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = map.tSportType 
+					AND csa.BetType = map.tBetType 
+					AND csa.IsLive = map.IsLive
+	WHERE map.SettingType = 1 AND ci.roleid = 4
+			AND ci.srecommend IN (SELECT CustID FROM #supers)
+			AND (
+				cs.spositiontaking  *100 <> 80
+				OR cs.mpositiontaking  *100 <> 80
+				OR cs.apositiontaking  *100 <> 80
+				OR cs.isautompositiontaking <> 0
+				OR cs.autompositiontaking *100 <> 0
+				OR cs.isautopositiontaking <> 0
+				OR cs.autopositiontaking  *100 <> 0
+				OR co.minpositiontaking  *100 <> 0
+			)
+	--Master/Agent PT
+	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
+	FROM dbo.custinfo ci WITH(NOLOCK)
+		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = map.tSportType 
+					AND csa.BetType = map.tBetType 
+					AND csa.IsLive = map.IsLive
+	WHERE map.SettingType = 1 AND ci.roleid IN (2,3)
+			AND ci.srecommend IN (SELECT CustID FROM #supers)
+			AND (
+				cs.spositiontaking  *100 <> 0
+				OR cs.mpositiontaking  *100 <> 0
+				OR cs.apositiontaking  *100 <> 0
+				OR cs.isautompositiontaking <> 0
+				OR cs.autompositiontaking *100 <> 0
+				OR cs.isautopositiontaking <> 0
+				OR cs.autopositiontaking  *100 <> 0
+				OR co.minpositiontaking  *100 <> 0
+			)
+			
+	--Member PT
+	INSERT INTO #MemberPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
+	FROM dbo.custinfo ci WITH(NOLOCK)
+		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Member csm WITH(UPDLOCK,ROWLOCK)
+			ON csm.CustID = ci.custid 
+					AND csm.SportType = map.tSportType 
+					AND csm.BetType = map.tBetType 
+					AND csm.IsLive = map.IsLive
+	WHERE map.SettingType = 1 AND ci.roleid = 1 AND ci.srecommend IN (SELECT CustID FROM #supers)
+			AND (
+				cs.spositiontaking  *100 <> 0
+				OR cs.mpositiontaking  *100 <> 0
+				OR cs.apositiontaking  *100 <> 0
+				OR cs.isautompositiontaking <> 0
+				OR cs.autompositiontaking *100 <> 0
+				OR cs.isautopositiontaking <> 0
+				OR cs.autopositiontaking  *100 <> 0
+			)
+			
 	--SMA Bet Limit
 	INSERT INTO #SMABetLimitCust(CustID,fSportType,fBetType,tSportType,tBetType,maxpermatch99)
 	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,ci.maxpermatch99
