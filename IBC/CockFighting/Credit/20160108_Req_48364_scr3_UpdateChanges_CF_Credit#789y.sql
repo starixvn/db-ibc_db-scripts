@@ -43,14 +43,14 @@
 	WHERE map.SettingType = 1 AND ci.roleid = 4
 			AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
-				cs.spositiontaking  *100 <> 80
-				OR cs.mpositiontaking  *100 <> 80
-				OR cs.apositiontaking  *100 <> 80
-				OR cs.isautompositiontaking <> 0
-				OR cs.autompositiontaking *100 <> 0
-				OR cs.isautopositiontaking <> 0
-				OR cs.autopositiontaking  *100 <> 0
-				OR co.minpositiontaking  *100 <> 0
+				80 <> csa.SuperPT
+				OR 80 <> csa.MasterPT
+				OR 80 <> csa.AgentPT
+				OR 0 <> csa.IsAutoMasterPT
+				OR 0 <> csa.AutoMasterPT
+				OR 0 <> csa.IsAutoSuperPT
+				OR 0 <> csa.AutoSuperPT
+				OR 0 <> csa.MinPT
 			)
 	--Master/Agent PT
 	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
@@ -65,14 +65,14 @@
 	WHERE map.SettingType = 1 AND ci.roleid IN (2,3)
 			AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
-				cs.spositiontaking  *100 <> 0
-				OR cs.mpositiontaking  *100 <> 0
-				OR cs.apositiontaking  *100 <> 0
-				OR cs.isautompositiontaking <> 0
-				OR cs.autompositiontaking *100 <> 0
-				OR cs.isautopositiontaking <> 0
-				OR cs.autopositiontaking  *100 <> 0
-				OR co.minpositiontaking  *100 <> 0
+				0 <> csa.SuperPT
+				OR 0 <> csa.MasterPT
+				OR 0 <> csa.AgentPT
+				OR 0 <> csa.IsAutoMasterPT
+				OR 0 <> csa.AutoMasterPT
+				OR 0 <> csa.IsAutoSuperPT
+				OR 0 <> csa.AutoSuperPT
+				OR 0 <> csa.MinPT
 			)
 			
 	--Member PT
@@ -87,13 +87,13 @@
 					AND csm.IsLive = map.IsLive
 	WHERE map.SettingType = 1 AND ci.roleid = 1 AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
-				cs.spositiontaking  *100 <> 0
-				OR cs.mpositiontaking  *100 <> 0
-				OR cs.apositiontaking  *100 <> 0
-				OR cs.isautompositiontaking <> 0
-				OR cs.autompositiontaking *100 <> 0
-				OR cs.isautopositiontaking <> 0
-				OR cs.autopositiontaking  *100 <> 0
+				0 <> csm.SuperPT
+				OR 0 <> csm.MasterPT
+				OR 0 <> csm.AgentPT
+				OR 0 <> csm.IsAutoMasterPT
+				OR 0 <> csm.AutoMasterPT
+				OR 0 <> csm.IsAutoSuperPT
+				OR 0 <> csm.AutoSuperPT
 			)
 			
 	--SMA Bet Limit
