@@ -4,7 +4,7 @@
 	Task: Update Bet Setting / Position Taking / Discount of CockFighting for credit customer if there are any changes
 	DB: DBCust.CustDB
 */  
-	CREATE TABLE #SMAPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
+	CREATE TABLE #SMAPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,RoleID TINYINT)
 	CREATE TABLE #MemberPTCust(CustID INT, fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT)
 	CREATE TABLE #SMABetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
 	CREATE TABLE #MemberBetLimitCust(CustID INT ,fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, maxpermatch99 MONEY)
@@ -31,8 +31,8 @@
 	
 	/*****************************STEP 1 : Get Affected Customers**************************/
 	--Super PT
-	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
-	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
+	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive,RoleID)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive,ci.roleid
 	FROM dbo.custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
 		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
@@ -53,8 +53,8 @@
 				OR 0 <> csa.MinPT
 			)
 	--Master/Agent PT
-	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive)
-	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive
+	INSERT INTO #SMAPTCust(CustID,fSportType,fBetType,tSportType,tBetType,IsLive,roleid)
+	SELECT ci.custid,map.fSportType,map.fBetType,map.tSportType,map.tBetType,map.IsLive,ci.roleid
 	FROM dbo.custinfo ci WITH(NOLOCK)
 		CROSS JOIN #DestinationSportBetType map WITH(NOLOCK)
 		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
@@ -179,6 +179,62 @@
 				OR cs.sdiscount <> csm.SuperDiscount
 			)
 	/*****************************STEP 2: Update affected customers**************************/
+	--PT of Super
+	UPDATE csa
+	SET
+		csa.SuperPT = 80,
+		csa.MasterPT = 80,
+		csa.AgentPT = 80, 
+		csa.IsAutoMasterPT = 0,
+		csa.AutoMasterPT = 0, 
+		csa.IsAutoSuperPT = 0, 
+		csa.AutoSuperPT = 0, 
+		csa.MinPT = 0
+	FROM #SMAPTCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = ci.tSportType 
+					AND csa.BetType = ci.tBetType 
+					AND csa.IsLive = ci.IsLive
+	WHERE RoleID = 4
+	
+	UPDATE csa
+	SET
+		csa.SuperPT = 0,
+		csa.MasterPT = 0,
+		csa.AgentPT = 0, 
+		csa.IsAutoMasterPT = 0,
+		csa.AutoMasterPT = 0, 
+		csa.IsAutoSuperPT = 0, 
+		csa.AutoSuperPT = 0, 
+		csa.MinPT = 0
+	FROM #SMAPTCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK)
+			ON csa.CustID = ci.custid 
+					AND csa.SportType = ci.tSportType 
+					AND csa.BetType = ci.tBetType 
+					AND csa.IsLive = ci.IsLive
+	WHERE RoleID IN (2,3)
+
+	--PT of Master/Agent
+	
+	--PT of Member
+	UPDATE csm
+	SET
+		csm.SuperPT = 0,
+		csm.MasterPT = 0,
+		csm.AgentPT = 0, 
+		csm.IsAutoMasterPT = 0,
+		csm.AutoMasterPT = 0, 
+		csm.IsAutoSuperPT = 0, 
+		csm.AutoSuperPT = 0
+	FROM #MemberPTCust ci WITH(NOLOCK)
+		INNER JOIN dbo.CustPTSetting3rd_Member csm WITH(UPDLOCK,ROWLOCK)
+			ON csm.CustID = ci.custid 
+					AND csm.SportType = ci.tSportType 
+					AND csm.BetType = ci.tBetType 
+					AND csm.IsLive = ci.IsLive
+					
 	--BET LIMIT of SMA 
 	UPDATE csa
 	SET
