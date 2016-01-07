@@ -49,7 +49,7 @@
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
 	WHERE map.SettingType = 1 AND ci.roleid IN (2,3,4)
-			AND ci.srecommend NOT IN (SELECT CustID FROM #supers)
+			AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.spositiontaking  *100 <> csa.SuperPT
 				OR cs.mpositiontaking  *100 <> csa.MasterPT
@@ -74,7 +74,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 1 AND ci.roleid = 1 AND ci.srecommend NOT IN (SELECT CustID FROM #supers)
+	WHERE map.SettingType = 1 AND ci.roleid = 1 AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.spositiontaking  *100 <> csm.SuperPT
 				OR cs.mpositiontaking  *100 <> csm.MasterPT
@@ -97,7 +97,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 2 AND ci.roleid IN (2,3,4)
+	WHERE map.SettingType = 2 AND ci.roleid IN (2,3,4) AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.minbet <> csa.MinBet
 				OR
@@ -119,7 +119,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 2 AND ci.roleid = 1
+	WHERE map.SettingType = 2 AND ci.roleid = 1 AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.minbet <> csm.MinBet
 				OR
@@ -141,7 +141,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 3 AND ci.roleid IN (2,3,4)
+	WHERE map.SettingType = 3 AND ci.roleid IN (2,3,4) AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.groupa <> csa.Discount
 			)
@@ -159,7 +159,7 @@
 				ON cs.custid = ci.custid 
 					AND cs.sporttype = map.fSportType 
 					AND cs.bettype = map.fBetType
-	WHERE map.SettingType = 3 AND ci.roleid = 1
+	WHERE map.SettingType = 3 AND ci.roleid = 1 AND ci.srecommend IN (SELECT CustID FROM #supers)
 			AND (
 				cs.playerdiscount <> csm.PlayerDiscount
 				OR cs.discount <> csm.AgentDiscount
