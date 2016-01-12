@@ -72,7 +72,7 @@
 
 
 	--Get a list of real customers to disabled CF
-	SELECT CustID
+	SELECT stt.CustID
 	INTO #tmpCustID
 	FROM dbo.CustProductStatus stt with(nolock)
 	INNER JOIN custInfo ci with(nolock) ON stt.CustID = ci.custid
