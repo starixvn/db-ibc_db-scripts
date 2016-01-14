@@ -4,6 +4,7 @@ go
 /*
 	Task: copy Global Setting for One-RnG
 	DB: DBCUST/CustDB
+	delete from dbo.LossLimit_GlobalSetting
 */
 insert into dbo.LossLimit_GlobalSetting(ProductId, ExchangeId, MinLossLimit, DefaultLossLimit)
 select 6, ee.ExchangeID, MaxTransferCredit, SuperMaxTransfer

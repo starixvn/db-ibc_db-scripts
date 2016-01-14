@@ -4,8 +4,7 @@ go
 	this script copy data for CustWinlimit of ONE-RnG
 */
 
-drop table ##supers
 drop table dbo.CustUnSyncedCasinoTmp
-drop table dbo.CheckGDWinLimit
+drop table dbo.CheckRnGWinLimit
 
 go

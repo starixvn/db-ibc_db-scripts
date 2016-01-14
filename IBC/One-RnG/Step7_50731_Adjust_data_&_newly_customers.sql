@@ -5,7 +5,7 @@ go
 	task: adjust_data_for_newly_customers_and_turn_on_sync_casino
 */
 declare @MaxCustId int, @SportType smallint, @BetType smallint
-select @MaxCustId = 20460722, @SportType = 208, @BetType = 2101
+select @MaxCustId = ???, @SportType = 208, @BetType = 2101
 
 create table #AdjustData (custid int)
 
@@ -42,9 +42,9 @@ set MaxWinLimit = 0
 	, IsAutoReset = cs.IsAutoReset
 	, MaxLossLimit = isnull(MaxTransferCredit, 0)
 from dbo.CustWinLimit cwl with(rowlock, updlock)
-inner join dbtxn.CasinoAdmin.dbo.Customer cc with(nolock) on cwl.custid = cc.IBCCustID
-inner join dbtxn.CasinoAdmin.dbo.CustSetting cs with(nolock) on cc.custid = cs.CustSettingID
-where not exists (select custid from #AdjustData)
+	inner join DBCasino.CasinoAdmin.dbo.Customer cc with(nolock) on cwl.custid = cc.IBCCustID
+	inner join DBCasino.CasinoAdmin.dbo.CustSetting cs with(nolock) on cc.custid = cs.CustSettingID
+where not exists (select custid from #AdjustData where custid = cwl.CustId and SportType = @SportType and BetType = @BetType)
 
 drop table #AdjustData
 go
