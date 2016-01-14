@@ -5,13 +5,13 @@
 	Task: correct GD win limit
 	DB: DBCUST/CUSTDB
  */
- --deploy table CheckRnGWinLimit on DBCUST 
+ --deploy table CheckRnGWinLimitTmp on DBCUST 
 
 -- BEGIN STEP 1: Check data ------
 ------------------------------------------------------
- if object_id('CheckRnGWinLimit', 'u') is null
+ if object_id('CheckRnGWinLimitTmp', 'u') is null
  begin
-	select 'Table named CheckRnGWinLimit does not exist'
+	select 'Table named CheckRnGWinLimitTmp does not exist'
 	return
 end
  
@@ -33,7 +33,7 @@ declare @srecommend int, @rowindex int, @bettype smallint, @sporttype smallint
 select @rowindex = 1, @bettype = 2101, @sporttype = 208
 
 --delete for round #2
-delete from dbo.CheckRnGWinLimit
+delete from dbo.CheckRnGWinLimitTmp
 
 while exists (select top 1 1 from ##supers where rowindex = @rowindex)
 begin
@@ -43,7 +43,7 @@ begin
 	select @rowindex = @rowindex + 1
 	
 	--master level
-	insert into dbo.CheckRnGWinLimit(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
+	insert into dbo.CheckRnGWinLimitTmp(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
 		, custidB, maxWinLimitB, isAutoResetB, maxLossLimitB
 		, roleid)	
 	select ci.custid as custid, cs.maxWinLimit as maxWinLimitA, cs.isAutoReset as isAutoResetA, cs.MaxLossLimit as MaxLossLimitA
@@ -66,7 +66,7 @@ begin
 			)
 
 	--agent level
-	insert into dbo.CheckRnGWinLimit(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
+	insert into dbo.CheckRnGWinLimitTmp(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
 		, custidB, maxWinLimitB, isAutoResetB, maxLossLimitB
 		, roleid)	
 	select ci.custid as custid, cs.maxWinLimit as maxWinLimitA, cs.isAutoReset as isAutoResetA, cs.MaxLossLimit as MaxLossLimitA
@@ -98,7 +98,7 @@ begin
 			)
 
 	--member level
-	insert into dbo.CheckRnGWinLimit(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
+	insert into dbo.CheckRnGWinLimitTmp(custid, maxWinLimitA, isAutoResetA, maxLossLimitA
 		, custidB, maxWinLimitB, isAutoResetB, maxLossLimitB
 		, roleid)	
 	select ci.custid as custid, cs.maxWinLimit as maxWinLimitA, cs.isAutoReset as isAutoResetA, cs.MaxLossLimit as maxLossLimitA
@@ -147,7 +147,7 @@ begin
 end
 
 drop table ##supers
---select * from CheckRnGWinLimit
+--select * from CheckRnGWinLimitTmp
 	
 go	    
 
@@ -160,13 +160,13 @@ go
 use CustDB
 go
 
-if object_id('CheckRnGWinLimit', 'u') is null
+if object_id('CheckRnGWinLimitTmp', 'u') is null
 begin
-	select 'Table named CheckRnGWinLimit does not exist'
+	select 'Table named CheckRnGWinLimitTmp does not exist'
 	return
 end
 
-if not exists (select top 1 1 from dbo.CheckRnGWinLimit)
+if not exists (select top 1 1 from dbo.CheckRnGWinLimitTmp)
 begin
 	select 'No data'
 	return
@@ -182,7 +182,7 @@ begin
 	--clean data
 	delete from #tmp
 
-	update top (10000) dbo.CheckRnGWinLimit
+	update top (10000) dbo.CheckRnGWinLimitTmp
 	set isfinished = 1
 	output deleted.custid into #tmp
 	where isfinished = 0
@@ -227,7 +227,7 @@ begin
 	--clean data
 	delete from #tmp
 
-	update top (10000) dbo.CheckRnGWinLimit
+	update top (10000) dbo.CheckRnGWinLimitTmp
 	set isfinished = 1
 	output deleted.custid into #tmp
 	where isfinished = 0
@@ -272,7 +272,7 @@ begin
 	--clean data
 	delete from #tmp
 
-	update top (10000) dbo.CheckRnGWinLimit
+	update top (10000) dbo.CheckRnGWinLimitTmp
 	set isfinished = 1
 	output deleted.custid into #tmp
 	where isfinished = 0

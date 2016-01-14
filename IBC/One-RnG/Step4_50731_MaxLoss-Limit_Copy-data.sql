@@ -35,10 +35,9 @@ begin
 
 	--for case synced casino
 	insert into dbo.CustWinLimit(CustId, SportType, BetType, MaxWinLimit, IsAutoReset, MaxLossLimit)
-	select c.custid, @SportType, @BetType, 0, cs.IsAutoReset, isnull(MaxTransferCredit, 0)
+	select c.custid, @SportType, @BetType, 0, cc.IsAutoReset, isnull(cc.MaxTransferCredit, 0)
 	from dbo.custInfo c with(nolock)
-		inner join CasinoAdmin.dbo.Customer cc with(nolock) on c.custid = cc.IBCCustID
-		inner join CasinoAdmin.dbo.CustSetting cs with(nolock) on cc.custid = cs.CustSettingID
+		inner join dbo.CustLossLimitTmp cc with(nolock) on c.custid = cc.custid
 	where srecommend = @srecommend 
 		and c.roleid <= 4
 		and c.custid <= @MaxCustId

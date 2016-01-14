@@ -9,8 +9,8 @@ go
 --newly data
 insert into dbo.LossLimit_GlobalSetting(ProductId, ExchangeId, MinLossLimit, DefaultLossLimit)
 select 6, ee.ExchangeID, MaxTransferCredit, SuperMaxTransfer
-from dbtxn.CasinoAdmin.dbo.Exchange e with(nolock)
-	inner join dbtxn.CasinoAdmin.dbo.code c with(nolock) on e.exchangeid = c.codeid
+from DBCasino.CasinoAdmin.dbo.Exchange e with(nolock)
+	inner join DBCasino.CasinoAdmin.dbo.code c with(nolock) on e.exchangeid = c.codeid
 	inner join dbo.exchange ee with(nolock) on c.codeno = ee.exchangeid
 	left join dbo.LossLimit_GlobalSetting s with(nolock) on ee.ExchangeID = s.exchangeid
 where s.exchangeid is null
@@ -22,8 +22,8 @@ set MinLossLimit = MaxTransferCredit
 from dbo.LossLimit_GlobalSetting s
 inner join (
 	select 6 as ProductId, ee.ExchangeID, MaxTransferCredit, SuperMaxTransfer
-	from dbtxn.CasinoAdmin.dbo.Exchange e with(nolock)
-		inner join dbtxn.CasinoAdmin.dbo.code c with(nolock) on e.exchangeid = c.codeid
+	from DBCasino.CasinoAdmin.dbo.Exchange e with(nolock)
+		inner join DBCasino.CasinoAdmin.dbo.code c with(nolock) on e.exchangeid = c.codeid
 		inner join dbo.exchange ee with(nolock) on c.codeno = ee.exchangeid
 		inner join dbo.LossLimit_GlobalSetting s with(nolock) on ee.ExchangeID = s.exchangeid
 	where s.MinLossLimit <> MaxTransferCredit or DefaultLossLimit <> SuperMaxTransfer

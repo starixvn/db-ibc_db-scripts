@@ -19,3 +19,4 @@ insert into dbo.CustUnSyncedCasinoTmp(custid)
 select custid from dbo.custInfo with(nolock) where custid <= @MaxCustId and SyncCasino = 0
 
 select @MaxCustId as '@MaxCustId'
+go
