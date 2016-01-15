@@ -1,7 +1,7 @@
 /*
 	Created: Elodie
 	Date: 2016-01-15
-	Task: Update DisableSuperLive = 0 for all currencies of 789y except for Myanmar and licensee
+	Task: Update DisableSuperLive = 0 for 789y except Myanmar and licensee
 	DB: DBCUST/CustDB
 */ 
 
