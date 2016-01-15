@@ -68,7 +68,7 @@ where roleid = 4
 	and srecommend <= @MaxCustId
 	and ci.username not like '3rdSuper%' --dummy acc
 	and cs.isinternal = 0 --finance acc
-	and not exists (select 1 from dbo.Dep_CustSuper cs with (nolock) where ci.custid = cs.custid)
+	and not exists (select 1 from dbo.Dep_CustSuper dcs with (nolock) where ci.custid = dcs.custid)
 	
 declare @rowindex int, @srecommend int
 set @rowindex = 1
@@ -111,7 +111,7 @@ where roleid = 4
 	and srecommend <= @MaxCustId
 	and ci.username not like '3rdSuper%' --dummy acc
 	and cs.isinternal = 0 --finance acc
-	and not exists (select 1 from dbo.Dep_CustSuper cs with (nolock) where ci.custid = cs.custid)
+	and not exists (select 1 from dbo.Dep_CustSuper dcs with (nolock) where ci.custid = dcs.custid)
 	
 declare @rowindex int, @srecommend int
 set @rowindex = 1

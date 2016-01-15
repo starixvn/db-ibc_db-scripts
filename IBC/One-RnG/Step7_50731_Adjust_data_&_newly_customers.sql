@@ -18,9 +18,12 @@ where custid > @MaxCustId
 	and SyncCasino = 0
 	and Enabled = 1
 
---incorrected data
-select custid, 'Error!!!' as 'Error'
+--for case auto sync
+insert into dbo.CustWinLimit(CustId, SportType, BetType, MaxWinLimit, IsAutoReset, MaxLossLimit)
+select custid, @SportType, @BetType, 0, cs.IsAutoReset, isnull(MaxTransferCredit, 0)
 from dbo.custInfo c with(nolock)
+	inner join DBCasino.CasinoAdmin.dbo.Customer cc with(nolock) on c.custid = cc.IBCCustID
+	inner join DBCasino.CasinoAdmin.dbo.CustSetting cs with(nolock) on cc.custid = cs.CustSettingID
 where custid > @MaxCustId
 	and roleid <= 4
 	and SyncCasino = 1
