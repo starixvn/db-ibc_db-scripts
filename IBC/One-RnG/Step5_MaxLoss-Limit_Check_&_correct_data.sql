@@ -15,7 +15,7 @@
 	return
 end
  
-create table ##supers (rowindex int identity(1,1), custid int)
+create table ##supers (custid int, isFinished bit default(0))
 
 insert into ##supers(custid)
 select ci.custid
@@ -29,18 +29,21 @@ where ci.roleid = 4
 	and ci.custid not in (select custid from dbo.Dep_CustSuper with(nolock))
 	and s.islicensee = 0
 	
-declare @srecommend int, @rowindex int, @bettype smallint, @sporttype smallint
-select @rowindex = 1, @bettype = 2101, @sporttype = 208
+declare @srecommend int, @bettype smallint, @sporttype smallint
+select @bettype = 2101, @sporttype = 208
 
 --delete for round #2
 delete from dbo.CheckRnGWinLimitTmp
 
-while exists (select top 1 1 from ##supers where rowindex = @rowindex)
+while 1 = 1 --exists (select top 1 1 from ##supers where rowindex = @rowindex)
 begin
 
-	select @srecommend = custid
-	from ##supers where rowindex = @rowindex
-	select @rowindex = @rowindex + 1
+	update top (1) ##supers
+	set isFinished = 1
+		, @srecommend = custid			
+	where isFinished = 0
+	
+	if @@rowcount = 0 break
 	
 	--master level
 	insert into dbo.CheckRnGWinLimitTmp(custid, maxWinLimitA, isAutoResetA, maxLossLimitA

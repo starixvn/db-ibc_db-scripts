@@ -23,25 +23,25 @@ begin
 	if (select count(1) from sys.objects where name in ('custinfo', 'custwinlimit')) <> 2
 		return
 
-	--for case unsynced casino --> set default value for all level
-	insert into dbo.CustWinLimit(CustId, SportType, BetType, MaxWinLimit, IsAutoReset, MaxLossLimit)
-	select custid, @SportType, @BetType, 0, 1, 0
-	from dbo.custInfo c with(nolock)
-	where srecommend = @srecommend 
-		and roleid <= 4 
-		and custid <= @MaxCustId 
-		and SyncCasino = 0 
-		and Enabled = 1
+	----for case unsynced casino --> set default value for all level
+	--insert into dbo.CustWinLimit(CustId, SportType, BetType, MaxWinLimit, IsAutoReset, MaxLossLimit)
+	--select custid, @SportType, @BetType, 0, 1, 0
+	--from dbo.custInfo c with(nolock)
+	--where srecommend = @srecommend 
+	--	and roleid <= 4 
+	--	and custid <= @MaxCustId 
+	--	and SyncCasino = 0 
+	--	and Enabled = 1
 
 	--for case synced casino
 	insert into dbo.CustWinLimit(CustId, SportType, BetType, MaxWinLimit, IsAutoReset, MaxLossLimit)
-	select c.custid, @SportType, @BetType, 0, cc.IsAutoReset, isnull(cc.MaxTransferCredit, 0)
+	select c.custid, @SportType, @BetType, 0, isnull(cc.IsAutoReset, 1), isnull(cc.MaxTransferCredit, 0)
 	from dbo.custInfo c with(nolock)
-		inner join dbo.CustLossLimitTmp cc with(nolock) on c.custid = cc.custid
+		left join dbo.CustLossLimitTmp cc with(nolock) on c.custid = cc.custid
 	where srecommend = @srecommend 
 		and c.roleid <= 4
 		and c.custid <= @MaxCustId
-		and c.SyncCasino = 1
+		--and c.SyncCasino = 1
 		and Enabled = 1
 end
 go
@@ -58,7 +58,7 @@ select @SportType = 208, @BetType = 2101
 
 set @MaxCustId = ???
 
-create table #superIds (rowindex int identity(1,1), srecommend int)
+create table #superIds (srecommend int, isFinished bit default(0))
 
 insert into #superIds(srecommend)
 select ci.custid 
@@ -70,12 +70,17 @@ where roleid = 4
 	and cs.isinternal = 0 --finance acc
 	and not exists (select 1 from dbo.Dep_CustSuper dcs with (nolock) where ci.custid = dcs.custid)
 	
-declare @rowindex int, @srecommend int
-set @rowindex = 1
-while exists (select top 1 1 from #superIds where rowindex = @rowindex)
+declare @srecommend int
+
+while 1 = 1--exists (select top 1 1 from #superIds where rowindex = @rowindex)
 begin
-	select @srecommend = srecommend from #superIds where rowindex = @rowindex
-	set @rowindex = @rowindex + 1
+	
+	update top (1) #superIds
+	set isFinished = 1
+		, @srecommend = srecommend			
+	where isFinished = 0
+	
+	if @@rowcount = 0 break
 
 	exec dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend
 			, @maxcustid = @maxcustid
@@ -101,7 +106,7 @@ select @SportType = 208, @BetType = 2101
 
 set @MaxCustId = ???
 
-create table #superIds (rowindex int identity(1,1), srecommend int)
+create table #superIds (srecommend int, isFinished bit default(0))
 
 insert into #superIds(srecommend)
 select ci.custid 
@@ -113,12 +118,14 @@ where roleid = 4
 	and cs.isinternal = 0 --finance acc
 	and not exists (select 1 from dbo.Dep_CustSuper dcs with (nolock) where ci.custid = dcs.custid)
 	
-declare @rowindex int, @srecommend int
-set @rowindex = 1
-while exists (select top 1 1 from #superIds where rowindex = @rowindex)
+declare @srecommend int
+
+while 1 = 1 --exists (select top 1 1 from #superIds where rowindex = @rowindex)
 begin
-	select @srecommend = srecommend from #superIds where rowindex = @rowindex
-	set @rowindex = @rowindex + 1
+	update top (1) #superIds
+	set isFinished = 1
+		, @srecommend = srecommend			
+	where isFinished = 0
 
 	exec dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend
 			, @maxcustid = @maxcustid

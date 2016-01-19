@@ -47,7 +47,8 @@ set MaxWinLimit = 0
 from dbo.CustWinLimit cwl with(rowlock, updlock)
 	inner join DBCasino.CasinoAdmin.dbo.Customer cc with(nolock) on cwl.custid = cc.IBCCustID
 	inner join DBCasino.CasinoAdmin.dbo.CustSetting cs with(nolock) on cc.custid = cs.CustSettingID
-where exists (select custid from #AdjustData where custid = cwl.CustId and SportType = @SportType and BetType = @BetType)
+where cwl.CustId in (select custid from #AdjustData)
+	and cwl.SportType = @SportType and cwl.BetType = @BetType
 
 drop table #AdjustData
 go
