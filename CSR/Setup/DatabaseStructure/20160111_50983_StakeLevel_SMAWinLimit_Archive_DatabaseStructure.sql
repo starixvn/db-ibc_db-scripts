@@ -54,7 +54,7 @@ GO
 CREATE TABLE [dbo].[CustStakeLevel_Member_Old] (
 	CustID			INT					NOT NULL,
 	SportType		SMALLINT			NOT NULL,
-	BetType			SMALLINT			NOT NULL,
+	BetType			INT			NOT NULL,
 	StakeLevelList	VARCHAR(200)		NULL,
 	LastUpdated		DATETIME			NULL	
 	CONSTRAINT		DF_CustStakeLevel_Member_Old_LastUpdate DEFAULT GETDATE(),
