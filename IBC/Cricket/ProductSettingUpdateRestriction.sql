@@ -36,7 +36,6 @@ CREATE TABLE [dbo].[ProductSettingUpdateRestriction](
 	[SystemID] [tinyint] NOT NULL,
 	[ProductID] [tinyint] NOT NULL,
 	[SettingType] [smallint] NOT NULL,
-	[SuperID] [int] NOT NULL,
 	[ActorRoleID] [tinyint] NOT NULL,
 	[TargetRoleID] [tinyint] NOT NULL,
 	[ErrCode] [int] NULL,
@@ -46,7 +45,6 @@ CREATE TABLE [dbo].[ProductSettingUpdateRestriction](
 	[SystemID] ASC,
 	[ProductID] ASC,
 	[SettingType] ASC,
-	[SuperID] ASC,
 	[ActorRoleID] ASC,
 	[TargetRoleID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [ProductSettingUpdateRestriction_table]
