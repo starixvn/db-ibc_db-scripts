@@ -8,7 +8,7 @@ go
 
  -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
-alter procedure dbo.Acc_ExecRep_Cust_09 @srecommend int	
+alter procedure dbo.Acc_CustSetting3rd_19 @srecommend int	
 	, @maxcustid int
 	, @target varchar(20)
 	, @SportType smallint
@@ -20,7 +20,7 @@ begin
 	if (@target = 'replicated' and @@servername = 'dbcust') return	-- run at all replicated servers
 	if (@target = 'dbcust' and @@servername <> 'dbcust') return -- run at dbtrans only
 	
-	if (select count(1) from sys.objects where name in ('custinfo', 'custwinlimit')) <> 2
+	if (select count(1) from sys.objects where name in ('custinfo', 'custwinlimit', 'CustLossLimitTmp')) <> 3
 		return
 
 	----for case unsynced casino --> set default value for all level
@@ -82,7 +82,7 @@ begin
 	
 	if @@rowcount = 0 break
 
-	exec dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend
+	exec dbo.Acc_CustSetting3rd_19 @srecommend = @srecommend
 			, @maxcustid = @maxcustid
 			, @target = 'REPLICATED'
 			, @SportType = @SportType
