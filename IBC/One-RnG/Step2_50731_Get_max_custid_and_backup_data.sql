@@ -2,6 +2,7 @@ use custdb
 go
 /*
 	this script copy data for CustWinlimit of ONE-RnG
+	backup this data on DBCust
 */
 
 if object_id('CustUnSyncedCasinoTmp', 'u') is null
@@ -10,13 +11,13 @@ begin
 	return
 end
 
-declare @MaxCustId int
-select @MaxCustId = max(custid) 
-from dbo.Customer with(nolock) where roleid <= 4
+-- 1. get maxcustid (should check on CustLossLimitTmp to see if it exceed in this table)
+select MAX(custid) from custInfo witH(nolock)
 
---copy data for member unsync casino
-insert into dbo.CustUnSyncedCasinoTmp(custid)
-select custid from dbo.custInfo with(nolock) where custid <= @MaxCustId and SyncCasino = 0
+-- 2. copy data for member unsync casino
+select custid into CustUnSyncedCasinoTmp
+--select count(1)
+from dbo.custInfo with(nolock) where custid <= @maxcustID and SyncCasino = 0
 
-select @MaxCustId as '@MaxCustId'
+
 go
