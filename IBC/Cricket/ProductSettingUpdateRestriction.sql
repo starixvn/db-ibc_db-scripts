@@ -1,7 +1,7 @@
 /*
 	Created by: Dominic
 	Created Date: 20160115
-	Description: DCS 
+	Description: DCS #51157 - Add a new table to control setting update restriction
 	Database: DBCUST@CustDB
 		
 */
