@@ -3,22 +3,7 @@
 	Task: Stake Level and WinLossLimit Structure for DCS 
 */
 
--- BEGIN STEP 1: DEPLOY THIS SCRIPT ON DBPRO/bodb02		--
-----------------------------------------------------------
-USE bodb02
-GO
-
-ALTER TABLE Sport_Bettype_Reference
-ADD	BettypeRefComm			INT			NULL, 
-	SporttypeRefComm		SMALLINT	NULL, 
-	BettypeRefBetLimit		INT			NULL, 
-	SporttypeRefBetLimit	SMALLINT	NULL, 
-	RefTableName			VARCHAR(50)	NULL, 
-	RefTableNameComm		VARCHAR(50)	NULL, 
-	RefTableNameBetLimit	VARCHAR(50)	NULL
-
-
--- BEGIN STEP 2: DEPLOY THIS SCRIPT ON DBCUST/CustDB	--
+-- BEGIN STEP 1: DEPLOY THIS SCRIPT ON DBCUST/CustDB	--
 ----------------------------------------------------------
 USE CustDB
 GO
