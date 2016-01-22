@@ -17,8 +17,10 @@ where c.roleid = 3
 	and c.Enabled = 1
 	and c.SyncCasino = 1
 	and cwl2.MaxLossLimit > 0
-	and cwl.MaxLossLimit > cwl2.MaxLossLimit
-
+	and((cwl.MaxLossLimit > cwl2.MaxLossLimit)  --- UPline >downline
+		or (cwl2.MaxLossLimit > 0 and cwl.MaxLossLimit = 0)  --- Upline=0 but downline <>0
+	)
+	
 --agent level
 update cwl
 set cwl.MaxLossLimit = cwl2.MaxLossLimit
@@ -29,7 +31,9 @@ from dbo.CustWinLimit cwl with(rowlock, updlock)
 where c.roleid = 2
 	and c.Enabled = 1
 	and c.SyncCasino = 1
-	and cwl.MaxLossLimit > cwl2.MaxLossLimit
+	and((cwl.MaxLossLimit > cwl2.MaxLossLimit)  --- UPline >downline
+		or (cwl2.MaxLossLimit > 0 and cwl.MaxLossLimit = 0) --- Upline=0 but downline <>0
+	)
 
 --member level
 update cwl
@@ -41,6 +45,8 @@ from dbo.CustWinLimit cwl with(rowlock, updlock)
 where c.roleid = 1
 	and c.Enabled = 1
 	and c.SyncCasino = 1
-	and cwl.MaxLossLimit > cwl2.MaxLossLimit
+	and((cwl.MaxLossLimit > cwl2.MaxLossLimit)  --- UPline >downline
+		or (cwl2.MaxLossLimit > 0 and cwl.MaxLossLimit = 0)  --- Upline=0 but downline <>0
+	)
 
 go
