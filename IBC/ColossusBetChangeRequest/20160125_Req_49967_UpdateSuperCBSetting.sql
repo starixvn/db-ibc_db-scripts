@@ -1,0 +1,79 @@
+/*
+	Created: Helen
+	Date: 2016-01-20
+	Task: Update LockUpd = 0 
+	DB: 
+*/ 
+
+--STEP 1: DEPLOY THIS SP @DBCUST.CustDB -----
+-----------------------------------------------
+ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
+  @target     VARCHAR(20)
+ 
+AS
+BEGIN	
+	SET NOCOUNT ON
+	
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
+	
+	IF dbo.f_CheckRepTable('Custinfo') = 0
+		RETURN		
+
+	CREATE TABLE #Super_tmp (custid INT)
+	
+	INSERT INTO #Super_tmp
+    SELECT custid
+	FROM custInfo (NOLOCK)
+	WHERE roleid = 4
+	
+	UNION ALL
+	-- Direct master
+	SELECT ci.custid
+	FROM custInfo ci WITH (NOLOCK)
+		INNER JOIN Acc_CustDirect cd (NOLOCK) ON ci.srecommend = cd.custid AND ci.roleid = 3
+	
+	UNION ALL
+	-- Direct agent
+	SELECT ci.custid
+	FROM custInfo ci WITH (NOLOCK)
+		INNER JOIN Acc_CustDirect cd (NOLOCK) ON ci.mrecommend = cd.custid AND ci.roleid = 2
+	
+	UPDATE A 
+		SET CommRate = 0.10
+	FROM AgentCommRate A WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN 	#Super_tmp B ON A.CustId = B.custid
+	WHERE A.Sporttype = 204 AND Bettype = 18001
+
+	UPDATE A 
+		SET CommRate = 0.375000
+	FROM AgentCommRate A WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN 	#Super_tmp B ON A.CustId = B.custid
+	WHERE A.Sporttype = 204 AND Bettype = 18002
+
+    DROP TABLE #Super_tmp
+	   
+END
+GO
+-- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
+------------------------------------------------------	
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+--------------------------------------------------------------------------------------
+
+EXEC dbo.Acc_ExecRep_Cust_09
+	   @target = 'REPLICATED'
+GO		
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+-----------------------------------------------------------------------------------
+
+---
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+-------------------------------------------------
+
+EXEC dbo.Acc_ExecRep_Cust_09
+	   @target = 'REPLICATED'
+	  
+GO	
+
+-- END STEP 3: RUN THIS SCRIPT AT DBCUST -------
+-------------------------------------------------
