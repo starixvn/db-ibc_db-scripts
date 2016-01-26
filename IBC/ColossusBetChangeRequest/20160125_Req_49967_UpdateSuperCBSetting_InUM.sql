@@ -15,13 +15,13 @@ CREATE TABLE #Super_tmp (custid INT)
 INSERT INTO #Super_tmp
 SELECT custid
 FROM custInfo (NOLOCK)
-WHERE roleid = 4 AND custid >  @maxcustid
+WHERE roleid = 4 AND custid >  @maxcustid AND custid NOT IN (SELECT custid FROM Dep_custSuper WITH (NOLOCK) )
 
 UNION 
 -- Dummy Account
 SELECT custid
 FROM Acc_CustDirect (NOLOCK) 
-WHERE roleid IN (4,3,2) AND custid >  @maxcustid
+WHERE roleid IN (4,3,2) AND custid >  @maxcustid 
 -- Direct Master
 UNION
 
