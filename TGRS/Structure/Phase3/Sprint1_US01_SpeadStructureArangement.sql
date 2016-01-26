@@ -26,8 +26,8 @@ CREATE TABLE dbo.Spread_History (
 	LeagueId		INT			NOT NULL
 ,	BetType			SMALLINT	NOT NULL
 ,	OldSpread		SMALLINT	NULL
-,	ModifiedDate	DATE		NULL		CONSTRAINT DF_Spread_ModifiedDate DEFAULT GETDATE()
+,	ModifiedDate	DATETIME	NOT NULL	CONSTRAINT DF_Spread_ModifiedDate DEFAULT GETDATE()
 ,	ModifiedBy		INT			NULL
-,	CONSTRAINT PK_Spread_History PRIMARY KEY CLUSTERED (LeagueID, BetType) ON DATA
+,	CONSTRAINT PK_Spread_History PRIMARY KEY CLUSTERED (LeagueID, BetType, ModifiedDate) ON DATA
 ) ON DATA;
 GO
