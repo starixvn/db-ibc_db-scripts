@@ -24,7 +24,7 @@ inner join (
 		and cwl2.IsAutoReset = 1
 		and cwl.IsAutoReset = 0
 	group by cwl.CustId
-) t on cwl.CustId = t.CustId 
+) t on cwl.CustId = t.CustId AND cwl.SportType = 208 and cwl.BetType = 2101
 
 --master level
 update cwl
@@ -43,7 +43,7 @@ inner join (
 		and cwl2.IsAutoReset = 1
 		and cwl.IsAutoReset = 0
 	group by cwl.CustId
-) t on cwl.CustId = t.CustId
+) t on cwl.CustId = t.CustId AND cwl.SportType = 208 and cwl.BetType = 2101
 
 --super level
 update cwl
@@ -62,7 +62,7 @@ inner join (
 		and cwl2.IsAutoReset = 1
 		and cwl.IsAutoReset = 0
 	group by cwl.CustId
-) t on cwl.CustId = t.CustId
+) t on cwl.CustId = t.CustId AND cwl.SportType = 208 and cwl.BetType = 2101
 
 
 select * from #AffectedData
