@@ -28,7 +28,7 @@ BEGIN
 	INSERT INTO #Super_tmp
     SELECT custid
 	FROM custInfo (NOLOCK)
-	WHERE roleid = 4 AND custid <= @maxcustid
+	WHERE roleid = 4 AND custid <= @maxcustid AND custid NOT IN (SELECT custid FROM Dep_custSuper WITH (NOLOCK))
 	
 	UNION 
 	-- Dummy Account
