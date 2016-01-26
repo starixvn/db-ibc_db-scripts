@@ -11,6 +11,7 @@
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT
   , @target     VARCHAR(20)
+  , @max_custid INT
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -23,7 +24,7 @@ BEGIN
 
 	UPDATE custInfo WITH(ROWLOCK, UPDLOCK)
 	   SET HideColossusBet = 0, DisableColossusBet = 0
-	 WHERE srecommend = @srecommend
+	 WHERE srecommend = @srecommend AND custid <= @max_custid
 	
 END
 GO
@@ -38,12 +39,16 @@ CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))
 
 DECLARE @srecommend INT
 
+DECLARE @max_custid INT
+SELECT @max_custid = xxx
+
 INSERT INTO #CustSuper(srecommend)
 SELECT custid
  FROM Customer  WITH (NOLOCK) 
  WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND roleid = 4
 	AND (currency <> 67 OR [site] <> '789y')
+	AND custid <= @max_custid
 	
 
 WHILE (1 = 1)
@@ -58,6 +63,7 @@ BEGIN
 	EXEC dbo.Acc_ExecRep_Cust_09
 	    @srecommend = @srecommend
 	  , @target = 'REPLICATED'
+	  , @max_custid = @max_custid
 
     WAITFOR DELAY '00:00:00.280'
 END
@@ -75,12 +81,16 @@ CREATE TABLE #CustSuper(srecommend INT , isfinished BIT DEFAULT(0))
 
 DECLARE @srecommend INT
 
+DECLARE @max_custid INT
+SELECT @max_custid = xxx
+
 INSERT INTO #CustSuper(srecommend)
 SELECT custid
  FROM Customer  WITH (NOLOCK) 
  WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND roleid = 4
 	AND (currency <> 67 OR [site] <> '789y')
+	AND custid <= @max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -94,6 +104,7 @@ BEGIN
 	EXEC dbo.Acc_ExecRep_Cust_09
 	    @srecommend = @srecommend
 	  , @target = 'DBCUST'
+	  , @max_custid = @max_custid
 	  
 	WAITFOR DELAY '00:00:00.280'
 END

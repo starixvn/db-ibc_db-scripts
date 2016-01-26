@@ -45,7 +45,7 @@ INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
  WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND ci.custid <= @maxcustid
 
 WHILE (1 = 1)
 BEGIN
@@ -82,7 +82,7 @@ INSERT INTO #CustSuper(srecommend)
 SELECT ci.custid
   FROM custinfo ci WITH(NOLOCK)
  WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND ci.custid <= @maxcustid
 
 
 WHILE (1 = 1)

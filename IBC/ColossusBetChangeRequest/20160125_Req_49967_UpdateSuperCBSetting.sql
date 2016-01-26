@@ -9,6 +9,7 @@
 -----------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
   @target     VARCHAR(20)
+  , @maxcustid int
  
 AS
 BEGIN	
@@ -27,20 +28,20 @@ BEGIN
 	INSERT INTO #Super_tmp
     SELECT custid
 	FROM custInfo (NOLOCK)
-	WHERE roleid = 4
+	WHERE roleid = 4 AND custid <= @maxcustid
 	
 	UNION 
 	-- Dummy Account
 	SELECT custid
 	FROM Acc_CustDirect (NOLOCK) 
-	WHERE roleid IN (4,3,2)
+	WHERE roleid IN (4,3,2) AND custid <= @maxcustid
 	-- Direct Master
 	UNION
 	
 	SELECT ci.custid
 	FROM custInfo ci WITH (NOLOCK)
 		INNER JOIN Acc_CustDirect cd WITH (NOLOCK)  ON ci.srecommend = cd.custid AND ci.roleid = 3
-	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid)	
+	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid)	AND ci.custid <= @maxcustid
 	
 	-- Direct Agent
 	UNION
@@ -48,7 +49,7 @@ BEGIN
 	SELECT ci.custid
 	FROM custInfo ci WITH (NOLOCK)
 		INNER JOIN Acc_CustDirect cd WITH (NOLOCK)  ON ci.mrecommend = cd.custid AND ci.roleid = 2
-	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid)	
+	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid) AND ci.custid <= @maxcustid	
 	
 	
 	UPDATE A 
@@ -71,9 +72,12 @@ GO
 ------------------------------------------------------	
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
+DECLARE @srecommend INT, @maxcustid int
+SELECT @maxcustid=xxx   ---input maxcustid here
 
 EXEC dbo.Acc_ExecRep_Cust_09
 	   @target = 'REPLICATED'
+	   , @maxcustid=@maxcustid
 GO		
 -- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 -----------------------------------------------------------------------------------
@@ -81,10 +85,12 @@ GO
 ---
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 -------------------------------------------------
+DECLARE @srecommend INT, @maxcustid int
+SELECT @maxcustid=xxx   ---input maxcustid here
 
 EXEC dbo.Acc_ExecRep_Cust_09
 	   @target = 'DBCUST'
-	  
+	  , @maxcustid=@maxcustid
 GO	
 
 -- END STEP 3: RUN THIS SCRIPT AT DBCUST -------
