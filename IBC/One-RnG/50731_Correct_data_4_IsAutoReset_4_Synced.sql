@@ -65,7 +65,9 @@ inner join (
 ) t on cwl.CustId = t.CustId AND cwl.SportType = 208 and cwl.BetType = 2101
 
 
-select * from #AffectedData
+select t.CustId, c.roleid, c.username
+from #AffectedData t
+	inner join dbo.custinfo c with(nolock) on t.custid = c.custid
 
 drop table #AffectedData
 go
