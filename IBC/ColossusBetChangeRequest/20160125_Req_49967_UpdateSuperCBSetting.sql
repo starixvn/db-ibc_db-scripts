@@ -17,7 +17,9 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
-	IF dbo.f_CheckRepTable('Custinfo') = 0
+	IF dbo.f_CheckRepTable('Custinfo') = 0 
+		OR dbo.f_CheckRepTable('Acc_CustDirect') = 0
+		OR dbo.f_CheckRepTable('AgentCommRate') = 0
 		RETURN		
 
 	CREATE TABLE #Super_tmp (custid INT)
@@ -67,13 +69,13 @@ END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
 ------------------------------------------------------	
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
 
 EXEC dbo.Acc_ExecRep_Cust_09
 	   @target = 'REPLICATED'
 GO		
--- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB052/053/054/06/DBTP -----
+-- END STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 -----------------------------------------------------------------------------------
 
 ---
