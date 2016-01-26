@@ -81,7 +81,7 @@ GO
 -------------------------------------------------
 
 EXEC dbo.Acc_ExecRep_Cust_09
-	   , @target = 'DBCUST'
+	   @target = 'DBCUST'
 	  
 GO	
 
