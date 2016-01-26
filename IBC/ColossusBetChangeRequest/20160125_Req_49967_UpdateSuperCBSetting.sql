@@ -32,6 +32,22 @@ BEGIN
 	SELECT custid
 	FROM Acc_CustDirect (NOLOCK) 
 	WHERE roleid IN (4,3,2)
+	-- Direct Master
+	UNION
+	
+	SELECT ci.custid
+	FROM custInfo ci WITH (NOLOCK)
+		INNER JOIN Acc_CustDirect cd WITH (NOLOCK)  ON ci.srecommend = cd.custid AND ci.roleid = 3
+	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid)	
+	
+	-- Direct Agent
+	UNION
+	
+	SELECT ci.custid
+	FROM custInfo ci WITH (NOLOCK)
+		INNER JOIN Acc_CustDirect cd WITH (NOLOCK)  ON ci.mrecommend = cd.custid AND ci.roleid = 2
+	WHERE NOT EXISTS (SELECT 1 FROM Acc_CustDirect cd1 WITH (NOLOCK) WHERE cd1.custid = ci.custid)	
+	
 	
 	UPDATE A 
 		SET CommRate = 0.10
