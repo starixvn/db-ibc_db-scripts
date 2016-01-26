@@ -27,17 +27,11 @@ BEGIN
 	FROM custInfo (NOLOCK)
 	WHERE roleid = 4
 	
-	UNION ALL
-	-- Direct master
-	SELECT ci.custid
-	FROM custInfo ci WITH (NOLOCK)
-		INNER JOIN Acc_CustDirect cd (NOLOCK) ON ci.srecommend = cd.custid AND ci.roleid = 3
-	
-	UNION ALL
-	-- Direct agent
-	SELECT ci.custid
-	FROM custInfo ci WITH (NOLOCK)
-		INNER JOIN Acc_CustDirect cd (NOLOCK) ON ci.mrecommend = cd.custid AND ci.roleid = 2
+	UNION 
+	-- Dummy Account
+	SELECT custid
+	FROM Acc_CustDirect (NOLOCK) 
+	WHERE roleid IN (4,3,2)
 	
 	UPDATE A 
 		SET CommRate = 0.10
