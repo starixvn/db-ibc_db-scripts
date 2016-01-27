@@ -8,21 +8,20 @@ go
 declare @CustIds table(custid int)
 declare @winlostdate smalldatetime
 
-select @winlostdate = '2016-01-05' --replace winlostdate...
+select @winlostdate = '2016-01-26' --replace winlostdate...
 insert into @CustIds(custid)
-select custid from dbo.custInfo with(nolock) where username in ('12BETUUS01006') --replace username ....
+select custid from custdb.dbo.custInfo with(nolock) where username in ('member02', 'ACGUUS3838030') --replace username ....
 
 declare @sourcedata table (custid int, bettype smallint, winlostdate smalldatetime, winlost money)
 
 --check balance game
-delete from @sourcedata
 insert into @sourcedata(custid, winlostdate, winlost, bettype)
-select custid, winlostdate, sum(winlost-actual_stake) as winlost, 2101
+select custid, winlostdate, sum(winlost-actual_stake+playercomm) as winlost, 2101
 from dbo.bettransRnG with(nolock)
 where custid in (select custid from @CustIds)
 	and productID in (208,209,210)
 	and winlostdate = @winlostdate
-	and statusID not in(0,1)
+	and statusID in (112,113)
 group by custid, winlostdate
 
 select g.*, s.*
