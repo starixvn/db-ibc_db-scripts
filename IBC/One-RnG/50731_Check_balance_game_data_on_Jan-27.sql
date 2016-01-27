@@ -8,7 +8,7 @@ go
 declare @CustIds table(custid int)
 declare @winlostdate smalldatetime
 
-select @winlostdate = '2016-01-05' --replace winlostdate
+select @winlostdate = '2016-01-05' --replace winlostdate...
 insert into @CustIds(custid)
 select custid from dbo.custInfo with(nolock) where username in ('12BETUUS01006') --replace username ....
 
@@ -22,7 +22,7 @@ from dbo.bettransRnG with(nolock)
 where custid in (select custid from @CustIds)
 	and productID in (208,209,210)
 	and winlostdate = @winlostdate
-	and status not in(0,1)
+	and statusID not in(0,1)
 group by custid, winlostdate
 
 select g.*, s.*
