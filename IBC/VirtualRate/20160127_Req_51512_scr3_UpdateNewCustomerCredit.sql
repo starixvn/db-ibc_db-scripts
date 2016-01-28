@@ -11,11 +11,11 @@
 DECLARE	@maxCustID_1	INT = xxxx
 	,	@maxCustID_2	INT = xxxx;
 
-CREATE TABLE	##customers (
+CREATE TABLE	#customers (
 					CustID		INT
 				);
 
-INSERT INTO ##customers (CustID)
+INSERT INTO #customers (CustID)
 SELECT	ci.custid
 FROM	dbo.custInfo AS ci WITH(NOLOCK)
 WHERE	ci.custid > @maxCustID_1
@@ -45,9 +45,11 @@ SET		cvs.bitmapVirtual =	CONVERT(
 								)
 							)
 FROM		dbo.CustVirtualSetting AS cvs
-INNER JOIN	##customers AS c
+INNER JOIN	#customers AS c
 		ON	c.CustID = cvs.custid
 WHERE	cvs.bitmapVirtual LIKE '%[' + CAST(CAST(50 AS BINARY(1)) AS VARCHAR) + CAST(CAST(40 AS BINARY(1)) AS VARCHAR) + ']%'
 	AND	cvs.custid > @maxCustID_1
 	AND	cvs.custid <= @maxCustID_2;
 GO
+
+--DROP TABLE #customers

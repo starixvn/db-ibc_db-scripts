@@ -53,13 +53,13 @@ GO
 -- Select super lines for importing data --
 DECLARE	@maxCustID	INT = xxxx;
 
-CREATE TABLE	##supers (
+CREATE TABLE	#supers (
 					CustID		INT
 				,	isFinished	BIT	DEFAULT(0)
 				,	PRIMARY KEY CLUSTERED (CustID)
 				);
 
-INSERT INTO ##supers (CustID)
+INSERT INTO #supers (CustID)
 SELECT	ci.custid
 FROM		dbo.custInfo AS ci WITH(NOLOCK)
 INNER JOIN	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
@@ -74,7 +74,7 @@ DECLARE	@srecommend	INT
 
 WHILE (0 = 0)
 BEGIN
-    UPDATE TOP(1) ##supers
+    UPDATE TOP(1) #supers
 	SET		isFinished = 1,
 			@srecommend = CustID
 	WHERE	isFinished = 0;
@@ -98,13 +98,13 @@ GO
 -- Select super lines for importing data --
 DECLARE	@maxCustID	INT = xxxx;
 
-CREATE TABLE	##supers (
+CREATE TABLE	#supers (
 					CustID		INT
 				,	isFinished	BIT	DEFAULT(0)
 				,	PRIMARY KEY CLUSTERED (CustID)
 				);
 
-INSERT INTO ##supers (CustID)
+INSERT INTO #supers (CustID)
 SELECT	ci.custid
 FROM		dbo.custInfo AS ci WITH(NOLOCK)
 INNER JOIN	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
@@ -119,7 +119,7 @@ DECLARE	@srecommend	INT
 
 WHILE (0 = 0)
 BEGIN
-    UPDATE TOP(1) ##supers
+    UPDATE TOP(1) #supers
 	SET		isFinished = 1,
 			@srecommend = CustID
 	WHERE	isFinished = 0;
@@ -136,3 +136,4 @@ BEGIN
 END;
 GO
 
+--DROP TABLE #supers

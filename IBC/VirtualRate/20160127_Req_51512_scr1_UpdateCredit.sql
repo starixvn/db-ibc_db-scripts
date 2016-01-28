@@ -56,13 +56,13 @@ GO
 -- Select super lines for importing data --
 DECLARE	@maxCustID	INT = xxxx;
 
-CREATE TABLE	##supers (
+CREATE TABLE	#supers (
 					CustID		INT
 				,	isFinished	BIT	DEFAULT(0)
 				,	PRIMARY KEY CLUSTERED (CustID)
 				);
 
-INSERT INTO ##supers(CustID)
+INSERT INTO #supers(CustID)
 SELECT	ci.custid
 FROM	dbo.custInfo AS ci WITH(NOLOCK)
 WHERE	ci.roleid = 4
@@ -80,7 +80,7 @@ DECLARE	@srecommend	INT
 
 WHILE (0 = 0)
 BEGIN
-    UPDATE TOP(1) ##supers
+    UPDATE TOP(1) #supers
 	SET		isFinished = 1,
 			@srecommend = CustID
 	WHERE	isFinished = 0;
@@ -104,13 +104,13 @@ GO
 -- Select super lines for importing data --
 DECLARE	@maxCustID	INT = xxxx;
 
-CREATE TABLE	##supers (
+CREATE TABLE	#supers (
 					CustID		INT
 				,	isFinished	BIT	DEFAULT(0)
 				,	PRIMARY KEY CLUSTERED (CustID)
 				);
 				
-INSERT INTO ##supers (CustID)
+INSERT INTO #supers (CustID)
 SELECT	ci.custid
 FROM	dbo.custInfo AS ci WITH(NOLOCK)
 WHERE	ci.roleid = 4
@@ -128,7 +128,7 @@ DECLARE	@srecommend	INT
 
 WHILE (0 = 0)
 BEGIN
-    UPDATE TOP(1) ##supers
+    UPDATE TOP(1) #supers
 	SET		isFinished = 1,
 			@srecommend = CustID
 	WHERE	isFinished = 0;
@@ -144,3 +144,5 @@ BEGIN
 	WAITFOR DELAY '00:00:00.280';	
 END;
 GO
+
+--DROP TABLE #supers
