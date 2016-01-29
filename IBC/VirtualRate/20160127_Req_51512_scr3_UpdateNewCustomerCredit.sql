@@ -23,7 +23,7 @@ WHERE	ci.custid > @maxCustID_1
 	AND	NOT EXISTS (
 			SELECT	TOP(1) 1
 			FROM	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
-			WHERE	dcs.custid = ci.custid
+			WHERE	dcs.custid = ci.srecommend
 		);
 GO
 
