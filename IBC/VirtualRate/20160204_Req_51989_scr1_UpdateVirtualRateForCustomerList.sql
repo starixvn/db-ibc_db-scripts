@@ -8,18 +8,14 @@
 -----------------------------------------------------------
 
 CREATE TABLE	#members (
-					CustID				INT			NOT NULL PRIMARY KEY CLUSTERED
-				,	username			VARCHAR(50)	NOT NULL
-				,	oldVirtualBitmap	BINARY(64)	NULL
-				,	newVirtualBitmap	BINARY(64)	NULL
+					CustID				INT			
+				,	username			VARCHAR(50)
 				)
 
 INSERT INTO #members
-	(	CustID   , username   , oldVirtualBitmap)
-SELECT	ci.custid, ci.username, cvs.bitmapVirtual
-FROM		dbo.CustInfo			AS ci	WITH(NOLOCK)
-INNER JOIN	dbo.CustVirtualSetting	AS cvs	WITH(NOLOCK)
-		ON	cvs.custid = ci.custid
+	(	CustID   , username   )
+SELECT	ci.custid, ci.username
+FROM	dbo.CustInfo			AS ci	WITH(NOLOCK)
 WHERE ci.username IN (
 	'HAIFARMB01472827'
 ,	'HAIFARMB01425551'
@@ -2330,17 +2326,5 @@ FROM		dbo.CustVirtualSetting AS cvs
 INNER JOIN	#members AS m
 		ON	m.CustID = cvs.custid
 WHERE	cvs.bitmapVirtual LIKE '%[' + CAST(CAST(10 AS BINARY(1)) AS VARCHAR) + ']%'
-
-UPDATE	m
-SET		m.newVirtualBitmap = cvs.bitmapVirtual
-FROM		#members AS m
-INNER JOIN	dbo.CustVirtualSetting AS cvs WITH(NOLOCK)
-		ON	cvs.custid = m.CustID
-
-SELECT	m.CustID
-	,	m.username
-	,	m.oldVirtualBitmap
-	,	m.newVirtualBitmap
-FROM #members AS m
 
 --DROP TABLE #members
