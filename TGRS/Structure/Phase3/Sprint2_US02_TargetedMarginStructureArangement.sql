@@ -15,7 +15,7 @@ SET QUOTED_IDENTIFIER ON;
 GO
 
 CREATE TABLE dbo.TargetMargin (
-	TargetMarginID	INT			NOT NULL
+	TargetMarginID		INT			NOT NULL
 ,	BetType				SMALLINT	NULL
 ,	Rate				MONEY		NULL
 ,	CONSTRAINT PK_TargetMargin PRIMARY KEY CLUSTERED (TargetMarginID) ON DATA
@@ -23,7 +23,7 @@ CREATE TABLE dbo.TargetMargin (
 GO
 
 CREATE TABLE dbo.TargetMargin_History (
-	TargetMarginID	INT			NOT NULL
+	TargetMarginID		INT			NOT NULL
 ,	BetType				SMALLINT	NULL
 ,	OldRate				MONEY		NULL
 ,	ModifiedDate		DATETIME	NOT NULL	CONSTRAINT DF_TargetMargin_ModifiedDate DEFAULT GETDATE()
