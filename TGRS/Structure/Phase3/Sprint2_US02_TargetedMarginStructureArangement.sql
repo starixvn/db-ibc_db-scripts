@@ -23,11 +23,12 @@ CREATE TABLE dbo.TargetMargin (
 GO
 
 CREATE TABLE dbo.TargetMargin_History (
-	TargetMarginID		INT			NOT NULL
-,	BetType				SMALLINT	NULL
-,	OldRate				MONEY		NULL
-,	ModifiedDate		DATETIME	NOT NULL	CONSTRAINT DF_TargetMargin_ModifiedDate DEFAULT GETDATE()
-,	ModifiedBy			INT			NULL
-,	CONSTRAINT PK_TargetMargin_History PRIMARY KEY CLUSTERED (TargetMarginID, ModifiedDate) ON DATA
+	TargetedMarginHistoryID	INT			NOT NULL IDENTITY (1, 1)
+,	TargetMarginID			INT			NOT NULL
+,	BetType					SMALLINT	NULL
+,	OldRate					MONEY		NULL
+,	ModifiedDate			DATETIME	NOT NULL	CONSTRAINT DF_TargetMargin_ModifiedDate DEFAULT GETDATE()
+,	ModifiedBy				INT			NULL
+,	CONSTRAINT PK_TargetMargin_History PRIMARY KEY NONCLUSTERED (TargetedMarginHistoryID) ON DATA
 ) ON DATA;
 GO
