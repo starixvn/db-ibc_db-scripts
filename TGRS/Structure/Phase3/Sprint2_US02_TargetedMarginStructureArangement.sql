@@ -14,21 +14,21 @@ GO
 SET QUOTED_IDENTIFIER ON;
 GO
 
-CREATE TABLE dbo.TargetMargin (
-	TargetMarginID		INT			NOT NULL IDENTITY (1, 1)
+CREATE TABLE dbo.TargetedMargin (
+	TargetedMarginID		INT			NOT NULL IDENTITY (1, 1)
 ,	BetType				SMALLINT	NULL
 ,	Rate				MONEY		NULL
-,	CONSTRAINT PK_TargetMargin PRIMARY KEY CLUSTERED (TargetMarginID) ON DATA
+,	CONSTRAINT PK_TargetedMargin PRIMARY KEY CLUSTERED (TargetedMarginID) ON DATA
 ) ON DATA;
 GO
 
-CREATE TABLE dbo.TargetMargin_History (
+CREATE TABLE dbo.TargetedMargin_History (
 	TargetedMarginHistoryID	INT			NOT NULL IDENTITY (1, 1)
-,	TargetMarginID			INT			NOT NULL
+,	TargetedMarginID			INT			NOT NULL
 ,	BetType					SMALLINT	NULL
 ,	OldRate					MONEY		NULL
-,	ModifiedDate			DATETIME	NOT NULL	CONSTRAINT DF_TargetMargin_ModifiedDate DEFAULT GETDATE()
+,	ModifiedDate			DATETIME	NOT NULL	CONSTRAINT DF_TargetedMargin_ModifiedDate DEFAULT GETDATE()
 ,	ModifiedBy				INT			NULL
-,	CONSTRAINT PK_TargetMargin_History PRIMARY KEY NONCLUSTERED (TargetedMarginHistoryID) ON DATA
+,	CONSTRAINT PK_TargetedMargin_History PRIMARY KEY NONCLUSTERED (TargetedMarginHistoryID) ON DATA
 ) ON DATA;
 GO
