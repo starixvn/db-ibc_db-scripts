@@ -15,16 +15,16 @@ SET QUOTED_IDENTIFIER ON;
 GO
 
 CREATE TABLE dbo.TargetedMargin (
-	TargetedMarginID		INT			NOT NULL IDENTITY (1, 1)
-,	BetType				SMALLINT	NULL
-,	Rate				MONEY		NULL
+	TargetedMarginId		INT			NOT NULL IDENTITY (1, 1)
+,	BetType					SMALLINT	NULL
+,	Rate					MONEY		NULL
 ,	CONSTRAINT PK_TargetedMargin PRIMARY KEY CLUSTERED (TargetedMarginID) ON DATA
 ) ON DATA;
 GO
 
 CREATE TABLE dbo.TargetedMargin_History (
-	TargetedMarginHistoryID	INT			NOT NULL IDENTITY (1, 1)
-,	TargetedMarginID			INT			NOT NULL
+	TargetedMarginHistoryId	INT			NOT NULL IDENTITY (1, 1)
+,	TargetedMarginId		INT			NOT NULL
 ,	BetType					SMALLINT	NULL
 ,	OldRate					MONEY		NULL
 ,	ModifiedDate			DATETIME	NOT NULL	CONSTRAINT DF_TargetedMargin_ModifiedDate DEFAULT GETDATE()
