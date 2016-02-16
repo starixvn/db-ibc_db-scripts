@@ -21,6 +21,17 @@ where exists (select top 1 1
 					and s.currency = 20)
 and roleid = 1
 
+--============ start enable status of member ====================================
+
+UPDATE ci
+SET DisableMicrogameLC = 0
+	, DisableMicrogameRnG = 0
+from dbo.CustInfo ci with (rowlock, updlock)
+where exists (select top 1 1 from #CustIds c where ci.custid = c.CustId)
+
+--============ end enable status of member ====================================
+
+--============ start update PT setting ====================================
 --Geneic game: 0.875
 update cs
 set apositiontaking = 0.875
@@ -53,6 +64,7 @@ where not exists (select top 1 1
 					from dbo.Dep_CustSettingGame cs with(nolock) 
 					where c.CustId = cs.CustID and cs.Sporttype = 203 and Bettype = 2005)
 
+--============ end update PT setting ====================================
 drop table #CustIds
 
 go
