@@ -3,9 +3,10 @@ use custdb
 go
 
 /*
-	insert or update setting for UUS line of 12bet on member level
-		- generic as 0.875
-		- branded as 0.8
+	https://redmine.nexcel.vn/issues/52273
+	 - Enable MicrogameLC & MicrogameRNG
+	 - Update PT setting as generic as 0.875, branded as 0.8
+	 for all members under some lines: 12BETUUS01, 12BETUUS02, 12BETUUS03, 12BETUUS04 & 12BETUUS05
 	run on DBCUST
 */
 
@@ -14,16 +15,17 @@ create table #CustIds (CustId int)
 insert into #CustIds(CustId)
 select custid--, roleid, username
 from dbo.custInfo ci with(nolock)
-where exists (select top 1 1 
-				from dbo.Dep_CustSuper s with(nolock) 
-				where ci.srecommend = s.custid 
-					and s.site = '12bet'
-					and s.currency = 20)
+where recommend in (858249 --12BETUUS01
+					, 916515 --12BETUUS02
+					, 2812998 --12BETUUS03
+					, 3575283 --12BETUUS04
+					, 14390439 --12BETUUS05
+)
 and roleid = 1
 
 --============ start enable status of member ====================================
 
-UPDATE ci
+update ci
 SET DisableMicrogameLC = 0
 	, DisableMicrogameRnG = 0
 from dbo.CustInfo ci with (rowlock, updlock)
@@ -46,7 +48,7 @@ select c.CustId, 0 as spositiontaking, 0 as mpositiontaking, 0.875 as apositiont
 from #CustIds c
 where not exists (select top 1 1 
 					from dbo.Dep_CustSettingGame cs with(nolock)
-					where c.CustId = cs.CustID and cs.Sporttype = 203 and Bettype = 2001)
+					where c.CustId = cs.CustID and cs.Sporttype = 203 and cs.Bettype = 2001)
 
 --Branded game: 0.8
 update cs
@@ -62,7 +64,7 @@ select c.CustId, 0 as spositiontaking, 0 as mpositiontaking, 0.8 as apositiontak
 from #CustIds c
 where not exists (select top 1 1 
 					from dbo.Dep_CustSettingGame cs with(nolock) 
-					where c.CustId = cs.CustID and cs.Sporttype = 203 and Bettype = 2005)
+					where c.CustId = cs.CustID and cs.Sporttype = 203 and cs.Bettype = 2005)
 
 --============ end update PT setting ====================================
 drop table #CustIds
