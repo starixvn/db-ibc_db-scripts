@@ -43,8 +43,8 @@ declare @wrongdata table (custid int, username varchar(50), transid bigint
 insert into @sourcedata(custid, username, matchid, bettype, winlostdate, status
 	, turnover, winlost, awinlost, swinlost, mwinlost, scomm, acomm, comm, playercomm)
 select custid, username, productid, gameID, winlostdate
-	, case when sum(winlost-actual_stake+playercomm) > 0 then 'WON'
-		when sum(winlost-actual_stake+playercomm) < 0 then 'LOSE'
+	, case when sum(winlost-actual_stake) > 0 then 'WON'
+		when sum(winlost-actual_stake) < 0 then 'LOSE'
 		else 'DRAW' end as status
 	, sum(stake) as stake, sum(winlost-actual_stake) as winlost, sum(awinlost) as awinlost, sum(swinlost) as swinlost, sum(mwinlost) as mwinlost
 	, sum(scomm) as scomm, sum(acomm) as acomm, sum(comm) as comm, sum(playercomm) as playercomm
@@ -81,6 +81,7 @@ where s.turnover <> t.turnover
 	or s.acomm <> t.acomm 
 	or s.comm <> t.comm 
 	or s.playercomm <> t.playercomm
+	or s.status <> t.status
 	
 --------------------------
 
@@ -89,9 +90,9 @@ insert into @wrongdata (custid , username , transid
 	, stake , winlost , actual_stake , playercomm , playerdiscount , awinlost , apositiontaking , comm ,
 	discount , winlostdate ,gameid, status , issue )
 select top 100 custid,username,transid,stake,winlost,actual_stake,playercomm,playerdiscount,awinlost,apositiontaking,comm,discount,winlostdate,gameid,status,
-		case when winlost+playercomm>actual_stake then 'Issue: Status should be WON'
-		when winlost+playercomm=actual_stake then 'Issue: Status should be DRAW'
-		when winlost+playercomm<actual_stake then 'Issue: Status should be LOSE' 
+		case when winlost>actual_stake then 'Issue: Status should be WON'
+		when winlost=actual_stake then 'Issue: Status should be DRAW'
+		when winlost<actual_stake then 'Issue: Status should be LOSE' 
 		end as 'Comment'
 from dbo.bettransRnG with(nolock)
 where --custid in (select custid from @CustIds) AND
@@ -99,11 +100,11 @@ where --custid in (select custid from @CustIds) AND
 	AND winlostdate BETWEEN @FromDate AND @ToDate
 	AND statusID NOT IN (0,1)
 	AND (
-			(winlost+playercomm>actual_stake AND status<>'WON')--Case 2: Check data in BettransRNG - if winlost - actual_stake > 0 -> status=WON
+			(winlost>actual_stake AND status<>'WON')--Case 2: Check data in BettransRNG - if winlost - actual_stake > 0 -> status=WON
 			OR
-			(winlost+playercomm=actual_stake AND status<>'DRAW')--Case 3: Check data in BettransRNG - if winlost - actual_stake = 0 -> status=DRAW
+			(winlost=actual_stake AND status<>'DRAW')--Case 3: Check data in BettransRNG - if winlost - actual_stake = 0 -> status=DRAW
 			OR
-			(winlost+playercomm<actual_stake AND status<>'LOSE')--Case 4: Check data in BettransRNG - if winlost - actual_stake < 0 -> status=LOSE
+			(winlost<actual_stake AND status<>'LOSE')--Case 4: Check data in BettransRNG - if winlost - actual_stake < 0 -> status=LOSE
 			
 	    )
 

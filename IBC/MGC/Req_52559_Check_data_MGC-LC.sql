@@ -55,9 +55,9 @@ insert into @wrongdata (custid , username , transid
 	, stake , winlost , actual_stake , playercomm , playerdiscount , awinlost , apositiontaking , comm ,
 	discount , winlostdate , bettype, status , issue )
 select top 100 custid,username,transid,stake,winlost,actual_stake,playercomm,playerdiscount,awinlost,apositiontaking,comm,discount,winlostdate,bettype,status,
-		case when winlost+playercomm>actual_stake then 'Issue: Status should be WON'
-		when winlost+playercomm=actual_stake then 'Issue: Status should be DRAW'
-		when winlost+playercomm<actual_stake then 'Issue: Status should be LOSE' 
+		case when winlost>actual_stake then 'Issue: Status should be WON'
+		when winlost=actual_stake then 'Issue: Status should be DRAW'
+		when winlost<actual_stake then 'Issue: Status should be LOSE' 
 		end as 'Comment'
 from dbo.bettrans with(nolock)
 where
@@ -66,11 +66,11 @@ where
 	AND winlostdate BETWEEN @FromDate AND @ToDate
 	AND statusID NOT IN (0,1)
 	AND (
-			(winlost+playercomm>actual_stake AND status<>'WON')--Case : Check data in Bettrans: if winlost - actual_stake > 0 -> status=WON
+			(winlost>actual_stake AND status<>'WON')--Case : Check data in Bettrans: if winlost - actual_stake > 0 -> status=WON
 			OR
-			(winlost+playercomm=actual_stake AND status<>'DRAW')--Case : Check data in Bettrans: if winlost - actual_stake = 0 -> status=DRAW
+			(winlost=actual_stake AND status<>'DRAW')--Case : Check data in Bettrans: if winlost - actual_stake = 0 -> status=DRAW
 			OR
-			(winlost+playercomm<actual_stake AND status<>'LOSE')--Case : Check data in Bettrans: if winlost - actual_stake < 0 -> status=LOSE
+			(winlost<actual_stake AND status<>'LOSE')--Case : Check data in Bettrans: if winlost - actual_stake < 0 -> status=LOSE
 			
 	    )
 
