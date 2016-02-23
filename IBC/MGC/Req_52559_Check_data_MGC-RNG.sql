@@ -113,7 +113,7 @@ insert into @wrongdata (custid , username , transid
 	, stake , winlost , actual_stake , playercomm , playerdiscount , awinlost , apositiontaking , comm ,
 	discount , winlostdate ,gameid, status , issue )
 select top 100 custid,username,transid,stake,winlost,actual_stake,playercomm,playerdiscount,awinlost,apositiontaking,comm,discount,winlostdate,gameid,status,
-		case when -(winlost-actual_stake+playercomm)*apositiontaking<>awinlost then 'Issue: awinlost is calculated wrongly' 
+		case when -(winlost-actual_stake)*apositiontaking<>awinlost then 'Issue: awinlost is calculated wrongly' 
 			 when stake*playerdiscount<>playercomm then 'Issue: playercomm is wrong'
 			 when gameID = 2009 AND apositiontaking<>@aGenericGameSetting then 'Issue: apositiontaking is wrong (generic game)'
 			 when gameID = 2008 AND apositiontaking<>@aBrandedGameSetting then 'Issue: apositiontaking is wrong (branded game)' 
@@ -129,7 +129,7 @@ where --custid in (select custid from @CustIds) AND
 	AND winlostdate BETWEEN @FromDate AND @ToDate
 	AND statusID NOT IN (0,1)
 	AND (
-			(-(winlost-actual_stake+playercomm)*apositiontaking<>awinlost) --Case 5: Check data in BettransRNG - awinlost,playercomm are calculated correctly
+			(-(winlost-actual_stake)*apositiontaking<>awinlost) --Case 5: Check data in BettransRNG - awinlost,playercomm are calculated correctly
 			OR
 			(stake*playerdiscount<>playercomm) --Case 5b: playercomm is wrong
 			OR 
