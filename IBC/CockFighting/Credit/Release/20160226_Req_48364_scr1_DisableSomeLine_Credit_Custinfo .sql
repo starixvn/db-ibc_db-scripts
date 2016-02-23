@@ -125,6 +125,7 @@ CREATE TABLE #Customer (custid int,roleid int, isfinished bit default(0))
 DECLARE @CustID INT,@RoleID INT
 
 INSERT INTO #Customer(custid,RoleID)
+VALUES
 (xxx,xxx),
 (xxx,xxx)
 	
@@ -153,6 +154,7 @@ CREATE TABLE #Customer (custid int,roleid int, isfinished bit default(0))
 DECLARE @CustID INT,@RoleID INT
 
 INSERT INTO #Customer(custid,RoleID)
+VALUES
 (xxx,xxx),
 (xxx,xxx)
 	
