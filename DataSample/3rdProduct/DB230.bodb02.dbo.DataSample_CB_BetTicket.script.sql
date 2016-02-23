@@ -1,3 +1,5 @@
+use bodb02
+go
 ALTER PROCEDURE [dbo].[DataSample_CB_BetTicket_Ins]
 --DECLARE
 	@CustID		INT
@@ -96,7 +98,8 @@ BEGIN
 		,@maxWinlost money
 		,@recommend INT=NULL
 		,@recomendSource INT=NULL
-
+		,@custom2 varchar(50) 
+		
 	SELECT @gameID		= @Bettype
 		, @vendorID		= 4
 		, @productID	= 15 
@@ -108,6 +111,7 @@ BEGIN
 		, @hdp1			= isnull(@hdp1, 0.3)
 		, @hdp2			= isnull(@hdp2, 0.7)
 		, @maxWinlost	= 200000
+		, @custom2		= 'The Colossus'
 	
 	SELECT @transdate	= GETDATE()
 		, @statusID		= CASE WHEN @STATUS = 'RUNNING' THEN 0 
@@ -185,6 +189,7 @@ BEGIN
 			,[Gameid3rd]
 			,[Tranid3rd]
 			,[custom1]
+			,[custom2]
 		)
 		SELECT TOP 1 @CustID [custid]
 			,@transdate [transdate]
@@ -199,7 +204,7 @@ BEGIN
 			,ISNULL(comRate.discount, 0.02) 	AS [discount]
 			,ISNULL(comRate.adiscount, 0.045) 	AS [adiscount]
 			,ISNULL(comRate.sdiscount, 0.06075) AS [sdiscount]
-			,[creator]
+			,0 AS [creator]
 			,@WinlostDate [winlostdate]
 			,'i' AS [betfrom]
 			,0.7 AS [virtualrate]
@@ -212,7 +217,7 @@ BEGIN
 			,@srecommend [srecommend]
 			,'127.0.0.1' [ip]
 			,@statusID AS [statusID]
-			,[balance]
+			,0 AS [balance]
 			,@UserName [Username]
 			,@transdesc [transdesc]
 			,@sportType [productID]
@@ -222,15 +227,15 @@ BEGIN
 			,@GameId3rd  GameId3rd
 			,@TranId3rd TranId3rd
 			,@custom1 AS custom1
-		FROM [bodb02].[dbo].[translog] b (nolock)
-			----inner join dbo.SportBettypeMatrix bt (nolock) on  b.gameID = bt.bettype
+			,@custom2 AS custom2
+		FROM CustDB.dbo.custInfo (nolock)
 			OUTER APPLY (
-				select top 1 sdiscount 
-						,adiscount 
-						,discount
-						,playerdiscount
-				from DBCUST.CustDB.dbo.CustCommRate with(nolock)
-				where bettype = 18001 and custid = @CustID
+				select top 1 cr.sdiscount 
+						,cr.adiscount 
+						,cr.discount
+						,cr.playerdiscount
+				from DBCUST.CustDB.dbo.CustCommRate cr with(nolock)
+				where cr.bettype = 18001 and custid = @CustID
 			) AS comRate
 		WHERE custid = @custid
 			
@@ -789,7 +794,8 @@ BEGIN
 			SELECT 'Settle' AS [Action]
 				,@refno_translog AS 'translog.translogid'
 				,@Refno_Bettrans AS 'bettrans.transid'
-			IF(@maxAmount >= @maxWinlost)
+				
+			/*IF(@maxAmount >= @maxWinlost)
 			BEGIN
 				--INSERT INTO PayoutTrans
 				INSERT INTO [dbo].[PayoutTrans]
@@ -818,19 +824,21 @@ BEGIN
 				   ,1
 				   ,'Open'
 				   ,NULL)
-			 END
+			 END*/
 		END
 	END
 	
 	--UPDATE change pwd
-	DECLARE @potetinalWL 	MONEY
+	DECLARE @potetinalWL 		MONEY
+		, @Status_Bettrans   	NVARCHAR(10)
 		
 	select @potetinalWL	= SUM(case when bettype not in(18001) then winlost else 0 end)
 		, @payoutAmount	= sum(case when bettype not in(18001) THEN [winlost] - stake ELSE 0 END)
 	from dbo.bettransm (nolock)
 	where refno = @refno_translog 
 	
-	SELECT @Refno_Bettrans = transid 
+	SELECT @Refno_Bettrans  = transid 
+		,@Status_Bettrans	= [status]
 	FROM bettrans b (NOLOCK) 
 	WHERE custid 		= @custid 
 		AND b.refno 	= @refno_translog 
@@ -852,6 +860,11 @@ BEGIN
 				SELECT 1 
 				FROM [dbo].[PayoutTrans] 
 				WHERE refno = @Refno_Bettrans
+			)
+			AND @Status_Bettrans IN ('running')
+			AND ( 
+				NOT EXISTS(SELECT 1 FROM dbo.bettransm (nolock) where refno = @refno_translog and bettype = 18005) -- waiting for BONUS prize or not
+				OR EXISTS(SELECT 1 FROM dbo.bettransm (nolock) where refno = @refno_translog and bettype = 18006) -- has BONUS prize
 			)
 		)
 		BEGIN
@@ -893,9 +906,7 @@ BEGIN
 				AND refno 	= @Refno_Bettrans
 		END
 		-- UPD to not allow to change member pwd
-		UPDATE c
-		SET LockUpd = 1
-		FROM OPENQUERY(DBCUST, 'SELECT * FROM CustDB.dbo.custinfo WHERE custid = 1176092') AS c
+		EXEC [DBCUST].[CustDB].[dbo].[Dot_Member_UpdateLockPassword] @CustID = @custid, @status = 1
 	END
 	
 	FINAL_CHECK:
