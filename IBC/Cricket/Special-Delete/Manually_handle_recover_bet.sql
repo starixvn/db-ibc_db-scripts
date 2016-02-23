@@ -19,7 +19,7 @@ declare @TransIds varchar(max)
 	, @ErrCode int
 	, @ErrMsg nvarchar(200)
  
-select @TransIds = '8413655314,8412783358', @UserId = 8, @IP = '127.0.0.1'
+select @TransIds = '8415947885,8415948134', @UserId = 8, @IP = '127.0.0.1'
 
 if isnull(@TransIds, '') = '' or isnull(@UserId, '') = '' or isnull(@IP, '') = ''
 begin

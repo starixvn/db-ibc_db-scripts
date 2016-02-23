@@ -28,7 +28,7 @@ Void By Bet Id
 	, @Reason nvarchar(500) = ''
 	, @InvalidTrans nvarchar(max) = ''
 
- select @TransIds = '8413655314,8412783358'
+ select @TransIds = '8415947885,8415948134'
 	, @UserName = 'sa'
 	, @Password = '56E8A2D78170E87C928E480797CC73' --1234aa
 	, @UserId= 8
