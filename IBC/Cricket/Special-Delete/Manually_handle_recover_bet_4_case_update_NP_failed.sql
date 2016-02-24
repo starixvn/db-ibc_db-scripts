@@ -18,7 +18,7 @@ declare @TransIds varchar(max)
 	, @ErrCode int
 	, @ErrMsg nvarchar(200)
  
-select @TransIds = '8415947885,8415948134'
+select @TransIds = '9799002825,9799002826'
 
 if isnull(@TransIds, '') = ''
 begin
@@ -26,18 +26,15 @@ begin
 end
 
 --==start step 1: search cricket ticket to update NP--===============
-select 'start #1' as '#1'
 declare @TicketCricketList table(transid bigint, bettype smallint, isfinished bit)
   
---insert into @TicketCricketList(transid, bettype, isfinished)
+insert into @TicketCricketList(transid, bettype, isfinished)
 select t.transid, b.bettype, 0
 from (
 select val as transid from dbo.strSplit(@TransIds, ',')
 ) t
 	inner join dbo.bettrans b with(nolock) on t.transid = b.transid
 where b.srecommend not in (select custid from CustDB.dbo.Dep_CustSuper s with(nolock))
---where s.custid is null and b.bettype = 501
-select * from @TicketCricketList
 
 --double check
 if exists (select top 1 1 from @TicketCricketList where bettype in (500))
@@ -46,16 +43,15 @@ begin
 	return
 end
 
---add more check at here
-
-select 'end #1' as '#1'
 --==end step 1: search cricket ticket to update NP--=================
 
 --==start step 4: update NP--===============
-select 'start #4' as '#4'
 
-declare @TransFailedIds table(transid bigint, msg nvarchar(300))
-declare @transid bigint
+declare @ScheduleList table (CustId int, MatchId int, bettype smallint)
+declare @QueueItems table (NPQueueID bigint, Matchid int, Bettype smallint, MinTransid bigint, MaxTransid bigint, ActionTypeID tinyint, NeedPending bit)
+
+declare @transid bigint, @NPQueueID bigint, @MatchId int, @Bettype smallint
+	, @MinTransid bigint, @MaxTransId bigint, @CustId int
 
 while 1 = 1
 begin
@@ -69,7 +65,6 @@ begin
 	break
 
 	--cal service to update NP
-	begin try
 	exec dbo.Dot_Member_NetPosition_UnVoid_test
 		@Transid = @transid,
 		@ErrCode = @ErrCode OUTPUT,
@@ -77,29 +72,43 @@ begin
 
 	if @ErrCode <> 0
 	begin
-		if not exists (select top 1 1 from @TransFailedIds)
-		begin
-			insert into @TransFailedIds(transid, msg)
-			values(@transid, @ErrMsg)
-		end
+		select @ErrCode as '@ErrCode', @ErrMsg as '@ErrMsg'
+		continue
 	end
-	end try
-	begin catch
-		if not exists (select top 1 1 from @TransFailedIds)
-		begin
-			insert into @TransFailedIds(transid, msg)
-			values(@transid, @ErrMsg)
-		end
-	end catch
+
+	--clean data
+	delete from @QueueItems
+	delete from @ScheduleList
+
+	--get queue item
+	insert into @QueueItems
+	exec dbo.Dot_Member_NetPosition_GetQueue_test
+
+	select top 1 @NPQueueID = NPQueueID, @Matchid = Matchid, @Bettype = Bettype, @MinTransid = MinTransid, @MaxTransId = MaxTransid
+   	from @QueueItems
+	where ActionTypeID = 3 and MinTransid = @transid
+
+	--get schedule
+	insert into @ScheduleList
+	exec dbo.Dot_Member_NetPosition_GetSchedule_test @NPQueueID = @NPQueueID
+		, @Matchid = @Matchid
+		, @bettype = @bettype
+		, @MinTransid = @MinTransid
+		, @MaxTransid = @MaxTransId
+		, @ActionTypeID = 3
+
+	select top 1 @CustId = CustId
+	from @ScheduleList 
+	where MatchId = @MatchId and bettype = @Bettype
+
+	--calculate NP
+	exec dbo.Dot_Member_NetPosition_Calculation_test @Custid = @CustId
+		, @Matchid = @Matchid
+		, @bettype = @bettype
+		, @ActionTypeID = 3
 
 end
 
-if exists (select top 1 1 from @TransFailedIds)
-begin
-	select 'Failed to update NP' as 'Failed', * from @TransFailedIds
-end
-
-select 'end #4' as '#4'
 --==end step 4: update NP--===============
 
  go
