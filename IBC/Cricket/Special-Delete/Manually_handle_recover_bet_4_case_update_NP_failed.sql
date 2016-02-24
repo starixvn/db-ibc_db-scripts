@@ -55,6 +55,8 @@ declare @transid bigint, @NPQueueID bigint, @MatchId int, @Bettype smallint
 
 while 1 = 1
 begin
+	set @transid = 0
+
 	update top(1) t
 	set @transid = transid
 		, isfinished = 1
@@ -84,6 +86,9 @@ begin
 	insert into @QueueItems
 	exec dbo.Dot_Member_NetPosition_GetQueue_test
 
+	if not exists (select 1 from @QueueItems)
+		continue
+
 	select top 1 @NPQueueID = NPQueueID, @Matchid = Matchid, @Bettype = Bettype, @MinTransid = MinTransid, @MaxTransId = MaxTransid
    	from @QueueItems
 	where ActionTypeID = 3 and MinTransid = @transid
@@ -96,6 +101,9 @@ begin
 		, @MinTransid = @MinTransid
 		, @MaxTransid = @MaxTransId
 		, @ActionTypeID = 3
+
+	if not exists (select 1 from @ScheduleList)
+		continue
 
 	select top 1 @CustId = CustId
 	from @ScheduleList 
