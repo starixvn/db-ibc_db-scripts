@@ -18,7 +18,7 @@ declare @TransIds varchar(max)
 	, @ErrCode int
 	, @ErrMsg nvarchar(200)
  
-select @TransIds = '9799002825,9799002826'
+select @TransIds = '???'
 
 if isnull(@TransIds, '') = ''
 begin
@@ -67,7 +67,7 @@ begin
 	break
 
 	--cal service to update NP
-	exec dbo.Dot_Member_NetPosition_UnVoid_test
+	exec dbo.Dot_Member_NetPosition_UnVoid
 		@Transid = @transid,
 		@ErrCode = @ErrCode OUTPUT,
 		@ErrMsg = @ErrMsg OUTPUT
@@ -84,7 +84,7 @@ begin
 
 	--get queue item
 	insert into @QueueItems
-	exec dbo.Dot_Member_NetPosition_GetQueue_test
+	exec dbo.Dot_Member_NetPosition_GetQueue
 
 	if not exists (select 1 from @QueueItems)
 		continue
@@ -95,7 +95,7 @@ begin
 
 	--get schedule
 	insert into @ScheduleList
-	exec dbo.Dot_Member_NetPosition_GetSchedule_test @NPQueueID = @NPQueueID
+	exec dbo.Dot_Member_NetPosition_GetSchedule @NPQueueID = @NPQueueID
 		, @Matchid = @Matchid
 		, @bettype = @bettype
 		, @MinTransid = @MinTransid
@@ -110,7 +110,7 @@ begin
 	where MatchId = @MatchId and bettype = @Bettype
 
 	--calculate NP
-	exec dbo.Dot_Member_NetPosition_Calculation_test @Custid = @CustId
+	exec dbo.Dot_Member_NetPosition_Calculation @Custid = @CustId
 		, @Matchid = @Matchid
 		, @bettype = @bettype
 		, @ActionTypeID = 3

@@ -28,7 +28,7 @@ Void By Bet Id
 	, @Reason nvarchar(500) = ''
 	, @InvalidTrans nvarchar(max) = ''
 
- select @TransIds = '8415947885,8415948134'
+ select @TransIds = '???'
 	, @UserName = 'sa'
 	, @Password = '56E8A2D78170E87C928E480797CC73' --1234aa
 	, @UserId= 8
@@ -100,7 +100,7 @@ begin
 
 	--cal service to update NP
 	begin try
-	exec dbo.Dot_Member_NetPosition_Void_test
+	exec dbo.Dot_Member_NetPosition_Void
 		@Transid = @transid,
 		@ErrCode = @ErrCode OUTPUT,
 		@ErrMsg = @ErrMsg OUTPUT
@@ -159,67 +159,6 @@ exec dbo.NAP_BettransSpecialDelBetID_Del @TransIds = @TransIds
 
 select @InvalidTrans as '@InvalidTrans'
 
---need to rollback NP
-if @ErrCode <> 0
-begin
-	--reset data
-	update t
-	set isfinished = 0
-	from #TicketCricketList t
-	where transid not in (select transid from @TransFailedIds)
-	
-	declare @TransFailedToRollbackIds table (transid bigint, msg nvarchar(300))
-	set @transid = 0
-	while 1 = 1
-	begin
-		update top(1) t
-		set @transid = transid
-			, isfinished = 1
-		from #TicketCricketList t
-
-		if @@rowcount = 0
-		break
-
-		--only rollback NP for ticket which is not voided
-		if exists (select top 1 1 from dbo.bettrans b with(nolock)
-								  where transid = @transid
-									and b.bettype = 501
-									and b.statusID in (102, 101))
-		begin
-			continue
-		end
-
-		--cal service to update NP --> rollback
-		begin try
-		exec dbo.Dot_Member_NetPosition_UnVoid_test
-			@Transid = @transid,
-			@ErrCode = @ErrCode OUTPUT,
-			@ErrMsg = @ErrMsg OUTPUT
-
-		if @ErrCode <> 0
-		begin
-			if not exists (select top 1 1 from @TransFailedToRollbackIds)
-			begin
-				insert into @TransFailedToRollbackIds(transid, msg)
-				values(@transid, @ErrMsg)
-			end
-		end
-		end try
-		begin catch
-			if not exists (select top 1 1 from @TransFailedToRollbackIds)
-			begin
-				insert into @TransFailedToRollbackIds(transid, msg)
-				values(@transid, @ErrMsg)
-			end
-		end catch
-
-	end
-
-	if exists (select top 1 1 from @TransFailedToRollbackIds)
-	begin
-		select 'Failed to rollback NP' as 'Failed', * from @TransFailedToRollbackIds
-	end
-end
 select 'end #4&5' as '#4_5'
 --==end step 4 & 5: void ticket--=================
 
