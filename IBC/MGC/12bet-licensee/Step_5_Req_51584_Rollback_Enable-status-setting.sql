@@ -57,7 +57,7 @@ from dbo.custInfo ci with(nolock)
 where roleid = 4
 	and srecommend <= @MaxCustId
 	and s.site = '12bet'
-	and s.currency in (3, 6, 4, 12, 2, 13, 20, 9, 41, 1, 15, 51, 45, 61, 32)
+	and s.currency in (3, 6, 4, 12, 2, 13, 9, 41, 1, 15, 51, 45, 61, 32)
 	
 declare @srecommend int
 
@@ -100,7 +100,7 @@ from dbo.custInfo ci with(nolock)
 where roleid = 4
 	and srecommend <= @MaxCustId
 	and s.site = '12bet'
-	and s.currency in (3, 6, 4, 12, 2, 13, 20, 9, 41, 1, 15, 51, 45, 61, 32)
+	and s.currency in (3, 6, 4, 12, 2, 13, 9, 41, 1, 15, 51, 45, 61, 32)
 	
 declare @srecommend int
 

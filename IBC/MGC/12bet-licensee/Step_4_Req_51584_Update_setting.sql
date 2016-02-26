@@ -27,7 +27,7 @@ from dbo.custinfo ci with(nolock)
 where ci.custid > @maxcustid
 	and ci.roleid <= 4
 	and mci.username not like '12betacc%' --need to check for sure
-	and s.currency in (3, 6, 4, 12, 2, 13, 20, 9, 41, 1, 15, 51, 45, 61, 32)
+	and s.currency in (3, 6, 4, 12, 2, 13, 9, 41, 1, 15, 51, 45, 61, 32)
 	
 if not exists (select top 1 1 from #DataTmp)
 	return
