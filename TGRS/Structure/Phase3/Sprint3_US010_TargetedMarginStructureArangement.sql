@@ -15,28 +15,28 @@ GO
 
 -- Add new column ShiftId --
 ALTER TABLE	dbo.TargetedMargin 
-			ADD	ShiftId		TINYINT		NULL
+			ADD	WorkShift	TINYINT		NULL
 
 ALTER TABLE	dbo.TargetedMargin_History
-			ADD	ShiftId		TINYINT		NULL
+			ADD	WorkShift	TINYINT		NULL
 GO
 
 -- Update and initial new data --
 UPDATE	tm
-SET		tm.ShiftId = 1
+SET		tm.WorkShift = 1
 FROM	dbo.TargetedMargin AS tm
 
 UPDATE	tmh
-SET		tmh.ShiftId = 1
+SET		tmh.WorkShift = 1
 FROM	dbo.TargetedMargin_History AS tmh
 
 INSERT INTO	TargetedMargin
-	(	BetType, Rate, ShiftId)
-SELECT	tm.BetType, tm.Rate, s.ShiftId
+	(	BetType, Rate, WorkShift)
+SELECT	tm.BetType, tm.Rate, s.WorkShift
 FROM		#TargetedMargin AS tm
 CROSS APPLY	(
 	SELECT 2
 	UNION ALL
 	SELECT 3
-) s(ShiftId)
+) s(WorkShift)
 GO
