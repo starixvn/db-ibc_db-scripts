@@ -12,18 +12,19 @@ declare @sporttype smallint
 
 select @sporttype = 208, @bettype = 2101
 
-create table #DataTmp(custid int, username varchar(50), roleid tinyint, MaxWinLimit money, MaxLossLimit money, credit money)
+create table #DataTmp(custid int, username varchar(50), roleid tinyint, MaxWinLimit money, IsAutoReset bit, MaxLossLimit money, credit money)
 
-insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, credit, username, roleid)
-	select c.custid, MaxWinLimit, MaxLossLimit, c.credit, username, roleid
+insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, username, roleid)
+	select c.custid, MaxWinLimit, MaxLossLimit, IsAutoReset, c.credit, username, roleid
 	from CustDB.dbo.custinfo c with (nolock)
 		inner join DBCUST.CustDB.dbo.CustWinLimit cwl with (nolock) 
 			on cwl.CustId = c.custid 
 				and cwl.sporttype = @sporttype
 				and cwl.bettype = @bettype
-	where c.roleid = 1 AND cwl.MaxWinLimit > 0 AND cwl.IsAutoReset = 0
+	where c.roleid = 1 AND (cwl.MaxWinLimit > 0 OR cwl.MaxLossLimit > 0) AND cwl.IsAutoReset = 1
+	option (maxdop 4)
 
-select tt.custid, username, roleid, t.winlost, (credit * MaxWinLimit) as maxwinning, (credit * MaxLossLimit) as maxloss
+select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, (credit * MaxLossLimit) as maxloss
 	, case when (t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
 	, case when (abs(t.winlost) > (credit * MaxLossLimit)) then 1 else 0 end as isexccedloss
 from (
@@ -36,8 +37,9 @@ from (
 	from dbo.BalanceDebitGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
 	group by custid
 ) t inner join #DataTmp tt on t.custid = tt.custid
-where (t.winlost > (credit * MaxWinLimit))
-	or (abs(t.winlost) > (credit * MaxLossLimit))
+where (MaxWinLimit > 0 and (t.winlost > (credit * MaxWinLimit))
+	or (MaxLossLimit > 0 and abs(t.winlost) > (credit * MaxLossLimit)))
+option (maxdop 4)
 
 drop table #DataTmp
 
