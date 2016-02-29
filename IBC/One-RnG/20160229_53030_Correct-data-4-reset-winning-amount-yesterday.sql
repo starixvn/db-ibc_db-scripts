@@ -30,9 +30,9 @@ WHILE 1 = 1
 BEGIN
 	DELETE TOP (50000) bal
 	FROM dbo.BalanceCreditGame bal WITH (ROWLOCK)
-	WHERE NOT EXISTS (SELECT TOP 1 1 
-						FROM #WeeklyResetCustomer t 
-						WHERE bal.CustId = t.CustId	AND winlostdate BETWEEN '2016-01-27' AND @Yesterday AND bettype = @bettype)
+		LEFT JOIN #WeeklyResetCustomer t ON bal.CustId = t.CustId
+	WHERE winlostdate <= @Yesterday AND bettype = @bettype
+		 AND t.CustId IS NULL
 	OPTION (MAXDOP 4)
 		
 	IF @@ROWCOUNT < 50000
@@ -45,9 +45,9 @@ WHILE 1 = 1
 BEGIN
 	DELETE TOP (50000) bal
 	FROM dbo.BalanceDebitGame bal WITH (ROWLOCK)
-	WHERE NOT EXISTS (SELECT TOP 1 1 
-						FROM #WeeklyResetCustomer t 
-						WHERE bal.CustId = t.CustId	AND winlostdate BETWEEN '2016-01-27' AND @Yesterday AND bettype = @bettype)
+		LEFT JOIN #WeeklyResetCustomer t ON bal.CustId = t.CustId
+	WHERE winlostdate <= @Yesterday AND bettype = @bettype
+		 AND t.CustId IS NULL
 	OPTION (MAXDOP 4)
 		
 	IF @@ROWCOUNT < 50000
