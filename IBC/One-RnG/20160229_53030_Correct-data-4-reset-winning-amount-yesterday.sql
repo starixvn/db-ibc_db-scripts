@@ -56,65 +56,6 @@ BEGIN
 	WAITFOR DELAY '00:00:00.280'
 END
 
---remove credit account
-DELETE t
-FROM #WeeklyResetCustomer t
-	LEFT JOIN CustDB.dbo.Dep_CustSuper s WITH(NOLOCK) ON t.srecommend = s.custid
-WHERE s.custid IS NULL
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM #WeeklyResetCustomer)
-BEGIN
-	DROP TABLE #WeeklyResetCustomer
-	RETURN
-END
-
---remove deposit account
-IF EXISTS (SELECT TOP 1 1 FROM dbo.BalanceCreditGame bal WITH(NOLOCK)
-				INNER JOIN #WeeklyResetCustomer t 
-					ON bal.CustId = t.custid 
-						AND bal.bettype = @bettype 
-						AND winlostdate BETWEEN '2016-01-27' AND @Yesterday
-		)
-BEGIN
-	WHILE 1 = 1
-	BEGIN
-		DELETE TOP (50000) bal
-		FROM dbo.BalanceCreditGame bal WITH (ROWLOCK)
-			INNER JOIN #WeeklyResetCustomer t 
-				ON bal.CustId = t.custid 
-					AND bal.bettype = @bettype 
-					AND winlostdate BETWEEN '2016-01-27' AND @Yesterday
-		
-		IF @@ROWCOUNT < 50000
-			BREAK
-			
-		WAITFOR DELAY '00:00:00.280'
-	END
-END
-
-IF EXISTS (SELECT TOP 1 1 FROM dbo.BalanceDebitGame bal WITH(NOLOCK)
-				INNER JOIN #WeeklyResetCustomer t 
-					ON bal.CustId = t.custid 
-						AND bal.bettype = @bettype 
-						AND winlostdate BETWEEN '2016-01-27' AND @Yesterday
-		)
-BEGIN
-	WHILE 1 = 1
-	BEGIN
-		DELETE TOP (50000) bal
-		FROM dbo.BalanceDebitGame bal WITH (ROWLOCK)
-			INNER JOIN #WeeklyResetCustomer t 
-				ON bal.CustId = t.custid 
-					AND bal.bettype = @bettype 
-					AND winlostdate BETWEEN '2016-01-27' AND @Yesterday
-		
-		IF @@ROWCOUNT < 50000
-			BREAK
-			
-		WAITFOR DELAY '00:00:00.280'
-	END
-END	
-
 DROP TABLE #WeeklyResetCustomer
 
 GO
