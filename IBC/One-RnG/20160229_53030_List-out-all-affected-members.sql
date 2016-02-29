@@ -22,6 +22,7 @@ insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, use
 				and cwl.sporttype = @sporttype
 				and cwl.bettype = @bettype
 	where c.roleid = 1 AND (cwl.MaxWinLimit > 0 OR cwl.MaxLossLimit > 0) AND cwl.IsAutoReset = 1
+		and credit > 0
 	option (maxdop 4)
 
 ;with MemberWinning as (

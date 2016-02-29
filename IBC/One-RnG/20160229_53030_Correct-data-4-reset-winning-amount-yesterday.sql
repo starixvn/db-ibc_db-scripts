@@ -20,7 +20,7 @@ INSERT INTO #WeeklyResetCustomer(custid, srecommend)
 			ON cwl.CustId = c.custid 
 				AND cwl.sporttype = @sporttype
 				AND cwl.bettype = @bettype
-	WHERE c.roleid = 1 AND cwl.MaxWinLimit > 0 AND cwl.IsAutoReset = 0
+	WHERE c.roleid = 1 AND IsAutoReset = 0 --AND ((BetType = 1701 AND MaxWinlimit > 0) OR BetType = 2101)
 
 DECLARE @Yesterday SMALLDATETIME
 SET @Yesterday = DATEADD(dd, -1, CAST(GETDATE() AS DATE))
