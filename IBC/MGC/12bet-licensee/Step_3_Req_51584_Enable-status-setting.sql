@@ -30,7 +30,7 @@ begin
 	from dbo.custinfo ci with(nolock)
 		inner join dbo.custinfo mci with(nolock) on ci.mrecommend = mci.custid
 	where ci.srecommend = @srecommend
-		and ci.roleid <= 4
+		and ci.roleid <= 3
 		and mci.username not like '12betacc%' --need to check for sure
 		and (ci.DisableMicrogameLC = 1 or ci.DisableMicrogameRNG = 1)
 end

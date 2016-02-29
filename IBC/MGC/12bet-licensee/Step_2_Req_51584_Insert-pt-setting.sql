@@ -36,7 +36,8 @@ begin
 		, spositiontaking, mpositiontaking, apositiontaking
 		, playerdiscount, discount, adiscount, sdiscount)
 	select ci.custid, f.sporttype, f.bettype
-		, case when ci.roleid = 4 then f.pt else 0 end as spositiontaking
+		, 0 as spositiontaking
+		--, case when ci.roleid = 4 then f.pt else 0 end as spositiontaking
 		, case when ci.roleid = 3 then f.pt else 0 end as mpositiontaking
 		, case when ci.roleid in (2,1) then f.pt else 0 end as apositiontaking
 		, 0, 0, 0, 0
@@ -44,7 +45,7 @@ begin
 		inner join dbo.custinfo mci with(nolock) on ci.mrecommend = mci.custid
 		cross apply @bettypeIds f
 	where ci.srecommend = @srecommend
-		and ci.roleid <= 4
+		and ci.roleid <= 3
 		and mci.username not like '12betacc%' --need to check for sure
 end
 go
