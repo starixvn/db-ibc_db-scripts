@@ -25,8 +25,8 @@ insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, use
 	option (maxdop 4)
 
 select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, (credit * MaxLossLimit) as maxloss
-	, case when (t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
-	, case when (abs(t.winlost) > (credit * MaxLossLimit)) then 1 else 0 end as isexccedloss
+	, case when (MaxWinLimit > 0 and t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
+	, case when (MaxLossLimit > 0 and abs(t.winlost) > (MaxLossLimit)) then 1 else 0 end as isexccedloss
 from (
 	select custid, sum(Balance) as winlost
 	from dbo.BalanceCreditGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
@@ -38,7 +38,7 @@ from (
 	group by custid
 ) t inner join #DataTmp tt on t.custid = tt.custid
 where (MaxWinLimit > 0 and (t.winlost > (credit * MaxWinLimit))
-	or (MaxLossLimit > 0 and abs(t.winlost) > (credit * MaxLossLimit)))
+	or (MaxLossLimit > 0 and abs(t.winlost) > (MaxLossLimit)))
 option (maxdop 4)
 
 drop table #DataTmp
