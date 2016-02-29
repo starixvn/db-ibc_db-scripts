@@ -24,21 +24,25 @@ insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, use
 	where c.roleid = 1 AND (cwl.MaxWinLimit > 0 OR cwl.MaxLossLimit > 0) AND cwl.IsAutoReset = 1
 	option (maxdop 4)
 
+;with MemberWinning as (
+	select custid, sum(winlost) as winlost
+	from (
+		select custid, Balance as winlost
+		from dbo.BalanceCreditGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
+
+		union all
+		select custid, -Balance as winlost
+		from dbo.BalanceDebitGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
+	) t
+	group by custid
+)
 select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, (credit * MaxLossLimit) as maxloss
 	, case when (MaxWinLimit > 0 and t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
-	, case when (MaxLossLimit > 0 and abs(t.winlost) > (MaxLossLimit)) then 1 else 0 end as isexccedloss
-from (
-	select custid, sum(Balance) as winlost
-	from dbo.BalanceCreditGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
-	group by custid
-
-	union all
-	select custid, -sum(Balance) as winlost
-	from dbo.BalanceDebitGame b with(nolock) where bettype = @bettype and winlostdate >= '2016-01-27'
-	group by custid
-) t inner join #DataTmp tt on t.custid = tt.custid
+	, case when (MaxLossLimit > 0 and abs(t.winlost) > MaxLossLimit) then 1 else 0 end as isexccedloss
+from MemberWinning t 
+	inner join #DataTmp tt on t.custid = tt.custid
 where (MaxWinLimit > 0 and (t.winlost > (credit * MaxWinLimit))
-	or (MaxLossLimit > 0 and abs(t.winlost) > (MaxLossLimit)))
+	or (MaxLossLimit > 0 and abs(t.winlost) > MaxLossLimit))
 option (maxdop 4)
 
 drop table #DataTmp
