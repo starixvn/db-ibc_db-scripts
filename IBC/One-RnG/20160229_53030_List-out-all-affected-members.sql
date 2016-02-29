@@ -36,7 +36,7 @@ insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, use
 	) t
 	group by custid
 )
-select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, (credit * MaxLossLimit) as maxloss
+select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, MaxLossLimit as maxloss
 	, case when (MaxWinLimit > 0 and t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
 	, case when (MaxLossLimit > 0 and abs(t.winlost) > MaxLossLimit) then 1 else 0 end as isexccedloss
 from MemberWinning t 
