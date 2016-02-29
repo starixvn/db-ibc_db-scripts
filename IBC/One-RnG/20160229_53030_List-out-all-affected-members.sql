@@ -38,11 +38,11 @@ insert into #DataTmp(custid, MaxWinLimit, MaxLossLimit, IsAutoReset, credit, use
 )
 select tt.custid, username, roleid, t.winlost, IsAutoReset, (credit * MaxWinLimit) as maxwinning, MaxLossLimit as maxloss
 	, case when (MaxWinLimit > 0 and t.winlost > (credit * MaxWinLimit)) then 1 else 0 end as isexccedwinning
-	, case when (MaxLossLimit > 0 and abs(t.winlost) > MaxLossLimit) then 1 else 0 end as isexccedloss
+	, case when (MaxLossLimit > 0 and t.winlost < 0 and abs(t.winlost) > MaxLossLimit) then 1 else 0 end as isexccedloss
 from MemberWinning t 
 	inner join #DataTmp tt on t.custid = tt.custid
 where (MaxWinLimit > 0 and (t.winlost > (credit * MaxWinLimit))
-	or (MaxLossLimit > 0 and abs(t.winlost) > MaxLossLimit))
+	or (MaxLossLimit > 0 and t.winlost < 0 and abs(t.winlost) > MaxLossLimit))
 option (maxdop 4)
 
 drop table #DataTmp
