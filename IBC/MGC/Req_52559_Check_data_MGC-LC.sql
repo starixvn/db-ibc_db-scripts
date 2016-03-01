@@ -3,27 +3,25 @@ go
 
 /*
 	check data between bettrans & bettransrng for MGC RnG
-	run on db06 or db052
+	run on DB06 or DBTP
 */
 
-declare @CustIds table(custid int)
+--declare @CustIds table(custid int)
 declare @FromDate smalldatetime, @ToDate smalldatetime
-declare @aGenericGameSetting money, @aBrandedGameSetting money
-declare @mGenericGameSetting money, @mBrandedGameSetting money
-declare @sGenericGameSetting money, @sBrandedGameSetting money
 
-select @FromDate = '2016-02-17' --replace FromDate...
-select @ToDate = '2016-02-19' --replace ToDate...
-SELECT @aGenericGameSetting = 0.875 --PT of Generic Game (by request)
-SELECT @aBrandedGameSetting = 0.8 --PT of Branded Game (by request)
-SELECT @mGenericGameSetting = 0 --PT of Generic Game (by request)
-SELECT @mBrandedGameSetting = 0 --PT of Branded Game (by request)
-SELECT @sGenericGameSetting = 0 --PT of Generic Game (by request)
-SELECT @sBrandedGameSetting = 0 --PT of Branded Game (by request)
+
+select @FromDate = '2016-02-29' --replace FromDate...
+select @ToDate = '2016-03-01' --replace ToDate...
+
+
+--Temp table is used to check wrong setting when placing bet
+declare @wrongdataPT table (custid int, transid bigint
+	, bettype smallint, playerdiscount decimal(9,8), discount decimal(9,8), adiscount decimal(9,8), sdiscount decimal(9,8),
+	apositiontaking money, mpositiontaking money, spositiontaking money, transdate datetime)
 
 declare @wrongdata table (custid int, username varchar(50), transid bigint
-	, stake money, winlost money, actual_stake money, playercomm money, playerdiscount decimal,
-	awinlost money, apositiontaking money, comm money, discount decimal, winlostdate smalldatetime, bettype smallint, status varchar(10)
+	, stake money, winlost money, actual_stake money, playercomm money, playerdiscount decimal(9,8),
+	awinlost money, apositiontaking money, comm money, discount decimal(9,8), winlostdate smalldatetime, bettype smallint, status varchar(10)
 	,issue varchar(200) )
 	
 --Case 1: check data between translog & bettrans
@@ -74,20 +72,14 @@ where
 			
 	    )
 
---Case 5,6,7 
+--Case 5 
 insert into @wrongdata (custid , username , transid 
 	, stake , winlost , actual_stake , playercomm , playerdiscount , awinlost , apositiontaking , comm ,
 	discount , winlostdate , bettype, status , issue )
 select top 100 custid,username,transid,stake,winlost,actual_stake,playercomm,playerdiscount,awinlost,apositiontaking,comm,discount,winlostdate, bettype, status,
 		case when -(winlost-actual_stake)*apositiontaking<>awinlost then 'Issue: awinlost is calculated wrongly' 
 			 when stake*playerdiscount<>playercomm then 'Issue: playercomm is wrong'
-			 when bettype IN (2001,2002,2003,2004) AND apositiontaking<>@aGenericGameSetting then 'Issue: apositiontaking is wrong (generic game)'
-			 when bettype IN (2005,2006,2007) AND apositiontaking<>@aBrandedGameSetting then 'Issue: apositiontaking is wrong (branded game)' 
-			 when bettype IN (2001,2002,2003,2004) AND mpositiontaking<>@mGenericGameSetting then 'Issue: mpositiontaking is wrong (generic game)'
-			 when bettype IN (2005,2006,2007) AND mpositiontaking<>@mBrandedGameSetting then 'Issue: mpositiontaking is wrong (branded game)' 
-			 when bettype IN (2001,2002,2003,2004) AND spositiontaking<>@sGenericGameSetting then 'Issue: spositiontaking is wrong (generic game)'
-			 when bettype IN (2005,2006,2007) AND spositiontaking<>@sBrandedGameSetting then 'Issue: spositiontaking is wrong (branded game)' 
-			 when apositiontaking + mpositiontaking + spositiontaking <>tpositiontaking then 'Issue: tpositiontaking is wrong' 
+			  
 		end as 'Comment'
 from dbo.bettrans with(nolock)
 where 
@@ -99,23 +91,61 @@ where
 			(-(winlost-actual_stake)*apositiontaking<>awinlost) --Case 5: Check data in Bettrans: awinlost,playercomm are calculated correctly
 			OR
 			(stake*playerdiscount<>playercomm) --Case 5b: check player wrong playercomm
-			OR 
-			(bettype IN (2001,2002,2003,2004) AND apositiontaking<>@aGenericGameSetting) --Case 6: detect apositiontaking is wrong when placing bet Generic Game
-			OR
-			(bettype IN (2005,2006,2007) AND apositiontaking<>@aBrandedGameSetting) --Case 6: detect apositiontaking is wrong when placing bet Branded Game
-			OR 
-			(bettype IN (2001,2002,2003,2004) AND mpositiontaking<>@mGenericGameSetting) --Case 6: detect mpositiontaking is wrong when placing bet Generic Game
-			OR
-			(bettype IN (2005,2006,2007) AND mpositiontaking<>@mBrandedGameSetting) --Case 6: detect mpositiontaking is wrong when placing bet Branded Game
-			OR 
-			(bettype IN (2001,2002,2003,2004) AND spositiontaking<>@sGenericGameSetting) --Case 6: detect spositiontaking is wrong when placing bet Generic Game
-			OR
-			(bettype IN (2005,2006,2007) AND spositiontaking<>@sBrandedGameSetting) --Case 6: detect spositiontaking is wrong when placing bet Branded Game
-			OR
-			(apositiontaking + mpositiontaking + spositiontaking <>tpositiontaking) --Case 7: detect apositiontaking + mpositiontaking + spositiontaking <>tpositiontaking
+			
 	    )
 
 select *
 from @wrongdata
+
+-------------------------------
+
+--Case 6,7: 
+insert into @wrongdataPT (custid, transid, bettype, playerdiscount, discount, 
+	adiscount, sdiscount, apositiontaking, mpositiontaking, spositiontaking, transdate)
+select t.custid, t.translogid, t.gameID, t.playerdiscount, t.discount,  
+		t.adiscount, t.sdiscount, t.apositiontaking, t.mpositiontaking, t.spositiontaking, t.transdate
+from (
+	select custid, gameid, max(translogid) as translogid
+    from translog with (nolock) 
+    where productID=203
+    group by custid, gameID
+)tm inner join translog t with (nolock) on t.translogid = tm.translogid
+	inner join Dep_CustSettingGame st with (nolock) on tm.custid=st.CustID 
+		and case when t.gameID in (2001,2002,2003,2004) then 2001
+				 when t.gameID in (2005,2006,2007) then 2005
+			end = st.Bettype				
+		and st.sporttype=203			
+where productID=203
+and (t.playerdiscount<>st.playerdiscount
+	OR t.discount<>st.discount
+	OR t.adiscount<>st.adiscount 
+	OR t.sdiscount<>st.sdiscount
+	OR t.apositiontaking<>st.apositiontaking --Case 6: detect apositiontaking is wrong when placing bet
+	OR t.mpositiontaking<>st.mpositiontaking --Case 6: detect mpositiontaking is wrong when placing bet
+	OR t.spositiontaking<>st.spositiontaking --Case 6: detect spositiontaking is wrong when placing bet
+	OR t.apositiontaking+t.mpositiontaking+t.spositiontaking<>t.tpositiontaking --Case 7: detect apositiontaking + mpositiontaking + spositiontaking <>tpositiontaking
+	)
+
+select * from @wrongdataPT
+
+------------------
+--case 8
+select *
+from (
+	select count(1) as count, productid, gameid
+	from translog with (nolock)
+	where productID= 203
+		and gameid between 2001 and 2007
+		and winlostdate BETWEEN @FromDate AND @ToDate
+	group by productid, gameid
+ ) tt1
+  inner join (
+  select count(1) as count, matchid, bettype
+  from bettrans with (nolock)
+  where bettype between 2001 and 2007
+	and matchid = 203
+	and winlostdate BETWEEN @FromDate AND @ToDate
+  group by matchid, bettype) tt2 on tt1.productID = tt2.matchid and tt1.gameid = tt2.bettype
+where tt1.count <> tt2.count
 
 go
