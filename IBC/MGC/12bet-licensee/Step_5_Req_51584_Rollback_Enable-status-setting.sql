@@ -23,7 +23,7 @@ begin
 	update dbo.custInfo with(rowlock, updlock)
 	set DisableMicrogameLC = 1, DisableMicrogameRNG = 1
 	where custid = @srecommend 
-		and (DisableMicrogameLC = 0 or DisableMicrogameRNG = 0)
+		--and (DisableMicrogameLC = 0 or DisableMicrogameRNG = 0)
 
 	--for master, agent & member level
 	update ci with(rowlock, updlock)
@@ -33,7 +33,7 @@ begin
 	where ci.srecommend = @srecommend
 		and ci.roleid <= 4
 		and mci.username not like '12betacc%' --need to check for sure
-		and (ci.DisableMicrogameLC = 0 or ci.DisableMicrogameRNG = 0)
+		--and (ci.DisableMicrogameLC = 0 or ci.DisableMicrogameRNG = 0)
 end
 go
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
@@ -53,7 +53,7 @@ create table #superIds (srecommend int, isFinished bit default(0))
 insert into #superIds(srecommend)
 select ci.custid 
 from dbo.custInfo ci with(nolock)
-	inner join dbcust.custdb.dbo.Dep_CustSuper s with (nolock) on ci.custid = s.custid
+	inner join dbo.Dep_CustSuper s with (nolock) on ci.custid = s.custid
 where roleid = 4
 	and srecommend <= @MaxCustId
 	and s.site = '12bet'
