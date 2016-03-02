@@ -61,7 +61,7 @@ update ci with(rowlock, updlock)
 set DisableMicrogameLC = 0, DisableMicrogameRNG = 0
 from dbo.custinfo ci with(nolock)
 where exists (select top 1 1 from #DataTmp t where ci.custid = t.custid)
-	and (ci.DisableMicrogameLC = 1 or ci.DisableMicrogameRNG = 1)
+	--and (ci.DisableMicrogameLC = 1 or ci.DisableMicrogameRNG = 1)
 
 --====end enable status======
 
