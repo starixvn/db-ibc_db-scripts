@@ -1,14 +1,12 @@
 /*
 	Created: Elodie
-	Date: 20160218
+	Date: 20160302
 	Task: Copy stake level from LCS to AllBet
-	DB: DBCust/CustDB
+	DB: DBCUST/CustDB
 */  
-
-
  -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
-ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
+ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -18,36 +16,71 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo','CustGameType','tmpCustGameType','tmpStakeLevel')) <> 4 RETURN	
+	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustGameType') = 0 RETURN
+	IF dbo.f_CheckRepTable('tmpCustGameType') = 0 RETURN
+	IF dbo.f_CheckRepTable('tmpStakeLevel') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustStakeLevel_Agent') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustStakeLevel_Member') = 0 RETURN
+
 	-----------------
-	DECLARE @syncLiveCasino_super bit, @exchangeID int, @stakeLevelList1701_super varchar(300), @stakeLevelList1702_super varchar(300)
+	DECLARE @syncLiveCasino_super BIT, @exchangeID INT, @stakeLevelList_super VARCHAR(100)
 
 	SELECT @exchangeID = currency, @syncLiveCasino_super = syncLiveCasino FROM dbo.custinfo WITH(NOLOCK) WHERE custid = @srecommend
 	
+	CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, SettingType INT)
+	INSERT INTO #DestinationSportBetType
+	VALUES
+	(162, 1101, 211	, 2401, 7), --StakeLevel
+	(162, 1101, 211	, 2402, 7) --StakeLevel
+
+	CREATE TABLE #MemberTemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED,
+		SyncLiveCasino BIT,
+	)
+
+	CREATE TABLE #SMATemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED,
+		roleid TINYINT,
+		SyncLiveCasino BIT,
+	)
+	
+	INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
+	SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+	FROM Custinfo WITH (NOLOCK)
+	WHERE srecommend = @srecommend AND roleid = 1  AND Enabled = 1 AND custid <= @maxcustid
+	
+	INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
+	SELECT custid, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+	FROM Custinfo WITH (NOLOCK)
+	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
+
 	IF @syncLiveCasino_super = 0
 	BEGIN -- not sync yet, just put empty stakelevellist		
-		INSERT INTO dbo.CustGameType(custid, GameTypeID, StakeLevelList)		
-		SELECT custid, GameTypeID, StakeLevelList
-		FROM custinfo ci WITH(NOLOCK) 
-			CROSS APPLY (VALUES(1701, ''),(1702, '')) b(GameTypeID, StakeLevelList)
-		WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid
-			AND enabled = 1
+		--SMA Level
+		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
+		SELECT custid, SportType, BetType, StakeLevelList
+		FROM #SMATemp ci 
+			CROSS APPLY (SELECT tSportType, tBetType, '' FROM #DestinationSportBetType) b(SportType, BetType, StakeLevelList)
 
+		--Member Level
+		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
+		SELECT custid, SportType, BetType, StakeLevelList
+		FROM #MemberTemp ci 
+			CROSS APPLY (SELECT tSportType, tBetType, '' FROM #DestinationSportBetType) b(SportType, BetType, StakeLevelList)
 		RETURN
 	END
 
-	SELECT @stakeLevelList1701_super = stakeLevelList		
+	SELECT @stakeLevelList_super = stakeLevelList		
 	FROM dbo.tmpCustGameType WITH(NOLOCK)
-	WHERE custid = @srecommend AND GameTypeID = 1701
+	WHERE custid = @srecommend
 	
-	SELECT @stakeLevelList1702_super = stakeLevelList		
-	FROM dbo.tmpCustGameType WITH(NOLOCK)
-	WHERE custid = @srecommend AND GameTypeID = 1702
-		
 	--If don't have stake level for this line yet, get the lowest stakelevel from currency
-	IF ISNULL(@stakeLevelList1701_super,'') = '' OR  ISNULL(@stakeLevelList1702_super,'') = ''	
+	IF ISNULL(@stakeLevelList_super,'') = ''
 	BEGIN
-		INSERT INTO CustGameType (custid, GameTypeID, StakeLevelList)
+		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
 		SELECT custid, GameTypeID, CASE WHEN SyncLiveCasino = 1 THEN CAST(StakeLevelList AS VARCHAR(100)) ELSE '' END
 		FROM custinfo c WITH(NOLOCK) 
 			CROSS APPLY (

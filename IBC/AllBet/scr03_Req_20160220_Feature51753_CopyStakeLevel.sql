@@ -9,7 +9,7 @@
 USE [CustDB]
 GO
 
-set IDENTITY_INSERT StakeLevel ON
+set IDENTITY_INSERT StakeLevel OFF
 GO
 
 INSERT INTO [dbo].[StakeLevel]
@@ -33,3 +33,6 @@ FROM (
 			--AND exchangeID in (68)--POS MMK
 		)t    
 INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
+
+GO
+set IDENTITY_INSERT StakeLevel ON

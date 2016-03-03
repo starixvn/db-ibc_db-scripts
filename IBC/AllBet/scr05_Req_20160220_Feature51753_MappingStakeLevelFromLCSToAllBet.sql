@@ -29,7 +29,7 @@ INSERT INTO [dbo].[tmpStakeLevel]
            ,[MaxStake]
            ,[ExchangeId]
           )
-SELECT 2401 AS GameTypeID,s.[MinLabel],s.[MaxLabel],s.[MinStake],s.[MaxStake],t.[ExchangeId]
+SELECT t.StakeLevelID, 2401 AS GameTypeID,s.[MinLabel],s.[MaxLabel],s.[MinStake],s.[MaxStake],t.[ExchangeId]
 FROM (           
 		SELECT StakeLevelID, exchangeID, GameTypeID
 		FROM DBBingoAdmin.LiveCasinoAdmin.dbo.gameTemplate gt with(nolock) 
