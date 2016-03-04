@@ -134,67 +134,67 @@ BEGIN
 		FROM (SELECT custid, roleid FROM #SMATemp WHERE SyncLiveCasino = 0 UNION ALL SELECT custid, 1 FROM #MemberTemp WHERE SyncLiveCasino = 0) a
 		WHERE roleid < 4		
 
-	-- maybe need to create index for table #SyncedDownlines here
+		-- maybe need to create index for table #SyncedDownlines here
 	 	
-	-- get stakelevellist for synced customers
-	;WITH s AS (
-		SELECT a2.custid, sl.stakeLevelID2 as stakeLevelID, MinStake, MaxStake
-		FROM (
-				SELECT a1.custid, Split.a.value('.', 'int') AS stakelevelID
-				FROM (
-						SELECT b.custid, CAST('<v>' + REPLACE(a.stakelevellist, ',', '</v><v>') + '</v>' AS XML) AS _xml
-						FROM dbo.tmpCustGameType a WITH(NOLOCK)
-							INNER JOIN #SyncedDownlines b ON a.custid = b.custid
+		-- get stakelevellist for synced customers
+		;WITH s AS (
+			SELECT a2.custid, sl.stakeLevelID2 as stakeLevelID, MinStake, MaxStake
+			FROM (
+					SELECT a1.custid, Split.a.value('.', 'int') AS stakelevelID
+					FROM (
+							SELECT b.custid, CAST('<v>' + REPLACE(a.stakelevellist, ',', '</v><v>') + '</v>' AS XML) AS _xml
+							FROM dbo.tmpCustGameType a WITH(NOLOCK)
+								INNER JOIN #SyncedDownlines b ON a.custid = b.custid
 						
-					) AS a1
-					CROSS APPLY _xml.nodes('/v') AS Split(a)
-			) a2
-			INNER JOIN dbo.tmpStakeLevel sl ON a2.stakelevelID = sl.stakelevelID		
-	)
-	UPDATE #SyncedDownlines
-	SET stakelevellist = data.StakeLevelList
-	FROM (
-			SELECT b.custid, STUFF(
-						(SELECT ',' + CONVERT(VARCHAR(10),a.StakeLevelID)
-						FROM  s a                
-						WHERE a.custid = b.custid		
-						ORDER BY MinStake, MaxStake ASC				
-						FOR XML PATH (''))
-						, 1, 1, '')  AS StakeLevelList
-			FROM s b WITH(NOLOCK)
-			GROUP BY b.custid
-		) data
-	WHERE #SyncedDownlines.custid = data.custid
-	option (maxdop 4)
+						) AS a1
+						CROSS APPLY _xml.nodes('/v') AS Split(a)
+				) a2
+				INNER JOIN dbo.tmpStakeLevel sl ON a2.stakelevelID = sl.stakelevelID		
+		)
+		UPDATE #SyncedDownlines
+		SET stakelevellist = data.StakeLevelList
+		FROM (
+				SELECT b.custid, STUFF(
+							(SELECT ',' + CONVERT(VARCHAR(10),a.StakeLevelID)
+							FROM  s a                
+							WHERE a.custid = b.custid		
+							ORDER BY MinStake, MaxStake ASC				
+							FOR XML PATH (''))
+							, 1, 1, '')  AS StakeLevelList
+				FROM s b WITH(NOLOCK)
+				GROUP BY b.custid
+			) data
+		WHERE #SyncedDownlines.custid = data.custid
+		option (maxdop 4)
 		
-	UPDATE #SyncedDownlines
-	SET StakeLevelList = ''
-	WHERE StakeLevelList IS NULL
+		UPDATE #SyncedDownlines
+		SET StakeLevelList = ''
+		WHERE StakeLevelList IS NULL
 
-	-- all done, start insert
-	INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
-	SELECT @srecommend, 211, 2401, @stakeLevelList2401_super 
+		-- all done, start insert
+		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
+		SELECT @srecommend, 211, 2401, @stakeLevelList2401_super 
 	
-	UNION ALL
-	SELECT custid, 211, 2401, ISNULL(stakeLevelList,'')
-	FROM #SyncedDownlines 
-	WHERE roleid <> 1
+		UNION ALL
+		SELECT custid, 211, 2401, ISNULL(stakeLevelList,'')
+		FROM #SyncedDownlines 
+		WHERE roleid <> 1
 
-	UNION ALL
-	SELECT custid, 211, 2401, '' AS stakeLevelList
-	FROM #UnSyncDownlines	
-	WHERE roleid <> 1	
+		UNION ALL
+		SELECT custid, 211, 2401, '' AS stakeLevelList
+		FROM #UnSyncDownlines	
+		WHERE roleid <> 1	
 
-	INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
-	SELECT custid, 211, 2401, ISNULL(stakeLevelList,'')
-	FROM #SyncedDownlines 
-	WHERE roleid = 1
+		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
+		SELECT custid, 211, 2401, ISNULL(stakeLevelList,'')
+		FROM #SyncedDownlines 
+		WHERE roleid = 1
 
-	UNION ALL
-	SELECT custid, 211, 2401, '' AS stakeLevelList
-	FROM #UnSyncDownlines	
-	WHERE roleid = 1	
-		
+		UNION ALL
+		SELECT custid, 211, 2401, '' AS stakeLevelList
+		FROM #UnSyncDownlines	
+		WHERE roleid = 1	
+	END	
 	DROP TABLE #UnSyncDownlines
 	DROP TABLE #SyncedDownlines
 	DROP TABLE #SMATemp

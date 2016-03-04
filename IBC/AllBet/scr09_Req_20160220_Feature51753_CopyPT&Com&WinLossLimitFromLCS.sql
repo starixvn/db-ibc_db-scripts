@@ -4,7 +4,8 @@
 	DB: DBCUST/CustDB
 	Date: 20160226
 */ 
- ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
+
+ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)

@@ -97,10 +97,10 @@ FROM dbo.custInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.srecommend = @srecommend AND ci.roleid = 2 AND dest.SettingType = 6
+WHERE ci.srecommend IN (SELECT custid FROM #SMATemp) AND ci.roleid = 2 AND dest.SettingType = 6
 	
 --Member Level
-INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
+INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 SELECT ci.custid, dest.tSportType, dest.tBetType	
 	,CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 			WHEN ai.SyncLiveCasino = 1 THEN ai.MaxWinLiveCasino 
@@ -118,7 +118,7 @@ FROM dbo.custInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.srecommend = @srecommend AND ci.roleid = 1 AND dest.SettingType = 6 
+WHERE ci.srecommend IN (SELECT custid FROM #supers) AND ci.roleid = 1 AND dest.SettingType = 6 
 	
 --------------------------------------PT Setting-------------------------------------------------	
 --AGENT LEVEL
@@ -220,10 +220,9 @@ WHERE cs.MasterPT + cs.SuperPT > @MaxPT	AND roleid = 3
 UPDATE cs
 SET cs.SuperPT = CASE WHEN cs.SuperPT > @MaxPT THEN @MaxPT ELSE cs.SuperPT END 		
 FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK) 
-	INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
+	INNER JOIN #supers ci WITH(NOLOCK) ON ci.custid = cs.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.tBetType AND cs.sporttype = dest.tSportType
-WHERE ci.custid = @srecommend		
-	AND cs.SuperPT > @MaxPT	
+WHERE cs.SuperPT > @MaxPT	
 
 --------------------------------------Commission Setting-------------------------------------------------		
 --Agent Level
