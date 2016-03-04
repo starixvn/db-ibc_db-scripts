@@ -35,10 +35,17 @@ FROM (
 		FROM DBBingoAdmin.LiveCasinoAdmin.dbo.gameTemplate gt with(nolock) 
 			INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.gameStakeLevel gs with(nolock) ON gt.gameTemplateid = gs.gameTemplateid 
 		WHERE gt.GameTypeid = 108 AND gt.gameTemplateid = 193
+			AND exchangeID in (1,2,3,4,5,6,9,12,13,15,16,17,21,22,31,32,33,34,35,36,37,40,41,43,44,45,47,50,51,52,54,55,58,61,62,64,65,66,67,68)
 		)t    
-inner join DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
-GO
+INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
 
+--Allbet Supported Currency
+--SELECT * 
+--FROM Exchange 
+--WHERE code IN ('CNY','USD','HKD','BTC','KRW','MYR','SGD','JPY','THB','IDR','VND','EUR','AUD','GBP','CHF','MXP','CAD','RUB','INR','RON',
+--				'DKK','NOK','NTD','COP')
+
+GO
 --step 2: mapping stakeLevelID from LCS to GD
 UPDATE lcs WITH(UPDLOCK,ROWLOCK)
 SET stakelevelID2 = s.StakeLevelID

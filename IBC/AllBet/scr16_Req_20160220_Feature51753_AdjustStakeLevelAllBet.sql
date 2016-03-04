@@ -1,667 +1,700 @@
 CREATE TABLE #updatestake (stakelevelid int, gametypeid int, minlabel varchar(50),maxlabel varchar(50),minstake decimal(19,8),maxstake decimal(19,8))
 GO
 INSERT INTO #updatestake
-SELECT 	2 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel ,  2  AS minstake,  500  AS maxstake
+--SGD
+SELECT 	352 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '5,000' AS maxlabel ,  10  AS minstake,  5000  AS maxstake
 UNION ALL 	
-SELECT 	3 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	353 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '8,000' AS maxlabel , 20 AS minstake, 8000 AS maxstake	
 UNION ALL 
-SELECT 	4 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	354 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '15,000' AS maxlabel , 50 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	5 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	355 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '1,000' AS maxlabel , 2 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	6 AS stakelevelid, 2401 AS gametypeid, '5' AS minlabel, '1,000' AS maxlabel , 5 AS minstake, 1000 AS maxstake	
+--MYR
+SELECT 	356 AS stakelevelid, 2401 AS gametypeid, '25' AS minlabel, '7,000' AS maxlabel , 25 AS minstake, 7000 AS maxstake	
 UNION ALL 
-SELECT 	7 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '2,500' AS maxlabel , 20 AS minstake, 2500 AS maxstake	
+SELECT 	357 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '10,000' AS maxlabel , 100 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	8 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	358 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	9 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	359 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	10 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+--USD
+SELECT 	360 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	11 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	361 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	12 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	362 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	13 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	363 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	14 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
+--THB
+SELECT 	364 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	15 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
+SELECT 	365 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	16 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
+SELECT 	366 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	17 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	367 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	18 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+--HKD
+SELECT 	368 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	19 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	369 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	20 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	370 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	21 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+SELECT 	371 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	22 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+--EUR
+SELECT 	372 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	23 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	373 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	24 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	374 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	25 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	375 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	26 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+--AUD
+SELECT 	376 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	27 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	377 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	28 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	378 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	29 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	379 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	30 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+--GBP
+SELECT 	380 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	31 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	381 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	32 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	382 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	33 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	383 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	34 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+--CNY
+SELECT 	384 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	35 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	385 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	36 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	386 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	37 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+SELECT 	387 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	38 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+--IDR
+SELECT 	388 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	39 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	389 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	40 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	390 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	41 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+SELECT 	391 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	42 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+--USD
+SELECT 	392 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	43 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	393 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	44 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	394 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	45 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	395 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	46 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	396 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	47 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	397 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	48 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	398 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	49 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	399 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	54 AS stakelevelid, 2401 AS gametypeid, '25,000' AS minlabel, '1,000,000' AS maxlabel , 25000 AS minstake, 1000000 AS maxstake	
+--CAD
+SELECT 	400 AS stakelevelid, 2401 AS gametypeid, '25,000' AS minlabel, '1,000,000' AS maxlabel , 25000 AS minstake, 1000000 AS maxstake	
 UNION ALL 
-SELECT 	55 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	401 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	56 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	402 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	57 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	403 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	58 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--IDR
+SELECT 	404 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	59 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	405 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	60 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	406 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	61 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	407 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	62 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--TWD
+SELECT 	408 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	63 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
+SELECT 	409 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	64 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
+SELECT 	410 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	65 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
+SELECT 	411 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	66 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+--JPY
+SELECT 	412 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	67 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
+SELECT 	413 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
 UNION ALL 
-SELECT 	68 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
+SELECT 	414 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	69 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	415 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	70 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
+SELECT 	416 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	71 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
+SELECT 	417 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
 UNION ALL 
-SELECT 	72 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
+SELECT 	418 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	73 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	419 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	74 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
+--IDR
+SELECT 	420 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	75 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	421 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	76 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	422 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	77 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	423 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	78 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+SELECT 	424 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	79 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	425 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	80 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	426 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	81 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	427 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	82 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--USD
+SELECT 	428 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	83 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	429 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	84 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	430 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	85 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	431 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	86 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	432 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	87 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	433 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	88 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	434 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	89 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	435 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	90 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--JPY
+SELECT 	436 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	91 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	437 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	92 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	438 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	93 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	439 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	94 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--USD
+SELECT 	440 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	95 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	441 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	96 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	442 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	97 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	443 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	98 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--CHF
+SELECT 	444 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	99 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	445 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	100 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	446 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	101 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	447 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	102 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--THB
+SELECT 	448 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	103 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
+SELECT 	449 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
 UNION ALL 
-SELECT 	104 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
+SELECT 	450 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	105 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	451 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	106 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
+--KRW
+SELECT 	452 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	107 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
+SELECT 	453 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	108 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
+SELECT 	454 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	109 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
+SELECT 	455 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	110 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	456 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	111 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	457 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	112 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	458 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	113 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	459 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	114 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--IDR
+SELECT 	460 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	115 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '300,000' AS maxlabel , 2500 AS minstake, 300000 AS maxstake	
+SELECT 	461 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '300,000' AS maxlabel , 2500 AS minstake, 300000 AS maxstake	
 UNION ALL 
-SELECT 	116 AS stakelevelid, 2401 AS gametypeid, '7,500' AS minlabel, '750,000' AS maxlabel , 7500 AS minstake, 750000 AS maxstake	
+SELECT 	462 AS stakelevelid, 2401 AS gametypeid, '7,500' AS minlabel, '750,000' AS maxlabel , 7500 AS minstake, 750000 AS maxstake	
 UNION ALL 
-SELECT 	117 AS stakelevelid, 2401 AS gametypeid, '25,000' AS minlabel, '1,000,000' AS maxlabel , 25000 AS minstake, 1000000 AS maxstake	
+SELECT 	463 AS stakelevelid, 2401 AS gametypeid, '25,000' AS minlabel, '1,000,000' AS maxlabel , 25000 AS minstake, 1000000 AS maxstake	
 UNION ALL 
-SELECT 	118 AS stakelevelid, 2401 AS gametypeid, '75,000' AS minlabel, '3,000,000' AS maxlabel , 75000 AS minstake, 3000000 AS maxstake	
+--BND
+SELECT 	464 AS stakelevelid, 2401 AS gametypeid, '75,000' AS minlabel, '3,000,000' AS maxlabel , 75000 AS minstake, 3000000 AS maxstake	
 UNION ALL 
-SELECT 	119 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	465 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	120 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	466 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	121 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	467 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	122 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--IDR
+SELECT 	468 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	123 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	469 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	124 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	470 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	125 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	471 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	126 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--ZAR
+SELECT 	472 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	127 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	473 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	128 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	474 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	129 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	475 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	130 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--MXN
+SELECT 	476 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	131 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	477 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	132 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	478 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	133 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	479 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	134 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--CAD
+SELECT 	480 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	135 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	481 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	136 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	482 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	137 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	483 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	138 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+--VND
+SELECT 	484 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	139 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
+SELECT 	485 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '3,000' AS maxlabel , 20 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	140 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
+SELECT 	486 AS stakelevelid, 2401 AS gametypeid, '70' AS minlabel, '7,500' AS maxlabel , 70 AS minstake, 7500 AS maxstake	
 UNION ALL 
-SELECT 	141 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	487 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	142 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
+--DKK
+SELECT 	488 AS stakelevelid, 2401 AS gametypeid, '750' AS minlabel, '30,000' AS maxlabel , 750 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	143 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+SELECT 	489 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	144 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	490 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	145 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	491 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	146 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+--SEK
+SELECT 	492 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	147 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+SELECT 	493 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	148 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	494 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	149 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	495 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	150 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+--NOK
+SELECT 	496 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	151 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+SELECT 	497 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	152 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	498 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	153 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	499 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	154 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+--RUB
+SELECT 	500 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	155 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
+SELECT 	501 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	156 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
+SELECT 	502 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	157 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
+SELECT 	503 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	158 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	504 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	159 AS stakelevelid, 2401 AS gametypeid, '5' AS minlabel, '1,000' AS maxlabel , 5 AS minstake, 1000 AS maxstake	
+SELECT 	505 AS stakelevelid, 2401 AS gametypeid, '5' AS minlabel, '1,000' AS maxlabel , 5 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	160 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '2,500' AS maxlabel , 20 AS minstake, 2500 AS maxstake	
+SELECT 	506 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '2,500' AS maxlabel , 20 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	161 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	507 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	162 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	508 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	163 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
+SELECT 	509 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '10,000' AS maxlabel , 50 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	164 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
+SELECT 	510 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '25,000' AS maxlabel , 250 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	165 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
+SELECT 	511 AS stakelevelid, 2401 AS gametypeid, '1,000' AS minlabel, '50,000' AS maxlabel , 1000 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	166 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	512 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	167 AS stakelevelid, 2401 AS gametypeid, '5' AS minlabel, '1,000' AS maxlabel , 5 AS minstake, 1000 AS maxstake	
+SELECT 	513 AS stakelevelid, 2401 AS gametypeid, '5' AS minlabel, '1,000' AS maxlabel , 5 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	168 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '2,500' AS maxlabel , 20 AS minstake, 2500 AS maxstake	
+SELECT 	514 AS stakelevelid, 2401 AS gametypeid, '20' AS minlabel, '2,500' AS maxlabel , 20 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	169 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	515 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	170 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	516 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	171 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
+SELECT 	516 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '20,000' AS maxlabel , 100 AS minstake, 20000 AS maxstake	
 UNION ALL 
-SELECT 	172 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
+SELECT 	518 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '50,000' AS maxlabel , 500 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	173 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
+SELECT 	519 AS stakelevelid, 2401 AS gametypeid, '2,500' AS minlabel, '100,000' AS maxlabel , 2500 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	174 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
+SELECT 	520 AS stakelevelid, 2401 AS gametypeid, '5,000' AS minlabel, '250,000' AS maxlabel , 5000 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	175 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	521 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	176 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	522 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	177 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	523 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	178 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	524 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	179 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	525 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	180 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	526 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	181 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	527 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	182 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	528 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	183 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
+SELECT 	529 AS stakelevelid, 2401 AS gametypeid, '2' AS minlabel, '500' AS maxlabel , 2 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	184 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
+SELECT 	530 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,000' AS maxlabel , 10 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	185 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
+SELECT 	531 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '2,500' AS maxlabel , 50 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	186 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
+SELECT 	532 AS stakelevelid, 2401 AS gametypeid, '100' AS minlabel, '5,000' AS maxlabel , 100 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	187 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
+SELECT 	533 AS stakelevelid, 2401 AS gametypeid, '10' AS minlabel, '1,500' AS maxlabel , 10 AS minstake, 1500 AS maxstake	
 UNION ALL 
-SELECT 	188 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
+SELECT 	534 AS stakelevelid, 2401 AS gametypeid, '50' AS minlabel, '5,000' AS maxlabel , 50 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	189 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
+SELECT 	535 AS stakelevelid, 2401 AS gametypeid, '250' AS minlabel, '10,000' AS maxlabel , 250 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	190 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
+SELECT 	536 AS stakelevelid, 2401 AS gametypeid, '500' AS minlabel, '25,000' AS maxlabel , 500 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	191 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	537 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	192 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	538 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	193 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	539 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	194 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
+SELECT 	540 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	195 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	541 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	196 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	542 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	197 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	543 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	198 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	544 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	199 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	545 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	200 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	546 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	201 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
+SELECT 	547 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	202 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	548 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	203 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	549 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	204 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	550 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	205 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	551 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	206 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	552 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	207 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	553 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	208 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	554 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	209 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	555 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	210 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	556 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	211 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	557 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	212 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	558 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	213 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	559 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	214 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	560 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	215 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	561 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	216 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	562 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	217 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	563 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	218 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	564 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	219 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	565 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	220 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	566 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	221 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	567 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	222 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	568 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	223 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	569 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	224 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	570 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	225 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	571 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	226 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	572 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	228 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '20' AS maxlabel , 10 AS minstake, 20 AS maxstake	
+SELECT 	573 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '20' AS maxlabel , 10 AS minstake, 20 AS maxstake	
 UNION ALL 
-SELECT 	229 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	574 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	230 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	575 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	231 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	576 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	232 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	577 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	233 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	578 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	234 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	579 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	235 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	580 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	236 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
+SELECT 	581 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	237 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	582 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	238 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	583 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	239 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	584 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	240 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
+SELECT 	585 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	241 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	586 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	242 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	587 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	243 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
+SELECT 	588 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	244 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	589 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	245 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	590 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	246 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	591 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	247 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	592 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	248 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	593 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	249 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	594 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	250 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	595 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	251 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	596 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	252 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	597 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	253 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	598 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	254 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	599 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	255 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	600 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	256 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	601 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	257 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	602 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	258 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	603 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	259 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	604 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	260 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	605 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	261 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	606 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	262 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	607 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	263 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	608 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	264 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	609 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	265 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	610 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	266 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	611 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	267 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
+SELECT 	612 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	268 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	613 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	269 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
+SELECT 	614 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	270 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	615 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	271 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	616 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	272 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	617 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	273 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	618 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	274 AS stakelevelid, 2402 AS gametypeid, '300' AS minlabel, '300,000' AS maxlabel , 300 AS minstake, 300000 AS maxstake	
+SELECT 	619 AS stakelevelid, 2402 AS gametypeid, '300' AS minlabel, '300,000' AS maxlabel , 300 AS minstake, 300000 AS maxstake	
 UNION ALL 
-SELECT 	275 AS stakelevelid, 2402 AS gametypeid, '1,500' AS minlabel, '1,500,000' AS maxlabel , 1500 AS minstake, 1500000 AS maxstake	
+SELECT 	620 AS stakelevelid, 2402 AS gametypeid, '1,500' AS minlabel, '1,500,000' AS maxlabel , 1500 AS minstake, 1500000 AS maxstake	
 UNION ALL 
-SELECT 	276 AS stakelevelid, 2402 AS gametypeid, '3,000' AS minlabel, '3,000,000' AS maxlabel , 3000 AS minstake, 3000000 AS maxstake	
+SELECT 	621 AS stakelevelid, 2402 AS gametypeid, '3,000' AS minlabel, '3,000,000' AS maxlabel , 3000 AS minstake, 3000000 AS maxstake	
 UNION ALL 
-SELECT 	277 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	622 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	278 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	623 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	279 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	624 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	280 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	625 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	281 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	626 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	282 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	627 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	283 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	628 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	284 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	629 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	285 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	630 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	286 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	631 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	287 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	632 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	288 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	633 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	289 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	634 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	290 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	635 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	291 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	636 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	292 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
+SELECT 	637 AS stakelevelid, 2402 AS gametypeid, '3' AS minlabel, '3,000' AS maxlabel , 3 AS minstake, 3000 AS maxstake	
 UNION ALL 
-SELECT 	293 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
+SELECT 	638 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '15,000' AS maxlabel , 10 AS minstake, 15000 AS maxstake	
 UNION ALL 
-SELECT 	294 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
+SELECT 	639 AS stakelevelid, 2402 AS gametypeid, '30' AS minlabel, '30,000' AS maxlabel , 30 AS minstake, 30000 AS maxstake	
 UNION ALL 
-SELECT 	295 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	640 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	296 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	641 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	297 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	642 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	298 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	643 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	299 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	644 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	300 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	645 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	301 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	646 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	302 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	647 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	303 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	648 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	304 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	649 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	305 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
+SELECT 	650 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	306 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	651 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	307 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
+SELECT 	652 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	308 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	653 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	309 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	654 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	310 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	655 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	311 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
+SELECT 	656 AS stakelevelid, 2402 AS gametypeid, '50' AS minlabel, '50,000' AS maxlabel , 50 AS minstake, 50000 AS maxstake	
 UNION ALL 
-SELECT 	312 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	657 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	313 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
+SELECT 	658 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '1,000' AS maxlabel , 1 AS minstake, 1000 AS maxstake	
 UNION ALL 
-SELECT 	314 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	659 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	315 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	660 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	316 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	661 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL 
-SELECT 	317 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
+SELECT 	662 AS stakelevelid, 2402 AS gametypeid, '100' AS minlabel, '100,000' AS maxlabel , 100 AS minstake, 100000 AS maxstake	
 UNION ALL 
-SELECT 	318 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
+SELECT 	663 AS stakelevelid, 2402 AS gametypeid, '250' AS minlabel, '250,000' AS maxlabel , 250 AS minstake, 250000 AS maxstake	
 UNION ALL 
-SELECT 	319 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	664 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	320 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	665 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	321 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	666 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	322 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	667 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	323 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	668 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	324 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	669 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	325 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
+SELECT 	670 AS stakelevelid, 2402 AS gametypeid, '1' AS minlabel, '500' AS maxlabel , 1 AS minstake, 500 AS maxstake	
 UNION ALL 
-SELECT 	326 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	671 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	327 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
+SELECT 	672 AS stakelevelid, 2402 AS gametypeid, '5' AS minlabel, '5,000' AS maxlabel , 5 AS minstake, 5000 AS maxstake	
 UNION ALL 
-SELECT 	328 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
+SELECT 	673 AS stakelevelid, 2402 AS gametypeid, '2' AS minlabel, '2,500' AS maxlabel , 2 AS minstake, 2500 AS maxstake	
 UNION ALL 
-SELECT 	329 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
+SELECT 	674 AS stakelevelid, 2402 AS gametypeid, '10' AS minlabel, '10,000' AS maxlabel , 10 AS minstake, 10000 AS maxstake	
 UNION ALL 
-SELECT 	330 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
+SELECT 	675 AS stakelevelid, 2402 AS gametypeid, '20' AS minlabel, '25,000' AS maxlabel , 20 AS minstake, 25000 AS maxstake	
 UNION ALL
-Select 331 AS stakelevelid,2401 AS gametypeid, '10' AS minlabel,'1,000' AS maxlabel ,10  AS minstake, 1000 AS maxstake 
+Select 676 AS stakelevelid,2401 AS gametypeid, '10' AS minlabel,'1,000' AS maxlabel ,10  AS minstake, 1000 AS maxstake 
 UNION ALL 
-Select 332 AS stakelevelid,2401 AS gametypeid, '100' AS minlabel,'5,000' AS maxlabel ,100 AS minstake, 5000 AS maxstake 
+Select 677 AS stakelevelid,2401 AS gametypeid, '100' AS minlabel,'5,000' AS maxlabel ,100 AS minstake, 5000 AS maxstake 
 UNION ALL 
-Select 333 AS stakelevelid,2401 AS gametypeid, '2'  AS minlabel,'500' AS maxlabel ,2  AS minstake, 500 AS maxstake 
+Select 678 AS stakelevelid,2401 AS gametypeid, '2'  AS minlabel,'500' AS maxlabel ,2  AS minstake, 500 AS maxstake 
 UNION ALL 
-Select 334 AS stakelevelid,2401 AS gametypeid, '50' AS minlabel,'2,500' AS maxlabel ,50  AS minstake, 2500 AS maxstake 
+Select 679 AS stakelevelid,2401 AS gametypeid, '50' AS minlabel,'2,500' AS maxlabel ,50  AS minstake, 2500 AS maxstake 
 UNION ALL 
-Select 335 AS stakelevelid,2402 AS gametypeid, '1'  AS minlabel,'500' AS maxlabel ,1  AS minstake, 500 AS maxstake 
+Select 680 AS stakelevelid,2402 AS gametypeid, '1'  AS minlabel,'500' AS maxlabel ,1  AS minstake, 500 AS maxstake 
 UNION ALL 
-Select 336 AS stakelevelid,2402 AS gametypeid, '2'  AS minlabel,'2,500' AS maxlabel ,2  AS minstake, 2500 AS maxstake 
+Select 681 AS stakelevelid,2402 AS gametypeid, '2'  AS minlabel,'2,500' AS maxlabel ,2  AS minstake, 2500 AS maxstake 
 UNION ALL 
-Select 337 AS stakelevelid,2402 AS gametypeid, '5'  AS minlabel,'5,000' AS maxlabel ,5  AS minstake, 5000 AS maxstake
+Select 682 AS stakelevelid,2402 AS gametypeid, '5'  AS minlabel,'5,000' AS maxlabel ,5  AS minstake, 5000 AS maxstake
 
 UPDATE stakenew WITH(ROWLOCK,UPDLOCK)
 SET stakenew.MinLabel=u.minlabel,

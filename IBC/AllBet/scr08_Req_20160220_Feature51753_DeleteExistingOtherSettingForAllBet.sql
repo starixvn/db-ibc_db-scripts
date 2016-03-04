@@ -24,8 +24,6 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustDiscount3rd_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Member') = 0 RETURN
-	IF dbo.f_CheckRepTable('CustStakeLevel_Agent') = 0 RETURN
-	IF dbo.f_CheckRepTable('CustStakeLevel_Member') = 0 RETURN
 			
 	DELETE cg
 	FROM CustPTSetting3rd_Agent cg WITH(UPDLOCK,ROWLOCK)		
@@ -53,14 +51,6 @@ BEGIN
 
 	DELETE cg
 	FROM CustWinLossLimit_Member cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 211
-
-	DELETE cg
-	FROM CustStakeLevel_Agent cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 211
-
-	DELETE cg
-	FROM CustStakeLevel_Member cg WITH(UPDLOCK,ROWLOCK)		
 	WHERE SportType = 211
 END	
 GO

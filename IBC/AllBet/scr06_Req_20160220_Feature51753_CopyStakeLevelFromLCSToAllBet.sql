@@ -56,7 +56,7 @@ BEGIN
 	SELECT TOP 1 @StakeLevelList_2402 =  StakeLevelID 
 	FROM dbo.StakeLevel WITH(NOLOCK) 
 	WHERE ExchangeId = @exchangeID AND GameTypeID = 2402 
-	ORDER BY MinStake, MaxStake
+	ORDER BY MaxStake, MinStake
 
 	INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
 	SELECT CustID, 211, 2402, @StakeLevelList_2402
@@ -114,7 +114,7 @@ BEGIN
 						FROM (SELECT CAST('<v>' + REPLACE(@stakeLevelList2401_super, ',', '</v><v>') + '</v>' AS XML) AS _xml) AS a
 							CROSS APPLY _xml.nodes('/v') AS Split(a)
 				)
-				ORDER BY MinStake, MaxStake ASC
+				ORDER BY MaxStake, MinStake
 				FOR XML PATH('')
 			), 1,1,'')
 	
