@@ -34,5 +34,22 @@ FROM (
 		)t    
 INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
 
+GO 
+
+INSERT INTO [dbo].[StakeLevel]
+           ([GameTypeID]
+           ,[MinLabel]
+           ,[MaxLabel]
+           ,[MinStake]
+           ,[MaxStake]
+           ,[ExchangeId])
+SELECT	2402 as GameTypeID,
+		s.[MinLabel],
+		s.[MaxLabel],
+		s.[MinStake],
+		s.[MaxStake],
+		s.[ExchangeId]
+FROM StakeLevel s WITH (NOLOCK) WHERE GameTypeID = 2401
+
 GO
 set IDENTITY_INSERT StakeLevel ON
