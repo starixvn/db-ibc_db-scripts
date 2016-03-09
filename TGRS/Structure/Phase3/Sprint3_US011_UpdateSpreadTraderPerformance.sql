@@ -116,7 +116,7 @@ BEGIN
 									THEN 8		-- 1st O/U
 								WHEN BetType = 2
 									THEN 2		-- O/E
-								WHEN .BetType = 12
+								WHEN BetType = 12
 									THEN 12		-- 1x2
 					
 								WHEN BetType IN (5, 124) AND SpecialType = 0
