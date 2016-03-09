@@ -41,6 +41,8 @@ BEGIN
 	IF	@@ROWCOUNT = 0
 		BREAK
 
+	TRUNCATE TABLE #Spread
+
 	INSERT INTO	#Spread (
 					CustId
 				,	MatchId
@@ -169,7 +171,7 @@ BEGIN
 	INNER JOIN	#Spread AS s WITH (NOLOCK)
 			ON	s.CustId = tp.CustId
 			AND	s.MatchId = tp.MatchId
-			AND	s.BetType = tp.BetType
+			AND	s.BetType_TGR = tp.BetType
 END
 
 
@@ -319,5 +321,5 @@ BEGIN
 	INNER JOIN	#Spread AS s WITH (NOLOCK)
 			ON	s.CustId = tp.CustId
 			AND	s.MatchId = tp.MatchId
-			AND	s.BetType = tp.BetType
+			AND	s.BetType_TGR = tp.BetType
 END
