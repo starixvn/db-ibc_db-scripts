@@ -1,6 +1,7 @@
 /*
 	Created by Dominic@20160309
 	Description: Add a new table to support controling default product status by site and by currency #53604
+	- This table is located at DBCCUST.CustDB and being added to the publication CustDB_Customer_Info as dbo.productsettingdetail being
 */
 USE [CustDB]
 
