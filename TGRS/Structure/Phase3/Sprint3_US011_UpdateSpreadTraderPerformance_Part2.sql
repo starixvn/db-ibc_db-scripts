@@ -91,7 +91,7 @@ BEGIN
 					ELSE 0
 			END		SpecialType
 		,	CAST(mm.Spread * 100 AS SMALLINT) Spread
-	FROM		bodb_Archive.dbo.Dot_Admin_Assignment_Operator AS ao WITH (NOLOCK)
+	FROM		bodb02.dbo.Dot_Admin_Assignment_Operator AS ao WITH (NOLOCK)
 	INNER JOIN	bodb02.dbo.match AS m WITH (NOLOCK)
 			ON	m.matchid = ao.matchid
 	LEFT JOIN	bodb02.dbo.Team AS t WITH (NOLOCK)
