@@ -1,0 +1,21 @@
+Use bodb_Acc
+---Dummy Test ACC
+
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069569,1,'ACCMKK')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069578,2,'MKK99')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069585,3,'ACCTHAI')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069591,4,'ACCTHAI2')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069597,5,'ACCTHAI56')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069600,6,'ACCTHAI99')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069610,7,'INDO2')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069615,8,'INDO56')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069619,9,'INDOBS')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069622,10,'INDOWIN')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069624,11,'ACCDDD')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069630,12,'ACCIN')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069632,13,'ACCIRR')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069638,14,'ACCUT2')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069643,15,'ACCYEN789')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069646,16,'ACCYEN889')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069650,17,'ACCNTD')
+INSERT INTO Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName) VALUES (21069656,18,'BC')
