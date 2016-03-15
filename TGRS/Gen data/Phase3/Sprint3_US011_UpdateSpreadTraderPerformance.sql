@@ -1,10 +1,18 @@
 /*
-	Created: 20160309@Billy
-	Task: Update Spread Data in Trader Performance table [Redmine: #53032]
+	Created: 20160315@Billy
+	Task: Update Spread Data in Trader Performance table
 	DB: DBTGRS\bodb_TGRS
 */
 
 -- BEGIN STEP 1: DEPLOY THIS SCRIPT ON DBTGRS\bodb_TGRS	--
+----------------------------------------------------------
+
+UPDATE	dbo.TraderPerformance WITH (ROWLOCK, UPDLOCK)
+SET	Spread = NULL
+WHERE	Spread IS NOT NULL
+
+
+-- BEGIN STEP 2: DEPLOY THIS SCRIPT ON DBTGRS\bodb_TGRS	--
 ----------------------------------------------------------
 
 DECLARE	@ProcessingDay	DATETIME
