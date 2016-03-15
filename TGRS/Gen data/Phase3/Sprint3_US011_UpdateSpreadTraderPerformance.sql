@@ -56,7 +56,6 @@ BEGIN
 				,	MatchId
 				,	BetType
 				,	SpecialType
-				,	Spread
 				)
 	SELECT	ao.OperatorID
 		,	ao.matchid
@@ -210,7 +209,6 @@ BEGIN
 				,	MatchId
 				,	BetType
 				,	SpecialType
-				,	Spread
 				)
 	SELECT	ao.OperatorID
 		,	ao.matchid
