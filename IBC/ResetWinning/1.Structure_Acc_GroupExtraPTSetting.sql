@@ -115,3 +115,10 @@ GO
 
 SET ANSI_PADDING OFF
 GO
+
+
+GRANT SELECT ON  Acc_GroupExtraPTSetting TO bodbAdminNet 
+
+GRANT SELECT ON  Acc_DWLList_ExtraPT TO bodbAdminNet 
+
+GRANT SELECT ON  Acc_DWLList_ExtraPT_xtest TO bodbAdminNet
