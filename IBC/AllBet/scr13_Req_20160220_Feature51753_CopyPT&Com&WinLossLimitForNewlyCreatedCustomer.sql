@@ -65,7 +65,7 @@ SELECT custid, dest.tSportType, dest.tBetType
 	,CASE WHEN ci.SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END AS IsAutoReset
 FROM #SMATemp ci WITH(NOLOCK)	
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.custid IN (SELECT custid FROM #SMATemp) AND dest.SettingType = 6 
+WHERE ci.roleid = 4 AND dest.SettingType = 6 
 									
 --Master Level
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -80,7 +80,7 @@ SELECT ci.custid, dest.tSportType, dest.tBetType
 FROM dbo.custInfo ci WITH(NOLOCK)	
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.srecommend IN (SELECT custid FROM #SMATemp) AND ci.roleid = 3 AND dest.SettingType = 6 
+WHERE ci.roleid = 3 AND dest.SettingType = 6 
 
 --Agent Level
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -98,7 +98,7 @@ FROM dbo.custInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.srecommend IN (SELECT custid FROM #SMATemp) AND ci.roleid = 2 AND dest.SettingType = 6
+WHERE ci.roleid = 2 AND dest.SettingType = 6
 	
 --Member Level
 INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -119,7 +119,7 @@ FROM dbo.custInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.srecommend IN (SELECT custid FROM #supers) AND ci.roleid = 1 AND dest.SettingType = 6 
+WHERE ci.roleid = 1 AND dest.SettingType = 6 
 	
 --------------------------------------PT Setting-------------------------------------------------	
 --AGENT LEVEL
