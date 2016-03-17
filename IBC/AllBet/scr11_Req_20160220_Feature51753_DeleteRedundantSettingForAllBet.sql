@@ -1,7 +1,7 @@
 /*
 	Created: Elodie
 	Date: 20160301
-	Task: Delete redundant All Bet settings
+	Task: Delete redundant All Bet settings except StakeLevel
 	DB: DBCust/CustDB
 */
 DECLARE @maxcustID1 INT = xxx, @maxcustID2 INT = xxx
@@ -31,19 +31,6 @@ WHERE cs.Sporttype = @Sporttype
 	AND cs.Bettype = @Bettype
 	AND cs.IsLive = @IsLive
 
---Bet Limit	
-DELETE cs
-FROM [dbo].CustStakeLevel_Agent cs WITH(UPDLOCK,ROWLOCK)
-WHERE cs.CustID > @maxcustID1
-	AND cs.Sporttype = @Sporttype
-	AND cs.Bettype = @Bettype
-
-DELETE cs
-FROM [dbo].CustStakeLevel_Member cs WITH(UPDLOCK,ROWLOCK)
-WHERE cs.CustID > @maxcustID1
-	AND cs.Sporttype = @Sporttype
-	AND cs.Bettype = @Bettype
-		
 --Commission
 DELETE cs
 FROM [dbo].CustDiscount3rd_Agent cs WITH(UPDLOCK,ROWLOCK)

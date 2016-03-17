@@ -38,5 +38,7 @@ GO
 --mapping GameTypeID from LCS to GD
 INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList])
 SELECT custid, StakeLevelList	
-FROM CustGameType_LCS WITH(NOLOCK)
-WHERE GameTypeID = 108
+FROM CustGameType_LCS cs WITH(NOLOCK) --DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType
+	INNER JOIN Customer ci WITH(NOLOCK) ON cs.custid = ci.custid
+WHERE GameTypeID = 108 AND ci.currency IN (34,45) --IDR,WON
+

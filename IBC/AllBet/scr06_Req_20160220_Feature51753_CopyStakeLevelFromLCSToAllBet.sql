@@ -18,11 +18,10 @@ BEGIN
 	
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustGameType') = 0 RETURN
-	IF dbo.f_CheckRepTable('tmpCustGameType') = 0 RETURN
-	IF dbo.f_CheckRepTable('tmpStakeLevel') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustStakeLevel_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustStakeLevel_Member') = 0 RETURN
-
+	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('tmpCustGameType','tmpStakeLevel')) <> 2
+		RETURN
 	-----------------
 	DECLARE @syncLiveCasino_super BIT, @exchangeID INT, @stakeLevelList2401_super VARCHAR(100)
 
@@ -222,6 +221,7 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid
+	AND ci.currency IN (34,45) --IDR,WON
 	
 WHILE (1 = 1)
 BEGIN
@@ -254,7 +254,8 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	
+	AND ci.currency IN (34,45) --IDR,WON
+
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers

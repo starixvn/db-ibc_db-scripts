@@ -33,8 +33,8 @@ BEGIN
 	UPDATE cs
     SET
 			bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE bitmapHasSynced END,
-			bitmapIsHidden = CASE WHEN ci.SyncLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) ELSE bitmapIsHidden END,
-			bitmapIsDisabled = CASE WHEN ci.DisableLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1) ELSE bitmapIsDisabled END
+			bitmapIsHidden = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE bitmapIsHidden END,
+			bitmapIsDisabled = CASE WHEN ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 0) ELSE bitmapIsDisabled END
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid	
@@ -57,7 +57,8 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	
+	AND ci.currency IN (34,45) --IDR,WON
+
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -89,7 +90,8 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	
+	AND ci.currency IN (34,45) --IDR,WON
+
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers

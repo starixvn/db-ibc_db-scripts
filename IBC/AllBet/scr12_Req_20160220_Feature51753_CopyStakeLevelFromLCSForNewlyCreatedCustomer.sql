@@ -13,6 +13,7 @@ SELECT custid
 FROM CustInfo WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND currency IN (34,45) --IDR,WON
 
 --step 1: copy settings for newly created customers
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT)
@@ -68,8 +69,8 @@ BEGIN
 	BEGIN
 		--Bettype 2401: get stakelevel from LiveCasino
 		SELECT @StakeLevelList_2401 = StakeLevelList
-		FROM dbo.tmpCustGameType s with(Nolock) 
-		WHERE custid = @custid
+		FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType s with(Nolock) 
+		WHERE custid = @custid AND s.GameTypeID = 108
 			
 		SELECT @StakeLevelList_2401_new = @StakeLevelList_2401_new + CONVERT(VARCHAR(10),StakeLevelID2) + ','
 		FROM (
@@ -86,28 +87,36 @@ BEGIN
 		IF @roleid = 1
 			--Member Level
 			INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
-			SELECT @custid, 211, 2401, @StakeLevelList_2401_new
+			SELECT @custid, 211, 2401, @StakeLevelList_2401_new 
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL 
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
 		ELSE
 			--SMA Level
 			INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
 			SELECT @custid, 211, 2401, @StakeLevelList_2401_new
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL 
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
 	END	
 	ELSE--Un-sync LCS
 	BEGIN
 		IF @roleid = 1
 			INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
 			SELECT @custid, 211, 2401, '' AS stakeLevelList
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
 		ELSE
 			INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
 			SELECT @custid, 211, 2401, '' AS stakeLevelList
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
+			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
 	END	
 	
 	DELETE #tmpCust WHERE custid = @custid

@@ -16,8 +16,7 @@ CREATE TABLE [dbo].[tmpStakeLevel](
 	[StakeLevelID2] [int] NULL,
  ) ON [DATA]
 
-create clustered index CIX_tmpStakeLevel on tmpStakeLevel
-(stakeLevelID)
+create clustered index CIX_tmpStakeLevel on tmpStakeLevel (stakeLevelID)
 --step1: import data from LCS to tempdb on DBTP
 
 INSERT INTO [dbo].[tmpStakeLevel]
@@ -35,7 +34,7 @@ FROM (
 		FROM DBBingoAdmin.LiveCasinoAdmin.dbo.gameTemplate gt with(nolock) 
 			INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.gameStakeLevel gs with(nolock) ON gt.gameTemplateid = gs.gameTemplateid 
 		WHERE gt.GameTypeid = 108 AND gt.gameTemplateid = 193
-			AND exchangeID in (1,2,3,4,5,6,9,12,13,15,16,17,21,22,31,32,33,34,35,36,37,40,41,43,44,45,47,50,51,52,54,55,58,61,62,64,65,66,67,68)
+			--AND exchangeID in (1,2,3,4,5,6,9,12,13,15,16,17,21,22,31,32,33,34,35,36,37,40,41,43,44,45,47,50,51,52,54,55,58,61,62,64,65,66,67,68)
 		)t    
 INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
 
@@ -46,6 +45,7 @@ INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stake
 --				'DKK','NOK','NTD','COP')
 
 GO
+
 --step 2: mapping stakeLevelID from LCS to GD
 UPDATE lcs WITH(UPDLOCK,ROWLOCK)
 SET stakelevelID2 = s.StakeLevelID
