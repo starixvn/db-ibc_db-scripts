@@ -27,6 +27,13 @@ BEGIN
 				FROM Acc_CustGroup WITH (NOLOCK)
 				WHERE GroupName = @GroupName AND IsPayout = 1)	 
 	BEGIN 
+	
+		UPDATE Acc_CustGroup
+		SET IsPayout= 1
+		WHERE 	CustId = @CustId 
+				AND GroupName = @GroupName
+				AND IsPayout = 0
+				
 		SELECT TOP 1 @SuperId = SuperId   
 		FROM DBACC.bodb_Acc.dbo.Acc_GroupExtraPTSetting WITH (NOLOCK)
 		WHERE GroupName = @GroupName
