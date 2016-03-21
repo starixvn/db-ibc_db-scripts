@@ -195,8 +195,8 @@ WHERE ci.custid IN (
 		,18479460
 		,18289591
 	)
-	AND ci.Currency = 20
-	
+	--AND ci.Currency = 20
+	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -241,8 +241,8 @@ WHERE ci.custid IN (
 		,18479460
 		,18289591
 	)
-	AND ci.Currency = 20
-	
+	--AND ci.Currency = 20
+	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers

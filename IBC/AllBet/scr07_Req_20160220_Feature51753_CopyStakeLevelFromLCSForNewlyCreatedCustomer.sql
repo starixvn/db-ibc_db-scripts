@@ -13,7 +13,7 @@ SELECT custid
 FROM CustInfo WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND currency IN (34,45) --IDR,WON
+	AND currency IN (34,45,43) --IDR,WON,'THB'
 
 --step 1: copy settings for newly created customers
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT)

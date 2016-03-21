@@ -57,7 +57,7 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	AND ci.currency IN (34,45) --IDR,WON
+	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 WHILE (1 = 1)
 BEGIN
@@ -90,7 +90,7 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.custid <= @max_custid 
-	AND ci.currency IN (34,45) --IDR,WON
+	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 WHILE (1 = 1)
 BEGIN

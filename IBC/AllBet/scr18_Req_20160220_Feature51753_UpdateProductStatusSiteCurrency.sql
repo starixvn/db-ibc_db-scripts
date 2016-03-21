@@ -5,4 +5,4 @@
 	Date: 20160317
 */ 
 
-DELETE FROM ProductStatusSiteCurrency WHERE Currency IN (34,45) AND SportType = 211
+DELETE FROM ProductStatusSiteCurrency WHERE Currency IN (34,45,43) AND SportType = 211
