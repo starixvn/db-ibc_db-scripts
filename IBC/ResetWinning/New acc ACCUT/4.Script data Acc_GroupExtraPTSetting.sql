@@ -118,13 +118,6 @@ FROM dbo.Acc_GroupExtraPTSetting
 WHERE GroupName IN ('ACCIRR', 'ACCUT2', 'accyen789', 'ACCYEN889', 'ACCNTD','ACCUT')
 AND ProductID = 1 AND SubProduct = '' AND Sporttype = 0 
 
--- BINGO
-UNION ALL
-SELECT SuperId, GroupId, GroupName, 7, Sporttype, SubProduct, 0.05
-FROM dbo.Acc_GroupExtraPTSetting
-WHERE GroupName IN ('ACCIRR', 'ACCUT2', 'accyen789', 'ACCYEN889', 'ACCNTD','ACCUT')
-AND ProductID = 1 AND SubProduct = '' AND Sporttype = 0 
-
 -- NUMBER GAME
 UNION ALL
 SELECT SuperId, GroupId, GroupName, 3, Sporttype, SubProduct, 0.05
