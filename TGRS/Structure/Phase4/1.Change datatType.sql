@@ -1,0 +1,6 @@
+ USE BODB_TGRS
+
+ALTER TABLE TraderPerFormance
+ALTER COLUMN Spread MONEY 
+
+SELECT * FROM TraderPerFormance
