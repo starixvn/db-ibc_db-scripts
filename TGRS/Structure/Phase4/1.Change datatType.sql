@@ -3,4 +3,5 @@
 ALTER TABLE TraderPerFormance
 ALTER COLUMN Spread MONEY 
 
-SELECT * FROM TraderPerFormance
+ALTER TABLE [Staging_TraderPerformance]
+ALTER COLUMN Spread MONEY 
