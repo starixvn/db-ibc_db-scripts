@@ -6,17 +6,17 @@
 */
 --step 0: backup & copy stake level setting from LCS DB to DBTP for newly customers
 
-CREATE TABLE #supers (custid int)
+CREATE TABLE #supers (custid int, currency INT)
 
-INSERT INTO #supers(custid)
-SELECT custid
-FROM CustInfo WITH(NOLOCK)
+INSERT INTO #supers(custid,currency)
+SELECT custid, currency
+FROM Customer WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND currency IN (34,45,43) --IDR,WON,'THB'
+	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 --step 1: copy settings for newly created customers
-CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT)
+CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT, srecommend INT, currency INT)
 
 DECLARE @StakeLevelList_2401 VARCHAR(100)= ''
 		,@StakeLevelList_2402 VARCHAR(100)= ''
@@ -28,18 +28,19 @@ DECLARE @StakeLevelList_2401 VARCHAR(100)= ''
 		,@syncLiveCasino BIT
 		,@max_custid INT
 		,@max_custid2 INT
+		,@srecommend INT
 
 SELECT @max_custid = xx
 		,@max_custid2 = yy	
 
-INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID)
+INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID, srecommend, currency)
 SELECT DISTINCT ci.custid, roleid, syncLiveCasino,
 		CASE WHEN roleid = 3 THEN srecommend
 			WHEN roleid = 2 THEN mrecommend
-			WHEN roleid = 1 THEN recommend  ELSE 0 END
-FROM custinfo ci WITH(NOLOCK)
-WHERE srecommend IN (select custid FROM #Supers)
-	AND ci.custid > @max_custid
+			WHEN roleid = 1 THEN recommend  ELSE 0 END, srecommend, s.currency
+FROM custinfo ci WITH(NOLOCK) 
+	INNER JOIN #Supers s ON ci.srecommend = s.custid
+WHERE ci.custid > @max_custid
 	AND ci.custid <= @max_custid2
 
 
@@ -49,6 +50,8 @@ BEGIN
 				,@roleid = roleid
 				,@syncLiveCasino = syncLiveCasino
 				,@UplineID = uplineID
+				,@srecommend = srecommend
+				,@currency = currency
 	FROM #tmpCust		
 	ORDER BY roleid DESC
 			
@@ -103,20 +106,45 @@ BEGIN
 	END	
 	ELSE--Un-sync LCS
 	BEGIN
-		IF @roleid = 1
+		IF EXISTS (SELECT 1 FROM CustInfo WITH (NOLOCK) WHERE custid = @srecommend AND syncLiveCasino = 0)
+		BEGIN
+			SELECT TOP 1 @StakeLevelList_2401 =  StakeLevelID 
+			FROM dbo.StakeLevel WITH(NOLOCK) 
+			WHERE ExchangeId = @currency AND GameTypeID = 2401
+			ORDER BY MaxStake, MinStake
+
+			IF @roleid = 1
 			INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
-			SELECT @custid, 211, 2401, '' AS stakeLevelList
+			SELECT @custid, 211, 2401, @StakeLevelList_2401
 			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
 			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
 		ELSE
 			INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
-			SELECT @custid, 211, 2401, '' AS stakeLevelList
+			SELECT @custid, 211, 2401, @StakeLevelList_2401
 			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
 			UNION ALL
 			SELECT @custid, 211, 2402, @StakeLevelList_2402
 			WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
+		END
+		ELSE
+		BEGIN
+			IF @roleid = 1
+				INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
+				SELECT @custid, 211, 2401, '' AS stakeLevelList
+				WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
+				UNION ALL
+				SELECT @custid, 211, 2402, @StakeLevelList_2402
+				WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
+			ELSE
+				INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
+				SELECT @custid, 211, 2401, '' AS stakeLevelList
+				WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2401)
+				UNION ALL
+				SELECT @custid, 211, 2402, @StakeLevelList_2402
+				WHERE NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent WITH (NOLOCK) WHERE CustID = @custid AND SportType = 211 AND BetType = 2402)
+		END
 	END	
 	
 	DELETE #tmpCust WHERE custid = @custid
