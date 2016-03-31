@@ -87,17 +87,23 @@ BEGIN
 	FROM dbo.tmpCustGameType WITH(NOLOCK)
 	WHERE custid = @srecommend
 	
-	--If don't have stake level for this line yet, just put empty stakelevellist
+	--If don't have stake level for this line yet, just put lowest value 
 	IF ISNULL(@stakeLevelList2401_super,'') = ''
 	BEGIN
+		DECLARE @StakeLevelList_2401 VARCHAR(100)
+		SELECT TOP 1 @StakeLevelList_2401 =  StakeLevelID 
+		FROM dbo.StakeLevel WITH(NOLOCK) 
+		WHERE ExchangeId = @exchangeID AND GameTypeID = 2401
+		ORDER BY MaxStake, MinStake
+
 		--SMA Level
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
-		SELECT custid, 211, 2401, ''
+		SELECT custid, 211, 2401, @StakeLevelList_2401
 		FROM #SMATemp ci 
 
 		--Member Level
 		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
-		SELECT custid, 211, 2401, ''
+		SELECT custid, 211, 2401, @StakeLevelList_2401
 		FROM #MemberTemp ci 
 		
 		RETURN
