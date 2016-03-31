@@ -1,0 +1,57 @@
+/*
+	Created: Elodie
+	Date: 20151015
+	Task: Create exec rep SPs Acc_DynamicCustomerInfo_00~09 for DCS
+	DB: DBTXN/DBCust/DB06/DBTP/DB05x/DB04x
+*/
+USE [CustDB]
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_00]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_01]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_02]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_03]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_04]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_05]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_06]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_07]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_08]
+AS
+SELECT CURRENT_TIMESTAMP
+GO
+
+CREATE PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
+AS
+SELECT CURRENT_TIMESTAMP
