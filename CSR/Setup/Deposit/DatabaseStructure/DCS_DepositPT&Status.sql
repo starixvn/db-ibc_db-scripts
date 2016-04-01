@@ -52,13 +52,13 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Member](
 
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD  DEFAULT ((0)) FOR [SuperPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTSetting_Member_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTSetting_Member_MasterPT] DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTSetting_Member_AgentPT] DEFAULT ((0)) FOR [AgentPT]
 GO
 
 CREATE TABLE [dbo].[Dep_CustPTSetting_Agent](
@@ -80,13 +80,13 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Agent](
 
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD  DEFAULT ((0)) FOR [SuperPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD CONSTRAINT [DF_Dep_CustPTSetting_Agent_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD CONSTRAINT [DF_Dep_CustPTSetting_Agent_MasterPT] DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[Dep_CustPTSetting_Agent] ADD CONSTRAINT [DF_Dep_CustPTSetting_Agent_AgentPT] DEFAULT ((0)) FOR [AgentPT]
 GO
 
 CREATE TABLE [dbo].[Dep_CustPTGroupSetting_Member](
@@ -108,13 +108,13 @@ CREATE TABLE [dbo].[Dep_CustPTGroupSetting_Member](
 
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD  DEFAULT ((0)) FOR [SuperPT]
+ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTGroupSetting_Member_SuperPT] DEFAULT ((0)) FOR [SuperPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD  DEFAULT ((0)) FOR [MasterPT]
+ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTGroupSetting_Member_MasterPT] DEFAULT ((0)) FOR [MasterPT]
 GO
 
-ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD  DEFAULT ((0)) FOR [AgentPT]
+ALTER TABLE [dbo].[Dep_CustPTGroupSetting_Member] ADD CONSTRAINT [DF_Dep_CustPTGroupSetting_Member_AgentPT] DEFAULT ((0)) FOR [AgentPT]
 GO
 
 
@@ -134,13 +134,13 @@ CREATE TABLE [dbo].[Dep_CustSettingMode](
 
 GO
 
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD  DEFAULT ((1)) FOR [IsGroupedPT]
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedPT]  DEFAULT ((1)) FOR [IsGroupedPT]
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD  DEFAULT ((1)) FOR IsGroupedComm
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedComm]  DEFAULT ((1)) FOR IsGroupedComm
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD  DEFAULT ((1)) FOR IsGroupedBetLimit
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedBetLimit]  DEFAULT ((1)) FOR IsGroupedBetLimit
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD  DEFAULT ((1)) FOR IsGroupStakeLevel
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupStakeLevel]  DEFAULT ((1)) FOR IsGroupStakeLevel
 GO
 
 CREATE TABLE [dbo].[Dep_CustProductStatus](
@@ -175,6 +175,7 @@ CREATE TABLE [dbo].[Dep_ProductStatusProfile](
 GO
 
 -----------------
+
 CREATE TABLE [dbo].[Dep_ProductSettingDetail](
 	ProductSettingID [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
@@ -194,13 +195,13 @@ CREATE TABLE [dbo].[Dep_ProductSettingDetail](
 ) ON DATA
 
 GO
-ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD  DEFAULT ((0)) FOR MaxDefaultValue
+ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_MaxDefaultValue]   DEFAULT ((0)) FOR MaxDefaultValue
 GO
 
-ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD  DEFAULT ((0)) FOR [IsHidden]
+ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_IsHidden]   DEFAULT ((0)) FOR [IsHidden]
 GO
 
-ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD  DEFAULT ((0)) FOR [IsDisabled]
+ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_IsDisabled]   DEFAULT ((0)) FOR [IsDisabled]
 GO
 
 CREATE TABLE [dbo].[Dep_LicenseeProductSetting](
