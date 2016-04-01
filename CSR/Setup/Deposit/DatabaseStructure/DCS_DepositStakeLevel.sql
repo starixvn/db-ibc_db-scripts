@@ -7,81 +7,26 @@
 */
 USE CustDB
 GO
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustStakeLevel_Agent_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustStakeLevel_table')
 BEGIN
 	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustStakeLevel_Agent_table;
+	ADD FILEGROUP Dep_CustStakeLevel_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustStakeLevel_Agent_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustStakeLevel_table_01')
 BEGIN
 	ALTER DATABASE CustDB 
 	ADD FILE 
 	(
-		NAME = Dep_CustStakeLevel_Agent_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustStakeLevel_Agent_table_01.NDF'
+		NAME = Dep_CustStakeLevel_table_01,
+		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustStakeLevel_table_01.NDF'
 	)
-	TO FILEGROUP Dep_CustStakeLevel_Agent_table;
-END
-GO
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustStakeLevel_Member_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustStakeLevel_Member_table;
+	TO FILEGROUP Dep_CustStakeLevel_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustStakeLevel_Member_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_CustStakeLevel_Member_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustStakeLevel_Member_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustStakeLevel_Member_table;
-END
-GO
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_StakeLevel_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_StakeLevel_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_StakeLevel_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_StakeLevel_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_StakeLevel_table_01.NDF'
-	)
-	TO FILEGROUP Dep_StakeLevel_table;
-END
-GO
------------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_StakeLevelGroupDetail_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_StakeLevelGroupDetail_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_StakeLevelGroupDetail_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_StakeLevelGroupDetail_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_StakeLevelGroupDetail_table_01.NDF'
-	)
-	TO FILEGROUP Dep_StakeLevelGroupDetail_table;
-END
-GO
 -----
 CREATE TABLE [dbo].[Dep_StakeLevelGroupDetail](
 	[StakeLevelID] [int] NOT NULL,
@@ -94,8 +39,8 @@ CREATE TABLE [dbo].[Dep_StakeLevelGroupDetail](
 (
 	[StakeLevelID] ASC,
 	[GameTypeID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_StakeLevelGroupDetail_table
-) ON Dep_StakeLevelGroupDetail_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA
+) ON DATA
 
 GO
 
@@ -114,8 +59,8 @@ CREATE TABLE [dbo].[Dep_StakeLevel](
  CONSTRAINT [PK_Dep_StakeLevel] PRIMARY KEY CLUSTERED 
 (
 	[StakeLevelID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_StakeLevel_table
-) ON Dep_StakeLevel_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA
+) ON DATA
 
 GO
 
@@ -132,8 +77,8 @@ CREATE TABLE [dbo].[Dep_CustStakeLevel_Agent](
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_Agent_table
-) ON Dep_CustStakeLevel_Agent_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_table
+) ON Dep_CustStakeLevel_table
 
 GO
 
@@ -148,8 +93,8 @@ CREATE TABLE [dbo].[Dep_CustStakeLevel_Member](
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_Member_table
-) ON Dep_CustStakeLevel_Member_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_table
+) ON Dep_CustStakeLevel_table
 
 GO
 

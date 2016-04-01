@@ -8,121 +8,25 @@
 USE CustDB
 GO
 --- CREATING FILE GROUP AND DATA FILE
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTSetting_Member_table')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTSetting_table')
 BEGIN
 	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustPTSetting_Member_table;
+	ADD FILEGROUP Dep_CustPTSetting_table;
 END
 GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTSetting_Member_table_01')
+IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTSetting_table_01')
 BEGIN
 ALTER DATABASE CustDB 
 ADD FILE 
 (
-	NAME = Dep_CustPTSetting_Member_table_01,
-	FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustPTSetting_Member_table_01.NDF'
+	NAME = Dep_CustPTSetting_table_01,
+	FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustPTSetting_table_01.NDF'
 )
-TO FILEGROUP Dep_CustPTSetting_Member_table;
+TO FILEGROUP Dep_CustPTSetting_table;
 END
 GO
 --------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTSetting_Agent_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustPTSetting_Agent_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTSetting_Agent_table_01')
-BEGIN
-ALTER DATABASE CustDB 
-ADD FILE 
-(
-	NAME = Dep_CustPTSetting_Agent_table_01,
-	FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustPTSetting_Agent_table_01.NDF'
-)
-TO FILEGROUP Dep_CustPTSetting_Agent_table;
-END
-GO
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTGroupSetting_Member_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustPTGroupSetting_Member_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTGroupSetting_Member_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_CustPTGroupSetting_Member_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustPTGroupSetting_Member_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustPTGroupSetting_Member_table;
-END
-GO
-
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustSettingMode_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustSettingMode_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustSettingMode_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_CustSettingMode_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustSettingMode_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustSettingMode_table;
-END
-GO
--------
-
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustProductStatus_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_CustProductStatus_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustProductStatus_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_CustProductStatus_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_CustProductStatus_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustProductStatus_table;
-END
-GO
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_ProductSettingDetail_table')
-BEGIN
-	ALTER DATABASE CustDB
-	ADD FILEGROUP Dep_ProductSettingDetail_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_ProductSettingDetail_table_01')
-BEGIN
-	ALTER DATABASE CustDB 
-	ADD FILE 
-	(
-		NAME = Dep_ProductSettingDetail_table_01,
-		FILENAME = 'D:\DB233\IBC_DB\CustDB\Dep_ProductSettingDetail_table_01.NDF'
-	)
-	TO FILEGROUP Dep_ProductSettingDetail_table;
-END
-GO
 -------
 USE CustDB
 
@@ -143,8 +47,8 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Member](
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTSetting_Member_Table]
-) ON [Dep_CustPTSetting_Member_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustPTSetting_table
+) ON Dep_CustPTSetting_table
 
 GO
 
@@ -171,8 +75,8 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Agent](
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTSetting_Agent_Table]
-) ON [Dep_CustPTSetting_Agent_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustPTSetting_table
+) ON Dep_CustPTSetting_table
 
 GO
 
@@ -199,8 +103,8 @@ CREATE TABLE [dbo].[Dep_CustPTGroupSetting_Member](
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTGroupSetting_Member_table]
-) ON [Dep_CustPTGroupSetting_Member_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustPTSetting_table
+) ON Dep_CustPTSetting_table
 
 GO
 
@@ -225,8 +129,8 @@ CREATE TABLE [dbo].[Dep_CustSettingMode](
  CONSTRAINT [PK_Dep_CustSettingMode] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustSettingMode_table]
-) ON [Dep_CustSettingMode_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustPTSetting_table
+) ON Dep_CustPTSetting_table
 
 GO
 
@@ -246,8 +150,8 @@ CREATE TABLE [dbo].[Dep_CustProductStatus](
  CONSTRAINT [CIX_Dep_CustProductStatus_custid] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustProductStatus_Table]
-) ON [Dep_CustProductStatus_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON table_customer
+) ON table_customer
 
 GO
 
@@ -265,8 +169,8 @@ CREATE TABLE [dbo].[Dep_ProductStatusProfile](
 (
 	[Sporttype] ASC,
 	[Bettype] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustProductStatus_Table]
-) ON [Dep_CustProductStatus_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON DATA
+) ON DATA
 
 GO
 
@@ -286,8 +190,8 @@ CREATE TABLE [dbo].[Dep_ProductSettingDetail](
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_ProductSettingDetail_table]
-) ON [Dep_ProductSettingDetail_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON DATA
+) ON DATA
 
 GO
 ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD  DEFAULT ((0)) FOR MaxDefaultValue
@@ -306,8 +210,8 @@ CREATE TABLE [dbo].[Dep_LicenseeProductSetting](
 (
 	[CustID] ASC,
 	[ProductSettingID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [Dep_ProductSettingDetail_table]
-) ON [Dep_ProductSettingDetail_table]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA
+) ON DATA
 
 GO
 
@@ -322,8 +226,8 @@ CREATE TABLE [dbo].[Dep_ProductSetting](
  CONSTRAINT [PK_Dep_ProductSetting] PRIMARY KEY CLUSTERED 
 (
 	[ProductSettingID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [Dep_ProductSettingDetail_table]
-) ON [Dep_ProductSettingDetail_table]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA
+) ON DATA
 
 GO
 

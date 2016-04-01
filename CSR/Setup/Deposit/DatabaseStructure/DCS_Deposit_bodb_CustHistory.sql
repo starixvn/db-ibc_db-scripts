@@ -5,143 +5,7 @@
 	Database: DBTP/bodb_CustHistory
 		
 */
-USE bodb_CustHistory
-GO
---- CREATING FILE GROUP AND DATA FILE
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTSetting_Member_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustPTSetting_Member_table;
-END
-GO
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTSetting_Member_table_01')
-BEGIN
-ALTER DATABASE bodb_CustHistory 
-ADD FILE 
-(
-	NAME = Dep_CustPTSetting_Member_table_01,
-	FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustPTSetting_Member_table_01.NDF'
-)
-TO FILEGROUP Dep_CustPTSetting_Member_table;
-END
-GO
---------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTSetting_Agent_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustPTSetting_Agent_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTSetting_Agent_table_01')
-BEGIN
-ALTER DATABASE bodb_CustHistory 
-ADD FILE 
-(
-	NAME = Dep_CustPTSetting_Agent_table_01,
-	FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustPTSetting_Agent_table_01.NDF'
-)
-TO FILEGROUP Dep_CustPTSetting_Agent_table;
-END
-GO
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustPTGroupSetting_Member_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustPTGroupSetting_Member_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustPTGroupSetting_Member_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = Dep_CustPTGroupSetting_Member_table_01,
-		FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustPTGroupSetting_Member_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustPTGroupSetting_Member_table;
-END
-GO
-
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustSettingMode_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustSettingMode_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustSettingMode_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = Dep_CustSettingMode_table_01,
-		FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustSettingMode_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustSettingMode_table;
-END
-GO
--------
-
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustProductStatus_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustProductStatus_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustProductStatus_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = Dep_CustProductStatus_table_01,
-		FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustProductStatus_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustProductStatus_table;
-END
-GO
-------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustStakeLevel_Agent_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustStakeLevel_Agent_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustStakeLevel_Agent_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = Dep_CustStakeLevel_Agent_table_01,
-		FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustStakeLevel_Agent_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustStakeLevel_Agent_table;
-END
-GO
--------
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.filegroups where name='Dep_CustStakeLevel_Member_table')
-BEGIN
-	ALTER DATABASE bodb_CustHistory
-	ADD FILEGROUP Dep_CustStakeLevel_Member_table;
-END
-GO
-
-IF NOT EXISTS (SELECT TOP 1 1 FROM sys.database_files where name='Dep_CustStakeLevel_Member_table_01')
-BEGIN
-	ALTER DATABASE bodb_CustHistory 
-	ADD FILE 
-	(
-		NAME = Dep_CustStakeLevel_Member_table_01,
-		FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustStakeLevel_Member_table_01.NDF'
-	)
-	TO FILEGROUP Dep_CustStakeLevel_Member_table;
-END
-GO
 -------
 
 USE bodb_CustHistory
@@ -163,8 +27,8 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Member_history](
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTSetting_Member_Table]
-) ON [Dep_CustPTSetting_Member_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -191,8 +55,8 @@ CREATE TABLE [dbo].Dep_CustPTSetting_Agent_history(
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTSetting_Agent_Table]
-) ON [Dep_CustPTSetting_Agent_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -219,8 +83,8 @@ CREATE TABLE [dbo].Dep_CustPTGroupSetting_Member_history(
 	[SportType] ASC,
 	[BetType] ASC,
 	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustPTGroupSetting_Member_table]
-) ON [Dep_CustPTGroupSetting_Member_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -242,8 +106,8 @@ CREATE TABLE [dbo].Dep_CustSettingMode_history(
  CONSTRAINT [PK_Dep_CustSettingMode] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustSettingMode_table]
-) ON [Dep_CustSettingMode_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -263,8 +127,8 @@ CREATE TABLE [dbo].Dep_CustProductStatus_history(
  CONSTRAINT [CIX_Dep_CustProductStatus_custid] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustProductStatus_Table]
-) ON [Dep_CustProductStatus_Table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -285,8 +149,8 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Agent_history(
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_Agent_table
-) ON Dep_CustStakeLevel_Agent_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
 
@@ -301,7 +165,7 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history(
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustStakeLevel_Member_table
-) ON Dep_CustStakeLevel_Member_table
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustSetting3rd_table
+) ON Dep_CustSetting3rd_table
 
 GO
