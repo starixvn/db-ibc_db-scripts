@@ -12,6 +12,7 @@ USE bodb_CustHistory
 
 GO
 
+
 CREATE TABLE [dbo].[Dep_CustPTSetting_Member_history](
 	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
@@ -25,6 +26,8 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Member_history](
 ) ON Dep_CustSetting3rd_table
 
 GO
+ALTER TABLE [dbo].[Dep_CustPTSetting_Member_history] ADD  CONSTRAINT [DF_Dep_CustPTSetting_Member_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
 
 ALTER TABLE [dbo].[Dep_CustPTSetting_Member_history] ADD  DEFAULT ((0)) FOR [SuperPT]
 GO
@@ -34,6 +37,8 @@ GO
 
 ALTER TABLE [dbo].[Dep_CustPTSetting_Member_history] ADD  DEFAULT ((0)) FOR [AgentPT]
 GO
+
+
 
 CREATE TABLE [dbo].Dep_CustPTSetting_Agent_history(
 	UpdateTime datetime NOT NULL,
@@ -48,6 +53,9 @@ CREATE TABLE [dbo].Dep_CustPTSetting_Agent_history(
 
 GO
 
+ALTER TABLE [dbo].Dep_CustPTSetting_Agent_history ADD  CONSTRAINT [DF_Dep_CustPTSetting_Agent_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
+
 ALTER TABLE [dbo].Dep_CustPTSetting_Agent_history ADD  DEFAULT ((0)) FOR [SuperPT]
 GO
 
@@ -56,6 +64,7 @@ GO
 
 ALTER TABLE [dbo].Dep_CustPTSetting_Agent_history ADD  DEFAULT ((0)) FOR [AgentPT]
 GO
+
 
 CREATE TABLE [dbo].Dep_CustPTGroupSetting_Member_history(
 	UpdateTime datetime NOT NULL,
@@ -70,6 +79,9 @@ CREATE TABLE [dbo].Dep_CustPTGroupSetting_Member_history(
 
 GO
 
+ALTER TABLE [dbo].Dep_CustPTGroupSetting_Member_history ADD  CONSTRAINT [DF_CustPTGroupSetting_Member_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
+
 ALTER TABLE [dbo].Dep_CustPTGroupSetting_Member_history ADD  DEFAULT ((0)) FOR [SuperPT]
 GO
 
@@ -78,6 +90,7 @@ GO
 
 ALTER TABLE [dbo].Dep_CustPTGroupSetting_Member_history ADD  DEFAULT ((0)) FOR [AgentPT]
 GO
+
 
 CREATE TABLE [dbo].Dep_CustSettingMode_history(
 	UpdateTime datetime NOT NULL,
@@ -89,15 +102,18 @@ CREATE TABLE [dbo].Dep_CustSettingMode_history(
 ) ON Dep_CustSetting3rd_table
 
 GO
+ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  CONSTRAINT [DF_Dep_CustSettingMode_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
 
-ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((1)) FOR [IsGroupedPT]
+ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((0)) FOR [IsGroupedPT]
 GO
-ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((1)) FOR IsGroupedComm
+ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((0)) FOR IsGroupedComm
 GO
-ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((1)) FOR IsGroupedBetLimit
+ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((0)) FOR IsGroupedBetLimit
 GO
-ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((1)) FOR IsGroupStakeLevel
+ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((0)) FOR IsGroupStakeLevel
 GO
+
 
 CREATE TABLE [dbo].Dep_CustProductStatus_history(
 	UpdateTime datetime NOT NULL,
@@ -106,6 +122,8 @@ CREATE TABLE [dbo].Dep_CustProductStatus_history(
 	[bitmapIsDisabled] [binary](32) NOT NULL,
 ) ON Dep_CustSetting3rd_table
 
+GO
+ALTER TABLE [dbo].Dep_CustProductStatus_history ADD  CONSTRAINT [DF_Dep_CustProductStatus_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
 GO
 
 ALTER TABLE [dbo].Dep_CustProductStatus_history ADD  CONSTRAINT [DF_Dep_CustPRoductStatus_bitmapIsHidden]  DEFAULT (0x00) FOR [bitmapIsHidden]
@@ -125,6 +143,8 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Agent_history(
 ) ON Dep_CustSetting3rd_table
 
 GO
+ALTER TABLE [dbo].Dep_CustStakeLevel_Agent_history ADD  CONSTRAINT [DF_Dep_CustStakeLevel_Agent_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
 
 CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history( 
 	UpdateTime datetime NOT NULL,
@@ -136,3 +156,6 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history(
 ) ON Dep_CustSetting3rd_table
 
 GO
+ALTER TABLE [dbo].Dep_CustStakeLevel_Member_history ADD  CONSTRAINT [DF_Dep_CustStakeLevel_Member_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
+GO
+
