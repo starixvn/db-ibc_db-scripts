@@ -99,7 +99,4 @@ CREATE TABLE [dbo].[Dep_CustStakeLevel_Member](
 GO
 
 
-ALTER TABLE GameGroup
-ADD IsDeposit BIT DEFAULT(0)
-
 
