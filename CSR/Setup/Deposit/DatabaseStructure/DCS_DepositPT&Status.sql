@@ -134,13 +134,13 @@ CREATE TABLE [dbo].[Dep_CustSettingMode](
 
 GO
 
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedPT]  DEFAULT ((1)) FOR [IsGroupedPT]
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedPT]  DEFAULT ((0)) FOR [IsGroupedPT]
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedComm]  DEFAULT ((1)) FOR IsGroupedComm
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedComm]  DEFAULT ((0)) FOR IsGroupedComm
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedBetLimit]  DEFAULT ((1)) FOR IsGroupedBetLimit
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedBetLimit]  DEFAULT ((0)) FOR IsGroupedBetLimit
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupStakeLevel]  DEFAULT ((1)) FOR IsGroupStakeLevel
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupStakeLevel]  DEFAULT ((0)) FOR IsGroupStakeLevel
 GO
 
 CREATE TABLE [dbo].[Dep_CustProductStatus](
