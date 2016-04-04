@@ -126,7 +126,7 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Agent_history(
 
 GO
 
-CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history(
+CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history( 
 	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
