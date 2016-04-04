@@ -13,6 +13,7 @@ USE bodb_CustHistory
 GO
 
 CREATE TABLE [dbo].[Dep_CustPTSetting_Member_history](
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
@@ -20,14 +21,7 @@ CREATE TABLE [dbo].[Dep_CustPTSetting_Member_history](
 	[SuperPT] [tinyint] NOT NULL,
 	[MasterPT] [tinyint] NOT NULL,
 	[AgentPT] [tinyint] NOT NULL
-	
- CONSTRAINT [PK_Dep_CustPTSetting_Member] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC,
-	[SportType] ASC,
-	[BetType] ASC,
-	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
+
 ) ON Dep_CustSetting3rd_table
 
 GO
@@ -42,6 +36,7 @@ ALTER TABLE [dbo].[Dep_CustPTSetting_Member_history] ADD  DEFAULT ((0)) FOR [Age
 GO
 
 CREATE TABLE [dbo].Dep_CustPTSetting_Agent_history(
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
@@ -49,13 +44,6 @@ CREATE TABLE [dbo].Dep_CustPTSetting_Agent_history(
 	[SuperPT] [tinyint] NOT NULL,
 	[MasterPT] [tinyint] NOT NULL,
 	[AgentPT] [tinyint] NOT NULL	
- CONSTRAINT [PK_Dep_CustPTSetting_Agent] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC,
-	[SportType] ASC,
-	[BetType] ASC,
-	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
 ) ON Dep_CustSetting3rd_table
 
 GO
@@ -70,6 +58,7 @@ ALTER TABLE [dbo].Dep_CustPTSetting_Agent_history ADD  DEFAULT ((0)) FOR [AgentP
 GO
 
 CREATE TABLE [dbo].Dep_CustPTGroupSetting_Member_history(
+	UpdateTime datetime NOT NULL,
 	[AgentID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
@@ -77,13 +66,6 @@ CREATE TABLE [dbo].Dep_CustPTGroupSetting_Member_history(
 	[SuperPT] [tinyint] NOT NULL,
 	[MasterPT] [tinyint] NOT NULL,
 	[AgentPT] [tinyint] NOT NULL
- CONSTRAINT [PK_Dep_CustPTGroupSetting_Member] PRIMARY KEY CLUSTERED 
-(
-	[AgentID] ASC,
-	[SportType] ASC,
-	[BetType] ASC,
-	[IsLive] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
 ) ON Dep_CustSetting3rd_table
 
 GO
@@ -98,15 +80,12 @@ ALTER TABLE [dbo].Dep_CustPTGroupSetting_Member_history ADD  DEFAULT ((0)) FOR [
 GO
 
 CREATE TABLE [dbo].Dep_CustSettingMode_history(
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[IsGroupedPT] [bit] NOT NULL,
 	IsGroupedComm [bit] NOT NULL,
 	IsGroupedBetLimit [bit] NOT NULL,
 	IsGroupStakeLevel [bit] NOT NULL
- CONSTRAINT [PK_Dep_CustSettingMode] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
 ) ON Dep_CustSetting3rd_table
 
 GO
@@ -121,13 +100,10 @@ ALTER TABLE [dbo].Dep_CustSettingMode_history ADD  DEFAULT ((1)) FOR IsGroupStak
 GO
 
 CREATE TABLE [dbo].Dep_CustProductStatus_history(
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[bitmapIsHidden] [binary](32) NOT NULL,
 	[bitmapIsDisabled] [binary](32) NOT NULL,
- CONSTRAINT [CIX_Dep_CustProductStatus_custid] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON Dep_CustSetting3rd_table
 ) ON Dep_CustSetting3rd_table
 
 GO
@@ -139,33 +115,24 @@ ALTER TABLE [dbo].Dep_CustProductStatus_history ADD  CONSTRAINT [DF_Dep_CustPRod
 GO
 
 ---
+
 CREATE TABLE [dbo].Dep_CustStakeLevel_Agent_history(
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
-	[StakeLevelList] [varchar](200) NULL,
- CONSTRAINT [PK_Dep_CustStakeLevel_Agent] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC,
-	[SportType] ASC,
-	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustSetting3rd_table
+	[StakeLevelList] [varchar](200) NULL, 
 ) ON Dep_CustSetting3rd_table
 
 GO
 
 CREATE TABLE [dbo].Dep_CustStakeLevel_Member_history(
+	UpdateTime datetime NOT NULL,
 	[CustID] [int] NOT NULL,
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
 	[StakeLevelList] [varchar](200) NULL,
 	[LastUpdated] [datetime] NULL,
- CONSTRAINT [PK_Dep_CustStakeLevel_Member] PRIMARY KEY CLUSTERED 
-(
-	[CustID] ASC,
-	[SportType] ASC,
-	[BetType] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON Dep_CustSetting3rd_table
 ) ON Dep_CustSetting3rd_table
 
 GO
