@@ -18,8 +18,8 @@ CREATE TABLE [dbo].[StakeLevelGroupDetail](
 (
 	[StakeLevelID] ASC,
 	[GameTypeID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustStakeLevel_Agent_table]
-) ON [CustStakeLevel_Agent_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
+) ON [DATA]
 
 GO
 
@@ -28,14 +28,16 @@ CREATE TABLE [dbo].[GameGroup](
 	[RefSportType] [smallint] NOT NULL,
 	[RefBetType] [int] NOT NULL,
 	[GroupName] [nvarchar](100) NULL,
+	[IsDeposit]	[bit] NOT NULL,
  CONSTRAINT [PK_GameGroup] PRIMARY KEY CLUSTERED 
 (
 	[GameGroupID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustStakeLevel_Agent_table]
-) ON [CustStakeLevel_Agent_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
+) ON [DATA]
 
 GO
-
+ALTER TABLE [dbo].[GameGroup] ADD  CONSTRAINT [DF_GameGroup_IsDeposit]  DEFAULT ((0)) FOR [IsDeposit]
+GO
 ALTER TABLE [dbo].[GameGroup] ADD  CONSTRAINT [DF_GameGroup_RefSportType]  DEFAULT ((0)) FOR [RefSportType]
 GO
 
