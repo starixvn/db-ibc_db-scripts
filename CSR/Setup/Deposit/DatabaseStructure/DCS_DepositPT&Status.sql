@@ -181,9 +181,7 @@ CREATE TABLE [dbo].[Dep_ProductSettingDetail](
 	[SportType] [smallint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
 	[IsLive] [bit] NOT NULL,	
-	MaxDefaultValue [decimal](9, 8) NULL,	
-	[IsHidden] [bit] NULL,
-	[IsDisabled] [bit] NULL,
+	MaxDefaultValue [decimal](9, 8) NULL,		
 	[SettingStatus] [tinyint] NULL,
  CONSTRAINT [PK_Dep_ProductSettingDetail] PRIMARY KEY CLUSTERED 
 (
@@ -198,11 +196,6 @@ GO
 ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_MaxDefaultValue]   DEFAULT ((0)) FOR MaxDefaultValue
 GO
 
-ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_IsHidden]   DEFAULT ((0)) FOR [IsHidden]
-GO
-
-ALTER TABLE [dbo].[Dep_ProductSettingDetail] ADD CONSTRAINT [DF_Dep_ProductSettingDetail_IsDisabled]   DEFAULT ((0)) FOR [IsDisabled]
-GO
 
 CREATE TABLE [dbo].[Dep_LicenseeProductSetting](
 	[CustID] [int] NOT NULL,
@@ -220,8 +213,7 @@ CREATE TABLE [dbo].[Dep_ProductSetting](
 	[ProductSettingID] [int] NOT NULL,
 	[ProductID] [smallint] NOT NULL,
 	[SettingType] [tinyint] NOT NULL,
-	[Template] [tinyint] NOT NULL,
-	[TemplateName] [varchar](50) NULL,
+	[Template] [tinyint] NOT NULL,	
 	[DisplayOrder] [tinyint] NOT NULL,
 	[SettingLevel] [tinyint] NOT NULL,
  CONSTRAINT [PK_Dep_ProductSetting] PRIMARY KEY CLUSTERED 
@@ -235,6 +227,15 @@ GO
 ALTER TABLE [dbo].[Dep_ProductSetting] ADD  CONSTRAINT [DF_Dep_ProductSetting_Template]  DEFAULT ((0)) FOR [Template]
 GO
 
+
+
+CREATE TABLE [dbo].SettingRefResource(
+	RefId varchar(20) NOT NULL,
+	ResourceId tinyint NOT NULL,
+	Resource_en varchar(50) NOT NULL
+) ON DATA
+
+GO
 
 
 
