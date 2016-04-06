@@ -224,7 +224,7 @@ CREATE TABLE [dbo].[Dep_ProductSetting](
 
 GO
 
-ALTER TABLE [dbo].[Dep_ProductSetting] ADD  CONSTRAINT [DF_Dep_ProductSetting_Template]  DEFAULT ((0)) FOR [Template]
+ALTER TABLE [dbo].[Dep_ProductSetting] ADD  CONSTRAINT [DF_Dep_ProductSetting_TemplateID]  DEFAULT ((0)) FOR [TemplateID]
 GO
 
 
