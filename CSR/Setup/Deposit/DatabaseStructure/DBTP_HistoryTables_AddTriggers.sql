@@ -183,7 +183,7 @@ BEGIN
 	
 	INSERT INTO bodb_CustHistory.dbo.Dep_CustStakeLevel_Member_history (
 		[CustID] ,
-		[SportType] ,
+		[SportType] , 
 		[BetType] ,
 		StakeLevelList,
 		LastUpdated

@@ -144,7 +144,7 @@ ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_I
 GO
 
 CREATE TABLE [dbo].[Dep_CustProductStatus](
-	[CustID] [int] NOT NULL,
+	[CustID] [int] NOT NULL, 
 	[bitmapIsHidden] [binary](32) NOT NULL,
 	[bitmapIsDisabled] [binary](32) NOT NULL,
  CONSTRAINT [CIX_Dep_CustProductStatus_custid] PRIMARY KEY CLUSTERED 
