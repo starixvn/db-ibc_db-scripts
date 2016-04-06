@@ -213,7 +213,7 @@ CREATE TABLE [dbo].[Dep_ProductSetting](
 	[ProductSettingID] [int] NOT NULL,
 	[ProductID] [smallint] NOT NULL,
 	[SettingType] [tinyint] NOT NULL,
-	[Template] [tinyint] NOT NULL,	
+	[TemplateID] [tinyint] NOT NULL,	
 	[DisplayOrder] [tinyint] NOT NULL,
 	[SettingLevel] [tinyint] NOT NULL,
  CONSTRAINT [PK_Dep_ProductSetting] PRIMARY KEY CLUSTERED 
