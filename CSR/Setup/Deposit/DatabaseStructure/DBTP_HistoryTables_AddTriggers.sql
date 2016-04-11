@@ -143,7 +143,7 @@ END
 GO
 
 
-CREATE TRIGGER [dbo].[Dep_CustStakeLevel_Agent__update] ON [dbo].Dep_CustStakeLevel_Agent AFTER UPDATE
+CREATE TRIGGER [dbo].[Dep_CustStakeLevel_Agent_update] ON [dbo].Dep_CustStakeLevel_Agent AFTER UPDATE
 AS
 /*
 	Created by: 20160406@Winnie
@@ -170,7 +170,7 @@ END
 
 GO
 
-CREATE TRIGGER [dbo].[Dep_CustStakeLevel_Member__update] ON [dbo].Dep_CustStakeLevel_Member AFTER UPDATE
+CREATE TRIGGER [dbo].[Dep_CustStakeLevel_Member_update] ON [dbo].Dep_CustStakeLevel_Member AFTER UPDATE
 AS
 /*
 	Created by: 20160406@Winnie
