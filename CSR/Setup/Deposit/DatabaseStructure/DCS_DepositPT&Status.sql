@@ -119,7 +119,7 @@ GO
 
 
 
-
+ 
 CREATE TABLE [dbo].[Dep_CustSettingMode](
 	[CustID] [int] NOT NULL,
 	[IsGroupedPT] [bit] NOT NULL,
