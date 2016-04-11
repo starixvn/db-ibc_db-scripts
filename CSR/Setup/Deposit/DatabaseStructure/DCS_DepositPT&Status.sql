@@ -125,7 +125,7 @@ CREATE TABLE [dbo].[Dep_CustSettingMode](
 	[IsGroupedPT] [bit] NOT NULL,
 	IsGroupedComm [bit] NOT NULL,
 	IsGroupedBetLimit [bit] NOT NULL,
-	IsGroupStakeLevel [bit] NOT NULL
+	IsGroupedStakeLevel [bit] NOT NULL
  CONSTRAINT [PK_Dep_CustSettingMode] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
