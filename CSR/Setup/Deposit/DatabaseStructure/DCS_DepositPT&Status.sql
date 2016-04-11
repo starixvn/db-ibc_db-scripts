@@ -140,7 +140,7 @@ ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_I
 GO
 ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedBetLimit]  DEFAULT ((0)) FOR IsGroupedBetLimit
 GO
-ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupStakeLevel]  DEFAULT ((0)) FOR IsGroupStakeLevel
+ALTER TABLE [dbo].[Dep_CustSettingMode] ADD CONSTRAINT [DF_Dep_CustSettingMode_IsGroupedStakeLevel]  DEFAULT ((0)) FOR IsGroupedStakeLevel
 GO
 
 CREATE TABLE [dbo].[Dep_CustProductStatus](
