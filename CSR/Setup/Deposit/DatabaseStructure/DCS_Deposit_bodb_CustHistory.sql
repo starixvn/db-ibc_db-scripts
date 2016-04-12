@@ -171,7 +171,7 @@ CREATE TABLE [dbo].Dep_CustStakeLevel_Agent_history(
 GO
 ALTER TABLE [dbo].Dep_CustStakeLevel_Agent_history ADD  CONSTRAINT [DF_Dep_CustStakeLevel_Agent_history_UpdateTime]  DEFAULT (getdate()) FOR [UpdateTime]
 GO
-CREATE CLUSTERED INDEX [Dep_CustStakeLevel_Agent_His_Index] ON [dbo].[Dep_CustStakeLevel_Agent_history] 
+CREATE CLUSTERED INDEX [Dep_CustStakeLevel_Agent_His_Index] ON [dbo].[Dep_CustStakeLevel_Agent_history]  
 (
 	[UpdateTime] ASC,
 	[CustID] ASC
