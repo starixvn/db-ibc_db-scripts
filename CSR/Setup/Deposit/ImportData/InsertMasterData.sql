@@ -37,6 +37,7 @@ GO
 
 -- StakeLevel
 -- Just sample data
+
 INSERT INTO dbo.GameGroup 
 		(	GameGroupID, RefSportType, RefBetType, GroupName, IsDeposit)
 VALUES	(	6          , 212         , 4001      , 'Level 1', 1        )
