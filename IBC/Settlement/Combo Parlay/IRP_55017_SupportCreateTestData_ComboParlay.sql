@@ -93,7 +93,7 @@ BEGIN
 			,@refn		INT
 			,@betcheck	NVARCHAR(50)
 			,@betteam	NVARCHAR(10)
-			,@tpt		SMALLMONEY = 1 - @apt - @mpt - @spt
+			,@tpt		SMALLMONEY = @apt + @mpt + @spt --1 - @apt - @mpt - @spt
 			,@bitmapcombo	VARCHAR(20) = REPLICATE('0',20)
 			,@bitmapfullSP	VARCHAR(20) = REPLICATE('0',20)
 			,@bitmapLucky	VARCHAR(20) = REPLICATE('0',20)
