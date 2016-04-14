@@ -1,4 +1,4 @@
-DECLARE @srecommend INT = 8071813
+DECLARE @srecommend INT = 8067174
 	, @ProductProfileList VARCHAR(200) = '1,2,3'
 	, @ProductID INT = 22 -- VB
 	-- For ProductStatus param
@@ -24,7 +24,9 @@ FROM custInfo WITH(NOLOCK)
 WHERE srecommend =@srecommend
 	AND mrecommend NOT IN (SELECT custid FROM custinfo WITH(NOLOCK)
 						   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
-						   
+
+SELECT * FROM #tblCust						   
+
 SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
 
 -- Licensee profile list
@@ -104,6 +106,8 @@ BEGIN
 	FROM #ProductSettingDetail_tmp psd WITH(NOLOCK)  
 		INNER JOIN ProductStatusProfile pbs WITH (NOLOCK) ON pbs.[SportType] = psd.[SportType] AND pbs.[BetType] = psd.[BetType]
 	WHERE psd.SettingType = 4
+	
+	--select * from #SportBettypeFilter4
 	
 	IF EXISTS(SELECT TOP 1 1 FROM #SportBettypeFilter4)
 	BEGIN
