@@ -1,6 +1,6 @@
 USE [bodb02]
 GO
-/****** Object:  StoredProcedure [dbo].[DBA_ComboParlayIns]    Script Date: 04/12/2016 14:19:49 ******/
+/****** Object:  StoredProcedure [dbo].[DBA_ComboParlayIns]    Script Date: 04/19/2016 15:02:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -371,64 +371,31 @@ BEGIN
 	BEGIN
 		IF dbo.BinaryToDecimal(@bitmapcombo) > 0
 		BEGIN
-			--combo
-			IF len(@bitmapcombo) - len(replace(@bitmapcombo,'1','')) >1
-			BEGIN
-				UPDATE ref with (rowlock,updlock) SET @refn=refno=refno+1  WHERE  refid='refno'
+			UPDATE ref with (rowlock,updlock) SET @refn=refno=refno+1  WHERE  refid='refno'
 				set @refno = @refn + 100000000000
 		
-				INSERT INTO dbo.bettransm (custid, transdate, oddsid,  odds, stake, status, betteam, creator, refno, winlostdate, betfrom, apositiontaking, 
-					mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount, matchid, matchdate, bettype, spositiontaking, sdiscount, statusID, comstatus)
-				OUTPUT INSERTED.transid INTO @tblBettransmCombo (transid)
-				SELECT @custid AS custid, GETDATE(),(SELECT top 1 oddsid FROM odds with(NOLOCK) WHERE matchid = m.matchid AND bettype = btype.val AND liveindicator = 0 ), o.val AS odds, s.val AS stake, 'running', bteam.val AS betteam, @custid AS creator, @refno AS refno, m.eventdate AS winlostdate, 'i' AS betfrom, @apt,
-					@mpt, @tpt, @playerdc, @dc, @adc, m.matchid, m.eventdate, btype.val AS bettype, @spt, @sdc, 0 AS statusid, @refno
-				FROM	@matchinfo m
-					INNER JOIN dbo.strSplit(@oddValueInfo, ',') o
-						ON m.id = o.rank
-					INNER JOIN dbo.strSplit(@betTypeInfo, ',') btype
-						ON o.rank = btype.rank
-					INNER JOIN dbo.strSplit(@betTeamInfo,',') bteam
-						ON btype.rank = bteam.rank		
-					INNER JOIN dbo.strSplit(@stakescombo, ',') s
-						ON s.rank = m.matchorder
-						
-				INSERT INTO dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, status, apositiontaking, mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount,
-					betteam, creator, winlostdate, betfrom, betcheck, matchid, recommend, mrecommend, ruben, bettype, actual_stake, currency, sdiscount, spositiontaking, srecommend, 
-					Username, CurrencyName, statusID, modds, refno, comstatus, oddstype, betid)
-				OUTPUT INSERTED.transid, INSERTED.refno INTO @tblBettransCombo (transid, refno)
-				SELECT @custid, GETDATE(), 1, 1 AS hdp1, @numberofmatch AS hdp2,  @mainOdds AS odds, @mainStakeCombo AS stake, 'running', @apt, @mpt, @tpt, @playerdc, @dc, @adc,
-					 dbo.BinaryToDecimal(reverse(RIGHT(@bitmapcombo,@numberofmatch))) AS betteam, @custid AS creator, (SELECT MAX(eventdate) FROM @matchinfo) AS winlostdate, 'i' AS betfrom, dbo.BinaryToDecimal(@bitmapcombo) AS betcheck,
-					 29 AS matchid, @recommend, @mrecommend, 0 AS ruben, 29 AS bettype, @mainStakeCombo AS actual_stake, @currency, @sdc, @spt, @srecommend, @username, @currencyname, 0 as statusid, 1	, @refno, 0, 1,0
-			END
-			ELSE
-			BEGIN
-				UPDATE ref with (rowlock,updlock) SET @refn=refno=refno+1  WHERE  refid='refno'
-				set @refno = @refn + 100000000000
-		
-				-- just 1 combo
-				INSERT INTO dbo.bettransm (custid, transdate, oddsid,  odds, stake, status, betteam, creator, refno, winlostdate, betfrom, apositiontaking, 
-					mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount, matchid, matchdate, bettype, spositiontaking, sdiscount, statusID, comstatus)
-				OUTPUT INSERTED.transid INTO @tblBettransmCombo (transid)
-				SELECT @custid AS custid, GETDATE(), (SELECT top 1 oddsid FROM odds with(NOLOCK) WHERE matchid = m.matchid AND bettype = btype.val AND liveindicator = 0 ), o.val AS odds, (SELECT MAX(val) FROM dbo.strSplit(@stakescombo,',')) AS stake, 'running', bteam.val AS betteam, @custid AS creator, @refno AS refno, m.eventdate AS winlostdate, 'i' AS betfrom, @apt,
-					@mpt, @tpt, @playerdc, @dc, @adc, m.matchid, m.eventdate, btype.val AS bettype, @spt, @sdc, 0 AS statusid, @refno					
-				FROM	@matchinfo m
-					INNER JOIN dbo.strSplit(@oddValueInfo, ',') o
-						ON m.id = o.rank
-					INNER JOIN dbo.strSplit(@betTypeInfo, ',') btype
-						ON o.rank = btype.rank
-					INNER JOIN dbo.strSplit(@betTeamInfo,',') bteam
-						ON btype.rank = bteam.rank		
-			
-						
-				-- bettrans
-				INSERT INTO dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, status, apositiontaking, mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount,
-					betteam, creator, winlostdate, betfrom, betcheck, matchid, recommend, mrecommend, ruben, bettype, actual_stake, currency, sdiscount, spositiontaking, srecommend, 
-					Username, CurrencyName, statusID, modds, refno, comstatus, oddstype, betid)
-				OUTPUT INSERTED.transid, INSERTED.refno INTO @tblBettransCombo (transid,refno)
-				SELECT @custid, GETDATE(), 1, 1 AS hdp1, @numberofmatch AS hdp2,  @mainOdds AS odds, @mainStakeCombo AS stake, 'running', @apt, @mpt, @tpt, @playerdc, @dc, @adc,
-					 dbo.BinaryToDecimal(reverse(RIGHT(@bitmapcombo,@numberofmatch))) AS betteam, @custid AS creator, (SELECT MAX(eventdate) FROM @matchinfo) AS winlostdate, 'i' AS betfrom, dbo.BinaryToDecimal(@bitmapcombo) AS betcheck,
-					 29 AS matchid, @recommend, @mrecommend, 0 AS ruben, 29 AS bettype, @mainStakeCombo AS actual_stake, @currency, @sdc, @spt, @srecommend, @username, @currencyname, 0 as statusid, 1	, @refno, 0,1,0
-			END
+			INSERT INTO dbo.bettransm (custid, transdate, oddsid,  odds, stake, status, betteam, creator, refno, winlostdate, betfrom, apositiontaking, 
+				mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount, matchid, matchdate, bettype, spositiontaking, sdiscount, statusID, comstatus)
+			OUTPUT INSERTED.transid INTO @tblBettransmCombo (transid)
+			SELECT @custid AS custid, GETDATE(),(SELECT top 1 oddsid FROM odds with(NOLOCK) WHERE matchid = m.matchid AND bettype = btype.val AND liveindicator = 0 ), o.val AS odds, s.val AS stake, 'running', bteam.val AS betteam, @custid AS creator, @refno AS refno, m.eventdate AS winlostdate, 'i' AS betfrom, @apt,
+				@mpt, @tpt, @playerdc, @dc, @adc, m.matchid, m.eventdate, btype.val AS bettype, @spt, @sdc, 0 AS statusid, @refno
+			FROM	@matchinfo m
+				INNER JOIN dbo.strSplit(@oddValueInfo, ',') o
+					ON m.id = o.rank
+				INNER JOIN dbo.strSplit(@betTypeInfo, ',') btype
+					ON o.rank = btype.rank
+				INNER JOIN dbo.strSplit(@betTeamInfo,',') bteam
+					ON btype.rank = bteam.rank		
+				INNER JOIN dbo.strSplit(@stakescombo, ',') s
+					ON s.rank = m.matchorder
+					
+			INSERT INTO dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, status, apositiontaking, mpositiontaking, tpositiontaking, playerdiscount, discount, adiscount,
+				betteam, creator, winlostdate, betfrom, betcheck, matchid, recommend, mrecommend, ruben, bettype, actual_stake, currency, sdiscount, spositiontaking, srecommend, 
+				Username, CurrencyName, statusID, modds, refno, comstatus, oddstype, betid)
+			OUTPUT INSERTED.transid, INSERTED.refno INTO @tblBettransCombo (transid, refno)
+			SELECT @custid, GETDATE(), 1, 1 AS hdp1, @numberofmatch AS hdp2,  @mainOdds AS odds, @mainStakeCombo AS stake, 'running', @apt, @mpt, @tpt, @playerdc, @dc, @adc,
+				 dbo.BinaryToDecimal(reverse(RIGHT(@bitmapcombo,@numberofmatch))) AS betteam, @custid AS creator, (SELECT MAX(eventdate) FROM @matchinfo) AS winlostdate, 'i' AS betfrom, dbo.BinaryToDecimal(@bitmapcombo) AS betcheck,
+				 29 AS matchid, @recommend, @mrecommend, 0 AS ruben, 29 AS bettype, @mainStakeCombo AS actual_stake, @currency, @sdc, @spt, @srecommend, @username, @currencyname, 0 as statusid, 1	, @refno, 0, 1,0
 			
 			SELECT 'bettransMCombo', * FROM @tblBettransmCombo
 			SELECT 'bettransCombo', * FROM @tblBettransCombo
