@@ -10,4 +10,6 @@ SET SettingStatus = 0
 WHERE ProductID = 22 -- Voidbridge
 
 INSERT INTO LossLimit_GlobalSetting(ProductId, ExchangeId, MinLossLimit, DefaultLossLimit)
-SELECT @ProductID,ExchangeId, 1, 2000 FROM LossLimit_GlobalSetting WHERE ProductId = 6 AND ExchangeId NOT IN (20,2,3,34)
+SELECT 22,ExchangeId, MinLossLimit, DefaultLossLimit 
+FROM LossLimit_GlobalSetting WITH (NOLOCK)
+WHERE ProductId = 6
