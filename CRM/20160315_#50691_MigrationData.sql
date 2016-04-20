@@ -55,7 +55,7 @@ VALUES	(	N'Sportsbook'		, N'Soccer'				, 1			)
 	,	(	N'Virtual Sports'	, N'Virtual Tennis'		, 2			)	-- new
 	,	(	N'Virtual Sports'	, N'Virtual Greyhound'	, 2			)	-- new
 	,	(	N'Virtual Sports'	, N'Virtual Speedway'	, 2			)	-- new
-	,	(	N'Virtual Sports'	, N'Virtual MotorGP'	, 2			)	-- new
+	,	(	N'Virtual Sports'	, N'Virtual Motorsports', 2			)	-- new
 
 	,	(	N'Racing'			, N'Horse Racing'		, 1			)
 	,	(	N'Racing'			, N'Greyhound Racing'	, 1			)
@@ -118,6 +118,7 @@ WHERE	SettingName = 'ParentProduct'
 -- Update value of [crmFeedback] table
 DECLARE	@counter		INT
 	,	@step			INT = 20000
+	,	@VirtualSport	NVARCHAR(50) 
 
 SELECT	@counter = MAX(cf.FeedbackID)
 FROM	dbo.crmFeedback AS cf WITH (NOLOCK)
@@ -132,46 +133,74 @@ BEGIN
 			ON	m.SubProductID = cf.ProductID
 	WHERE	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
 
+	-- Update SubProduct for Virtual Sports Product
+	SELECT	@VirtualSport = N'Virtual Soccer'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+
+	SELECT	@VirtualSport = N'Virtual Racing'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+
+	SELECT	@VirtualSport = N'Virtual Tennis'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+	
+	SELECT	@VirtualSport = N'Virtual Greyhound'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+	
+	SELECT	@VirtualSport = N'Virtual Speedway'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+	
+	SELECT	@VirtualSport = N'Virtual Motorsports'
+	UPDATE	cf
+	SET	cf.SubProductID = cs.SettingID
+	FROM		dbo.crmFeedback AS cf WITH (ROWLOCK, UPDLOCK)
+	INNER JOIN	dbo.crmSetting AS cs WITH (NOLOCK)
+			ON	cs.SettingValue = @VirtualSport
+			AND	cs.SettingName = 'SubProduct'
+	WHERE	cf.SubProductID = 8020
+		AND	cf.Description LIKE '%' + @VirtualSport + '%'
+		AND	cf.FeedbackID BETWEEN @counter - @step + 1 AND @counter
+
 	SELECT	@counter = @counter - @step
 
 	WAITFOR DELAY '00:00:00.280'
 END
-
-SELECT *
-FROM #mapping AS m
-
-SELECT *
-INTO #crmFeedback
-FROM dbo.crmFeedback AS cf WITH (NOLOCK)
-
-SELECT *
-INTO #crmSetting
-FROM dbo.crmSetting AS cs WITH (NOLOCK)
-
---DROP TABLE #mapping
-
---DROP TABLE #crmFeedback
-
---DROP TABLE #crmSetting
-
-SELECT COUNT(1)
-FROM dbo.crmFeedback AS cf WITH (NOLOCK)
-WHERE cf.ProductID = 8020
-
-SELECT TOP 500 cf.FeedbackID, cf.CustID, cf.TitleID, cf.LanguageID, cf.CountryID, cf.CreateDate, cf.CreatorID, cf.FeedbackDate, cf.SolveDate, cf.CommunicationID, cf.StationID, cf.MainCategoryID, cf.SubCategoryID, cf.SiteID, cf.RoleID, cf.ProductID, cf.BetTypeID, cf.ResponseID, cf.StatusID, cf.Description, cf.Solution, cf.IsReviewed, cf.Review, cf.ReviewerID, cf.Subject, cf.ResolutionDate
-FROM crmFeedback AS cf WITH (NOLOCK)
-WHERE cf.ProductID = 8020
-AND cf.Description LIKE '%Virtual MotorGP%'
-
-UPDATE	#crmSetting WITH (ROWLOCK, UPDLOCK)
-SET		SettingName = 'SubProduct'
-WHERE	SettingName = 'Product'
-
-UPDATE	#crmSetting WITH (ROWLOCK, UPDLOCK)
-SET		SettingName = 'Product'
-WHERE	SettingName = 'ParentProduct'
-
-SELECT *
-FROM #crmSetting AS cs
-GO
-

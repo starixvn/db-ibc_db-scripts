@@ -55,7 +55,7 @@ VALUES	(	N'Sportsbook'		, N'Soccer'				, 1			)
 	,	(	N'Virtual Sports'	, N'Virtual Tennis'		, 2			)	-- new
 	,	(	N'Virtual Sports'	, N'Virtual Greyhound'	, 2			)	-- new
 	,	(	N'Virtual Sports'	, N'Virtual Speedway'	, 2			)	-- new
-	,	(	N'Virtual Sports'	, N'Virtual MotorGP'	, 2			)	-- new
+	,	(	N'Virtual Sports'	, N'Virtual Motorsports', 2			)	-- new
 
 	,	(	N'Racing'			, N'Horse Racing'		, 1			)
 	,	(	N'Racing'			, N'Greyhound Racing'	, 1			)
@@ -198,7 +198,7 @@ EXECUTE	dbo.Acc_CRM_SettingIns @UserID = @UserID, @SettingName = @SettingName, @
 SELECT	@SettingValue = N'Virtual Speedway'
 EXECUTE	dbo.Acc_CRM_SettingIns @UserID = @UserID, @SettingName = @SettingName, @SettingValue = @SettingValue, @ParentID = @ParentID, @DisplayOrder = @DisplayOrder, @IP = @IP
 
-SELECT	@SettingValue = N'Virtual MotorGP'
+SELECT	@SettingValue = N'Virtual Motorsports'
 EXECUTE	dbo.Acc_CRM_SettingIns @UserID = @UserID, @SettingName = @SettingName, @SettingValue = @SettingValue, @ParentID = @ParentID, @DisplayOrder = @DisplayOrder, @IP = @IP
 
 -- Map relationship between ParentProduct and current Product
@@ -484,9 +484,9 @@ VALUES	(	N'Soccer'             , N'Handicap'                      )
 	,	(	N'Virtual Speedway'   , N'Place'                         )
 	,	(	N'Virtual Speedway'   , N'Win/Place'                     )
 														             
-	,	(	N'Virtual MotorGP'    , N'Win'                           )
-	,	(	N'Virtual MotorGP'    , N'Place'                         )
-	,	(	N'Virtual MotorGP'    , N'Win/Place'                     )
+	,	(	N'Virtual Motorsports', N'Win'                           )
+	,	(	N'Virtual Motorsports', N'Place'                         )
+	,	(	N'Virtual Motorsports', N'Win/Place'                     )
 														             
 	,	(	N'Horse Racing'       , N'Win'                           )
 	,	(	N'Horse Racing'       , N'Place'                         )
