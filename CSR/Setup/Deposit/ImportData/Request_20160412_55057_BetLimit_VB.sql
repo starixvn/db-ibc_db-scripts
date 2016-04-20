@@ -1,11 +1,11 @@
 /*
 	Created By: Helen
 	Created Date: 20160420
-	Description: Stakelevelgroup for Voidbridge
+	Description: Bet Limit for Voidbridge
 	
 	DB: DBCust/CustDB
+	
 */
-
 DELETE FROM GameGroup
 
 INSERT INTO dbo.GameGroup 
@@ -17,9 +17,8 @@ VALUES	(	1          , 212         , 4001      , 'Level 1', 0        )
 	,	(	4          , 212         , 4001      , 'Level 1', 1        )
 	,	(	5          , 212         , 4001      , 'Level 2', 1        )
 	,	(	6          , 212         , 4001      , 'Level 3', 1        )
-	
+
 DELETE FROM Dep_StakeLevel
-DELETE FROM StakeLevel
 DELETE FROM StakeLevelGroupDetail
 DELETE FROM Dep_StakeLevelGroupDetail
 
@@ -48,21 +47,52 @@ FROM #Currency c
 DECLARE @Start_Index INT = 1
 DECLARE @End_Index INT 
 DECLARE @StakeLevelID INT = 1
+
+DECLARE @StakeLevelID_Credit INT = 1
 DECLARE @ExchangeID  INT
-SET @End_Index = (SELECT MAX(ID) FROM #Currency)
+
+
 
 SET IDENTITY_INSERT StakeLevel ON 
  
+SET @StakeLevelID_Credit = (SELECT ISNULL(MAX(StakeLevelID),0) FROM StakeLevel WITH (NOLOCK))
+
+SET @Start_Index = @StakeLevelID_Credit + 1
+
+SET @End_Index = (SELECT MAX(ID) FROM #ExchangeIDListPerCurrency) + @StakeLevelID_Credit
+
+SET @StakeLevelID = @Start_Index
+
+-- Credit
+
 WHILE @Start_Index < = @End_Index
 BEGIN
 	
-	SET @ExchangeID = (SELECT ExchangeID FROM #ExchangeIDListPerCurrency WHERE ID = @Start_Index)
-	-- Credit
+	SET @ExchangeID = (SELECT ExchangeID FROM #ExchangeIDListPerCurrency WHERE ID = @Start_Index - @StakeLevelID_Credit)
+	
 	INSERT INTO StakeLevel (StakeLevelID, GameTypeID, GameGroupID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId )
 	VALUES (	@StakeLevelID     , 4001      , 1         , NULL    , NULL    , NULL    , NULL    , @ExchangeID           )
 		,	(	@StakeLevelID + 1 , 4001      , 2         , NULL    , NULL    , NULL    , NULL    , @ExchangeID           )
 		,	(	@StakeLevelID + 2 , 4001      , 3         , NULL    , NULL    , NULL    , NULL    , @ExchangeID           )
 	
+	
+	SET @Start_Index	 = @Start_Index + 1
+	
+	SET @StakeLevelID = @StakeLevelID + 3
+		
+END
+
+-- Deposit
+SET @Start_Index = 1
+
+SET @End_Index = (SELECT MAX(ID) FROM #ExchangeIDListPerCurrency) 
+
+SET @StakeLevelID = 1 
+
+WHILE @Start_Index < = @End_Index
+BEGIN
+	
+	SET @ExchangeID = (SELECT ExchangeID FROM #ExchangeIDListPerCurrency WHERE ID = @Start_Index)
 	-- Deposit
 	INSERT INTO Dep_StakeLevel (	StakeLevelID, GameTypeID, GameGroupID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId )
 	VALUES (	@StakeLevelID     , 4001      , 4         , NULL    , NULL    , NULL    , NULL    , @ExchangeID           )
@@ -74,6 +104,7 @@ BEGIN
 	SET @StakeLevelID = @StakeLevelID + 3
 		
 END
+
 
 CREATE TABLE #GameType (GameTypeID INT, MYR  VARCHAR(50),  USD VARCHAR(50),  CNY VARCHAR(50),  GBP VARCHAR(50),  VND VARCHAR(50),  EUR VARCHAR(50),  THB VARCHAR(50),  IDR VARCHAR(50),  INR VARCHAR(50),  KRW VARCHAR(50),  PLN VARCHAR(50),  UUS VARCHAR(50),  JPY VARCHAR(50),  CAD VARCHAR(50),  AUD VARCHAR(50),  BND VARCHAR(50),  SGD VARCHAR(50),  HKD VARCHAR(50),  TWD VARCHAR(50),  CHF VARCHAR(50),  PHP VARCHAR(50),  ZAR VARCHAR(50),  MXN VARCHAR(50),  DKK VARCHAR(50),  SEK VARCHAR(50),  NOK VARCHAR(50),  RUB VARCHAR(50),  CZK VARCHAR(50),  RON VARCHAR(50),  NZD VARCHAR(50),  MMK VARCHAR(50),  KHR VARCHAR(50))
 
