@@ -1,3 +1,10 @@
+/*
+	Created By: Helen
+	Created Date: 20160420
+	Description: Stakelevelgroup for Voidbridge
+	
+	DB: DBCust/CustDB
+*/
 
 DELETE FROM GameGroup
 
