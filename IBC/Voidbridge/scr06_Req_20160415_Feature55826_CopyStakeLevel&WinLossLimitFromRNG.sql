@@ -76,9 +76,9 @@ BEGIN
 				WHEN si.SyncCasino = 1 THEN ss.IsAutoReset 
 				ELSE 1 END AS IsAutoReset
 	FROM dbo.CustWinLimit cs WITH(NOLOCK)	
-		INNER JOIN CustInfo ci WITH (NOLOCK) ON ci.custid = cs.CustId
-		INNER JOIN CustWinLimit ss WITH (NOLOCK) ON ss.CustId = ci.srecommend
-		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.custid = si.custid
+		INNER JOIN CustInfo ci WITH (NOLOCK) ON ci.custid = cs.CustId		
+		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
+		INNER JOIN CustWinLimit ss WITH (NOLOCK) ON ss.CustId = ci.srecommend AND ss.BetType = cs.BetType AND ss.SportType = cs.SportType
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 3 AND cs.SportType = 208 AND cs.BetType = 2101
 
 	--Agent Level
@@ -99,9 +99,9 @@ BEGIN
 	FROM dbo.CustWinLimit cs WITH(NOLOCK)	
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK)ON ci.custid = cs.CustId
 		INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
-		INNER JOIN dbo.CustWinLimit ms WITH (NOLOCK) ON ms.CustId = mi.CustID
+		INNER JOIN dbo.CustWinLimit ms WITH (NOLOCK) ON ms.CustId = mi.CustID AND ms.BetType = cs.BetType AND ms.SportType = cs.SportType
 		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
-		INNER JOIN dbo.CustWinLimit ss WITH (NOLOCK) ON ss.CustId = si.CustID
+		INNER JOIN dbo.CustWinLimit ss WITH (NOLOCK) ON ss.CustId = si.CustID AND ss.BetType = cs.BetType AND ss.SportType = cs.SportType
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 2 AND cs.SportType = 208 AND cs.BetType = 2101
 	
 	--Member Level
@@ -125,11 +125,11 @@ BEGIN
 	FROM dbo.CustWinLimit cs WITH(NOLOCK)	
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK)ON ci.custid = cs.CustId
 		INNER JOIN #SMATemp ai WITH (NOLOCK) ON ci.recommend = ai.custid	
-		INNER JOIN dbo.CustWinLimit ags WITH (NOLOCK) ON ags.CustId = ai.CustID
+		INNER JOIN dbo.CustWinLimit ags WITH (NOLOCK) ON ags.CustId = ai.CustID AND ags.BetType = cs.BetType AND ags.SportType = cs.SportType
 		INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
-		INNER JOIN dbo.CustWinLimit ms WITH (NOLOCK) ON ms.CustId = mi.CustID
+		INNER JOIN dbo.CustWinLimit ms WITH (NOLOCK) ON ms.CustId = mi.CustID AND ms.BetType = cs.BetType AND ms.SportType = cs.SportType
 		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
-		INNER JOIN dbo.CustWinLimit ss WITH (NOLOCK) ON ss.CustId = si.CustID
+		INNER JOIN dbo.CustWinLimit ss WITH (NOLOCK) ON ss.CustId = si.CustID AND ss.BetType = cs.BetType AND ss.SportType = cs.SportType
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 1 AND cs.SportType = 208 AND cs.BetType = 2101
 	
 	--------------------------------------StakeLevelGroup Setting-------------------------------------------------	

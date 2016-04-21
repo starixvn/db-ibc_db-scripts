@@ -1,10 +1,10 @@
 /*
 	Created: Elodie
-	Date: 20160217
+	Date: 20160420
 	Task: prepare data for tmpCustGameKind
 	DB: DBCUST/06/TP/MNL.bodb02	
 */ 
---step 0: prepare structure for tmpCustGameType on DBCUST
+--step 0: prepare structure for tmpCustGameKind on DBCUST
 USE [CustDB]
 GO
 
@@ -48,7 +48,6 @@ GO
 
 USE [CustDB]
 GO
---mapping GameTypeID from LCS to GDCasinoAdmin
 INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[SPositionTaking]
            ,[MPositionTaking]
@@ -64,9 +63,19 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
 SELECT	c.IBCCustID,
-		SPositionTaking, MPositionTaking, APositionTaking, IsAutoPositionTaking, AutoPositionTaking, MaxPositionTaking, MinPositionTaking
-		SMAgentRollingRate, MAgentRollingRate, AgentRollingRate, MemberRollingRate,
-		IsAutoMPositionTaking, AutoMPositionTaking 
+		ISNULL(SPositionTaking,0), 
+		ISNULL(MPositionTaking, 
+		ISNULL(APositionTaking, 
+		ISNULL(IsAutoPositionTaking, 
+		ISNULL(AutoPositionTaking, 
+		ISNULL(MaxPositionTaking, 
+		MinPositionTaking,
+		SMAgentRollingRate, 
+		MAgentRollingRate, 
+		AgentRollingRate, 
+		MemberRollingRate,
+		ISNULL(IsAutoMPositionTaking, 
+		ISNULL(AutoMPositionTaking 
 FROM DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) 
 	INNER JOIN DBBingoAdmin.CasinoAdmin.dbo.customer c WITH (NOLOCK) ON cs.CustID = c.CustID
 WHERE cs.GameKind = 9 

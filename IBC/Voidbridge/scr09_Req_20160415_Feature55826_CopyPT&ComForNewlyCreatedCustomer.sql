@@ -2,12 +2,12 @@
 	Created: Elodie
 	Task: Copy PT & Comm for newly created customer
 	DB: DBCUST/CustDB
-	Date: 20150626
+	Date: 20150420
 */ 
 
-DECLARE @maxcustID2 INT
+DECLARE @MaxCustID1 INT
 	
-SELECT @maxcustID2 = xxx
+SELECT @MaxCustID1 = xxx
 	
 CREATE TABLE #supers (custid int)
 	
@@ -37,12 +37,12 @@ CREATE TABLE #SMATemp
 INSERT INTO #MemberTemp (CustID, SyncCasino)
 SELECT custid, SyncCasino
 FROM Custinfo WITH (NOLOCK)
-WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1 AND custid > @maxcustID2	
+WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1 AND custid > @MaxCustID1	
 	
 INSERT INTO #SMATemp (CustID, roleid, SyncCasino)
 SELECT custid, roleid, SyncCasino
 FROM Custinfo WITH (NOLOCK)
-WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @maxcustID2 
+WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @MaxCustID1 
 
 DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 22 AND SettingType = 1

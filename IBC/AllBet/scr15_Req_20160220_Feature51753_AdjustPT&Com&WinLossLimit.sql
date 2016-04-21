@@ -61,7 +61,7 @@ FROM CustWinLossLimit_Agent cs WITH (NOLOCK)
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON cs.SportType = dest.tSportType AND cs.BetType = dest.tBetType AND dest.SettingType = 6 
 	INNER JOIN #SMATemp ci WITH (NOLOCK) ON ci.custid = cs.CustId 
 WHERE ci.roleid = 4 AND ci.SyncLiveCasino = 1
-	AND (cs.MaxWinLimit = ci.MaxWinLiveCasino OR cs.IsAutoReset = ci.isAutoResetLiveCasino)
+	AND (cs.MaxWinLimit <> ci.MaxWinLiveCasino OR cs.IsAutoReset <> ci.isAutoResetLiveCasino)
 								
 --Master Level
 UPDATE cs		
@@ -117,11 +117,11 @@ FROM dbo.CustWinLossLimit_Member cs WITH (NOLOCK)
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid
 	INNER JOIN #SMATemp ai WITH (NOLOCK) ON ci.recommend = ai.custid
 WHERE ci.roleid = 1
-	AND (cs.MaxWinLimit = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
+	AND (cs.MaxWinLimit <> CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 								WHEN ai.SyncLiveCasino = 1 THEN ai.MaxWinLiveCasino 
 								WHEN mi.SyncLiveCasino = 1 THEN mi.MaxWinLiveCasino 
 								WHEN si.SyncLiveCasino = 1 THEN si.MaxWinLiveCasino END
-		OR cs.IsAutoReset = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.isAutoResetLiveCasino
+		OR cs.IsAutoReset <> CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.isAutoResetLiveCasino
 									WHEN ai.SyncLiveCasino = 1 THEN ai.isAutoResetLiveCasino 
 									WHEN mi.SyncLiveCasino = 1 THEN mi.isAutoResetLiveCasino 
 									WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino END)	

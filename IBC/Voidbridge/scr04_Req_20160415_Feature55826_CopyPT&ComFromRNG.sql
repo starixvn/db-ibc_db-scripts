@@ -80,7 +80,7 @@ BEGIN
 		,cs.isautopositiontaking 
 		,cs.autopositiontaking  *100
 		,cs.minpositiontaking  *100
-		,90
+		,@MaxPT
 	FROM dbo.tmpCustGameKind cs WITH(NOLOCK) 
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 	

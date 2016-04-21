@@ -27,29 +27,23 @@ VALUES
 
 CREATE TABLE #MemberTemp
 (
-	CustID INT PRIMARY KEY CLUSTERED,
-	SyncLiveCasino BIT,
-	MaxWinLiveCasino SMALLMONEY,
-	isAutoResetLiveCasino BIT
+	CustID INT PRIMARY KEY CLUSTERED,	
 )
 
 CREATE TABLE #SMATemp
 (
-	CustID INT PRIMARY KEY CLUSTERED,
-	roleid TINYINT,
-	SyncLiveCasino BIT,
-	MaxWinLiveCasino SMALLMONEY,
-	isAutoResetLiveCasino BIT
+	CustID INT PRIMARY KEY CLUSTERED,	
+	roleid TINYINT
 )
 	
-INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
-SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+INSERT INTO #MemberTemp (CustID)
+SELECT custid
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1 AND custid > @maxcustid
 	
 	
-INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
-SELECT custid, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+INSERT INTO #SMATemp (CustID, roleid)
+SELECT custid, roleid
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @maxcustid 
 
@@ -59,11 +53,12 @@ SELECT @MaxComm = MaxDiscount FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE 
 --------------------------------------WinLossLimit-------------------------------------------------
 --SuperLevel
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
-SELECT custid, dest.tSportType, dest.tBetType	
+SELECT ci.custid, dest.tSportType, dest.tBetType	
 	,CASE WHEN ci.SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END AS MaxWinLimit
 	,0 AS MaxLossLimit 
 	,CASE WHEN ci.SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END AS IsAutoReset
-FROM #SMATemp ci WITH(NOLOCK)	
+FROM dbo.custInfo ci WITH(NOLOCK)	
+	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
 WHERE ci.roleid = 4 AND dest.SettingType = 6 
 									
@@ -78,7 +73,8 @@ SELECT ci.custid, dest.tSportType, dest.tBetType
 			WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino 
 			ELSE 1 END AS IsAutoReset
 FROM dbo.custInfo ci WITH(NOLOCK)	
-	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
+	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
+	INNER JOIN custInfo si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
 WHERE ci.roleid = 3 AND dest.SettingType = 6 
 
@@ -95,8 +91,9 @@ SELECT ci.custid, dest.tSportType, dest.tBetType
 			WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino 
 			ELSE 1 END AS IsAutoReset
 FROM dbo.custInfo ci WITH(NOLOCK)
-	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
-	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
+	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
+	INNER JOIN custInfo mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
+	INNER JOIN custInfo si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
 WHERE ci.roleid = 2 AND dest.SettingType = 6
 	
@@ -115,9 +112,10 @@ SELECT ci.custid, dest.tSportType, dest.tBetType
 			WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino 
 			ELSE 1 END AS IsAutoReset
 FROM dbo.custInfo ci WITH(NOLOCK)
-	INNER JOIN #SMATemp ai WITH (NOLOCK) ON ci.recommend = ai.custid
-	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
-	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
+	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
+	INNER JOIN custInfo ai WITH (NOLOCK) ON ci.recommend = ai.custid
+	INNER JOIN custInfo mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
+	INNER JOIN custInfo si WITH (NOLOCK) ON ci.srecommend = si.custid
 	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
 WHERE ci.roleid = 1 AND dest.SettingType = 6 
 	
