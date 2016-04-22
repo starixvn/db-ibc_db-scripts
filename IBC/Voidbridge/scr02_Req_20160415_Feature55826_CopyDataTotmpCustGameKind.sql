@@ -94,7 +94,6 @@ WHERE ci.roleid = 4
 	AND cs.isinternal = 0
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND s.islicensee = 0
-	AND ci.custid <= @max_custid
 	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
  
 INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
@@ -111,7 +110,7 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[MemberRollingRate]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
-SELECT	ci.CustID,
+SELECT	ci.CustID
 		,0
 		,0
 		,0
@@ -138,7 +137,7 @@ FROM Custinfo ci WITH (NOLOCK)
 LEFT JOIN [dbo].[tmpCustGameKind] cgk WITH(NOLOCK) ON cgk.custid = ci.custid
 WHERE ci.srecommend IN (SELECT CustID FROM #supers) 
 AND ci.roleid = 3
-WHERE cgk.SPositionTaking IS NULL
+AND cgk.SPositionTaking IS NULL
 
 INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[SPositionTaking]
@@ -154,7 +153,7 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[MemberRollingRate]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
-SELECT	ci.CustID,
+SELECT	ci.CustID
 		,cgk.SPositionTaking
 		,0
 		,0
@@ -180,7 +179,7 @@ FROM Custinfo ci WITH (NOLOCK)
 LEFT JOIN [dbo].[tmpCustGameKind] cgk WITH(NOLOCK) ON cgk.custid = ci.custid
 WHERE ci.srecommend IN (SELECT CustID FROM #supers) 
 AND ci.roleid = 2
-WHERE cgk.SPositionTaking IS NULL
+AND cgk.SPositionTaking IS NULL
 
 INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[SPositionTaking]
@@ -196,7 +195,7 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[MemberRollingRate]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
-SELECT	ci.CustID,
+SELECT	ci.CustID
 		,0
 		,cgk.MPositionTaking
 		,0
@@ -216,13 +215,13 @@ INNER JOIN [dbo].[tmpCustGameKind] cgk WITH(NOLOCK) ON cgk.custid = ci.mrecommen
 -----------------INSERT UNSYNC-ED Members-------------------------------
 CREATE TABLE #Members (custid INT, srecommend INT, mrecommend INT, recommend INT)
 
-INSERT INTO #Members(custid,mrecommend)
+INSERT INTO #Members(custid,srecommend,mrecommend,recommend)
 SELECT ci.CustID,ci.srecommend,ci.mrecommend,ci.recommend
 FROM Custinfo ci WITH (NOLOCK)
 LEFT JOIN [dbo].[tmpCustGameKind] cgk WITH(NOLOCK) ON cgk.custid = ci.custid
 WHERE ci.srecommend IN (SELECT CustID FROM #supers) 
 AND ci.roleid = 1
-WHERE cgk.SPositionTaking IS NULL
+AND cgk.SPositionTaking IS NULL
 
 INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[SPositionTaking]
@@ -238,10 +237,10 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[MemberRollingRate]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
-SELECT	ci.CustID,
+SELECT	ci.CustID
 		,0
 		,0
-		, CASE WHEN ISNULL(cgk.APositionTaking,0) < ISNULL(cgk.MinPositionTaking,0)  					THEN ISNULL(CGKA.MinPositionTaking,0)  				ELSE ISNULL(cgk.APositionTaking,0) 
+		, CASE WHEN ISNULL(cgk.APositionTaking,0) < ISNULL(cgk.MinPositionTaking,0)  					THEN ISNULL(cgk.MinPositionTaking,0)  				ELSE ISNULL(cgk.APositionTaking,0) 
 			END
 		,0
 		,0
@@ -262,38 +261,38 @@ UPDATE CGKC WITH(rowlock, updlock)
 SET CGKC.MPositionTaking = CASE 
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 1
 			AND (ISNULL(CGKA.AutoMPositionTaking, 0) <= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND (ISNULL(CGKA.AutoMPositionTaking, 0) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APo sitionTaking, 0)))
+			AND (ISNULL(CGKA.AutoMPositionTaking, 0) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
 			THEN ISNULL(CGKA.AutoMPositionTaking, 0)
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 1
 			AND (ISNULL(CGKA.AutoMPositionTaking, 0) <= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND (ISNULL(CGKA.AutoMPositionTaking, 0) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APo sitionTaking, 0)))
+			AND (ISNULL(CGKA.AutoMPositionTaking, 0) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
 			THEN ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.MPositionTaking, 0)
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 1
 			AND (ISNULL(CGKA.AutoMPositionTaking, 0) >= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) >= (ISNULL(CGKM.MinPosi tionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
+			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 				)
 			THEN (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 1
 			AND (ISNULL(CGKA.AutoMPositionTaking, 0) >= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) <= (ISNULL(CGKM.MinPosi tionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
+			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 				)
 			THEN ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 0
 			AND (ISNULL(CGKA.MPositionTaking, 0) <= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND (ISNULL(CGKA.MPositionTaking, 0) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTa king, 0)))
+			AND (ISNULL(CGKA.MPositionTaking, 0) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
 			THEN ISNULL(CGKA.MPositionTaking, 0)
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 0
 			AND (ISNULL(CGKA.MPositionTaking, 0) <= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND (ISNULL(CGKA.MPositionTaking, 0) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTa king, 0)))
+			AND (ISNULL(CGKA.MPositionTaking, 0) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
 			THEN ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.MPositionTaking, 0)
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 0
 			AND (ISNULL(CGKA.MPositionTaking, 0) >= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) >= (ISNULL(CGKM.MinPosition Taking, 0) - ISNULL(CGKC.APositionTaking, 0))
+			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) >= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 				)
 			THEN (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 		WHEN ISNULL(CGKA.IsAutoMPositionTaking, 0) = 0
 			AND (ISNULL(CGKA.MPositionTaking, 0) >= (ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)))
-			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) <= (ISNULL(CGKM.MinPosition Taking, 0) - ISNULL(CGKC.APositionTaking, 0))
+			AND ((ISNULL(CGKM.MPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)) <= (ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0))
 				)
 			THEN ISNULL(CGKM.MinPositionTaking, 0) - ISNULL(CGKC.APositionTaking, 0)
 		ELSE ISNULL(CGKA.MPositionTaking, 0)
