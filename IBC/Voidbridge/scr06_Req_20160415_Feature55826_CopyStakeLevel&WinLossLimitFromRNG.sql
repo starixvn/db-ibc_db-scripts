@@ -105,7 +105,7 @@ BEGIN
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 2 AND cs.SportType = 208 AND cs.BetType = 2101
 	
 	--Member Level
-	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
+	INSERT INTO dbo.CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT cs.custid, @SportType, @BetType	
 		,CASE	WHEN ci.SyncCasino  = 1 THEN cs.MaxWinLimit
 				WHEN ai.SyncCasino = 1 THEN ags.MaxWinLimit 
@@ -166,11 +166,17 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.custid <= @max_custid
-	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+FROM CustInfo ci WITH(NOLOCK)
+ INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+ INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+ LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+ AND ci.username NOT LIKE '3rdSuper%'
+ AND cs.isinternal = 0
+ AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+ AND s.islicensee = 0
+ AND ci.custid <= @max_custid
+ AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 WHILE (1 = 1)
 BEGIN
@@ -199,11 +205,17 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.custid <= @max_custid 
-	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+FROM CustInfo ci WITH(NOLOCK)
+ INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+ INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+ LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+ AND ci.username NOT LIKE '3rdSuper%'
+ AND cs.isinternal = 0
+ AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+ AND s.islicensee = 0
+ AND ci.custid <= @max_custid
+ AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 WHILE (1 = 1)
 BEGIN

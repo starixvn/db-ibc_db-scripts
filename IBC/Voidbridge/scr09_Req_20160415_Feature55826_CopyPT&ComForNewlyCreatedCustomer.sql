@@ -13,10 +13,16 @@ CREATE TABLE #supers (custid int)
 	
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+FROM CustInfo ci WITH(NOLOCK)
+ INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+ INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+ LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+ AND ci.username NOT LIKE '3rdSuper%'
+ AND cs.isinternal = 0
+ AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+ AND s.islicensee = 0
+ AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
 DECLARE @SportType SMALLINT, @BetType SMALLINT, @IsLive BIT
 	SELECT @SportType = 212, @BetType = 4001, @IsLive = 0
