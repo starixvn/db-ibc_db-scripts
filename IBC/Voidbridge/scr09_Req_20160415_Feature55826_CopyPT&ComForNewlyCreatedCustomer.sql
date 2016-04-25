@@ -72,18 +72,18 @@ INSERT INTO dbo.CustPTSetting3rd_Agent
 		,[MaxPT])
 SELECT 
 	c.IBCCustID, @SportType, @BetType, @IsLive
-	,cs.spositiontaking  *100
-	,cs.mpositiontaking  *100
-	,cs.apositiontaking  *100
-	,cs.isautompositiontaking
-	,cs.autompositiontaking *100
-	,cs.isautopositiontaking 
-	,cs.autopositiontaking  *100
-	,cs.minpositiontaking  *100
+	,ISNULL(cs.spositiontaking,0)  *100
+	,ISNULL(cs.mpositiontaking,0)  *100
+	,ISNULL(cs.apositiontaking,0)  *100
+	,ISNULL(cs.isautompositiontaking,0)
+	,ISNULL(cs.autompositiontaking,0) *100
+	,ISNULL(cs.isautopositiontaking,0) 
+	,ISNULL(cs.autopositiontaking,0)  *100
+	,ISNULL(cs.minpositiontaking,0)  *100
 	,90
-FROM DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) 
-	INNER JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.CustID = cs.CustID
-	INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = c.IBCCustID
+FROM #SMATemp ci WITH(NOLOCK)  
+	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.IBCCustID = ci.CustID
+	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON cs.custid = c.custid	
 WHERE cs.GameKind = 9
 	
 --MEMBER LEVEL
@@ -101,16 +101,16 @@ INSERT INTO dbo.CustPTSetting3rd_Member
 		,	[AutoSuperPT])
 SELECT 
 	c.IBCCustID, @SportType, @BetType, @IsLive
-	,cs.spositiontaking  *100
-	,cs.mpositiontaking  *100
-	,cs.apositiontaking  *100
-	,cs.isautompositiontaking
-	,cs.autompositiontaking *100
-	,cs.isautopositiontaking 
-	,cs.autopositiontaking  *100
-FROM DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) 
-	INNER JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.CustID = cs.CustID
-	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON ci.CustID = c.IBCCustID
+	,ISNULL(cs.spositiontaking,0)  *100
+	,ISNULL(cs.mpositiontaking,0)  *100
+	,ISNULL(cs.apositiontaking,0)  *100
+	,ISNULL(cs.isautompositiontaking,0)
+	,ISNULL(cs.autompositiontaking,0) *100
+	,ISNULL(cs.isautopositiontaking,0) 
+	,ISNULL(cs.autopositiontaking,0)  *100
+FROM #MemberTemp ci WITH(NOLOCK)
+	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.IBCCustID = ci.CustID
+	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON cs.custid = c.custid	
 WHERE cs.GameKind = 9
 	
 DECLARE @apos SMALLMONEY,

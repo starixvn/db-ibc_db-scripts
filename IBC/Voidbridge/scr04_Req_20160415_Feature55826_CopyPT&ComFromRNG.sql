@@ -72,17 +72,17 @@ BEGIN
 		   ,[MaxPT])
 	SELECT 
 		cs.custid, @SportType, @BetType, @IsLive
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-		,cs.minpositiontaking  *100
+		,ISNULL(cs.spositiontaking,0)  *100
+		,ISNULL(cs.mpositiontaking,0)  *100
+		,ISNULL(cs.apositiontaking,0)  *100
+		,ISNULL(cs.isautompositiontaking,0)
+		,ISNULL(cs.autompositiontaking,0) *100
+		,ISNULL(cs.isautopositiontaking,0) 
+		,ISNULL(cs.autopositiontaking,0)  *100
+		,ISNULL(cs.minpositiontaking,0)  *100
 		,@MaxPT
-	FROM dbo.tmpCustGameKind cs WITH(NOLOCK) 
-		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
+	FROM #SMATemp ci WITH(NOLOCK) 
+		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.custid = ci.custid
 	
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
@@ -99,15 +99,15 @@ BEGIN
 		  ,	[AutoSuperPT])
 	SELECT 
 		cs.custid, @SportType, @BetType, @IsLive
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-	FROM dbo.tmpCustGameKind cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
+		,ISNULL(cs.spositiontaking,0)  *100
+		,ISNULL(cs.mpositiontaking,0)  *100
+		,ISNULL(cs.apositiontaking,0)  *100
+		,ISNULL(cs.isautompositiontaking,0)
+		,ISNULL(cs.autompositiontaking,0) *100
+		,ISNULL(cs.isautopositiontaking,0) 
+		,ISNULL(cs.autopositiontaking,0)  *100
+	FROM #MemberTemp ci WITH(NOLOCK)
+		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.CustID = ci.custid
 	
 	DECLARE @apos SMALLMONEY,
 			@mpos SMALLMONEY
@@ -155,17 +155,17 @@ BEGIN
 	--Agent Level
 	INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
 	SELECT cs.custid, @SportType, @BetType, 
-			CASE	WHEN roleid = 4 THEN cs.SMAgentRollingRate
-					WHEN roleid = 3 THEN cs.MAgentRollingRate
-					WHEN roleid = 2 THEN cs.AgentRollingRate END
-	FROM dbo.tmpCustGameKind cs WITH(NOLOCK)
-		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
+			CASE	WHEN roleid = 4 THEN ISNULL(cs.SMAgentRollingRate,0)
+					WHEN roleid = 3 THEN ISNULL(cs.MAgentRollingRate,0)
+					WHEN roleid = 2 THEN ISNULL(cs.AgentRollingRate,0) END
+	FROM #SMATemp ci WITH(NOLOCK)
+		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.custid = ci.custid
 		 
 	--Member Level
 	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
-	SELECT cs.custid, @SportType, @BetType, cs.MemberRollingRate, cs.AgentRollingRate, cs.MAgentRollingRate, cs.SMAgentRollingRate
-	FROM dbo.tmpCustGameKind cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
+	SELECT cs.custid, @SportType, @BetType, ISNULL(cs.MemberRollingRate,0), ISNULL(cs.AgentRollingRate,0), ISNULL(cs.MAgentRollingRate,0), ISNULL(cs.SMAgentRollingRate,0)
+	FROM #MemberTemp ci WITH(NOLOCK)
+		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.CustID = ci.custid
 
 	--adjust commission Super = [0; 0.1]	
 	--correct for super level

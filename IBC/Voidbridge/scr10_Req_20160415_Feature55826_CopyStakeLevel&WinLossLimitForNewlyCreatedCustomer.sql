@@ -113,7 +113,7 @@ FROM dbo.CustWinLimit cs WITH(NOLOCK)
 WHERE tmpci.roleid = 2 AND cs.SportType = 208 AND cs.BetType = 2101
 
 --Member Level
-INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
+INSERT INTO dbo.CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 SELECT cs.custid, @SportType, @BetType	
 	,CASE	WHEN tmpci.SyncCasino  = 1 THEN cs.MaxWinLimit
 			WHEN ai.SyncCasino = 1 THEN ags.MaxWinLimit 
