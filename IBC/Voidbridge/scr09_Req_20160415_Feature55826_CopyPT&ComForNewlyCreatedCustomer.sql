@@ -85,7 +85,14 @@ FROM #SMATemp ci WITH(NOLOCK)
 	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.IBCCustID = ci.CustID
 	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON cs.custid = c.custid	
 WHERE cs.GameKind = 9
-	
+
+--Update m4 = s4, a4 = s4	
+UPDATE CustPTSetting3rd_Agent
+SET 	[MasterPT] = [SuperPT],
+		[AgentPT] = [SuperPT]
+WHERE SportType = 212 AND BetType = 4001
+AND Custid IN (SELECT CustID FROM #SMATemp WHERE roleid = 4)
+		
 --MEMBER LEVEL
 INSERT INTO dbo.CustPTSetting3rd_Member
 	(	[custid]

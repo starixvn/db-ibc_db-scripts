@@ -84,6 +84,13 @@ BEGIN
 	FROM #SMATemp ci WITH(NOLOCK) 
 		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.custid = ci.custid
 	
+	--Update m4 = s4, a4 = s4	
+	UPDATE CustPTSetting3rd_Agent
+	SET 	[MasterPT] = [SuperPT],
+			[AgentPT] = [SuperPT]
+	WHERE SportType = 212 AND BetType = 4001
+	AND Custid = @srecommend
+	
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
 		(	[custid]

@@ -95,8 +95,8 @@ WHERE ci.srecommend IN (SELECT s.custid
 		AND csa.SportType = @SportType AND csa.BetType = @BetType
 		AND (
 			ISNULL(cgk.SPositionTaking,0) * 100 <> csa.SuperPT
-			OR (ISNULL(cgk.MPositionTaking,0) *100 <> csa.MasterPT)
-			OR (ISNULL(cgk.APositionTaking,0) *100 <> csa.AgentPT)
+			OR (ci.roleid <> 4 AND (ISNULL(cgk.MPositionTaking,0) *100 <> csa.MasterPT))
+			OR (ci.roleid <> 4 AND (ISNULL(cgk.APositionTaking,0) *100 <> csa.AgentPT))
 			OR ISNULL(cgk.IsAutoMPositionTaking,0) <> csa.IsAutoMasterPT
 			OR ISNULL(cgk.AutoMPositionTaking,0) *100 <> csa.AutoMasterPT
 			OR ISNULL(cgk.IsAutoPositionTaking ,0) <> csa.IsAutoSuperPT
