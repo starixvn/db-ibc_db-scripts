@@ -6,7 +6,7 @@
 -- BEGIN STEP 1: Deploy this SP at DBCUST.CustDB, Run only in the FIRST running
 ------------------------------------------------------
 
-ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustomerInfo_09]
+ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustSetting_09]
  	 @srecommend INT
 	, @currency int	= 20
 	, @max_custid INT = 100000000
