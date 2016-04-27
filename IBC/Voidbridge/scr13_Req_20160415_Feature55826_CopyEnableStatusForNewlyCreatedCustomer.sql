@@ -4,9 +4,6 @@
 	DB: DBCUST/CustDB
 	Date: 20160420
 */ 
-DECLARE @MaxCustID2 INT
-	
-SELECT @MaxCustID2 = xxx
 	
 CREATE TABLE #supers (custid int)
 	
@@ -39,4 +36,7 @@ SET
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 WHERE ci.srecommend IN (SELECT CustID FROM #supers)
-	AND ci.CustID > @MaxCustID2 
+	AND ((ci.SyncCasino = 1 AND dbo.f_GetProductStatus(cs.bitmapHasSynced, @BitmapOrder) = 0)
+			OR (ci.SyncCasino = 1 AND dbo.f_GetProductStatus(cs.bitmapIsHidden, @BitmapOrder) = 1)
+			OR (ci.SyncCasino = 1 AND ci.DisableCasino = 0 AND dbo.f_GetProductStatus(cs.bitmapIsDisabled, @BitmapOrder) = 1))
+	 
