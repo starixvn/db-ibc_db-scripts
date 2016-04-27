@@ -84,13 +84,6 @@ BEGIN
 	FROM #SMATemp ci WITH(NOLOCK) 
 		LEFT JOIN dbo.tmpCustGameKind cs WITH(NOLOCK) ON cs.custid = ci.custid
 	
-	--Update m4 = s4, a4 = s4	
-	UPDATE CustPTSetting3rd_Agent
-	SET 	[MasterPT] = [SuperPT],
-			[AgentPT] = [SuperPT]
-	WHERE SportType = 212 AND BetType = 4001
-	AND Custid = @srecommend
-	
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
 		(	[custid]
@@ -158,6 +151,14 @@ BEGIN
 	WHERE ci.custid = @srecommend		
 		AND cs.SuperPT > @MaxPT	AND cs.SportType = @SportType AND cs.BetType = @BetType
 
+	
+	--Update m4 = s4, a4 = s4	
+	UPDATE CustPTSetting3rd_Agent
+	SET 	[MasterPT] = [SuperPT],
+			[AgentPT] = [SuperPT]
+	WHERE SportType = 212 AND BetType = 4001
+	AND Custid = @srecommend
+	
 	--------------------------------------Commission Setting-------------------------------------------------		
 	--Agent Level
 	INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
