@@ -165,9 +165,9 @@ AND Custid IN (SELECT CustID FROM #SMATemp WHERE roleid = 4)
 --Agent Level
 INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
 SELECT ci.custid, @SportType, @BetType, 
-		CASE	WHEN roleid = 4 THEN ISNULL(cs.SMAgentRollingRate,0)
-				WHEN roleid = 3 THEN ISNULL(cs.MAgentRollingRate,0)
-				WHEN roleid = 2 THEN ISNULL(cs.AgentRollingRate,0) END
+		CASE	WHEN ci.roleid = 4 THEN ISNULL(cs.SMAgentRollingRate,0)
+				WHEN ci.roleid = 3 THEN ISNULL(cs.MAgentRollingRate,0)
+				WHEN ci.roleid = 2 THEN ISNULL(cs.AgentRollingRate,0) END
 FROM #SMATemp ci WITH(NOLOCK)
 	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c  WITH (NOLOCK) ON ci.custid = c.IBCCustID 
 	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON c.CustID = cs.CustID

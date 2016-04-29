@@ -90,7 +90,7 @@ WHERE ci.srecommend IN (SELECT s.custid
 							INNER JOIN CasinoAdmin_tmp.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = s.CustID
 							INNER JOIN CasinoAdmin_tmp.dbo.CustGameKind cs WITH(NOLOCK) ON c.custid = cs.custid AND cs.GameKind = 9
 						WHERE SPositionTaking <= @MaxPT) 
-		AND roleid IN (2,3,4) AND Enabled = 1
+		AND ci.roleid IN (2,3,4) AND Enabled = 1
 		AND cgk.GameKind = 9
 		AND csa.SportType = @SportType AND csa.BetType = @BetType
 		AND (
