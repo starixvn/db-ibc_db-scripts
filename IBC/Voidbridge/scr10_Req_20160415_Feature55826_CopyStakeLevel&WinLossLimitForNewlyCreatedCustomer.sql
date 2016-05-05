@@ -156,7 +156,7 @@ WHERE cs.SportType = 208 AND cs.BetType = 2101
 		(
 			SELECT CustID FROM #SMATemp
 			UNION ALL
-			SELECT CustID FROM #SMATemp
+			SELECT CustID FROM #MemberTemp
 		)
 	) AND GameTypeID = @BetType 
 )
