@@ -143,18 +143,39 @@ WHERE cs.SportType = 208 AND cs.BetType = 2101
 
 		
 --------------------------------------StakeLevelGroup Setting-------------------------------------------------	
-INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
-SELECT TOP 1 ci.CustID, @SportType, @BetType, StakeLevelID
-FROM #SMATemp tmpci
-	INNER JOIN custInfo ci WITH (NOLOCK) ON tmpci.srecommend = ci.custid
-	INNER JOIN StakeLevel st WITH (NOLOCK) ON st.ExchangeId = ci.currency AND st.GameTypeID = @BetType
-ORDER BY GameGroupID
+;WITH cte AS
+(
+	SELECT ExchangeId,StakeLevelID,
+         ROW_NUMBER() OVER (PARTITION BY ExchangeId ORDER BY GameGroupID) AS rn
+	FROM dbo.StakeLevel WITH(NOLOCK) 
+	WHERE ExchangeId IN
+	(
+		SELECT currency
+		FROM custInfo ci WITH (NOLOCK)
+		WHERE CustID IN
+		(
+			SELECT CustID FROM #SMATemp
+			UNION ALL
+			SELECT CustID FROM #SMATemp
+		)
+	) AND GameTypeID = @BetType 
+)
+SELECT ExchangeId,StakeLevelID
+INTO #Currency2ndStakeLevel 
+FROM cte
+WHERE rn = 2
 
-SELECT TOP 1 ci.CustID, @SportType, @BetType, StakeLevelID
+INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
+SELECT ci.CustID, @SportType, @BetType, StakeLevelID
+FROM #SMATemp tmpci
+	INNER JOIN custInfo ci WITH (NOLOCK) ON tmpci.custid = ci.custid
+	INNER JOIN #Currency2ndStakeLevel st WITH (NOLOCK) ON st.ExchangeId = ci.currency
+
+INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)	
+SELECT ci.CustID, @SportType, @BetType, StakeLevelID
 FROM #MemberTemp tmpci
-	INNER JOIN custInfo ci WITH (NOLOCK) ON tmpci.srecommend = ci.custid
-	INNER JOIN StakeLevel st WITH (NOLOCK) ON st.ExchangeId = ci.currency AND st.GameTypeID = @BetType
-ORDER BY GameGroupID	
+	INNER JOIN custInfo ci WITH (NOLOCK) ON tmpci.custid = ci.custid
+	INNER JOIN #Currency2ndStakeLevel st WITH (NOLOCK) ON st.ExchangeId = ci.currency	
 
 DROP TABLE #SMATemp
 DROP TABLE #MemberTemp

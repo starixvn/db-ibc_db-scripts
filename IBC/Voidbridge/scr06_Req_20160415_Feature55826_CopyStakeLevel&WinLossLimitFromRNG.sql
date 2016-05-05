@@ -135,10 +135,17 @@ BEGIN
 	--------------------------------------StakeLevelGroup Setting-------------------------------------------------	
 	--Get Lowest Group Level
 	DECLARE @StakeLevel VARCHAR(100)
-	SELECT TOP 1 @StakeLevel =  StakeLevelID 
-	FROM dbo.StakeLevel WITH(NOLOCK) 
-	WHERE ExchangeId = @exchangeID AND GameTypeID = @BetType 
-	ORDER BY GameGroupID
+	
+	;WITH cte AS
+	(
+		SELECT StakeLevelID,
+			 ROW_NUMBER() OVER (ORDER BY GameGroupID) AS rn
+		FROM dbo.StakeLevel WITH(NOLOCK) 
+		WHERE ExchangeId = @exchangeID AND GameTypeID = @BetType 
+	)
+	SELECT @StakeLevel =  StakeLevelID 
+	FROM cte
+	WHERE rn = 2
 
 	INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
 	SELECT CustID, @SportType, @BetType, @StakeLevel
