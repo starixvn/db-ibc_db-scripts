@@ -189,7 +189,7 @@ WHERE rn IN (1,2,3)
 
 
 INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
-SELECT ci.CustID, @SportType, @BetType, StakeLevelID
+SELECT ci.CustID, @SportType, @BetType, StakeLevelIDs
 FROM #SMATemp tmpci
 	INNER JOIN custInfo ci WITH (NOLOCK) ON tmpci.custid = ci.custid
 	INNER JOIN #CurrencyStakeLevelSMA st WITH (NOLOCK) ON st.ExchangeId = ci.currency
