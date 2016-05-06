@@ -134,7 +134,8 @@ BEGIN
 	
 	--------------------------------------StakeLevelGroup Setting-------------------------------------------------	
 	--Get Lowest Group Level
-	DECLARE @StakeLevel VARCHAR(100)
+	DECLARE @StakeLevelMem VARCHAR(100)
+	DECLARE @StakeLevelSMA VARCHAR(100)
 	
 	;WITH cte AS
 	(
@@ -143,16 +144,28 @@ BEGIN
 		FROM dbo.StakeLevel WITH(NOLOCK) 
 		WHERE ExchangeId = @exchangeID AND GameTypeID = @BetType 
 	)
-	SELECT @StakeLevel =  StakeLevelID 
+	SELECT @StakeLevelMem =  StakeLevelID 
 	FROM cte
 	WHERE rn = 2
+	
+	;WITH cte AS
+	(
+		SELECT StakeLevelID,
+			 ROW_NUMBER() OVER (ORDER BY GameGroupID) AS rn
+		FROM dbo.StakeLevel WITH(NOLOCK) 
+		WHERE ExchangeId = @exchangeID AND GameTypeID = @BetType 
+	)
+	SELECT @StakeLevelSMA =   COALESCE(@StakeLevelSMA + ',', '') + CAST(StakeLevelID  AS VARCHAR(100))
+	FROM cte
+	WHERE rn IN (1,2,3)
+
 
 	INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
-	SELECT CustID, @SportType, @BetType, @StakeLevel
+	SELECT CustID, @SportType, @BetType, @StakeLevelSMA
 	FROM #SMATemp 
 
 	INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)	
-	SELECT CustID, @SportType, @BetType, @StakeLevel
+	SELECT CustID, @SportType, @BetType, @StakeLevelMem
 	FROM #MemberTemp
 	
 	DROP TABLE #SMATemp
