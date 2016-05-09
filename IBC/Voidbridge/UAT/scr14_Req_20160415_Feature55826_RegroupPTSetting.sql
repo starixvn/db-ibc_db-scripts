@@ -183,18 +183,18 @@ WHERE ci.roleid = 4
  AND cs.isinternal = 0
  AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
  AND s.islicensee = 0
- AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+ AND ci.currency IN (20,2,3,34)
  AND ci.custid IN (
-		--13869621,
-		--5340162,
-		--12262401,
-		--12141653,
-		--4138910,
-		--6379932,
-		--16112208,
-		--12141529,
-		--1539339,
-		--720475
+		13869621,
+		5340162,
+		12262401,
+		12141653,
+		4138910,
+		6379932,
+		16112208,
+		12141529,
+		1539339,
+		720475
 		--UUS
 		17287861
 		,18879367
@@ -230,16 +230,16 @@ INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.custid IN (
-		--13869621,
-		--5340162,
-		--12262401,
-		--12141653,
-		--4138910,
-		--6379932,
-		--16112208,
-		--12141529,
-		--1539339,
-		--720475
+		13869621,
+		5340162,
+		12262401,
+		12141653,
+		4138910,
+		6379932,
+		16112208,
+		12141529,
+		1539339,
+		720475
 		--UUS
 		17287861
 		,18879367
@@ -248,8 +248,7 @@ WHERE ci.custid IN (
 		,18479460
 		,18289591
 	)
-	--AND ci.Currency = 20
-	AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+	AND ci.currency IN (20,2,3,34)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers

@@ -146,7 +146,7 @@ BEGIN
 	)
 	SELECT @StakeLevelMem =  StakeLevelID 
 	FROM cte
-	WHERE rn = 2
+	WHERE rn = 1
 	
 	;WITH cte AS
 	(
@@ -157,7 +157,7 @@ BEGIN
 	)
 	SELECT @StakeLevelSMA =   COALESCE(@StakeLevelSMA + ',', '') + CAST(StakeLevelID  AS VARCHAR(100))
 	FROM cte
-	WHERE rn IN (1,2,3)
+	WHERE rn IN (1,2)
 
 
 	INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
