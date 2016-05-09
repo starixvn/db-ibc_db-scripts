@@ -20,23 +20,24 @@ WHERE ci.roleid = 4
  AND s.islicensee = 0
  AND ci.currency IN (34,45,43) --IDR,WON,'THB'
 
-DECLARE @BitmapOrder TINYINT
-
-SELECT @BitmapOrder = PSP.bitmapOrder
-FROM dbo.ProductSettingDetail psd WITH(NOLOCK)  
-	INNER JOIN dbo.ProductStatusProfile psp WITH (NOLOCK) ON psp.Sporttype = psd.SportType AND psp.Bettype = psd.BetType
-WHERE psd.SettingType = 4 AND psd.ProductID = 22
-
 /*******************************CUST PRODUCTSTATUS TABLE*******************************/	
 UPDATE cs
 SET
-		bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
-		bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END,
-		bitmapIsDisabled = CASE WHEN ci.SyncCasino = 1 AND ci.DisableCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1) END
+		bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapHasSynced, '<root><r b="5" s="1"/></root>')) 
+						ELSE (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapHasSynced, '<root><r b="5" s="0"/></root>')) END,
+		bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsHidden, '<root><r b="5" s="0"/></root>')) 
+						ELSE (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsHidden, '<root><r b="5" s="1"/></root>')) END,
+		bitmapIsDisabled = CASE WHEN ci.SyncCasino = 1 AND ci.DisableCasino = 0 THEN (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, '<root><r b="5" s="0"/></root>')) 
+						ELSE (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, '<root><r b="5" s="1"/></root>')) END
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 WHERE ci.srecommend IN (SELECT CustID FROM #supers)
-	AND ((ci.SyncCasino = 1 AND dbo.f_GetProductStatus(cs.bitmapHasSynced, @BitmapOrder) = 0)
-			OR (ci.SyncCasino = 1 AND dbo.f_GetProductStatus(cs.bitmapIsHidden, @BitmapOrder) = 1)
-			OR (ci.SyncCasino = 1 AND ci.DisableCasino = 0 AND dbo.f_GetProductStatus(cs.bitmapIsDisabled, @BitmapOrder) = 1))
+	AND (
+			(ci.SyncCasino = 1 AND CASE substring(cs.bitmapHasSynced, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 0)
+			OR (ci.SyncCasino = 0 AND CASE substring(cs.bitmapHasSynced, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
+			OR (ci.SyncCasino = 1 AND CASE substring(cs.bitmapIsHidden, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
+			OR (ci.SyncCasino = 0 AND CASE substring(cs.bitmapIsHidden, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 0)
+			OR (ci.SyncCasino = 1 AND ci.DisableCasino = 0 AND CASE substring(cs.bitmapIsDisabled, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
+			OR (NOT (ci.SyncCasino = 1 AND ci.DisableCasino = 0) AND CASE substring(cs.bitmapIsDisabled, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 0)
+		)
 	 

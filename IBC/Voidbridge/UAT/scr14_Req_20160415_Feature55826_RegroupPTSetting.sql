@@ -183,7 +183,7 @@ WHERE ci.roleid = 4
  AND cs.isinternal = 0
  AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
  AND s.islicensee = 0
- AND ci.currency IN (20,2,3,34)
+ AND ci.currency IN (20)
  AND ci.custid IN (
 		13869621,
 		5340162,
@@ -248,7 +248,7 @@ WHERE ci.custid IN (
 		,18479460
 		,18289591
 	)
-	AND ci.currency IN (20,2,3,34)
+	AND ci.currency IN (20)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
