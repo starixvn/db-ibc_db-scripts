@@ -79,3 +79,8 @@ SELECT	c.IBCCustID,
 FROM DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) 
 	INNER JOIN DBBingoAdmin.CasinoAdmin.dbo.customer c WITH (NOLOCK) ON cs.CustID = c.CustID
 WHERE cs.GameKind = 9 
+
+--SUPERTEST91000008 has negative SPositionTaking
+UPDATE dbo.tmpCustGameKind 
+SET SPositionTaking = 0
+WHERE CustID = 19560980
