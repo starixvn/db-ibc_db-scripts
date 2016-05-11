@@ -37,9 +37,9 @@ BEGIN
 	SELECT	@EndDate = DATEADD(MONTH, 1, @StartDate)
 	
     UPDATE	dbo.crmFeedback
-	SET		ProductID = CASE ProductID WHEN 0 THEN @ProductNA ELSE ProductID END
-		,	SubProductID = CASE SubProductID WHEN 0 THEN @SubProductNA ELSE SubProductID END
-		,	BetTypeID = CASE BetTypeID WHEN 0 THEN @BetTypeNA ELSE BetTypeID END
+	SET		ProductID = CASE ISNULL(ProductID, 0) WHEN 0 THEN @ProductNA ELSE ProductID END
+		,	SubProductID = CASE ISNULL(SubProductID, 0) WHEN 0 THEN @SubProductNA ELSE SubProductID END
+		,	BetTypeID = CASE ISNULL(BetTypeID, 0) WHEN 0 THEN @BetTypeNA ELSE BetTypeID END
 	WHERE	CreateDate >= @StartDate
 		AND	CreateDate < @EndDate
 
