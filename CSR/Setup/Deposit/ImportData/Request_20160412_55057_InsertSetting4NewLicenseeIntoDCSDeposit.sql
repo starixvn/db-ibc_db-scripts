@@ -8,9 +8,9 @@
 
 ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustSetting_09]
  	 @srecommend INT
-	, @currency int	= 20
-	, @max_custid INT = 100000000
-	, @target VARCHAR(20) = ''
+	, @currency int
+	, @max_custid INT
+	, @target VARCHAR(20)
 	
 AS
 BEGIN	
@@ -63,7 +63,7 @@ BEGIN
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
 		AND custid <= @max_custid
 							   
-	--SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
+	SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
 
 	-- Licensee profile list
 	IF NOT EXISTS (SELECT 1 
@@ -196,7 +196,7 @@ BEGIN
 							CROSS APPLY ( SELECT ',' + CONVERT(VARCHAR(20),sl.StakeLevelID)
 											FROM GameGroup G (NOLOCK) 
 												INNER JOIN Dep_StakeLevel SL (NOLOCK) ON SL.GameGroupID = G.GameGroupID AND sl.ExchangeID = @currency
-										WHERE T.SportType = G.RefSportType AND SL.GameTypeID = T.BetType AND g.IsDeposit = 1
+										WHERE T.SportType = G.RefSportType AND SL.GameTypeID = T.BetType AND g.IsDeposit = 1 AND g.GroupName = 'Level 1'
 										FOR XML PATH('')
 										) AS T1 (StakeLevelList)
 						WHERE T.SettingType = 8 ) AS T
@@ -238,13 +238,13 @@ GO
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   @site='BE7',
+SELECT   @site='spondemo',
 	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-					  where site=@site and currency  in (15,3,13,4,2,20)  -- IN,US$,RMB,TB,RM,UUS									
+					  where site=@site and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS									
 AND custid <= @max_custid
 
 
@@ -258,7 +258,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_Dep_DynamicCustomerInfo_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST' 	
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -275,13 +275,13 @@ GO
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int
-SELECT   @site='BE7',
+SELECT   @site='spondemo',
 		 @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site and currency  in (15,3,13,4,2,20)  -- IN,US$,RMB,TB,RM,UUS			
+where site=@site and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS			
 AND custid <= @max_custid
 
 
@@ -295,7 +295,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_Dep_DynamicCustomerInfo_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED'
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	
