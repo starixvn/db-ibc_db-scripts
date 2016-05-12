@@ -229,22 +229,22 @@ BEGIN
 END	
 
 GO
--- END STEP 1: DEPLOY THIS SP @ DBTRANS.CustDB -------
+-- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
 
 ------------------------------------------------------	
--- BEGIN STEP 2: Run this SP at DBCust -----
+-- BEGIN STEP 2: Run this SP at replicated DB -----
 --------------------------------------------------------------------------------------
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   @site='spondemo',
+SELECT   @site='12bet',
 	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-					  where site=@site and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS									
+					  where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS									
 AND custid <= @max_custid
 
 
@@ -258,7 +258,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST' 	
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -266,22 +266,22 @@ END
 DROP TABLE #supers		
 GO		
 
--- END STEP 2: Run this SP at DBCust -----
+-- END STEP 2: Run this SP at replicated DB -----
 -----------------------------------------------------------------------------------
 
 ---
--- BEGIN STEP 3: Run this SP at replicated DB -----
+-- BEGIN STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int
-SELECT   @site='spondemo',
+SELECT   @site='12bet',
 		 @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS			
+where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS			
 AND custid <= @max_custid
 
 
@@ -295,7 +295,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED'
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -304,6 +304,5 @@ DROP TABLE #supers
 GO		
 
 
-
--- END STEP 3: Run this SP at replicated DB -----
+-- END STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
