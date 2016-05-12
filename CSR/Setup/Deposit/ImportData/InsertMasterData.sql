@@ -22,8 +22,8 @@ GO
 INSERT INTO [dbo].[Dep_ProductSettingDetail] (ProductSettingID,SportType,BetType,IsLive,MaxDefaultValue,SettingStatus)
 VALUES 
 	(1,212,4001,0,0,1)
-	,(2,212,4001,0,0,0)
-	,(3,212,4001,0,0,0)
+	,(2,212,4001,0,0,1)
+	,(3,212,4001,0,0,1)
 GO
 
 INSERT INTO [dbo].Dep_ProductStatusProfile (Sporttype,Bettype,bitmapOrder)
