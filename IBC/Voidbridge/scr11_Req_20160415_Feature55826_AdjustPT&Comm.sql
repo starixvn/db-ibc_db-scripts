@@ -84,7 +84,7 @@ SELECT ci.custid
 FROM dbo.custinfo ci WITH(NOLOCK)	
 	INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(NOLOCK) ON csa.custid = ci.custid
 	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = ci.CustID
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
+	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
 WHERE ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
 							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = s.CustID
