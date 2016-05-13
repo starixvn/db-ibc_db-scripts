@@ -8,8 +8,3 @@
 UPDATE ProductSettingDetail 
 SET SettingStatus = 0	
 WHERE ProductID = 22 -- Voidbridge
-
-INSERT INTO LossLimit_GlobalSetting(ProductId, ExchangeId, MinLossLimit, DefaultLossLimit)
-SELECT 22,ExchangeId, MinLossLimit, DefaultLossLimit 
-FROM LossLimit_GlobalSetting WITH (NOLOCK)
-WHERE ProductId = 6
