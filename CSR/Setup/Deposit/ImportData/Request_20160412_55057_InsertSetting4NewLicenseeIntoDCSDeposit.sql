@@ -140,7 +140,7 @@ BEGIN
 		SELECT DISTINCT psd.SportType,psd.Bettype, psd.SettingType,@IsDisable AS IsDisabled,@IsHidden AS IsHidden,pbs.bitmapOrder 
 		INTO #SportBettypeFilter4
 		FROM #ProductSettingDetail_tmp psd WITH(NOLOCK)  
-			INNER JOIN ProductStatusProfile pbs WITH (NOLOCK) ON pbs.[SportType] = psd.[SportType] AND pbs.[BetType] = psd.[BetType]
+			INNER JOIN Dep_ProductStatusProfile pbs WITH (NOLOCK) ON pbs.[SportType] = psd.[SportType] AND pbs.[BetType] = psd.[BetType]
 		WHERE psd.SettingType = 4
 		
 		IF EXISTS(SELECT TOP 1 1 FROM #SportBettypeFilter4)
