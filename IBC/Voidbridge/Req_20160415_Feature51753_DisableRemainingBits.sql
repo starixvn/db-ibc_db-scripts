@@ -1,8 +1,8 @@
 /*
 	Created: Dominic
 	Date: 2016-04-15
-	Task: Update bit values to 1 for bits between 4th and 255th
-	DB: DBCust.CustDB
+	Task: Update bit values to 1 for bits between 5th and 255th
+	DB: DBCust/CustDB
 */   
 -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
@@ -20,8 +20,7 @@ BEGIN
 	   )
 	  RETURN
 	  
-	DECLARE @xml VARCHAR(MAX) = '<root>
-	<r b="4" s="1"/>
+	DECLARE @xml VARCHAR(MAX) = '<root>	
 	<r b="5" s="1"/>
 	<r b="6" s="1"/>
 	<r b="7" s="1"/>
@@ -275,11 +274,12 @@ BEGIN
 	<r b="255" s="1"/>
 	</root>'
 
-	--Update product status of CF
+	--Update product status
 	UPDATE cs
 	SET
 			bitmapIsHidden = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsHidden, @xml)),
-			bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, @xml))
+			bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapIsDisabled, @xml)),
+			bitmapHasSynced = (select bitmap from dbo.f_GenerateProductStatus_multiple (bitmapHasSynced, @xml))
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @CustID
