@@ -57,7 +57,7 @@ WHERE ci.roleid = 4
  AND cs.isinternal = 0
  AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
  AND s.islicensee = 0
- AND ci.currency IN (34,45,43) --IDR,WON,'THB'
+ AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
 
 --SMA PT
 INSERT INTO #SMAPTCust(CustID,RoleID
@@ -250,6 +250,7 @@ SET
 FROM #MemberPTCust ci WITH(NOLOCK)
 	INNER JOIN dbo.CustPTSetting3rd_Member csm WITH(UPDLOCK,ROWLOCK) ON csm.custid = ci.CustID
 WHERE csm.SportType = @SportType AND csm.BetType = @BetType
+AND csm.custid <> 19560980
 
 --------------------------------------Commission Setting-------------------------------------------------		
 --Update Comm for different settings (not adjust for line super who take comm LCS more than 0.0007)
