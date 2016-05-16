@@ -80,6 +80,9 @@ WHERE custid = xxx
 														AND grpt.IsLive=mempt.IsLive
 	WHERE grpt.AgentID=@recommend AND mempt.CustID IS NULL
 	
+	UPDATE custsettingmode3rd
+	SET IsGrouped = 0
+	WHERE custid = xxx
 	
 	UPDATE csm
 	SET
