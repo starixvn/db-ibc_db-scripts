@@ -31,8 +31,7 @@ WHERE psd.SettingType = 4 AND psd.ProductID = 22
 UPDATE cs
 SET
 		bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
-		bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END,
-		bitmapIsDisabled = CASE WHEN ci.SyncCasino = 1 AND ci.DisableCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1) END
+		bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 WHERE ci.srecommend IN (SELECT CustID FROM #supers)
@@ -41,7 +40,5 @@ WHERE ci.srecommend IN (SELECT CustID FROM #supers)
 			OR (ci.SyncCasino = 0 AND CASE substring(cs.bitmapHasSynced, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
 			OR (ci.SyncCasino = 1 AND CASE substring(cs.bitmapIsHidden, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
 			OR (ci.SyncCasino = 0 AND CASE substring(cs.bitmapIsHidden, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 0)
-			OR (ci.SyncCasino = 1 AND ci.DisableCasino = 0 AND CASE substring(cs.bitmapIsDisabled, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 1)
-			OR (NOT (ci.SyncCasino = 1 AND ci.DisableCasino = 0) AND CASE substring(cs.bitmapIsDisabled, 1+((5-1)/8), 1) & POWER(2, (5-1)%8) WHEN 0 THEN 0 ELSE 1 END = 0)
 		)
 	 
