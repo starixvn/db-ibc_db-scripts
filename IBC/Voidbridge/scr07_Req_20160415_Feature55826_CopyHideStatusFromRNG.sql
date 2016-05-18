@@ -63,6 +63,7 @@ WHERE ci.roleid = 4
  AND s.islicensee = 0
  AND ci.custid <= @max_custid
  AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+ AND c.site IN ('755555', 'INDO', 'KORIBC')
 
 WHILE (1 = 1)
 BEGIN
@@ -102,6 +103,7 @@ WHERE ci.roleid = 4
  AND s.islicensee = 0
  AND ci.custid <= @max_custid
  AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+ AND c.site IN ('755555', 'INDO', 'KORIBC')
 
 WHILE (1 = 1)
 BEGIN

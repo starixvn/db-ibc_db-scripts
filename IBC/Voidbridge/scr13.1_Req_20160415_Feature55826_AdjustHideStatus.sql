@@ -19,6 +19,7 @@ WHERE ci.roleid = 4
  AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
  AND s.islicensee = 0
  AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+ AND c.site IN ('755555', 'INDO', 'KORIBC')
 
 DECLARE @BitmapOrder TINYINT
 
