@@ -17,7 +17,7 @@ WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR',
 
 /*******************************CUST PRODUCTSTATUS TABLE*******************************/	
 UPDATE cs
-SET bitmapIsDisabled = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 5, 0) END
+SET bitmapIsDisabled = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 5, 0) ELSE bitmapIsDisabled END
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN #supers ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	 
