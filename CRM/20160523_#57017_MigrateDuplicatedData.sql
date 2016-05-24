@@ -39,8 +39,6 @@ CREATE TABLE	#crmSetting (
 INSERT INTO	#crmSetting
 		(	SettingID, SettingName                 , SettingValue                                                                                          , IsActive)
 VALUES	(	3007     , 'MainCategory'              , 'Hihi'                                                                                                , 2       )
-	,	(	3026     , 'MainCategory'              , 'NONE'                                                                                                , 2       )
-	,	(	3039     , 'MainCategory'              , 'TEST'                                                                                                , 2       )
 	,	(	6039     , 'Site'                      , 'kakatest'                                                                                            , 2       )
 	,	(	6040     , 'Site'                      , 'thaole1'                                                                                             , 2       )
 	,	(	6041     , 'Site'                      , 'thaole2'                                                                                             , 2       )
@@ -57,7 +55,6 @@ VALUES	(	3007     , 'MainCategory'              , 'Hihi'                        
 	,	(	6052     , 'Site'                      , 'thao1'                                                                                               , 2       )
 	,	(	6053     , 'Site'                      , 'thao5'                                                                                               , 2       )
 	,	(	6054     , 'Site'                      , 'thao5'                                                                                               , 2       )
-	,	(	6210     , 'Site'                      , 'Suncity'                                                                                             , 2       )
 	,	(	6217     , 'Site'                      , 'User can not enter more than 100 characters on Setting value text box.'                              , 2       )
 	,	(	6218     , 'Site'                      , 'testaa1'                                                                                             , 2       )
 	,	(	6219     , 'Site'                      , 'test2'                                                                                               , 2       )
