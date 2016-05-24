@@ -10,8 +10,8 @@ SET NOCOUNT ON
 
 CREATE TABLE #tmpBettrans (transid BIGINT PRIMARY KEY, hdp1 SMALLMONEY, hdp2 SMALLINT, betteam NVARCHAR(10), betcheck NVARCHAR(50))
 
-INSERT INTO #tmpBettrans (transid, hdp1, hdp2)
-SELECT	transid, 0, LEN(betteam) -- number of match
+INSERT INTO #tmpBettrans (transid, hdp1, hdp2,betcheck)
+SELECT	transid, 0, LEN(betteam),hdp2 -- number of match
 FROM	dbo.rmBettrans
 WHERE	matchid = 29
 		AND bettype = 29
@@ -22,7 +22,7 @@ DECLARE @bitmap VARCHAR(21) = ''
 UPDATE tmpb
 	SET @bitmap = REPLICATE('1', hdp2 - 1) + '0'
 		,betteam = dbo.BinaryToDecimal(REVERSE(@bitmap))
-		,betcheck = tmpb.hdp2
+		--,betcheck = tmpb.hdp2
 FROM #tmpBettrans tmpb
 
 UPDATE b WITH(ROWLOCK, UPDLOCK)
@@ -53,8 +53,8 @@ FROM	dbo.rmbettrans b
 	SELECT EXP(SUM(LOG(odds))) AS Odds, b.transid, ps.SetStake
 	INTO #tmp
 	FROM tmpbettrans b 
-		INNER JOIN bodb02.dbo.RefCombinationSet_xtest rcs WITH(NOLOCK) ON b.selection_cnt = rcs.N AND (b.bitmapR & rcs.bitmapR) > 0  
-		INNER JOIN bodb02.dbo.RefCombination_xtest rc WITH(NOLOCK) ON rcs.N = rc.N AND rcs.R = rc.R AND b.RN = rc.seq
+		INNER JOIN bodb02.dbo.RefCombinationSet_xpre rcs WITH(NOLOCK) ON b.selection_cnt = rcs.N AND (b.bitmapR & rcs.bitmapR) > 0  
+		INNER JOIN bodb02.dbo.RefCombination_xpre rc WITH(NOLOCK) ON rcs.N = rc.N AND rcs.R = rc.R AND b.RN = rc.seq
 		INNER JOIN ParlayStake ps ON ps.refno = b.refno AND ps.RN = rc.R
 	GROUP BY b.transid, ps.SetStake, serial
 
@@ -75,7 +75,7 @@ FROM	dbo.rmbettrans b
 		SELECT b.TransID, SUM (rcs.cnt) AS TotalBet
 		FROM rmBettrans b WITH(NOLOCK)
 			INNER JOIN #tmpBettrans c ON b.transid=c.transid
-			INNER JOIN bodb02.dbo.RefCombinationSet_xtest rcs WITH(NOLOCK) ON b.hdp2 = rcs.N
+			INNER JOIN bodb02.dbo.RefCombinationSet_xpre rcs WITH(NOLOCK) ON b.hdp2 = rcs.N
 		WHERE b.bettype=29 AND (b.betteam & rcs.bitmapR) > 0
 		GROUP BY b.transid
 	)
