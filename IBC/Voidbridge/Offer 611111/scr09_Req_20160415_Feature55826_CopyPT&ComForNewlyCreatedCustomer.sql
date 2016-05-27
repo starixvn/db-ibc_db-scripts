@@ -17,12 +17,13 @@ FROM CustInfo ci WITH(NOLOCK)
  INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
  INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-WHERE ci.roleid = 4  
- AND ci.username NOT LIKE '3rdSuper%'
- AND cs.isinternal = 0
- AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
- AND s.islicensee = 0
- AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+WHERE (ci.roleid = 4  
+		 AND ci.username NOT LIKE '3rdSuper%'
+		 AND cs.isinternal = 0
+		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		 AND s.islicensee = 0
+		 AND c.site IN ('611111'))
+	OR ci.custid IN (5,42,13) --Dummy account
 
 DECLARE @SportType SMALLINT, @BetType SMALLINT, @IsLive BIT
 	SELECT @SportType = 212, @BetType = 4001, @IsLive = 0
@@ -82,8 +83,7 @@ SELECT
 	,ISNULL(cs.minpositiontaking,0)  *100
 	,90
 FROM #SMATemp ci WITH(NOLOCK)  
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.IBCCustID = ci.CustID
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON cs.custid = c.custid	
+	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
 WHERE ISNULL(cs.GameKind,9) = 9
 		
 --MEMBER LEVEL
@@ -109,8 +109,7 @@ SELECT
 	,ISNULL(cs.isautopositiontaking,0) 
 	,ISNULL(cs.autopositiontaking,0)  *100
 FROM #MemberTemp ci WITH(NOLOCK)
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c WITH (NOLOCK) ON c.IBCCustID = ci.CustID
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON cs.custid = c.custid	
+	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
 WHERE ISNULL(cs.GameKind,9) = 9
 	
 DECLARE @apos SMALLMONEY,
@@ -169,16 +168,14 @@ SELECT ci.custid, @SportType, @BetType,
 				WHEN ci.roleid = 3 THEN ISNULL(cs.MAgentRollingRate,0)
 				WHEN ci.roleid = 2 THEN ISNULL(cs.AgentRollingRate,0) END
 FROM #SMATemp ci WITH(NOLOCK)
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c  WITH (NOLOCK) ON ci.custid = c.IBCCustID 
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON c.CustID = cs.CustID
+	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
 WHERE ISNULL(cs.GameKind,9) = 9
 
 --Member Level
 INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
 SELECT ci.custid, @SportType, @BetType, ISNULL(cs.MemberRollingRate,0), ISNULL(cs.AgentRollingRate,0), ISNULL(cs.MAgentRollingRate,0), ISNULL(cs.SMAgentRollingRate,0)
 FROM #MemberTemp ci WITH(NOLOCK)
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.Customer c  WITH (NOLOCK) ON ci.custid = c.IBCCustID 
-	LEFT JOIN DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON c.CustID = cs.CustID
+	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
 WHERE ISNULL(cs.GameKind,9) = 9
 
 --adjust commission Super = [0; 0.1]	

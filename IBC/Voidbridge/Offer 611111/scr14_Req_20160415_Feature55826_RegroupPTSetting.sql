@@ -175,34 +175,34 @@ DECLARE @srecommend INT
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
- INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
- LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+	INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE ci.roleid = 4  
- AND ci.username NOT LIKE '3rdSuper%'
- AND cs.isinternal = 0
- AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
- AND s.islicensee = 0
- AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
- AND ci.custid IN (
-		13869621,
-		5340162,
-		12262401,
-		12141653,
-		4138910,
-		6379932,
-		16112208,
-		12141529,
-		1539339,
-		720475
-		--UUS
-		,17287861
-		,18879367
-		,14373244
-		,18362423
-		,18479460
-		,18289591
-	)
+	AND ci.username NOT LIKE '3rdSuper%'
+	AND cs.isinternal = 0
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND s.islicensee = 0
+	AND c.site IN ('611111')	
+	AND ci.custid IN (
+			13869621,
+			5340162,
+			12262401,
+			12141653,
+			4138910,
+			6379932,
+			16112208,
+			12141529,
+			1539339,
+			720475
+			--UUS
+			,17287861
+			,18879367
+			,14373244
+			,18362423
+			,18479460
+			,18289591
+		)
 
 WHILE (1 = 1)
 BEGIN
@@ -229,27 +229,35 @@ DECLARE @srecommend INT
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.custid IN (
-		13869621,
-		5340162,
-		12262401,
-		12141653,
-		4138910,
-		6379932,
-		16112208,
-		12141529,
-		1539339,
-		720475
-		--UUS
-		,17287861
-		,18879367
-		,14373244
-		,18362423
-		,18479460
-		,18289591
-	)
-	--AND ci.Currency = 20
-	  AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+	INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+	AND ci.username NOT LIKE '3rdSuper%'
+	AND cs.isinternal = 0
+	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	AND s.islicensee = 0
+	AND c.site IN ('611111')	
+	AND ci.custid IN (
+			13869621,
+			5340162,
+			12262401,
+			12141653,
+			4138910,
+			6379932,
+			16112208,
+			12141529,
+			1539339,
+			720475
+			--UUS
+			,17287861
+			,18879367
+			,14373244
+			,18362423
+			,18479460
+			,18289591
+		)
+
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers

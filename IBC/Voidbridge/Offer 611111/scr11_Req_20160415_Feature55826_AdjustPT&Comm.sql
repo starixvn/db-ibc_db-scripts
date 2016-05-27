@@ -52,12 +52,13 @@ FROM CustInfo ci WITH(NOLOCK)
  INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
  INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-WHERE ci.roleid = 4  
- AND ci.username NOT LIKE '3rdSuper%'
- AND cs.isinternal = 0
- AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
- AND s.islicensee = 0
- AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
+WHERE (ci.roleid = 4  
+		 AND ci.username NOT LIKE '3rdSuper%'
+		 AND cs.isinternal = 0
+		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		 AND s.islicensee = 0
+		 AND c.site IN ('611111'))
+	OR ci.custid IN (5,42,13) --Dummy account
 
 --SMA PT
 INSERT INTO #SMAPTCust(CustID,RoleID
@@ -83,15 +84,12 @@ SELECT ci.custid
 		,cgk.AutoMPositionTaking
 FROM dbo.custinfo ci WITH(NOLOCK)	
 	INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(NOLOCK) ON csa.custid = ci.custid
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = ci.CustID
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
+	INNER JOIN tmpCustGameKindUM cgk WITH(NOLOCK) ON cgk.custid = ci.custid	
 WHERE ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = s.CustID
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON c.custid = cs.custid AND cs.GameKind = 9
+							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE SPositionTaking <= @MaxPT) 
 		AND ci.roleid IN (2,3,4) AND Enabled = 1
-		AND cgk.GameKind = 9
 		AND csa.SportType = @SportType AND csa.BetType = @BetType
 		AND (
 			ISNULL(cgk.SPositionTaking,0) * 100 <> csa.SuperPT
@@ -127,12 +125,10 @@ SELECT ci.custid
 		,cgk.AutoMPositionTaking
 FROM dbo.custinfo ci WITH(NOLOCK)
 	INNER JOIN dbo.CustPTSetting3rd_Member csm WITH(NOLOCK) ON csm.custid = ci.custid
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = ci.CustID
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
+	INNER JOIN tmpCustGameKindUM cgk WITH(NOLOCK) ON cgk.custid = ci.custid	
 WHERE ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c WITH(NOLOCK) ON c.ibccustid = s.CustID
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) ON c.custid = cs.custid AND cs.GameKind = 9
+							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE SPositionTaking <= @MaxPT)  
 		AND ci.roleid = 1 AND Enabled = 1
 		AND cgk.GameKind = 9
@@ -160,12 +156,10 @@ SELECT ci.custid,ci.roleid
 		,MemberRollingRate
 FROM dbo.custinfo ci WITH(NOLOCK)	
 	INNER JOIN dbo.CustDiscount3rd_Agent csa WITH(NOLOCK) ON csa.custid = ci.custid
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c (NOLOCK) ON c.ibccustid = ci.CustID
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
+	INNER JOIN tmpCustGameKindUM cgk WITH(NOLOCK) ON cgk.custid = ci.custid	
 WHERE ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c (NOLOCK) ON c.ibccustid = s.CustID
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid AND cgk.GameKind = 9
+							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE cgk.SMAgentRollingRate <= @MaxComm)
 		AND ci.roleid IN (2,3,4) AND Enabled = 1
 		AND cgk.GameKind = 9
@@ -191,12 +185,10 @@ SELECT ci.custid
 		,MemberRollingRate
 FROM dbo.custinfo ci WITH(NOLOCK)	
 	INNER JOIN dbo.CustDiscount3rd_Member csm WITH(NOLOCK) ON csm.custid = ci.custid
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c (NOLOCK) ON c.ibccustid = ci.CustID
-	INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid
+	INNER JOIN tmpCustGameKindUM cgk WITH(NOLOCK) ON cgk.custid = ci.custid	
 WHERE ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.Customer c (NOLOCK) ON c.ibccustid = s.CustID
-							INNER JOIN DBBINGOADMIN.CasinoAdmin.dbo.CustGameKind cgk WITH(NOLOCK) ON cgk.custid = c.custid AND cgk.GameKind = 9
+							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE cgk.SMAgentRollingRate <= @MaxComm)
 		AND ci.roleid = 1 AND Enabled = 1
 		AND cgk.GameKind = 9

@@ -6,7 +6,6 @@
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
-	,@maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -36,7 +35,7 @@ BEGIN
 			bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid			
+	WHERE ci.srecommend = @srecommend 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -46,9 +45,8 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT
+DECLARE @srecommend INT
 
-SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -56,14 +54,13 @@ FROM CustInfo ci WITH(NOLOCK)
  INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
  INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-WHERE ci.roleid = 4  
- AND ci.username NOT LIKE '3rdSuper%'
- AND cs.isinternal = 0
- AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
- AND s.islicensee = 0
- AND ci.custid <= @max_custid
- AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
- AND c.site IN ('755555', 'INDO', 'KORIBC')
+WHERE (ci.roleid = 4  
+		 AND ci.username NOT LIKE '3rdSuper%'
+		 AND cs.isinternal = 0
+		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		 AND s.islicensee = 0
+		 AND c.site IN ('611111'))
+	OR ci.custid IN (5,42,13) --Dummy account
 
 WHILE (1 = 1)
 BEGIN
@@ -74,9 +71,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'REPLICATED'
 			
 			
 	waitfor delay '00:00:0.280'
@@ -86,9 +81,7 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
+DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -96,14 +89,13 @@ FROM CustInfo ci WITH(NOLOCK)
  INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
  INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-WHERE ci.roleid = 4  
- AND ci.username NOT LIKE '3rdSuper%'
- AND cs.isinternal = 0
- AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
- AND s.islicensee = 0
- AND ci.custid <= @max_custid
- AND ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
- AND c.site IN ('755555', 'INDO', 'KORIBC')
+WHERE (ci.roleid = 4  
+		 AND ci.username NOT LIKE '3rdSuper%'
+		 AND cs.isinternal = 0
+		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		 AND s.islicensee = 0
+		 AND c.site IN ('611111'))
+	OR ci.custid IN (5,42,13) --Dummy account
 
 WHILE (1 = 1)
 BEGIN
@@ -114,9 +106,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'
 END
