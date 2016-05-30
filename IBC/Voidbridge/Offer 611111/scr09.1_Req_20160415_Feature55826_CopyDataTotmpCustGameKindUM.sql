@@ -24,3 +24,8 @@ SELECT	c.IBCCustID CustID,
 FROM dbo.CustGameKind cs WITH(NOLOCK) 
 	INNER JOIN dbo.customer c WITH (NOLOCK) ON cs.CustID = c.CustID
 WHERE cs.GameKind = 9
+
+--Fix SUPERTEST91000008 has negative SPositionTaking (DBCUST.custDB)
+UPDATE dbo.tmpCustGameKindUM
+SET SPositionTaking = 0
+WHERE CustID = 19560980
