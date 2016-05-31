@@ -84,7 +84,6 @@ SELECT
 	,90
 FROM #SMATemp ci WITH(NOLOCK)  
 	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
-WHERE ISNULL(cs.GameKind,9) = 9
 		
 --MEMBER LEVEL
 INSERT INTO dbo.CustPTSetting3rd_Member
@@ -110,7 +109,6 @@ SELECT
 	,ISNULL(cs.autopositiontaking,0)  *100
 FROM #MemberTemp ci WITH(NOLOCK)
 	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
-WHERE ISNULL(cs.GameKind,9) = 9
 	
 DECLARE @apos SMALLMONEY,
 		@mpos SMALLMONEY	
@@ -169,14 +167,12 @@ SELECT ci.custid, @SportType, @BetType,
 				WHEN ci.roleid = 2 THEN ISNULL(cs.AgentRollingRate,0) END
 FROM #SMATemp ci WITH(NOLOCK)
 	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
-WHERE ISNULL(cs.GameKind,9) = 9
 
 --Member Level
 INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
 SELECT ci.custid, @SportType, @BetType, ISNULL(cs.MemberRollingRate,0), ISNULL(cs.AgentRollingRate,0), ISNULL(cs.MAgentRollingRate,0), ISNULL(cs.SMAgentRollingRate,0)
 FROM #MemberTemp ci WITH(NOLOCK)
 	LEFT JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON cs.custid = ci.custid	
-WHERE ISNULL(cs.GameKind,9) = 9
 
 --adjust commission Super = [0; 0.1]	
 --correct for super level
