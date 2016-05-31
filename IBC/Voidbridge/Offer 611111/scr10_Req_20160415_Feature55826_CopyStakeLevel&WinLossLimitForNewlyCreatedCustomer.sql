@@ -179,14 +179,14 @@ WHERE rn = 1
 		)
 	) AND GameTypeID = @BetType 
 )
-SELECT DISTINCT a.ExchangeId, StakeLevelIDs = 
+SELECT a.ExchangeId, StakeLevelIDs = 
     STUFF((SELECT ',' + CAST(StakeLevelID AS VARCHAR(100))
            FROM cte b 
            WHERE b.ExchangeId = a.ExchangeId AND b.rn IN (1,2)
           FOR XML PATH('')), 1, 1, '')
 INTO #CurrencyStakeLevelSMA
 FROM cte a
-WHERE rn IN (1,2)
+WHERE rn = 1
 
 
 INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)	
