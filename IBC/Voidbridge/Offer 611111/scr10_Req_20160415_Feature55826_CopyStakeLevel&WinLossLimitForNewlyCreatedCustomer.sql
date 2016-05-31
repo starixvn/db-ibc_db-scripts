@@ -179,7 +179,7 @@ WHERE rn = 1
 		)
 	) AND GameTypeID = @BetType 
 )
-SELECT a.ExchangeId, StakeLevelIDs = 
+SELECT DISTINCT a.ExchangeId, StakeLevelIDs = 
     STUFF((SELECT ',' + CAST(StakeLevelID AS VARCHAR(100))
            FROM cte b 
            WHERE b.ExchangeId = a.ExchangeId AND b.rn IN (1,2)
