@@ -75,7 +75,7 @@ SELECT ci.custid
 		,cgk.SPositionTaking
 		,cgk.MPositionTaking
 		,cgk.APositionTaking
-		,cgk.MinPresetPositionTaking
+		,0 AS MinPresetPositionTaking
 		,cgk.IsAutoPositionTaking
 		,cgk.AutoPositionTaking
 		,cgk.MinPositionTaking
@@ -116,7 +116,7 @@ SELECT ci.custid
 		,cgk.SPositionTaking
 		,cgk.MPositionTaking
 		,cgk.APositionTaking
-		,cgk.MinPresetPositionTaking
+		,0 AS MinPresetPositionTaking
 		,cgk.IsAutoPositionTaking
 		,cgk.AutoPositionTaking
 		,cgk.MinPositionTaking
