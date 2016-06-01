@@ -130,7 +130,7 @@ WHERE ci.srecommend IN (SELECT s.custid
 							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE SPositionTaking <= @MaxPT)  
 		AND ci.roleid = 1 AND Enabled = 1
-		AND cgk.GameKind = 9
+		--AND cgk.GameKind = 9
 		AND csm.SportType = @SportType AND csm.BetType = @BetType
 		AND (
 			ISNULL(cgk.SPositionTaking,0)  *100 <> csm.SuperPT
@@ -161,7 +161,7 @@ WHERE ci.srecommend IN (SELECT s.custid
 							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE cgk.SMAgentRollingRate <= @MaxComm)
 		AND ci.roleid IN (2,3,4) AND Enabled = 1
-		AND cgk.GameKind = 9
+		--AND cgk.GameKind = 9
 		AND csa.SportType = @SportType AND csa.BetType = @BetType
 		AND (
 			CASE ci.roleid 
@@ -190,7 +190,7 @@ WHERE ci.srecommend IN (SELECT s.custid
 							INNER JOIN tmpCustGameKindUM cs WITH(NOLOCK) ON s.custid = cs.custid
 						WHERE cgk.SMAgentRollingRate <= @MaxComm)
 		AND ci.roleid = 1 AND Enabled = 1
-		AND cgk.GameKind = 9
+		--AND cgk.GameKind = 9
 		AND csm.SportType = @SportType AND csm.BetType = @BetType
 		AND (
 			cgk.MemberRollingRate <> csm.PlayerDiscount
