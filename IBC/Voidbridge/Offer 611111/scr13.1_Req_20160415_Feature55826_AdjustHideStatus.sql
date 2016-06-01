@@ -50,16 +50,15 @@ DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
- INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+FROM customer ci WITH(NOLOCK)
+ INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE (ci.roleid = 4  
 		 AND ci.username NOT LIKE '3rdSuper%'
 		 AND cs.isinternal = 0
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
-		 AND c.site IN ('611111'))
+		 AND ci.site IN ('611111'))
 	OR ci.custid IN (5,42,13) --Dummy account
 
 WHILE (1 = 1)
@@ -85,16 +84,15 @@ DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
- INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+FROM customer ci WITH(NOLOCK)
+ INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
  LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE (ci.roleid = 4  
 		 AND ci.username NOT LIKE '3rdSuper%'
 		 AND cs.isinternal = 0
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
-		 AND c.site IN ('611111'))
+		 AND ci.site IN ('611111'))
 	OR ci.custid IN (5,42,13) --Dummy account
 
 WHILE (1 = 1)

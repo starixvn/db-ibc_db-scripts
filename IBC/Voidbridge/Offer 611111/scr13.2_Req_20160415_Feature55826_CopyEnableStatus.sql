@@ -118,10 +118,9 @@ DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BI
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+FROM customer ci WITH(NOLOCK)
 WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
-	AND c.site IN ('755555', 'INDO', 'KORIBC')
+	AND ci.site IN ('755555', 'INDO', 'KORIBC')
 	AND ci.username IN ('S922H','M922U','M922M','S922M','M922T','S922T','S922K','S922N','S922U','S922L','S922P','S922W','S922G','S922US','S922MA','S922Y','S922R','S922C','S922V','S922B','S922O','S922S',
 						'S922A','M359RM','M359SD','M359EU','M359ARM','M359ASD','M359RMB','M359ARMB','S359AH','HD','HE','S359HK','S359CM','HF','HG','HDN','HDQ','HH','DAA','DAB','DAC','DAD','HB','DAU','DAE',
 						'DAF','HX','DAM','HN','HQ','S359RM','S359HL','DAH','MGTB','MGBTB','MGCTB','SGS','SGTB','SGATB','SGI','SGT','SGAT','SGBT','SGCT','SGAR','TEH','TEC','THR','SGSM','SGSN','TEK','SGMM',
@@ -154,10 +153,9 @@ WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR',
 		
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS Mode
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+FROM customer ci WITH(NOLOCK)
 WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
-	AND c.site IN ('755555', 'INDO', 'KORIBC')
+	AND ci.site IN ('755555', 'INDO', 'KORIBC')
 	AND ci.username IN ('CHTB','CHITB','ST','STT','ST1T','ST2T','ST3T','ST4T','ST5T','ST6T','ST7T','ST8T','ST9T','BT','B5T','B1T','B2T','B3T','B4T','B6T','B7T','B8T','B9T','B10T',
 						'B11T','B12T','B13T','B14T','B15T','B16T','B17T','B18T','B19T','B20T','B21T','B22T','B23T','B24T','B25T','STEB','SABT','B26T','B27T','B28t','B29T','B30T',
 						'B31T','B32T','B33T','B35T','B34T','B36T','B37T','B38T','B39T','B40T','B41T','B42T','B43T','B44T','B45T','B46T','B47T','B48T','B49T','B50T','B51T','B52T',
@@ -196,10 +194,9 @@ DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BI
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+FROM customer ci WITH(NOLOCK)
 WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
-	AND c.site IN ('755555', 'INDO', 'KORIBC')
+	AND ci.site IN ('755555', 'INDO', 'KORIBC')
 	AND ci.username IN ('S922H','M922U','M922M','S922M','M922T','S922T','S922K','S922N','S922U','S922L','S922P','S922W','S922G','S922US','S922MA','S922Y','S922R','S922C','S922V','S922B','S922O','S922S',
 						'S922A','M359RM','M359SD','M359EU','M359ARM','M359ASD','M359RMB','M359ARMB','S359AH','HD','HE','S359HK','S359CM','HF','HG','HDN','HDQ','HH','DAA','DAB','DAC','DAD','HB','DAU','DAE',
 						'DAF','HX','DAM','HN','HQ','S359RM','S359HL','DAH','MGTB','MGBTB','MGCTB','SGS','SGTB','SGATB','SGI','SGT','SGAT','SGBT','SGCT','SGAR','TEH','TEC','THR','SGSM','SGSN','TEK','SGMM',
@@ -232,10 +229,9 @@ WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR',
 		
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS Mode
-FROM CustInfo ci WITH(NOLOCK)
- INNER JOIN customer c WITH (NOLOCK) ON ci.custid = c.custid
+FROM customer ci WITH(NOLOCK)
 WHERE ci.currency IN (20, 4, 15, 22, 33, 34, 43, 44, 45, 47, 62) --'KRW', 'IDR', 'THB'
-	AND c.site IN ('755555', 'INDO', 'KORIBC')
+	AND ci.site IN ('755555', 'INDO', 'KORIBC')
 	AND ci.username IN ('CHTB','CHITB','ST','STT','ST1T','ST2T','ST3T','ST4T','ST5T','ST6T','ST7T','ST8T','ST9T','BT','B5T','B1T','B2T','B3T','B4T','B6T','B7T','B8T','B9T','B10T',
 						'B11T','B12T','B13T','B14T','B15T','B16T','B17T','B18T','B19T','B20T','B21T','B22T','B23T','B24T','B25T','STEB','SABT','B26T','B27T','B28t','B29T','B30T',
 						'B31T','B32T','B33T','B35T','B34T','B36T','B37T','B38T','B39T','B40T','B41T','B42T','B43T','B44T','B45T','B46T','B47T','B48T','B49T','B50T','B51T','B52T',

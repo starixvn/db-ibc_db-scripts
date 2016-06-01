@@ -62,20 +62,20 @@ INSERT INTO [dbo].[tmpCustGameKind] ([CustID]
            ,[MemberRollingRate]
            ,[IsAutoMPositionTaking]
            ,[AutoMPositionTaking])
-SELECT	c.IBCCustID,
-		ISNULL(SPositionTaking,0), 
-		ISNULL(MPositionTaking,0), 
-		ISNULL(APositionTaking,0), 
-		ISNULL(IsAutoPositionTaking,0), 
-		ISNULL(AutoPositionTaking,0), 
-		ISNULL(MaxPositionTaking,0), 
-		ISNULL(MinPositionTaking,0),
+SELECT	c.IBCCustID AS CustID,
+		ISNULL(SPositionTaking,0) AS SPositionTaking, 
+		ISNULL(MPositionTaking,0) AS MPositionTaking,  
+		ISNULL(APositionTaking,0) AS APositionTaking, 
+		ISNULL(IsAutoPositionTaking,0) AS IsAutoPositionTaking, 
+		ISNULL(AutoPositionTaking,0) AS AutoPositionTaking, 
+		ISNULL(MaxPositionTaking,0) AS MaxPositionTaking, 
+		ISNULL(MinPositionTaking,0) AS MinPositionTaking,
 		SMAgentRollingRate, 
 		MAgentRollingRate, 
 		AgentRollingRate, 
 		MemberRollingRate,
-		ISNULL(IsAutoMPositionTaking,0), 
-		ISNULL(AutoMPositionTaking,0) 
+		ISNULL(IsAutoMPositionTaking,0) AS IsAutoMPositionTaking, 
+		ISNULL(AutoMPositionTaking,0) AS AutoMPositionTaking
 FROM DBBingoAdmin.CasinoAdmin.dbo.CustGameKind cs WITH(NOLOCK) 
 	INNER JOIN DBBingoAdmin.CasinoAdmin.dbo.customer c WITH (NOLOCK) ON cs.CustID = c.CustID
 WHERE cs.GameKind = 9 
