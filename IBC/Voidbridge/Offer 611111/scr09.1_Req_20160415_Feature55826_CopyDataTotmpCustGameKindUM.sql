@@ -1,10 +1,40 @@
 /*
 	Created: Daniel
-	Date: 20160527
-	Task: Select data for importing into table tmpCustGameKindUM (SSIS)
-	Source: DBCASINOADMIN.CasinoAdmin
-	Destination: DBCUST.CustDB
-*/
+	Date: 20160602
+	Task: Pull data in table CustGameKind from Casino server to local tmpCustGameKindUM
+	DB: DBCUST.custDB
+*/ 
+
+--1. Create tmpCustGameKind on DBCUST.custDB
+
+CREATE TABLE [dbo].[tmpCustGameKindUM](
+	[CustID] [int] NOT NULL,
+	[SPositionTaking] [smallmoney] NULL,
+	[MPositionTaking] [smallmoney] NULL,
+	[APositionTaking] [smallmoney] NULL,
+	[MinPresetPositionTaking] [smallmoney] NULL,	
+	[IsAutoPositionTaking] [bit] NULL,
+	[AutoPositionTaking] [smallmoney] NULL,
+	[MaxPositionTaking] [smallmoney] NULL,
+	[MinPositionTaking] [smallmoney] NULL,
+	[SMAgentRollingRate] [decimal](9, 8) NULL,
+	[MAgentRollingRate] [decimal](9, 8) NULL,
+	[AgentRollingRate] [decimal](9, 8) NULL,
+	[MemberRollingRate] [decimal](9, 8) NULL,
+	[IsAutoMPositionTaking] [bit] NULL,
+	[AutoMPositionTaking] [smallmoney] NULL,
+ CONSTRAINT [PK_tmpCustGameKindUM] PRIMARY KEY CLUSTERED 
+(
+	[CustID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON data
+) ON data
+
+
+--2.1 Use SSIS to import data for DBTP
+ /*
+   Source: DBCASINOADMIN.CasinoAdmin - with select Query below
+   Destination: DBCUST.custDB.tmpCustGameKindUM
+ */
 
 SELECT	c.IBCCustID CustID,
 		ISNULL(SPositionTaking,0) [SPositionTaking], 
@@ -25,7 +55,21 @@ FROM dbo.CustGameKind cs WITH(NOLOCK)
 	INNER JOIN dbo.customer c WITH (NOLOCK) ON cs.CustID = c.CustID
 WHERE cs.GameKind = 9
 
---Fix SUPERTEST91000008 has negative SPositionTaking (DBCUST.custDB)
-UPDATE dbo.tmpCustGameKindUM
-SET SPositionTaking = 0
-WHERE CustID = 19560980
+
+--2.2 Delete redundant records, only keep data for 611111
+SELECT c.custid into #customer
+FROM  customer c WITH (NOLOCK) 
+	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
+	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
+WHERE (c.roleid = 4  
+		 AND c.username NOT LIKE '3rdSuper%'
+		 AND cs.isinternal = 0
+		 AND c.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		 AND s.islicensee = 0		  
+		 AND c.site IN ('611111'))
+	OR c.custid IN (5,42,13) --Dummy account
+	
+delete from tmpCustGameKindUM
+where CustID not in (select custid from custInfo with(nolock) where srecommend in (Select custid from #customer))
+
+drop table #customer
