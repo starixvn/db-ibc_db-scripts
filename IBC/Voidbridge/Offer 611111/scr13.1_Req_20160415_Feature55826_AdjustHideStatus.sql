@@ -29,13 +29,60 @@ BEGIN
 	WHERE psd.SettingType = 4 AND psd.ProductID = 22
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	UPDATE cs
-    SET
-			bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
-			bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend 
+	IF @srecommend IN (5,42,13)
+	BEGIN
+		CREATE TABLE #DirrectMaster (custid INT)
+		CREATE TABLE #DirrectAgent (custid INT, mrecommend INT)
+
+		--Get Dirrect master
+		INSERT INTO #DirrectMaster(custid)
+		SELECT ci.custid
+		FROM customer c WITH(NOLOCK)
+			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
+		WHERE ci.srecommend = @srecommend AND c.site IN ('611111') AND ci.roleid = 3
+
+		--Get Dirrect agent
+		INSERT INTO #DirrectAgent(custid, mrecommend)
+		SELECT ci.custid, ci.mrecommend
+		FROM customer c WITH(NOLOCK)
+			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
+		WHERE ci.srecommend = @srecommend AND c.site IN ('611111') AND ci.roleid = 2
+			AND ci.mrecommend NOT IN (SELECT custid FROM #DirrectMaster)
+
+		IF EXISTS (SELECT 1 FROM #DirrectMaster)
+		BEGIN
+			UPDATE cs
+			SET
+					bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
+					bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.mrecommend IN (SELECT custid FROM #DirrectMaster) OR ci.custid = @srecommend
+		END
+		
+		IF EXISTS (SELECT 1 FROM #DirrectAgent)
+		BEGIN
+			UPDATE cs
+			SET
+					bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
+					bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.recommend IN (SELECT custid FROM #DirrectAgent) 
+				OR ci.custid = @srecommend 
+				OR ci.custid IN (SELECT mrecommend FROM #DirrectAgent) 
+		END
+	END
+	ELSE
+	BEGIN
+		UPDATE cs
+		SET
+				bitmapHasSynced = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1) ELSE dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 0) END,
+				bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		WHERE ci.srecommend = @srecommend 
+	END
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
