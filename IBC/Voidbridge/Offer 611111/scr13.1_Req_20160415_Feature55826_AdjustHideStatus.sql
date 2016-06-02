@@ -57,7 +57,7 @@ BEGIN
 					bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.mrecommend IN (SELECT custid FROM #DirrectMaster) OR ci.custid = @srecommend
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirrectMaster) AND ci.recommend NOT IN (16129,59308,68531)) OR ci.custid = @srecommend
 		END
 		
 		IF EXISTS (SELECT 1 FROM #DirrectAgent)
