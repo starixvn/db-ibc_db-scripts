@@ -29,7 +29,7 @@ BEGIN
 	WHERE psd.SettingType = 4 AND psd.ProductID = 22
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	IF @srecommend IN (5,42,13)
+	IF @srecommend IN (5,42,13,4)
 	BEGIN
 		CREATE TABLE #DirrectMaster (custid INT)
 		CREATE TABLE #DirrectAgent (custid INT, mrecommend INT)
@@ -106,7 +106,7 @@ WHERE (ci.roleid = 4
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
 		 AND ci.site IN ('611111'))
-	OR ci.custid IN (5,42,13) --Dummy account
+	OR ci.custid IN (5,42,13,4) --Dummy account
 
 WHILE (1 = 1)
 BEGIN
