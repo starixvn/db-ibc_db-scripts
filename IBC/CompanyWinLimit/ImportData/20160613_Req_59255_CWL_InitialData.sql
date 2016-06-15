@@ -39,20 +39,3 @@ VALUES
 ,(22,	4001,	3,	1)
 
 GO
-
-INSERT INTO Winlimit_ProductSiteCurrencyRef (ProductID,SiteID,ExchangeID)
---RNG Casino: all
-SELECT DISTINCT 6 AS ProductID, Siteid, c.currency
-FROM DBCUST.CustDB.dbo.Site S
-	INNER JOIN DBCUST.CustDB.dbo.Customer C WITH(NOLOCK) ON C.site = S.site
-WHERE S.Islicensee = 0 AND S.isactive = 1
-	AND C.roleid=2 AND C.srecommend NOT IN (SELECT custid FROM DBCUST.CustDB.dbo.Dep_CustSuper WITH(NOLOCK))
-UNION ALL	
---	Macau Games: 
-SELECT DISTINCT 22 AS ProductID, Siteid, c.currency
-FROM DBCUST.CustDB.dbo.Site S
-	INNER JOIN DBCUST.CustDB.dbo.Customer C WITH(NOLOCK) ON C.site = S.site
-WHERE S.Islicensee = 0 AND S.isactive = 1
-	AND C.roleid=2 AND C.srecommend NOT IN (SELECT custid FROM DBCUST.CustDB.dbo.Dep_CustSuper WITH(NOLOCK))
-	AND c.site IN ('755555', 'INDO', 'KORIBC','611111','789y','733333')
-	
