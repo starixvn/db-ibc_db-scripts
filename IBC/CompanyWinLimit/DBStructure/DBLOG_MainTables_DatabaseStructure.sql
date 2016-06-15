@@ -62,11 +62,12 @@ WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALL
 ) ON [WinlimitSetting_Tables]
 
 GO
-ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD  DEFAULT ((0)) FOR [MaxWinLimit]
+
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
 GO
-ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD  DEFAULT ((0)) FOR [TotalWinAmt]
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_TotalWinAmt] DEFAULT ((0)) FOR [TotalWinAmt]
 GO
-ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD  DEFAULT ((0)) FOR [WinAmt]
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_WinAmt] DEFAULT ((0)) FOR [WinAmt]
 go
-ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD  DEFAULT ((0)) FOR [ActionID]
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_ActionID] DEFAULT ((0)) FOR [ActionID]
 GO
