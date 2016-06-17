@@ -46,13 +46,13 @@ USE CustDB
 
 GO
 
-CREATE TABLE [dbo].[WinLimit_CustSetting](
+CREATE TABLE [dbo].[WinLimit_CustGameSetting](
 	[CustID] [int] NOT NULL,
 	[ProductID] [tinyint] NOT NULL,
 	[BettypeID] [smallint] NOT NULL,
 	[LevelID]	[tinyint] NOT NULL,
 	[MaxWinLimit] [money] NOT NULL
- CONSTRAINT [PK_WinLimit_CustSetting] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_WinLimit_CustGameSetting] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC,
 	[ProductID] ASC,
@@ -63,7 +63,7 @@ CREATE TABLE [dbo].[WinLimit_CustSetting](
 ) ON [WinlimitSetting_Tables]
 
 GO
-ALTER TABLE [dbo].[WinLimit_CustSetting] ADD CONSTRAINT [DF_WinLimit_CustSetting_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
+ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGameSetting_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
 GO
 
 CREATE TABLE [dbo].[WinLimit_CustGameStatus](
