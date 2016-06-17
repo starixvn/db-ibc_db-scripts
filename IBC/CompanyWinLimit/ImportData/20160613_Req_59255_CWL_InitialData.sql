@@ -2,7 +2,7 @@
 	Created by: Helen
 	Created Date: 20160613
 	Description: Company Win Limit Structure - Phase 2 
-	Database: DBPRO/bodb02 (DB230 - DB206)
+	Database: DBCUST/CUSTDB 
 	
 */
 
