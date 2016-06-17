@@ -154,3 +154,67 @@ ALTER TABLE [dbo].[WinLimit_ProductSettingDetail] ADD CONSTRAINT [DF_WinLimit_Pr
 GO
 ALTER TABLE [dbo].[WinLimit_ProductSettingDetail] ADD CONSTRAINT [DF_WinLimit_ProductSettingDetail_IsBlockedTransfer] DEFAULT ((0)) FOR [IsBlockedTransfer]
 GO
+CREATE TABLE [dbo].[WinLimit_CustGameMonitoring](
+	[CustID] [int] NOT NULL,
+	[ProductID] [tinyint] NOT NULL,
+	[BettypeID] [smallint] NOT NULL,
+	[WinlostDate] [smalldatetime] NOT NULL,
+	[LevelID]	[tinyint] NOT NULL,
+	[MaxWinLimit] [money] NOT NULL,
+	[TotalWinAmt] [money] NOT NULL,
+	[WinAmt] [money] NOT NULL,
+	[ModifiedDate] [datetime] NOT NULL,
+	[IsNotified] [bit] NOT NULL,
+	[ModifiedBy] [int],
+	[CreatedBy] [int]
+	
+	
+ CONSTRAINT [PK_WinLimit_CustGameMonitoring] PRIMARY KEY CLUSTERED 
+(
+	[CustID] ASC,
+	[ProductID] ASC,
+	[BettypeID] ASC,
+	[WinlostDate] ASC
+	
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [WinlimitSetting_Tables]
+) ON [WinlimitSetting_Tables]
+
+GO
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring] ADD  CONSTRAINT [DF_WinLimit_CustGameMonitoring_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
+GO
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring] ADD  CONSTRAINT [DF_WinLimit_CustGameMonitoring_TotalWinAmt] DEFAULT ((0)) FOR [TotalWinAmt]
+GO
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring] ADD  CONSTRAINT [DF_WinLimit_CustGameMonitoring_WinAmt] DEFAULT ((0)) FOR [WinAmt]
+GO
+CREATE TABLE [dbo].[WinLimit_CustGameMonitoring_History](
+	[LogID] [bigint] NOT NULL,
+	[CustID] [int] NOT NULL,
+	[ProductID] [tinyint] NOT NULL,
+	[BettypeID] [smallint] NOT NULL,
+	[WinlostDate] [smalldatetime] NOT NULL,
+	[LevelID]	[tinyint] NOT NULL,
+	[MaxWinLimit] [money] NOT NULL,
+	[TotalWinAmt] [money] NOT NULL,
+	[WinAmt] [money] NOT NULL,
+	[ActionID] [tinyint] NOT NULL,
+	[ModifiedDate] [datetime] NOT NULL,
+	[IsNotified] [bit] NOT NULL,
+	[ModifiedBy] [int],
+	[CreatedBy] [int]
+	
+ CONSTRAINT [PK_WinLimit_CustGameMonitoring_History] PRIMARY KEY  ([LogID])
+ , CONSTRAINT CIX_CustID_ProductID_BetTypeID_WinlostDate UNIQUE CLUSTERED (CustID,ProductID,BetTypeID,WinlostDate)
+
+WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [WinlimitSetting_Tables]
+) ON [WinlimitSetting_Tables]
+
+GO
+
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
+GO
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_TotalWinAmt] DEFAULT ((0)) FOR [TotalWinAmt]
+GO
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_WinAmt] DEFAULT ((0)) FOR [WinAmt]
+go
+ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_ActionID] DEFAULT ((0)) FOR [ActionID]
+GO
