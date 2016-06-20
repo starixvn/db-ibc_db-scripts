@@ -32,13 +32,13 @@ WHERE c.site IN ('789y','733333') AND c.roleid = 2
 
 --Get direct member
 INSERT INTO #DirectMember(custid)
-SELECT c.custid
-FROM Customer c WITH (NOLOCK)
-	INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON c.custid = ci.custid
-WHERE c.site IN ('789y','733333') AND c.roleid = 1
-	AND c.srecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
-	AND c.mrecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
-	AND c.recommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
+SELECT ci.custid
+FROM Customer ag WITH (NOLOCK)
+	INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON ag.custid = ci.custid
+WHERE ag.site IN ('789y','733333') AND ci.roleid = 1
+	AND ci.srecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
+	AND ci.mrecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
+	AND ci.recommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND ci.Enabled = 1
 
 DECLARE @SportType SMALLINT, @BetType SMALLINT, @exchangeID INT, @DefaultLossLimit MONEY
