@@ -68,11 +68,9 @@ DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+SELECT custid,currency
+FROM  Dep_CustSuper WITH(NOLOCK) 
+WHERE custid <= @max_custid 
  
 
 WHILE (1 = 1)
@@ -101,12 +99,9 @@ DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
-SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
- 
+SELECT custid,currency
+FROM  Dep_CustSuper WITH(NOLOCK) 
+WHERE custid <= @max_custid
 
 WHILE (1 = 1)
 BEGIN

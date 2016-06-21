@@ -91,11 +91,15 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
+FROM customer ci WITH (NOLOCK) 
+	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
+	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+	AND ci.username NOT LIKE '3rdSuper%'
+	AND cs.isinternal = 0
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
- 
+	AND s.islicensee = 0
+	AND ci.custid <= @max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -124,10 +128,15 @@ SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
-FROM CustInfo ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
+FROM customer ci WITH (NOLOCK) 
+	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
+	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+WHERE ci.roleid = 4  
+	AND ci.username NOT LIKE '3rdSuper%'
+	AND cs.isinternal = 0
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid 
+	AND s.islicensee = 0
+	AND ci.custid <= @max_custid
  
 
 WHILE (1 = 1)
