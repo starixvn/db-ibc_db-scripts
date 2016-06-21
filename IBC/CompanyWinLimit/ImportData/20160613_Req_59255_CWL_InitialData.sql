@@ -20,6 +20,7 @@ VALUES
 ,(2,	'Unblocked Placebet')
 ,(3,	'Blocked Transfer/Withdraw')
 ,(4,	'Unblocked Transfer/Withdraw')
+,(5,	'Blocked Placebet and Blocked Transfer/Withdraw')
 
 GO
 
@@ -39,3 +40,4 @@ VALUES
 ,(22,	4001,	3,	1)
 
 GO
+
