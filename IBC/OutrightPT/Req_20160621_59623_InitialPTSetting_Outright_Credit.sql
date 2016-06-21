@@ -76,6 +76,9 @@ BEGIN
 		INNER JOIN custsetting cs (NOLOCK) ON t.CustID = cs.custid
 		CROSS JOIN #SportTypeBetType bt 
 	WHERE cs.sporttype = 1 AND cs.bettype = 10
+	
+	DROP TABLE #DownlineListTemp
+	DROP TABLE #SportTypeBetType
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
