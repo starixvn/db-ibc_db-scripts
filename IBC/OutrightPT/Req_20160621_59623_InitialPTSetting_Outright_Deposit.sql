@@ -7,7 +7,7 @@
 	Date: 20160621
 */ 
 
-ALTER PROCEDURE [dbo].[Acc_CustSetting_09]
+ALTER PROCEDURE [dbo].[Acc_CustSetting_19]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -82,7 +82,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_CustSetting_09 @srecommend = @srecommend
+	EXEC dbo.Acc_CustSetting_19 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
@@ -112,7 +112,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_CustSetting_09 @srecommend = @srecommend
+	EXEC dbo.Acc_CustSetting_19 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 			
