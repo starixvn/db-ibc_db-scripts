@@ -5,9 +5,11 @@
 	Task: Initial PT setting on Outright of these 7 sports: Copied from Sport - HDP PT - [Redimine:59438]
 	DB: DBCUST/CustDB
 	Date: 20160621
+	-- Credit SIT: max custid = 19996769
+	-- Deposit SIT: 
 */ 
 
-ALTER PROCEDURE [dbo].[Acc_CustSetting_19]
+ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -41,15 +43,10 @@ BEGIN
 	FROM Custinfo WITH (NOLOCK)
 	WHERE srecommend = @srecommend AND Enabled = 1 AND custid <= @maxcustid
 	
-	INSERT INTO Dep_custsetting (custid, sporttype,Bettype
-							,apositiontaking
-							,mpositiontaking
-							,spositiontaking )
 	
-	SELECT t.custid, bt.sporttype,bt.Bettype
-			,apositiontaking
-			,mpositiontaking
-			,spositiontaking
+	INSERT INTO Dep_custsetting (custid, bettype, sporttype, islive, apositiontaking, mpositiontaking, spositiontaking, playerdiscount, discount, adiscount, sdiscount, minbet, maxbet )
+	
+	SELECT t.custid,bt.Bettype,bt.sporttype	,islive, apositiontaking, mpositiontaking, spositiontaking, playerdiscount, discount, adiscount, sdiscount, minbet, maxbet 
 	FROM #DownlineListTemp t
 		INNER JOIN Dep_custsetting cs (NOLOCK) ON t.CustID = cs.custid
 		CROSS JOIN #SportTypeBetType bt 
@@ -72,7 +69,7 @@ DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
-SELECT custid,currency
+SELECT custid
 FROM  Dep_CustSuper WITH(NOLOCK) 
 WHERE custid <= @max_custid 
  
@@ -86,7 +83,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_CustSetting_19 @srecommend = @srecommend
+	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
@@ -116,7 +113,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_CustSetting_19 @srecommend = @srecommend
+	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 			
