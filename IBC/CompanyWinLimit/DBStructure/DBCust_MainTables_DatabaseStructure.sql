@@ -186,8 +186,9 @@ ALTER TABLE [dbo].[WinLimit_CustGameMonitoring] ADD  CONSTRAINT [DF_WinLimit_Cus
 GO
 ALTER TABLE [dbo].[WinLimit_CustGameMonitoring] ADD  CONSTRAINT [DF_WinLimit_CustGameMonitoring_WinAmt] DEFAULT ((0)) FOR [WinAmt]
 GO
+
 CREATE TABLE [dbo].[WinLimit_CustGameMonitoring_History](
-	[LogID] [bigint] NOT NULL,
+	[LogID] [bigint] IDENTITY NOT NULL,
 	[CustID] [int] NOT NULL,
 	[ProductID] [tinyint] NOT NULL,
 	[BettypeID] [smallint] NOT NULL,
