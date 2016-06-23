@@ -29,7 +29,7 @@ BEGIN
 	WHERE psd.SettingType = 4 AND psd.ProductID = 22
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	IF @srecommend IN (2)
+	IF @srecommend IN (2,5,13)
 	BEGIN
 		CREATE TABLE #DirrectMaster (custid INT)
 		CREATE TABLE #DirrectAgent (custid INT, mrecommend INT)
@@ -57,7 +57,7 @@ BEGIN
 					bitmapIsHidden = CASE WHEN ci.SyncCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0) ELSE dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 1) END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE (ci.mrecommend IN (SELECT custid FROM #DirrectMaster) AND ci.recommend NOT IN (16129,59308,68531)) OR ci.custid = @srecommend
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirrectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
 		END
 		
 		IF EXISTS (SELECT 1 FROM #DirrectAgent)
@@ -106,7 +106,7 @@ WHERE (ci.roleid = 4
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
 		 AND ci.site IN ('789y', '733333'))
-	OR ci.custid IN (2) --Dummy account
+	OR ci.custid IN (2,5,13) --Dummy account
 
 WHILE (1 = 1)
 BEGIN
@@ -140,7 +140,7 @@ WHERE (ci.roleid = 4
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
 		 AND ci.site IN ('789y', '733333'))
-	OR ci.custid IN (2) --Dummy account
+	OR ci.custid IN (2,5,13) --Dummy account
 
 WHILE (1 = 1)
 BEGIN
