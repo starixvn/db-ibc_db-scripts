@@ -57,6 +57,7 @@ WHERE c.site IN ('789y','733333') AND c.roleid = 3
 	AND c.srecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND c.custid NOT IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND ci.Enabled = 1
+	AND c.srecommend IN (5,13)
 
 --Get direct agent
 INSERT INTO #DirectAgent(custid)
@@ -68,6 +69,7 @@ WHERE c.site IN ('789y','733333') AND c.roleid = 2
 	AND c.mrecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND c.custid NOT IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))	
 	AND ci.Enabled = 1
+	AND c.srecommend IN (5,13)
 
 --Get direct member
 INSERT INTO #DirectMember(custid)
@@ -79,6 +81,7 @@ WHERE ag.site IN ('789y','733333') AND ci.roleid = 1
 	AND ci.mrecommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND ci.recommend IN (SELECT custid FROM dbo.Acc_CustDirect WITH (NOLOCK))
 	AND ci.Enabled = 1
+	AND ci.srecommend IN (5,13)
 
 --SMA PT
 INSERT INTO #SMAPTCust(CustID,RoleID
