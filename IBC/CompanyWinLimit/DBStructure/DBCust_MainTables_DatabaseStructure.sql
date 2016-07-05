@@ -203,14 +203,14 @@ CREATE TABLE [dbo].[WinLimit_CustGameMonitoring_History](
 	[ModifiedBy] [int],
 	[CreatedBy] [int]
 	
- CONSTRAINT [PK_WinLimit_CustGameMonitoring_History] PRIMARY KEY  ([LogID])
- , CONSTRAINT CIX_CustID_ProductID_BetTypeID_WinlostDate UNIQUE CLUSTERED (CustID,ProductID,BetTypeID,WinlostDate)
+ CONSTRAINT [PK_WinLimit_CustGameMonitoring_History] PRIMARY KEY NONCLUSTERED  ([LogID])
 
 WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [WinlimitSetting_Tables]
 ) ON [WinlimitSetting_Tables]
 
 GO
-
+CREATE CLUSTERED INDEX CIX_CustID_ProductID_BetTypeID_WinlostDate ON [WinLimit_CustGameMonitoring_History] (CustID,ProductID,BetTypeID,WinlostDate)
+GO
 ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
 GO
 ALTER TABLE [dbo].[WinLimit_CustGameMonitoring_History] ADD CONSTRAINT [DF_WinLimit_CustGameMonitoring_History_TotalWinAmt] DEFAULT ((0)) FOR [TotalWinAmt]
