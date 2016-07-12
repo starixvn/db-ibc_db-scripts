@@ -65,13 +65,13 @@ CREATE TABLE [dbo].[WinLimit_CustGameSetting](
 GO
 ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGameSetting_MaxWinLimit] DEFAULT ((0)) FOR [MaxWinLimit]
 GO
-
 CREATE TABLE [dbo].[WinLimit_CustGameStatus](
 	[CustID] [int] NOT NULL,
 	[ProductID] [tinyint] NOT NULL,
 	[BettypeID] [smallint] NOT NULL,
 	[IsBlockedPlaceBet]	[bit] NOT NULL,
 	[IsBlockedTransfer] [bit] NOT NULL,
+	[ActionID] [tinyint] NOT NULL,
 	[ModifiedDate] [datetime] NOT NULL
  CONSTRAINT [PK_WinLimit_CustGameStatus] PRIMARY KEY CLUSTERED 
 (
@@ -86,6 +86,8 @@ GO
 ALTER TABLE [dbo].[WinLimit_CustGameStatus] ADD  CONSTRAINT [DF_WinLimit_CustGameStatus_IsBlockedPlaceBet] DEFAULT ((0)) FOR [IsBlockedPlaceBet]
 GO
 ALTER TABLE [dbo].[WinLimit_CustGameStatus] ADD  CONSTRAINT [DF_WinLimit_CustGameStatus_IsBlockedTransfer] DEFAULT ((0)) FOR [IsBlockedTransfer]
+go
+ALTER TABLE [dbo].[WinLimit_CustGameStatus] ADD  CONSTRAINT [DF_WinLimit_CustGameStatus_ActionID] DEFAULT ((0)) FOR [ActionID]
 
 GO
 CREATE TABLE [dbo].[Winlimit_LevelSetting](
