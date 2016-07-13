@@ -53,11 +53,11 @@ FROM dbo.CustGameKind cs WITH(NOLOCK)
 WHERE cs.GameKind = 9 
 
 
---2.1. Delete redundant records, only keep data for 611111 (DBTP)
-SELECT c.custid into #customer
-FROM  customer c WITH (NOLOCK) 
-	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
-	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
+--2.1. Delete redundant records, only keep data of remaining sites
+SELECT ci.custid into #customer
+FROM  customer ci WITH (NOLOCK) 
+	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
+	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE ci.roleid = 4  
 	AND ci.username NOT LIKE '3rdSuper%'
 	AND cs.isinternal = 0
@@ -70,6 +70,9 @@ delete from tmpCustGameKind
 where CustID not in (select custid from custInfo with(nolock) where srecommend in (Select custid from #customer))
 
 drop table #customer
+
+--correct invalid PT
+update tmpCustGameKind set SPositionTaking = 0 where custid = 19560980
  
  --4. Use SSIS to import this table from DBTP to other servers: DBCUST.custDB, DB06.bodb02, DBMNL.bodb02, MNL-DBCUST.custDB@MNL, MNL-DB06.bodb02
 
