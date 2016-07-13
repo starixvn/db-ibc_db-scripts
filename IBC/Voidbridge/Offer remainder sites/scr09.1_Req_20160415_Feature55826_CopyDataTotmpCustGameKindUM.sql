@@ -67,7 +67,7 @@ WHERE ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND s.islicensee = 0
 		AND ci.site NOT IN ('755555', 'INDO', 'KORIBC','611111','789y', '733333')
-		AND ci.custid NOT IN (2,4,5,42,13) --Dummy account
+		--AND ci.custid NOT IN (2,4,5,42,13) --Dummy account
 	
 delete from tmpCustGameKindUM
 where CustID not in (select custid from custInfo with(nolock) where srecommend in (Select custid from #customer))
