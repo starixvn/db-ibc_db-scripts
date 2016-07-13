@@ -57,10 +57,10 @@ WHERE cs.GameKind = 9
 
 
 --2.2 Delete redundant records, only keep data for 611111
-SELECT c.custid into #customer
-FROM  customer c WITH (NOLOCK) 
-	INNER JOIN site s WITH (NOLOCK) ON c.site = s.site
-	LEFT JOIN custsuper cs WITH (NOLOCK) ON c.custid = cs.custid
+SELECT ci.custid into #customer
+FROM  customer ci WITH (NOLOCK) 
+	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
+	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE ci.roleid = 4  
 		AND ci.username NOT LIKE '3rdSuper%'
 		AND cs.isinternal = 0
