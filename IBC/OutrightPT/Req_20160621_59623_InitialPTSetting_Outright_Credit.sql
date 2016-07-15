@@ -68,7 +68,13 @@ BEGIN
 					 FROM custsetting cs WITH (NOLOCK) 
 					 WHERE cs.Custid = temp_pt.custid AND cs.sporttype = temp_pt.SportType 
 					 ) AS temp_betsetting
-		
+	
+	INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
+	SELECT temp_pt.custid, bt.Bettype, bt.sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
+	FROM #DownlineListTemp temp_pt
+		INNER JOIN custoverride cs (NOLOCK) ON temp_pt.CustID = cs.custid
+		CROSS JOIN #SportTypeBetType bt 
+	WHERE cs.sporttype = 1 AND cs.bettype = 10
 						 
 	DROP TABLE #DownlineListTemp
 	DROP TABLE #SportTypeBetType
