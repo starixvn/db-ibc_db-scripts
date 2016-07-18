@@ -78,9 +78,9 @@ FROM custoverride cs
 	WHERE cs.sporttype = 1 AND cs.bettype = 10
 	) AS temp_pt ON cs.custid = temp_pt.custid 
 			AND (cs.minpositiontaking <> temp_pt.minpositiontaking
-				OR cs.maxpositiontaking <> temp_pt.minpositiontaking
-				OR cs.minlivepositiontaking <> temp_pt.minpositiontaking
-				OR cs.maxlivepositiontaking <> temp_pt.minpositiontaking)
+				OR cs.maxpositiontaking <> temp_pt.maxpositiontaking
+				OR cs.minlivepositiontaking <> temp_pt.minlivepositiontaking
+				OR cs.maxlivepositiontaking <> temp_pt.maxlivepositiontaking)
 					  
 				  
 --------------- END OF updating PT ----------------
