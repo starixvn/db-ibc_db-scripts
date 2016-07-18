@@ -1,4 +1,4 @@
-USE DB06
+USE bodb02
 GO
 /*
 	https://nexdev.net/issues/59623
