@@ -1,4 +1,4 @@
-USE CustDB
+USE DB06
 GO
 /*
 	https://nexdev.net/issues/59623
