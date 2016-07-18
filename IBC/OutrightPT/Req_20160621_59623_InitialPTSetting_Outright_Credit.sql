@@ -22,6 +22,7 @@ BEGIN
 	
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('custsetting') = 0 RETURN
+	IF dbo.f_CheckRepTable('custoverride') = 0 RETURN
 
 	CREATE TABLE #DownlineListTemp
 	(
@@ -43,15 +44,39 @@ BEGIN
 	FROM Custinfo WITH (NOLOCK)
 	WHERE srecommend = @srecommend AND Enabled = 1 AND custid <= @maxcustid
 	
-	INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
-							)
+	INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
+	SELECT
+			temp_pt.custid, temp_pt.sporttype,temp_pt.Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
+			, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
+			, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 	
-	SELECT t.custid, bt.sporttype,bt.Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
-	FROM #DownlineListTemp t
-		INNER JOIN custsetting cs (NOLOCK) ON t.CustID = cs.custid
+	FROM 
+		(SELECT t.custid, bt.sporttype,bt.Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
+				,autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
+		FROM #DownlineListTemp t
+			INNER JOIN custsetting cs (NOLOCK) ON t.CustID = cs.custid
+			CROSS JOIN #SportTypeBetType bt 
+		WHERE cs.sporttype = 1 AND cs.bettype = 10
+		) AS temp_pt
+		
+		-- Commission
+		CROSS APPLY (SELECT playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+					 FROM custsetting cs WITH (NOLOCK) 
+					 WHERE cs.Custid = temp_pt.custid AND cs.sporttype = 1 AND Bettype = 9999
+					 ) AS temp_commsetting
+
+		CROSS APPLY (SELECT TOP 1 minbet, maxbet
+					 FROM custsetting cs WITH (NOLOCK) 
+					 WHERE cs.Custid = temp_pt.custid AND cs.sporttype = temp_pt.SportType 
+					 ) AS temp_betsetting
+	
+	INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
+	SELECT temp_pt.custid, bt.Bettype, bt.sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
+	FROM #DownlineListTemp temp_pt
+		INNER JOIN custoverride cs (NOLOCK) ON temp_pt.CustID = cs.custid
 		CROSS JOIN #SportTypeBetType bt 
 	WHERE cs.sporttype = 1 AND cs.bettype = 10
-	
+						 
 	DROP TABLE #DownlineListTemp
 	DROP TABLE #SportTypeBetType
 END
