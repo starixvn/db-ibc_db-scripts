@@ -36,14 +36,14 @@ UPDATE cs
 		, isautolivempositiontaking = temp_pt.isautolivempositiontaking
 		
 FROM custsetting cs
-	INNER JOIN 
-	(SELECT cs.custid,  apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
-			,autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
-	FROM custsetting cs (NOLOCK) 
-		INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	WHERE cs.sporttype = 1 AND cs.bettype = 10
-	) AS temp_pt ON cs.custid = temp_pt.custid 
-			AND (cs.apositiontaking <> temp_pt.apositiontaking 
+	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
+	CROSS APPLY	(SELECT cs.custid, apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
+						,autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
+				FROM custsetting cs_temp (NOLOCK) 
+				WHERE cs.sporttype = 1 AND cs.bettype = 10 AND cs.custid = cs_temp.custid
+				) AS temp_pt 
+
+WHERE cs.apositiontaking <> temp_pt.apositiontaking 
 				 OR cs.mpositiontaking <> temp_pt.mpositiontaking 
 				 OR cs.spositiontaking <> temp_pt.spositiontaking 
 				 OR cs.alivepositiontaking <> temp_pt.alivepositiontaking 
@@ -57,7 +57,7 @@ FROM custsetting cs
 				 OR cs.autolivempositiontaking <> temp_pt.autolivempositiontaking 
 				 
 				 OR cs.isautompositiontaking <> temp_pt.isautompositiontaking 
-				 OR cs.isautolivempositiontaking <> temp_pt.isautolivempositiontaking)
+				 OR cs.isautolivempositiontaking <> temp_pt.isautolivempositiontaking
 				  
 
 --2. custoverride
@@ -71,16 +71,16 @@ UPDATE cs
 		, maxlivepositiontaking = temp_pt.maxlivepositiontaking
 		
 FROM custoverride cs
-	INNER JOIN 
-	(SELECT cs.custid,  minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
-	FROM custoverride cs (NOLOCK) 
-		INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	WHERE cs.sporttype = 1 AND cs.bettype = 10
-	) AS temp_pt ON cs.custid = temp_pt.custid 
-			AND (cs.minpositiontaking <> temp_pt.minpositiontaking
-				OR cs.maxpositiontaking <> temp_pt.maxpositiontaking
-				OR cs.minlivepositiontaking <> temp_pt.minlivepositiontaking
-				OR cs.maxlivepositiontaking <> temp_pt.maxlivepositiontaking)
+	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
+	CROSS APPLY	(SELECT cs.custid, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
+				 FROM custoverride cs_temp (NOLOCK) 
+				 WHERE cs.sporttype = 1 AND cs.bettype = 10 AND cs.custid = cs_temp.custid
+			) AS temp_pt 
+
+WHERE cs.minpositiontaking <> temp_pt.minpositiontaking
+		OR cs.maxpositiontaking <> temp_pt.maxpositiontaking
+		OR cs.minlivepositiontaking <> temp_pt.minlivepositiontaking
+		OR cs.maxlivepositiontaking <> temp_pt.maxlivepositiontaking
 					  
 				  
 --------------- END OF updating PT ----------------
@@ -100,14 +100,13 @@ UPDATE cs
 		, groupf = temp_pt.groupf
 		
 FROM custsetting cs
-	INNER JOIN 
-	(SELECT cs.custid, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
-	FROM custsetting cs (NOLOCK) 
-		INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	WHERE cs.sporttype = 1 AND cs.Bettype = 9999
-	) AS temp_pt ON cs.custid = temp_pt.custid 
+	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
+	CROSS APPLY	(SELECT cs.custid, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+				FROM custsetting cs_temp (NOLOCK) 
+				WHERE cs.sporttype = 1 AND cs.Bettype = 9999 AND cs.custid = cs_temp.custid
+			) AS temp_pt
 	
-	AND (cs.playerdiscount <> temp_pt.playerdiscount
+WHERE	cs.playerdiscount <> temp_pt.playerdiscount
 		OR cs.discount <> temp_pt.discount
 		OR cs.adiscount <> temp_pt.adiscount
 		OR cs. sdiscount <> temp_pt.sdiscount
@@ -118,7 +117,7 @@ FROM custsetting cs
 		OR cs.groupe <> temp_pt.groupe
 		OR cs.groupf <> temp_pt.groupf
 	
-	)			 
+			 
 		 
 -------- Update BetSetting -----------
 UPDATE cs
@@ -130,9 +129,10 @@ FROM custsetting cs
 	INNER JOIN #SportTypeBetType sp ON cs.sporttype = sp.SportType AND cs.bettype = sp.Bettype
 	CROSS APPLY (SELECT top 1 cs.custid, minbet, maxbet
 				FROM custsetting cs_temp (NOLOCK) 
-				WHERE  cs_temp.Bettype  <> 10 AND cs.sporttype = cs_temp.sporttype
-						 AND (cs.minbet <> cs_temp.minbet
-						      OR cs.maxbet <> cs_temp.maxbet)) AS Temp_bet
+				WHERE  cs_temp.Bettype  <> 10 AND cs.sporttype = cs_temp.sporttype AND cs.custid = cs_temp.custid
+				) AS Temp_bet
+WHERE  cs.minbet <> Temp_bet.minbet
+	   OR cs.maxbet <> Temp_bet.maxbet						
 
 	
 	
