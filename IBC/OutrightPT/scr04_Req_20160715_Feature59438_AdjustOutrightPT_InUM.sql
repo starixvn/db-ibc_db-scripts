@@ -121,5 +121,19 @@ FROM custsetting cs
 	)			 
 		 
 -------- Update BetSetting -----------
--- NO NEED SINCE IT'S GETTING ITSELFT
+UPDATE cs
+	SET 
+		minbet = Temp_bet.minbet
+	  , maxbet = Temp_bet.maxbet
+		
+FROM custsetting cs
+	INNER JOIN #SportTypeBetType sp ON cs.sporttype = sp.SportType AND cs.bettype = sp.Bettype
+	CROSS APPLY (SELECT top 1 cs.custid, minbet, maxbet
+				FROM custsetting cs_temp (NOLOCK) 
+				WHERE  cs_temp.Bettype  <> 10 AND cs.sporttype = cs_temp.sporttype
+						 AND (cs.minbet <> cs_temp.minbet
+						      OR cs.maxbet <> cs_temp.maxbet)) AS Temp_bet
+
+	
+	
 
