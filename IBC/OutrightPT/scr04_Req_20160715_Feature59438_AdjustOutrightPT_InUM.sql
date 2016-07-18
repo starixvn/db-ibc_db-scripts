@@ -37,10 +37,10 @@ UPDATE cs
 		
 FROM custsetting cs
 	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	CROSS APPLY	(SELECT cs.custid, apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
+	CROSS APPLY	(SELECT cs_temp.custid, apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
 						,autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 				FROM custsetting cs_temp (NOLOCK) 
-				WHERE cs.sporttype = 1 AND cs.bettype = 10 AND cs.custid = cs_temp.custid
+				WHERE cs_temp.sporttype = 1 AND cs_temp.bettype = 10 AND cs.custid = cs_temp.custid
 				) AS temp_pt 
 
 WHERE cs.apositiontaking <> temp_pt.apositiontaking 
@@ -72,9 +72,9 @@ UPDATE cs
 		
 FROM custoverride cs
 	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	CROSS APPLY	(SELECT cs.custid, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
+	CROSS APPLY	(SELECT cs_temp.custid, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
 				 FROM custoverride cs_temp (NOLOCK) 
-				 WHERE cs.sporttype = 1 AND cs.bettype = 10 AND cs.custid = cs_temp.custid
+				 WHERE cs_temp.sporttype = 1 AND cs_temp.bettype = 10 AND cs.custid = cs_temp.custid
 			) AS temp_pt 
 
 WHERE cs.minpositiontaking <> temp_pt.minpositiontaking
@@ -101,9 +101,9 @@ UPDATE cs
 		
 FROM custsetting cs
 	INNER JOIN #SportTypeBetType bt  ON bt.SportType = cs.sporttype AND bt.Bettype = cs.bettype
-	CROSS APPLY	(SELECT cs.custid, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+	CROSS APPLY	(SELECT cs_temp.custid, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
 				FROM custsetting cs_temp (NOLOCK) 
-				WHERE cs.sporttype = 1 AND cs.Bettype = 9999 AND cs.custid = cs_temp.custid
+				WHERE cs_temp.sporttype = 1 AND cs_temp.Bettype = 9999 AND cs.custid = cs_temp.custid
 			) AS temp_pt
 	
 WHERE	cs.playerdiscount <> temp_pt.playerdiscount
