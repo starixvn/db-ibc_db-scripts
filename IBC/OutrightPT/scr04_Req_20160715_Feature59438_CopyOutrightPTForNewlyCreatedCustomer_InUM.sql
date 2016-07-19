@@ -68,7 +68,7 @@ FROM
 
 	CROSS APPLY (SELECT TOP 1 minbet, maxbet
 				 FROM custsetting cs WITH (NOLOCK) 
-				 WHERE cs.Custid = temp_pt.custid AND cs.sporttype = temp_pt.SportType 
+				 WHERE cs.Custid = temp_pt.custid AND cs.sporttype = temp_pt.SportType AND cs.Bettype <> 9
 				 ) AS temp_betsetting
 
 INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
