@@ -58,7 +58,7 @@ BEGIN
 	SELECT cs.custid,cs.sporttype, MAX(minbet), MAX(maxbet)
 	FROM custsetting cs WITH (NOLOCK) 
 			INNER JOIN #DownlineListTemp t ON t.CustID = cs.custid
-	WHERE cs.sporttype IN (2,3,5,8,10,11,99)			
+	WHERE cs.sporttype IN (2,3,5,8,10,11,99) AND cs.bettype <> 9			
 	GROUP BY cs.custid,cs.sporttype
 	
 	INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
