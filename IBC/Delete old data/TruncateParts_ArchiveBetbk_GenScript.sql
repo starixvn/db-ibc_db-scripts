@@ -1,3 +1,7 @@
+/*
+	Task: Generate batch script to quick delete data in bettrans_bk using partitions switching
+	Run on DB06.bodb_Archive
+*/
 
 DECLARE @sql varchar(MAX)
 
@@ -8,7 +12,7 @@ DECLARE @parts TABLE
 	HasCompression bit
 )
 
-INSERT INTO @parts
+INSERT INTO @parts --input info of partitions to be truncated - get from <Get Partition Info.sql>
 SELECT 25, 'BETBK_12M01', 1 UNION ALL
 SELECT 26, 'BETBK_12M02', 1 UNION ALL
 SELECT 27, 'BETBK_12M03', 1 UNION ALL
