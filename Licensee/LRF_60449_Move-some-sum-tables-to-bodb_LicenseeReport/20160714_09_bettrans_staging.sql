@@ -9,7 +9,7 @@ DECLARE @SqlCmd VARCHAR(MAX)
 
 SELECT @PathFile = 'E:\IBC_DB\bodb_LicenseeReport\'
 
---create max group file
+--create file group for staging data
 SET @FileGroupName = 'LicenseeReport_Staging_Data'
 SELECT @SqlCmd = 'ALTER DATABASE bodb_LicenseeReport ADD FILEGROUP ' + @FileGroupName
 PRINT @SqlCmd
