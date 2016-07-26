@@ -81,5 +81,5 @@ CREATE TABLE [dbo].[rptKPI_MTD_3rdProducts](
 	[CurrencyID] ASC,
 	[StatID] ASC,
 	[Bettype] ASC
-)WITH (DATA_COMPRESSION = PAGE) ON [KPI_Data]
+)WITH (DATA_COMPRESSION = PAGE)
 ) ON [ps_rptKPI_MTD_3rdProducts_yearly]([rptDate])

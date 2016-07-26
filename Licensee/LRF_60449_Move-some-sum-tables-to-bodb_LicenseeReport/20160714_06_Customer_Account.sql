@@ -11,7 +11,7 @@ DECLARE @MinPartitionRange DATETIME, @MaxPartitionRange DATETIME
 	, @Temp DATETIME, @SqlCmd VARCHAR(MAX), @Prefix VARCHAR(50)
 	, @FileGroupName VARCHAR(100), @PathFile VARCHAR(255), @PathFile2 VARCHAR(255), @PathFile3 VARCHAR(255)
 
-SELECT @MinPartitionRange = '2010-04-30 23:59:59.997'
+SELECT @MinPartitionRange = '2010-03-31 23:59:59.997'
 	, @MaxPartitionRange = '2018-12-31 23:59:59.997'
 	, @PathFile = 'E:\IBC_DB\bodb_LicenseeReport\Customer_Account\'
 	, @PathFile2 = 'D:\IBC_DB\bodb_LicenseeReport\Customer_Account\'
