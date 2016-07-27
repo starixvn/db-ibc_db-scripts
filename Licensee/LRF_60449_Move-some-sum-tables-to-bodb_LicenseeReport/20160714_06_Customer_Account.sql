@@ -110,22 +110,15 @@ CREATE TABLE [dbo].[tbl_Customer_Account](
 	[mrecommend] [int] NULL,
 	[srecommend] [int] NULL,
 	[transtype] [smallint] NULL,
- CONSTRAINT [PK_customer_account] PRIMARY KEY CLUSTERED 
-(
-	[transid] ASC
-)WITH (DATA_COMPRESSION = PAGE) ON [KPI_Data]
 ) ON [ps_kpiCustomer_Account_quarterly]([transdate])
-
 GO
 
-CREATE NONCLUSTERED INDEX [ix_transdate] ON [dbo].[tbl_Customer_Account] 
+CREATE CLUSTERED INDEX [CIX_KPI_Customer_Account] ON [dbo].[tbl_Customer_Account] 
 (
 	[transdate] ASC,
 	[transtype] ASC,
 	[custid] ASC
-)
-INCLUDE ( [amount],
-[currency]) WITH (DATA_COMPRESSION = PAGE) ON [ps_kpiCustomer_Account_quarterly]([transdate])
+)WITH (DATA_COMPRESSION = PAGE) ON [ps_kpiCustomer_Account_quarterly]([transdate])
 GO
 
 ALTER TABLE [dbo].[tbl_Customer_Account] ADD  CONSTRAINT [DF_tbl_Customer_Account_deleted]  DEFAULT ((0)) FOR [deleted]

@@ -107,11 +107,7 @@ CREATE TABLE [dbo].[rptLicWinloss2](
 	[betfrom] [nvarchar](1) NOT NULL,
 	[BetEffective] [money] NULL,
 	[BuyBackAmt] [money] NULL,
-	[BABuyBackAmt] [money] NULL,
- CONSTRAINT [PK_rptLicWinloss] PRIMARY KEY NONCLUSTERED 
-(
-	[keyid] ASC
-)WITH (DATA_COMPRESSION = PAGE) ON [LicWinloss2_DATA]
+	[BABuyBackAmt] [money] NULL
 ) ON [ps_rptLicensee_monthly]([winlostdate])
 
 GO
