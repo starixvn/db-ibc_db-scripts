@@ -46,9 +46,7 @@ VALUES (2,5000,30000,100000),
 INSERT INTO WinLimit_ProductSettingDetail (ProductID, BettypeID, ExchangeID, SiteID, LevelID, MaxWinLimit, IsBlockedPlaceBet, IsBlockedTransfer)
 
 SELECT DISTINCT B.ProductID, B.BettypeID, A.ExchangeID, S.SiteID, A.LevelID, 0 AS MaxWinLimit, 0 IsBlockedPlaceBet
-		, CASE WHEN A.LevelID = 3 
-				AND S.isLicensee = 1 
-				AND B.ProductID IN (6,17,22) THEN 1 ELSE 0 END AS IsBlockedTransfer
+		,  0 AS IsBlockedTransfer
 FROM #CurrencySetting cs
 	INNER JOIN exchange e WITH (NOLOCK) ON cs.ExchangeID = e.exchangeid
 	CROSS APPLY ( VALUES (1,cs.ExchangeID,Orange),

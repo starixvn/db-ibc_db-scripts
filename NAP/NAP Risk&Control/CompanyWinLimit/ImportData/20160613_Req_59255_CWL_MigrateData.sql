@@ -13,9 +13,6 @@
 
 USE CustDB
 ----------- DATA PREPARATION ------------------
-SELECT ProductID, ExchangeID, MaxWinLimit
-INTO #CurrencySetting_phase1
-FROM DBPRO.bodb02.dbo.WinLimit_GlobalSetting  WITH (NOLOCK)
 
 SELECT CustID, ProductID, MaxWinLimit
 INTO #playerSetting_phase1
