@@ -6,7 +6,7 @@
 */
 
 
-/*/////////////////// START DELETE PART BETBK_12M01//////////////////////////////////// */
+/*/////////////////// START DELETE PART BET_12M01//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -70,10 +70,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M01]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M01]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -84,11 +82,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 25 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 1 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M01//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M02//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M01//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M02//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -152,10 +150,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M02]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M02]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -166,11 +162,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 26 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 2 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M02//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M03//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M02//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M03//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -234,10 +230,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M03]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M03]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -248,11 +242,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 27 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 3 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M03//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M04//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M03//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M04//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -316,10 +310,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M04]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M04]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -330,11 +322,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 28 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 4 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M04//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M05//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M04//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M05//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -398,10 +390,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M05]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M05]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -412,11 +402,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 29 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 5 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M05//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M06//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M05//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M06//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -480,10 +470,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M06]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M06]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -494,11 +482,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 30 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 6 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M06//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M07//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M06//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M07//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -562,10 +550,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M07]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M07]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -576,11 +562,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 31 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 7 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M07//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M08//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M07//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M08//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -644,10 +630,8 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M08]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M08]
 WITH
 (
 DATA_COMPRESSION = PAGE
@@ -658,11 +642,11 @@ CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging]
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 32 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 8 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M08//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M09//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M08//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M09//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -726,21 +710,23 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M09]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M09]
+WITH
+(
+DATA_COMPRESSION = PAGE
+)
 
 CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging] 
 (
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 33 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 9 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M09//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M10//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M09//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M10//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -804,21 +790,23 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M10]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M10]
+WITH
+(
+DATA_COMPRESSION = PAGE
+)
 
 CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging] 
 (
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 34 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 10 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M10//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M11//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M10//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M11//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -882,21 +870,23 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M11]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M11]
+WITH
+(
+DATA_COMPRESSION = PAGE
+)
 
 CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging] 
 (
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 35 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 11 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M11//////////////////////////////////// *//*/////////////////// START DELETE PART BETBK_12M12//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M11//////////////////////////////////// *//*/////////////////// START DELETE PART BET_12M12//////////////////////////////////// */
 
 CREATE TABLE [dbo].[bettrans_bk_staging](
 	[custid] [int] NOT NULL,
@@ -960,18 +950,20 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
-) ON [BETBK_12M12]
+	[CountryCode] [varchar](2) NULL
+) ON [BET_12M12]
+WITH
+(
+DATA_COMPRESSION = PAGE
+)
 
 CREATE CLUSTERED INDEX [CIX_winlostdate_staging] ON [dbo].[bettrans_bk_staging] 
 (
 	[winlostdate] ASC
 )
 
-ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 36 TO dbo.bettrans_bk_staging
+ALTER TABLE dbo.bettrans_bk SWITCH PARTITION 12 TO dbo.bettrans_bk_staging
 
 DROP TABLE dbo.bettrans_bk_staging
 
-/*////////////////////////////////////END DELETE PART BETBK_12M12//////////////////////////////////// */
+/*////////////////////////////////////END DELETE PART BET_12M12//////////////////////////////////// */

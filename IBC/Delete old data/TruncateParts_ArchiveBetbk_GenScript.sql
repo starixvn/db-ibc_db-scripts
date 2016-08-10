@@ -13,18 +13,18 @@ DECLARE @parts TABLE
 )
 
 INSERT INTO @parts --input info of partitions to be truncated - get from <Get Partition Info.sql>
-SELECT 25, 'BETBK_12M01', 1 UNION ALL
-SELECT 26, 'BETBK_12M02', 1 UNION ALL
-SELECT 27, 'BETBK_12M03', 1 UNION ALL
-SELECT 28, 'BETBK_12M04', 1 UNION ALL
-SELECT 29, 'BETBK_12M05', 1 UNION ALL
-SELECT 30, 'BETBK_12M06', 1 UNION ALL
-SELECT 31, 'BETBK_12M07', 1 UNION ALL
-SELECT 32, 'BETBK_12M08', 1 UNION ALL
-SELECT 33, 'BETBK_12M09', 0 UNION ALL
-SELECT 34, 'BETBK_12M10', 0 UNION ALL
-SELECT 35, 'BETBK_12M11', 0 UNION ALL
-SELECT 36, 'BETBK_12M12', 0
+SELECT 1, 'BET_12M01', 1 UNION ALL
+SELECT 2, 'BET_12M02', 1 UNION ALL
+SELECT 3, 'BET_12M03', 1 UNION ALL
+SELECT 4, 'BET_12M04', 1 UNION ALL
+SELECT 5, 'BET_12M05', 1 UNION ALL
+SELECT 6, 'BET_12M06', 1 UNION ALL
+SELECT 7, 'BET_12M07', 1 UNION ALL
+SELECT 8, 'BET_12M08', 1 UNION ALL
+SELECT 9, 'BET_12M09', 1 UNION ALL
+SELECT 10, 'BET_12M10', 1 UNION ALL
+SELECT 11, 'BET_12M11', 1 UNION ALL
+SELECT 12, 'BET_12M12', 1
 
 SELECT @sql = ''
 SELECT @sql = @sql + '/*/////////////////// START DELETE PART ' + filegroup + '//////////////////////////////////// */
@@ -91,9 +91,7 @@ CREATE TABLE [dbo].[bettrans_bk_staging](
 	[SecAcceptFlag] [bit] NULL,
 	[recommdate] [datetime] NULL,
 	[comstatus] [nvarchar](20) NULL,
-	[site] [varchar](10) NULL,
-	[CountryCode] [varchar](2) NULL,
-	[oddsspread_new] [money] NULL
+	[CountryCode] [varchar](2) NULL
 ) ON [' + filegroup + ']' + 
 CASE WHEN HasCompression = 1 THEN '
 WITH
