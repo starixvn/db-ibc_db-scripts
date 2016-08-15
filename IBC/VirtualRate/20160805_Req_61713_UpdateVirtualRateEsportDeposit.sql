@@ -21,11 +21,8 @@ BEGIN
 	IF (@target = 'DBCUST'	   AND @@SERVERNAME <> 'DBCUST')	-- Run at DBCUST only
 		RETURN;
 	
-	IF	(	SELECT	COUNT(1)
-			FROM	sys.tables WITH(NOLOCK)
-			WHERE	name IN ('CustVirtualSetting', 'custInfo')
-		) <> 2
-		RETURN;
+	IF dbo.f_CheckRepTable('CustVirtualSetting') = 0 RETURN
+	IF dbo.f_CheckRepTable('custInfo') = 0 RETURN
 		
 	UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
