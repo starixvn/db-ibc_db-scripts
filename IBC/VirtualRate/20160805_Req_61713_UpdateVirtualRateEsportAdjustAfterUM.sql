@@ -3,7 +3,8 @@
 	Task: Modify Virtual Rate data following new requirements - [Redmine: #61713]
 	DB: DBCUST/CustDB
 */
-
+Use CustDB
+Go
 
 CREATE TABLE #Member(CustID INT NOT NULL)
 INSERT INTO #Member(custid)
