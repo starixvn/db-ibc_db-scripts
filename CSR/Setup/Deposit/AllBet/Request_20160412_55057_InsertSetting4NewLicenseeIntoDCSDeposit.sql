@@ -51,7 +51,7 @@ BEGIN
 	, @IsPTSetting BIT = 1
 	, @SuperPT SMALLINT = 93
 	-- For StakelevelGroup params
-	, @IsStakeLevelGroup BIT = 1
+	, @IsStakeLevel BIT = 1
 	
 	CREATE TABLE #tblCust (custid int,agentid int, roleid int) 
 
@@ -184,40 +184,33 @@ BEGIN
 	END	
 
 	-- StakeLevelGroup
-	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 8) AND @IsStakeLevelGroup = 1
+	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 7) AND @IsStakeLevel = 1
 	BEGIN
 		PRINT 'StakeLevelGroup'
 		-- Insert NEW for level 1
 		INSERT INTO Dep_CustStakeLevel_Agent (CustID,SportType,BetType,StakeLevelList)
 		SELECT C.custid,T.SportType,T.BetType,StakeLevelListID
 		FROM #tblCust C
-			CROSS JOIN (SELECT T.SportType,t.BetType AS Bettype, STUFF(T1.StakeLevelList,1,1,'') AS StakeLevelListID
+			CROSS JOIN (SELECT T.SportType,t.BetType AS Bettype, SL.StakeLevelID AS StakeLevelListID
 						FROM #ProductSettingDetail_tmp T
-							CROSS APPLY ( SELECT ',' + CONVERT(VARCHAR(20),sl.StakeLevelID)
-											FROM GameGroup G (NOLOCK) 
-												INNER JOIN Dep_StakeLevel SL (NOLOCK) ON SL.GameGroupID = G.GameGroupID AND sl.ExchangeID = @currency
-										WHERE T.SportType = G.RefSportType AND SL.GameTypeID = T.BetType AND g.IsDeposit = 1 AND g.GroupName = 'Level 1'
-										FOR XML PATH('')
-										) AS T1 (StakeLevelList)
-						WHERE T.SettingType = 8 ) AS T
-		WHERE C.roleid= 4
+							INNER JOIN Dep_StakeLevel SL (NOLOCK) ON SL.GameTypeID = T.BetType AND sl.ExchangeID = @currency
+						WHERE T.SettingType = 7 ) AS T
+		WHERE C.roleid = 4
 		
 		INSERT INTO Dep_CustStakeLevel_Agent (CustID,SportType,BetType,StakeLevelList)
 		SELECT C.custid,T.SportType,T.BetType, T.StakeLevelList
 		FROM #tblCust C
 			CROSS JOIN (SELECT csla.SportType,csla.BetType,csla.StakeLevelList
-						 FROM dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) WHERE CustID = @srecommend) AS T
+						 FROM dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) 
+							INNER JOIN #ProductSettingDetail_tmp T ON csla.SportType = t.SportType AND T.BetType = CSLA.BetType AND T.SettingType = 7
+						 WHERE CustID = @srecommend) AS T
 		WHERE c.roleid IN (2,3)
 		
 		INSERT INTO Dep_CustStakeLevel_member (CustID,SportType,BetType,StakeLevelList)
-		SELECT C.custid,csla.SportType,csla.BetType, L.list
+		SELECT C.custid,csla.SportType,csla.BetType, csla.StakeLevelList
 		FROM #tblCust C
-			INNER JOIN dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) ON C.agentid = csla.CustID
-			CROSS APPLY(SELECT TOP 1 ss.val list
-						FROM 	dbo.strSplit(csla.StakeLevelList, ',') AS ss
-							INNER JOIN Dep_StakeLevel sl WITH (NOLOCK) ON ss.val = sl.StakeLevelID  
-						ORDER BY sl.MaxStake, sl.MinStake, SL.GameGroupID
-						) AS L					
+			INNER JOIN dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) ON C.agentid = csla.CustID 
+			INNER JOIN #ProductSettingDetail_tmp AS T ON T.SportType = CSLA.SportType AND  T.BetType = csla.BetType AND T.SettingType = 7
 		WHERE C.roleid = 1				
 		
 	END

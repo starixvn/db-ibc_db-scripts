@@ -17,16 +17,20 @@ VALUES
 	-- PT
 	,(5,21,1,0,2,1)
 	-- Stakelevel group
-	,(6,21,8,0,3,2)
+	,(6,21,7,0,3,3)
 GO
 INSERT INTO [dbo].[Dep_ProductSettingDetail] (ProductSettingID,SportType,BetType,IsLive,MaxDefaultValue,SettingStatus)
 VALUES 
 	(4,211,2401,0,0,1)
 	,(5,211,2401,0,0,1)
 	,(6,211,2401,0,0,1)
+	,(6,211,2402,0,0,1)
 GO
 
 INSERT INTO [dbo].Dep_ProductStatusProfile (Sporttype,Bettype,bitmapOrder)
 VALUES (211,2401,2)
 
 GO
+
+
+

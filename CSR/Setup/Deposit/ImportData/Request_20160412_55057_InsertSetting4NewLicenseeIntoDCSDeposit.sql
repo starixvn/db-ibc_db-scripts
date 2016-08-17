@@ -206,13 +206,17 @@ BEGIN
 		SELECT C.custid,T.SportType,T.BetType, T.StakeLevelList
 		FROM #tblCust C
 			CROSS JOIN (SELECT csla.SportType,csla.BetType,csla.StakeLevelList
-						 FROM dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) WHERE CustID = @srecommend) AS T
+						 FROM dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) 
+							INNER JOIN #ProductSettingDetail_tmp T ON csla.SportType = t.SportType AND T.BetType = CSLA.BetType AND T.SettingType = 8
+						 WHERE CustID = @srecommend) AS T
 		WHERE c.roleid IN (2,3)
 		
 		INSERT INTO Dep_CustStakeLevel_member (CustID,SportType,BetType,StakeLevelList)
 		SELECT C.custid,csla.SportType,csla.BetType, L.list
 		FROM #tblCust C
 			INNER JOIN dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) ON C.agentid = csla.CustID
+			INNER JOIN #ProductSettingDetail_tmp T ON csla.SportType = t.SportType AND T.BetType = CSLA.BetType AND T.SettingType = 8			 
+			
 			CROSS APPLY(SELECT TOP 1 ss.val list
 						FROM 	dbo.strSplit(csla.StakeLevelList, ',') AS ss
 							INNER JOIN Dep_StakeLevel sl WITH (NOLOCK) ON ss.val = sl.StakeLevelID  
