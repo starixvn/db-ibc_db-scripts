@@ -6,7 +6,7 @@
 USE CustDB
 GO
 
-UPDATE ProfileVirtualSetting
+UPDATE ProfileVirtualSetting  WITH (ROWLOCK,UPDLOCK) 
 SET isActive=1
 WHERE sporttype=43
 GO
