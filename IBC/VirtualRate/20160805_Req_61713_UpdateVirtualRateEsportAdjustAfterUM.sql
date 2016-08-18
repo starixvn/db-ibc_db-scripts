@@ -9,7 +9,7 @@ Go
    -- Member level
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 	
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=1 and islive=0
@@ -19,7 +19,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=1 and islive=1
@@ -29,7 +29,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 	
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=2 and islive=0
@@ -39,7 +39,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=2 and islive=1
@@ -49,7 +49,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 	
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=3 and islive=0
@@ -59,7 +59,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=3 and islive=1
@@ -69,7 +69,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=20 and islive=0
@@ -80,7 +80,7 @@ Go
     
     UPDATE cvs 
 	SET bitmapVirtual=CONVERT(binary(64), STUFF(bitmapVirtual, 1+((pv.profileID-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH(NOLOCK)
+	FROM        CustVirtualSetting    AS cvs WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid 	
     INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
             ON  cvs.seqNo = pvs.seqNo   AND sporttype=99 AND bettype=20 and islive=1
