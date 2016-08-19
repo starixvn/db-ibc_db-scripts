@@ -127,11 +127,11 @@ INNER JOIN	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
 		ON	dcs.custid = ci.CustID
 WHERE	ci.roleid = 4
 	AND	ci.custid <= @maxCustID;
-GO
+--GO
 
 -- Modify virtual rate settings for deposit super lines --
 DECLARE	@srecommend	INT
-	,	@maxCustID	INT = xxxx;
+--	,	@maxCustID	INT = xxxx;
 
 WHILE (0 = 0)
 BEGIN
@@ -172,11 +172,11 @@ INNER JOIN	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
 		ON	dcs.custid = ci.CustID
 WHERE	ci.roleid = 4
 	AND	ci.custid <= @maxCustID;
-GO
+--GO
 
 -- Modify virtual rate settings for deposit super lines --
 DECLARE	@srecommend	INT
-	,	@maxCustID	INT = xxxx;
+--	,	@maxCustID	INT = xxxx;
 
 WHILE (0 = 0)
 BEGIN

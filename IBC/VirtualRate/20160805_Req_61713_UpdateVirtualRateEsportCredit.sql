@@ -130,11 +130,11 @@ WHERE	ci.roleid = 4
 			FROM	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
 			WHERE	dcs.custid = ci.custid
 		);
-GO
+--GO
 
 -- Modify virtual rate settings for credit super lines --
 DECLARE	@srecommend	INT
-	,	@maxCustID	INT = xxxx;
+	--,	@maxCustID	INT = xxxx;
 
 WHILE (0 = 0)
 BEGIN
@@ -178,11 +178,11 @@ WHERE	ci.roleid = 4
 			FROM	dbo.Dep_CustSuper AS dcs WITH(NOLOCK)
 			WHERE	dcs.custid = ci.custid
 		);
-GO
+--GO
 
 -- Modify virtual rate settings for credit super lines --
 DECLARE	@srecommend	INT
-	,	@maxCustID	INT = xxxx;
+	--,	@maxCustID	INT = xxxx;
 
 WHILE (0 = 0)
 BEGIN
