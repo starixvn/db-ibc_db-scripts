@@ -16,10 +16,8 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	-- UAT 
-	AND ci.currency = 20
 	-- Production
-	--AND ci.site in ('INDO','755555','Koribc')
+	AND ci.site in ('INDO','755555','Koribc')
 
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 INSERT INTO #DestinationSportBetType

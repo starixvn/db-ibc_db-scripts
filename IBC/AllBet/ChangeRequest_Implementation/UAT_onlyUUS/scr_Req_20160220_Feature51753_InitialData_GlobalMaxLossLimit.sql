@@ -3,6 +3,10 @@
 	Task: set global setting of Max Loss Limit with value
 	DB: DBCUST/CustDB
 	Date: 20160226
+	
+	https://docs.google.com/spreadsheets/d/183ftwazU-wB0YHVlMOmL7_gyjWQPhaj6bMgYOtMKMrk/edit#gid=672993935
+	
+	Sheet: SMA Loss Limit Initial Setting, get from column "Min of Loss Limit (round number)" & "Max of Loss limit (round number)"
 */ 
 
 GO
