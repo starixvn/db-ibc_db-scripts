@@ -20,7 +20,7 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustGameType') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustStakeLevel_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustStakeLevel_Member') = 0 RETURN
-	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('tmpCustGameType','tmpStakeLevel')) <> 2
+	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('tmpCustGameType')) <> 1
 		RETURN
 	-----------------
 	DECLARE @syncLiveCasino_super BIT, @exchangeID INT, @stakeLevelList2401_super VARCHAR(100)
