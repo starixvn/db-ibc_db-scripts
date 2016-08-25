@@ -117,7 +117,7 @@ BEGIN
 		UNION ALL
 		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelList_2401_lowest) ELSE '' END AS stakeLevelList
 		FROM #SMATemp T1
-			LEFT JOIN tmpCustGameType T2 ON T1.CustID = T2.CustID
+			LEFT JOIN tmpCustGameType T2 WITH (NOLOCK) ON T1.CustID = T2.CustID
 			
 		WHERE T1.roleid IN (2,3)
 		
@@ -125,7 +125,7 @@ BEGIN
 		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
 		SELECT T1.custid, 211, 2401, CASE WHEN T1.SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelList_2401_lowest) ELSE '' END AS stakeLevelList
 		FROM #MemberTemp T1
-			LEFT JOIN tmpCustGameType T2 ON T1.CustID = T2.CustID
+			LEFT JOIN tmpCustGameType T2 WITH (NOLOCK) ON T1.CustID = T2.CustID
 			
 	END	
 	
