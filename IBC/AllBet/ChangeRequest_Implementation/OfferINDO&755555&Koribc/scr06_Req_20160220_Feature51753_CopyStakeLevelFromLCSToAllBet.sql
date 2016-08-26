@@ -31,14 +31,14 @@ BEGIN
 	CREATE TABLE #MemberTemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
-		SyncLiveCasino BIT,
+		SyncLiveCasino BIT
 	)
 
 	CREATE TABLE #SMATemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
 		roleid TINYINT,
-		SyncLiveCasino BIT,
+		SyncLiveCasino BIT
 	)
 	CREATE TABLE #Dummy_temp
 	(
@@ -277,7 +277,7 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0),IsDummy BIT)
 
-DECLARE @max_custid INT, @srecommend INT,@IsDummyBIT = 0
+DECLARE @max_custid INT, @srecommend INT,@IsDummy BIT = 0
 
 SELECT @max_custid = xxx
 
