@@ -84,7 +84,6 @@ VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 (11,'')
 
 
-
 DELETE #CodeCurrency WHERE currency = ''
 
 CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )
@@ -95,6 +94,16 @@ FROM #CodeCurrency t
 				FROM strSplit (t.Currency,',') AS T
 					INNER JOIN DBCUST.CUSTDB.dbo.exchange e(NOLOCK) ON LTRIM(RTRIM(T.val)) =e.currency) AS cur
 
+SELECT @max_custid = 100
+		,@max_custid2 = 1001
+
+INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID, srecommend, currency)
+SELECT DISTINCT ci.custid, roleid, syncLiveCasino, s.currency
+FROM custinfo ci WITH(NOLOCK) 
+	INNER JOIN #Supers s ON ci.srecommend = s.custid
+WHERE ci.custid > @max_custid
+	AND ci.custid <= @max_custid2
+	
 INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT cs.custid, StakeLevelList,ci.currency	
 FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType cs WITH(NOLOCK) 
@@ -131,15 +140,6 @@ UPDATE T1
 FROM #tmpCustGameType T1
 	INNER JOIN #StakeLevel_PreMapping T2 ON T1.ExchangeID = T2.ExchangeID AND T1.StakeLevelList_LC = T2.StakeLevelList_LC
 
-SELECT @max_custid = 100
-		,@max_custid2 = 1001
-
-INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID, srecommend, currency)
-SELECT DISTINCT ci.custid, roleid, syncLiveCasino, s.currency
-FROM custinfo ci WITH(NOLOCK) 
-	INNER JOIN #Supers s ON ci.srecommend = s.custid
-WHERE ci.custid > @max_custid
-	AND ci.custid <= @max_custid2
 	
 --Bettype 2402: Lowest VIP Bet limit
 SET @StakeLevelList_2402 = (SELECT TOP 1 ISNULL(StakeLevelID ,'')
