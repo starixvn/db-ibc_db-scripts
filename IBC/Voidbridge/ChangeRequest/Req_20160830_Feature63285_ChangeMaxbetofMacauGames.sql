@@ -26,6 +26,7 @@ WHERE SK.GameTypeID = 4001
 
 -------------------- DEPOSIT -------------------------------- 
 -- Level 2: GameGroupID = 4 -- LEVEL 2, current value / 2.5
+/*
 UPDATE D
 	SET MaxStake = D.MaxStake / 2.5
 	, MaxLabel=(SELECT SUBSTRING(t, 0, CASE CHARINDEX('.00', t) WHEN 0 THEN LEN(t) ELSE CHARINDEX('.00', t) END)
@@ -41,3 +42,4 @@ UPDATE D
 FROM Dep_StakeLevelGroupDetail d
 	INNER JOIN Dep_StakeLevel SK WITH (NOLOCK) ON d.StakeLevelID = sk.StakeLevelID and sk.GameGroupID = 5
 WHERE SK.GameTypeID = 4001
+*/
