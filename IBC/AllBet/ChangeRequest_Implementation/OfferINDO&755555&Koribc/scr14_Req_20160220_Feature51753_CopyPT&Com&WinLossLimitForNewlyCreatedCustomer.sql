@@ -4,7 +4,7 @@
 	DB: DBCUST/CustDB
 	Date: 20150626
 */ 
-
+		
 DECLARE @maxcustid INT, @exchangeid INT
 	
 SELECT @maxcustid = xxx
@@ -18,6 +18,7 @@ WHERE ci.roleid = 4
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	-- Production
 	AND ci.site in ('INDO','755555','Koribc')
+	AND ci.srecommend NOT IN (4,13,15)
 
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 INSERT INTO #DestinationSportBetType
@@ -47,6 +48,106 @@ INSERT INTO #SMATemp (CustID, roleid)
 SELECT custid, roleid
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @maxcustid 
+
+--- Dummy processing
+CREATE TABLE #Dummy_temp
+	(
+		ID INT IDENTITY,
+		CustID INT ,
+		srecommend INT, mrecommend INT, recommend INT, roleid TINYINT,exchangeID INT
+	)
+
+INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid,exchangeID)
+SELECT  c.custid, c.srecommend, c.mrecommend, c.recommend, c.roleid,c.currency
+FROM Customer c WITH (NOLOCK)
+	--JOIN Acc_CustDirect a WITH(NOLOCK) ON c.custid = a.custid
+	JOIN custInfo CI WITH (NOLOCK) ON ci.custid = c.custid
+WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend IN (4,13,15) AND CI.Enabled = 1 AND ci.custid > @maxcustid
+
+DECLARE  @currency INT
+		,@custid INT
+		,@uplineID INT
+		,@roleid INT
+		,@syncLiveCasino BIT
+		,@srecommend INT
+		,@mrecommend INT, @recommend INT
+
+------Dummy processing ----------
+IF EXISTS (SELECT 1 FROM #Dummy_temp)
+	BEGIN -- @IsDummy = 1
+		
+		DECLARE @Start INT = 1, @Stop INT = 1
+
+		SET @Stop = (SELECT MAX(ID) FROM #Dummy_temp)
+		
+		WHILE (@Start < = @Stop)
+		BEGIN
+			
+			SELECT @CustID= custid, @srecommend =srecommend, @mrecommend =mrecommend, @recommend = recommend,@RoleID = roleid
+			FROM #Dummy_temp WHERE ID = @Start
+			
+			IF @RoleID = 1
+			BEGIN
+				INSERT INTO #MemberTemp (CustID)
+				SELECT CI.custid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.custid = @CustID AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = @CustID)
+				
+				INSERT INTO #SMATemp (CustID, roleid)
+				SELECT CI.custid,CI.roleid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend) AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
+				
+			END
+			ELSE IF @RoleID = 2
+			BEGIN
+				INSERT INTO #MemberTemp (CustID)
+				SELECT CI.custid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.recommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid > @maxcustid
+					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
+				
+				INSERT INTO #SMATemp (CustID, roleid)
+				SELECT CI.custid,CI.roleid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend)
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
+			END
+			ELSE IF @RoleID = 3
+			BEGIN
+				INSERT INTO #MemberTemp (CustID)
+				SELECT CI.custid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.mrecommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid > @maxcustid
+					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
+				
+				INSERT INTO #SMATemp (CustID, roleid)
+				SELECT CI.custid,CI.roleid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.mrecommend = @CustID AND CI.roleid IN (2,3) AND CI.Enabled = 1 AND CI.custid > @maxcustid
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
+					
+				INSERT INTO #SMATemp (CustID, roleid)
+				SELECT CI.custid,CI.roleid
+				FROM custInfo CI WITH (NOLOCK)
+				WHERE CI.custid = @srecommend
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
+				
+			END
+			
+			SET @Start = @Start + 1
+
+		END
+		
+		---- REMOVE SMA OR member if existing Allbet Setting
+		DELETE M
+		FROM #SMATemp M 
+			INNER JOIN CustWinLossLimit_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
+			
+		DELETE M
+		FROM #MemberTemp M 
+			INNER JOIN CustWinLossLimit_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211	
+	END	
 
 DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 1

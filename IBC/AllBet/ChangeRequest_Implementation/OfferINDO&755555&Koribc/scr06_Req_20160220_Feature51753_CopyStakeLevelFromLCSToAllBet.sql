@@ -9,7 +9,6 @@
 ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
 	@srecommend INT	
 	,@maxcustid INT
-	,@IsDummy BIT = 0
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -46,7 +45,7 @@ BEGIN
 		CustID INT ,
 		srecommend INT, mrecommend INT, recommend INT, roleid TINYINT
 	)
-	IF (@IsDummy = 0)
+	IF @srecommend NOT IN (5,42,13,4)
 	BEGIN
 		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
 		SELECT custid, SyncLiveCasino
@@ -58,13 +57,12 @@ BEGIN
 		FROM Custinfo WITH (NOLOCK)
 		WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
 	END
-	ELSE
+	ELSE IF @srecommend IN (5,42,13,4)
 	BEGIN -- @IsDummy = 1
 		
 		INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid)
 		SELECT  c.custid, c.srecommend, c.mrecommend, c.recommend, c.roleid
 		FROM Customer c WITH (NOLOCK)
-			JOIN Acc_CustDirect a WITH(NOLOCK) ON c.custid = a.custid
 			JOIN custInfo CI WITH (NOLOCK) ON ci.custid = c.custid
 		WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend = @srecommend AND CI.Enabled = 1 AND CI.custid <= @maxcustid
 		
@@ -86,12 +84,12 @@ BEGIN
 				INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
 				SELECT CI.custid,CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid = @CustID 
+				WHERE CI.custid = @CustID AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = @CustID)
 				
 				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 				SELECT CI.custid,CI.roleid, CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend) 
+				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend) AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
 				
 			END
 			ELSE IF @RoleID = 2
@@ -100,11 +98,13 @@ BEGIN
 				SELECT CI.custid,CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
 				WHERE CI.recommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid <= @maxcustid
+					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
 				
 				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 				SELECT CI.custid,CI.roleid,CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
 				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend)
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
 			END
 			ELSE IF @RoleID = 3
 			BEGIN
@@ -112,16 +112,19 @@ BEGIN
 				SELECT CI.custid,CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
 				WHERE CI.mrecommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid <= @maxcustid
+					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
 				
 				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 				SELECT CI.custid,CI.roleid, CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
 				WHERE CI.mrecommend = @CustID AND CI.roleid IN (2,3) AND CI.Enabled = 1 AND CI.custid <= @maxcustid
-				
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
+					
 				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 				SELECT CI.custid,CI.roleid,CI.SyncLiveCasino
 				FROM custInfo CI WITH (NOLOCK)
 				WHERE CI.custid = @srecommend
+					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
 				
 			END
 			
@@ -230,43 +233,34 @@ GO
 ---
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0), IsDummy BIT )
+CREATE TABLE #supers (custid int,isfinished bit default(0) )
 
-DECLARE @max_custid INT, @srecommend INT,@IsDummy BIT = 0
-
+DECLARE @max_custid INT, @srecommend INT
 SELECT @max_custid = xxx
 
-
-INSERT INTO #supers(custid,IsDummy)
-SELECT ci.custid,0
+INSERT INTO #supers(custid)
+SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.custid <= @max_custid
-	-- Production
-	AND ci.site in ('INDO','755555','Koribc')
-
-INSERT INTO #supers(custid,IsDummy)
-SELECT  c.srecommend,1
-FROM Customer c WITH (NOLOCK)
-	JOIN Acc_CustDirect a WITH(NOLOCK) ON c.custid = a.custid
-WHERE c.site in ('INDO','755555','Koribc')
-	AND NOT EXISTS (SELECT 1 FROM #supers S WHERE S.custid = C.srecommend)
-		
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.custid <= @max_custid
+		-- Production
+		AND ci.site in ('INDO','755555','Koribc'))
 	
+	OR ci.custid IN (4,13,15) -- DUMMY ACCOUNT
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid
-		,@IsDummy = IsDummy	
+
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@IsDummy = @IsDummy
+			
 			,@target = 'REPLICATED'
 			
 			
@@ -277,39 +271,33 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0),IsDummy BIT)
 
-DECLARE @max_custid INT, @srecommend INT,@IsDummy BIT = 0
+DECLARE @max_custid INT, @srecommend INT
 
 SELECT @max_custid = xxx
 
-INSERT INTO #supers(custid,IsDummy)
-SELECT ci.custid,0
+INSERT INTO #supers(custid)
+SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.custid <= @max_custid 
-	-- Production
-	AND ci.site in ('INDO','755555','Koribc')
-
-INSERT INTO #supers(custid,IsDummy)
-SELECT  c.srecommend,1
-FROM Customer c WITH (NOLOCK)
-	JOIN Acc_CustDirect a WITH(NOLOCK) ON c.custid = a.custid
-WHERE c.site in ('INDO','755555','Koribc')
-	AND NOT EXISTS (SELECT 1 FROM #supers S WHERE S.custid = C.srecommend)
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.custid <= @max_custid 
+		-- Production
+		AND ci.site in ('INDO','755555','Koribc'))
+	OR ci.custid IN (4,13,15)
 
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid	
-		,@IsDummy = IsDummy
+		
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@IsDummy = @IsDummy
+			
 			,@target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'

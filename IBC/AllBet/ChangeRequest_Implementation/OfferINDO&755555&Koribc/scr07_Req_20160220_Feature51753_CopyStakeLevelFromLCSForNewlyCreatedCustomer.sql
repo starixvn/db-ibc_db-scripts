@@ -1,6 +1,6 @@
 /*
-	Created: Elodie
-	Date: 20160301
+	Created: Helen
+	Date: 20160829
 	Task: copy stake level for newly created customers
 	DB: DBCUST/CustDB
 */
@@ -25,7 +25,6 @@ SELECT @max_custid = 23134000
 CREATE TABLE #supers (custid int, currency INT)
 
 INSERT INTO #supers(custid,currency)
-
 SELECT custid, currency
 FROM Customer WITH(NOLOCK)
 WHERE roleid = 4 	
@@ -109,10 +108,9 @@ CREATE TABLE #Dummy_temp
 INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid,exchangeID)
 SELECT  c.custid, c.srecommend, c.mrecommend, c.recommend, c.roleid,c.currency
 FROM Customer c WITH (NOLOCK)
-	JOIN Acc_CustDirect a WITH(NOLOCK) ON c.custid = a.custid
 	JOIN custInfo CI WITH (NOLOCK) ON ci.custid = c.custid
-WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend = @srecommend AND CI.Enabled = 1 AND ci.custid > @max_custid
-	AND ci.custid <= @max_custid2
+WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend IN (4,13,15) AND CI.Enabled = 1 AND ci.custid > @max_custid
+	AND ci.custid <= @max_custid2  
 
 CREATE TABLE #Dummy_Result
 (
@@ -191,7 +189,9 @@ FROM custinfo ci WITH(NOLOCK)
 	INNER JOIN #Supers s ON ci.srecommend = s.custid
 WHERE ci.custid > @max_custid
 	AND ci.custid <= @max_custid2
+	
 UNION ALL
+
 SELECT DISTINCT ci.custid, roleid, d.syncLiveCasino, d.ExchangeID
 FROM custinfo ci WITH(NOLOCK) 
 INNER JOIN #Dummy_Result D ON ci.custid = d.CustID

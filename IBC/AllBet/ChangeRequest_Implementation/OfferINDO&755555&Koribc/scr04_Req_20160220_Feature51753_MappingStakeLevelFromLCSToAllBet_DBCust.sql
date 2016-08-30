@@ -214,7 +214,10 @@ VALUES
 (7,'10000','500000',10000,500000,243),
 (8,'3000','300000',3000,300000,242),
 (9,'20000','1000000',20000,1000000,30),
-(10,'1000','20000',1000,20000,39)
+(10,'1000','20000',1000,20000,39),
+(11,'1000','20000',1000,20000,241)
+
+
 
 INSERT INTO #StakeLEvel_2401_final (GameTypeID,MappingID,ExchangeId,Currency,MinLabel,MaxLabel,MinStake,MaxStake,ResourceID)
 SELECT 2401 AS GameTypeID,T1.MappingID,T2.ExchangeID,T2.Currency
