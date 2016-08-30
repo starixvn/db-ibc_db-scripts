@@ -45,7 +45,7 @@ BEGIN
 		CustID INT ,
 		srecommend INT, mrecommend INT, recommend INT, roleid TINYINT
 	)
-	IF @srecommend NOT IN (5,42,13,4)
+	IF @srecommend NOT IN (4,13,15)
 	BEGIN
 		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
 		SELECT custid, SyncLiveCasino
@@ -57,7 +57,7 @@ BEGIN
 		FROM Custinfo WITH (NOLOCK)
 		WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
 	END
-	ELSE IF @srecommend IN (5,42,13,4)
+	ELSE IF @srecommend IN (4,13,15)
 	BEGIN -- @IsDummy = 1
 		
 		INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid)
