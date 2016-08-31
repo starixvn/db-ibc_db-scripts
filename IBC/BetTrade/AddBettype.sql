@@ -1,7 +1,7 @@
   /*
 	Created: 20160805Winnie
 	Task : Bettrade Apply new business terms
-	DB: DBTXN/bodb02		
+	DB: DBPRO/bodb02		
 */
 
 INSERT INTO [bodb02].[dbo].[bettype]
