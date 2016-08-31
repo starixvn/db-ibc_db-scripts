@@ -52,10 +52,67 @@ BEGIN
 					)
 			FOR XML PATH('root')
 				, TYPE
+	
 			)
 	
-	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
-	UPDATE cs
+	IF @srecommend IN (2,4,13,15)
+	BEGIN
+		CREATE TABLE #DirrectMaster (custid INT)
+		CREATE TABLE #DirrectAgent (custid INT, mrecommend INT)
+
+		--Get Dirrect master
+		INSERT INTO #DirrectMaster(custid)
+		SELECT ci.custid
+		FROM customer c WITH(NOLOCK)
+			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
+		WHERE ci.srecommend = @srecommend AND c.site IN ('INDO','755555','Koribc') AND ci.roleid = 3
+
+		--Get Dirrect agent
+		INSERT INTO #DirrectAgent(custid, mrecommend)
+		SELECT ci.custid, ci.mrecommend
+		FROM customer c WITH(NOLOCK)
+			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
+		WHERE ci.srecommend = @srecommend AND c.site IN ('INDO','755555','Koribc') AND ci.roleid = 2
+			AND ci.mrecommend NOT IN (SELECT custid FROM #DirrectMaster)
+
+		
+		
+		IF EXISTS (SELECT 1 FROM #DirrectMaster)
+		BEGIN
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+										 ELSE cs.bitmapHasSynced
+									END	 
+				, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
+										 ELSE cs.bitmapIsHidden
+									END	 
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirrectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
+		END
+		
+		IF EXISTS (SELECT 1 FROM #DirrectAgent)
+		BEGIN
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+										 ELSE cs.bitmapHasSynced
+									END	 
+				, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
+										 ELSE cs.bitmapIsHidden
+									END	 
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			
+			WHERE ci.recommend IN (SELECT custid FROM #DirrectAgent) 
+				OR ci.custid = @srecommend 
+				OR ci.custid IN (SELECT mrecommend FROM #DirrectAgent) 
+		END
+	END
+	ELSE
+	BEGIN
+		UPDATE cs
 		SET 	
 			  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									 ELSE cs.bitmapHasSynced
@@ -63,9 +120,11 @@ BEGIN
 			, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
 									 ELSE cs.bitmapIsHidden
 								END	 
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid	
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+		WHERE ci.srecommend = @srecommend 
+	END
+	
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -82,11 +141,12 @@ SELECT @max_custid = xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.custid <= @max_custid 
-	-- Production
-	AND ci.site in ('INDO','755555','Koribc')
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.custid <= @max_custid 
+		-- Production
+		AND ci.site in ('INDO','755555','Koribc'))
+	OR ci.custid IN (2,4,13,15)
 
 WHILE (1 = 1)
 BEGIN
@@ -116,10 +176,11 @@ SELECT @max_custid = xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.roleid = 4 	
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	-- Production
-	AND ci.site in ('INDO','755555','Koribc')
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		-- Production
+		AND ci.site in ('INDO','755555','Koribc'))
+		OR ci.custid IN (2,4,13,15)
 
 WHILE (1 = 1)
 BEGIN
