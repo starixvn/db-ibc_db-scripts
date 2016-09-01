@@ -24,12 +24,14 @@ VALUES
 	(4,211,2401,0,0,1)
 	,(5,211,2401,0,0,1)
 	,(6,211,2401,0,0,1)
+	,(6,211,2402,0,0,1)
 GO
 
 INSERT INTO [dbo].Dep_ProductStatusProfile (Sporttype,Bettype,bitmapOrder)
 VALUES (211,2401,2)
 
 GO
+
 
 
 
