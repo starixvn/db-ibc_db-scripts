@@ -46,7 +46,7 @@ VALUES
 UPDATE T
 	SET MaxWinLimit = T1.Orange
 FROM WinLimit_ProductSettingDetail T
-	INNER JOIN #CurrencySetting_OrangeLevel T1 ON T.ExchangeID = T.ExchangeID 
+	INNER JOIN #CurrencySetting_OrangeLevel T1 ON T1.ExchangeID = T.ExchangeID 
 WHERE T.ProductID IN (6,17,22)	AND T.LevelID = 1
 
 DROP TABLE #CurrencySetting_OrangeLevel
