@@ -6,7 +6,7 @@
 */
 
 
-INSERT INTO AgentCommRate
+INSERT INTO DEP_AgentCommRate
            ([CustID]
            ,[SportType]
            ,[BetType]
@@ -21,7 +21,7 @@ select Custid from Dep_CustSuper WITH(NOLOCK)
 where site in ('spondemo','12bet'))
 AND roleid IN(2,3,4)
 
-INSERT INTO [CustDB].[dbo].[CustCommRate]
+INSERT INTO [CustDB].[dbo].[DEP_CustCommRate]
            ([CustId]
            ,[Sporttype]
            ,[Bettype]
