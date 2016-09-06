@@ -30,12 +30,12 @@ BEGIN
 			   ,[SportType]
 			   ,[BetType]
 			   ,[CommRate])
-	SELECT DISTINCT custid,204,18001,0.1215 FROM custInfo a WITH(NOLOCK) 
-	WHERE a.srecommend = @srecommend AND  a.custid <= @maxcustid AND a.roleid IN(2,3,4)
+	SELECT  custid,204,18001,0.1215 FROM custInfo a WITH(NOLOCK) 
+	WHERE a.srecommend = @srecommend AND  a.custid <= @maxcustid AND a.roleid IN(2,3,4) AND Enabled=1
 
 	UNION ALL
-	SELECT DISTINCT custid,204,18002,0.45 FROM custInfo a WITH(NOLOCK) 
-	WHERE a.srecommend = @srecommend AND  a.custid <= @maxcustid AND a.roleid IN(2,3,4)
+	SELECT  custid,204,18002,0.45 FROM custInfo a WITH(NOLOCK) 
+	WHERE a.srecommend = @srecommend AND  a.custid <= @maxcustid AND a.roleid IN(2,3,4) AND Enabled=1
 
 
 	INSERT INTO [Dep_CustCommRate]
@@ -46,11 +46,11 @@ BEGIN
 			   ,[adiscount]
 			   ,[discount]
 			   ,[playerdiscount])    
-	SELECT DISTINCT a.custid,204,18001,0.1215,0.1215,0.1215,0 FROM custInfo a WITH(NOLOCK) 
-	 WHERE srecommend = @srecommend AND  custid <= @maxcustid AND a.roleid =1	
+	SELECT  a.custid,204,18001,0.1215,0.1215,0.1215,0 FROM custInfo a WITH(NOLOCK) 
+	 WHERE srecommend = @srecommend AND  custid <= @maxcustid AND a.roleid =1	AND Enabled=1
 	UNION ALL
-	SELECT DISTINCT a.custid,204,18002,0.45,0.45,0.45,0 FROM custInfo a WITH(NOLOCK) 
-	 WHERE srecommend = @srecommend AND  custid <= @maxcustid AND a.roleid =1	
+	SELECT  a.custid,204,18002,0.45,0.45,0.45,0 FROM custInfo a WITH(NOLOCK) 
+	 WHERE srecommend = @srecommend AND  custid <= @maxcustid AND a.roleid =1	AND Enabled=1
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
