@@ -7,7 +7,7 @@
 
 ------------------------------------------------------
 
-ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
+ALTER PROCEDURE [dbo].Acc_CustomerInfo_Execrep_09
 	@srecommend INT	
 	,@target VARCHAR(30)
 	,@maxcustid INT
@@ -22,7 +22,7 @@ BEGIN
 			)
 		RETURN		
 	UPDATE custInfo WITH(ROWLOCK,UPDLOCK)	
-	SET DisableColossusBet=0,HideColossusBet=1
+	SET DisableColossusBet=0,HideColossusBet=0
 	WHERE srecommend=@srecommend AND Enabled=1
 END
 GO
@@ -30,7 +30,7 @@ GO
 ------------------------------------------------------
 ---
 ---
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB06/DBTP/DB05x) -----
 --------------------------------------------------------------------------------------
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
@@ -55,7 +55,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 	
@@ -90,7 +90,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 	
