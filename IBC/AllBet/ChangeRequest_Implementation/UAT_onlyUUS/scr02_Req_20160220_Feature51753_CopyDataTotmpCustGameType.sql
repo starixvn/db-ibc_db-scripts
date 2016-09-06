@@ -23,7 +23,7 @@ GO
 CREATE TABLE #CodeCurrency (ID INT, Currency VARCHAR(1000) )
 
 INSERT INTO #CodeCurrency (ID,Currency)
-VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
+VALUES (1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 (1,''),
 (1,''),
 (1,''),
@@ -64,8 +64,6 @@ VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 (11,''),
 (11,''),
 (11,'')
-
-
 
 DELETE #CodeCurrency WHERE currency = ''
 

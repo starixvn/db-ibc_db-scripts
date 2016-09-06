@@ -67,6 +67,7 @@ VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 
 
 
+
 DELETE #CodeCurrency WHERE currency = ''
 
 CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )

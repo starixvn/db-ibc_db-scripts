@@ -116,7 +116,7 @@ BEGIN
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 2 AND dest.SettingType = 6
 	
 	--Member Level
-	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
+	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT ci.custid, dest.tSportType, dest.tBetType	
 		,CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 				WHEN ai.SyncLiveCasino = 1 THEN ai.MaxWinLiveCasino 

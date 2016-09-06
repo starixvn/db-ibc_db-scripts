@@ -30,6 +30,7 @@ FROM Customer WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND site in ('INDO','755555','Koribc')
+	
 
 --step 1: copy settings for newly created customers
 
@@ -44,7 +45,8 @@ CREATE TABLE #tmpCustGameType (
 CREATE TABLE #CodeCurrency (ID INT, Currency VARCHAR(1000) )
 
 INSERT INTO #CodeCurrency (ID,Currency)
-VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
+VALUES
+(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 (1,''),
 (1,''),
 (1,''),
@@ -86,7 +88,6 @@ VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 (11,''),
 (11,'')
 
-
 DELETE #CodeCurrency WHERE currency = ''
 
 CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )
@@ -97,90 +98,92 @@ FROM #CodeCurrency t
 				FROM strSplit (t.Currency,',') AS T
 					INNER JOIN DBCUST.CUSTDB.dbo.exchange e(NOLOCK) ON LTRIM(RTRIM(T.val)) =e.currency) AS cur
 
--- Dummy processing
-CREATE TABLE #Dummy_temp
-	(
-		ID INT IDENTITY,
-		CustID INT ,
-		srecommend INT, mrecommend INT, recommend INT, roleid TINYINT,exchangeID INT
-	)
-
-INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid,exchangeID)
-SELECT  c.custid, c.srecommend, c.mrecommend, c.recommend, c.roleid,c.currency
-FROM Customer c WITH (NOLOCK)
-	JOIN custInfo CI WITH (NOLOCK) ON ci.custid = c.custid
-WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend IN (4,13,15) AND CI.Enabled = 1 AND ci.custid > @max_custid
-	AND ci.custid <= @max_custid2  
-
-CREATE TABLE #Dummy_Result
+------------- Dummy processing ----------------
+CREATE TABLE #MemberTemp
 (
-		CustID INT PRIMARY KEY CLUSTERED,
-		SyncLiveCasino BIT,
-		ExchangeID INT
+	CustID INT PRIMARY KEY CLUSTERED,
+	SyncLiveCasino BIT,
+	currency INT
 )
+
+CREATE TABLE #SMATemp
+(
+	CustID INT PRIMARY KEY CLUSTERED,
+	roleid TINYINT,
+	SyncLiveCasino BIT,
+	currency INT
+)
+CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
+CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
+
+--- get direct master
+INSERT INTO #DirectMaster (CustID,roleid)
+SELECT custid, roleid
+FROM Customer with(nolock)
+WHERE SITE in ('INDO','755555','Koribc')
+	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and roleid=3 AND srecommend = @srecommend 
 	
-------Member processing ----------
-DECLARE @Start INT = 1, @Stop INT = 1, @ExchangeID INT
+--- get direct agent
+INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
+SELECT custid, mrecommend,roleid
+FROM Customer WITH(NOLOCK)
+WHERE site in ('INDO','755555','Koribc')
+	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and roleid=2 AND srecommend = @srecommend 
 
-DECLARE @mrecommend INT, @recommend INT
+----------- For SMA  -----------
+INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino,currency)
+-- NO NEED TO ADD SUPER, it's added already
+SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Direct Master 
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2
 
-IF EXISTS (SELECT 1 FROM #Dummy_temp)
-BEGIN
-	SET @Stop = (SELECT MAX(ID) FROM #Dummy_temp)
+UNION ALL
+SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Master of direct agent
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2
+	
+UNION ALL
 
-	WHILE (@Start < = @Stop)
-	BEGIN
-		
-		SELECT @CustID= custid, @srecommend =srecommend, @mrecommend =mrecommend, @recommend = recommend,@RoleID = roleid,@ExchangeID = exchangeID
-		FROM #Dummy_temp WHERE ID = @Start
-		
-		IF @RoleID = 1
-		BEGIN
-			INSERT INTO #Dummy_Result (CustID, SyncLiveCasino,ExchangeID)
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.custid = @CustID 
-			UNION ALL
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.custid IN (@srecommend,@mrecommend,@recommend) 
-			
-		END
-		ELSE IF @RoleID = 2
-		BEGIN
-			INSERT INTO #Dummy_Result (CustID, SyncLiveCasino,ExchangeID)
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.recommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND ci.custid > @max_custid AND ci.custid <= @max_custid2
-			UNION ALL
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.custid IN (@srecommend,@mrecommend,@recommend)
-		END
-		ELSE IF @RoleID = 3
-		BEGIN
-			INSERT INTO #Dummy_Result (CustID, SyncLiveCasino,ExchangeID)
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.mrecommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND ci.custid > @max_custid AND ci.custid <= @max_custid2
-			
-			UNION ALL
-			SELECT CI.custid, CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.mrecommend = @CustID AND CI.roleid IN (2,3) AND CI.Enabled = 1 AND ci.custid > @max_custid AND ci.custid <= @max_custid2
-			
-			UNION ALL
-			SELECT CI.custid,CI.SyncLiveCasino,@ExchangeID
-			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.custid = @srecommend
-			
-		END
-		
-		SET @Start = @Start + 1
+SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Agent of direct master
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+WHERE CI.roleid = 2
+	AND ci.custid > @max_custid AND ci.custid <= @max_custid2
+UNION ALL
+SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Direct Agent
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2	
+---------- For members ---------
+INSERT INTO #MemberTemp (CustID, SyncLiveCasino,currency)
+SELECT CI.custid, ci.SyncLiveCasino,ci.currency
+FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
+WHERE CI.roleid = 1	AND ci.custid > @max_custid AND ci.custid <= @max_custid2
+	
+UNION ALL
+SELECT CI.custid, ci.SyncLiveCasino,ci.currency
+FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
+WHERE CI.roleid = 1 AND ci.custid > @max_custid AND ci.custid <= @max_custid2
 
-	END		
-END	
+---- REMOVE SMA OR member if existing Allbet Setting
+DELETE M
+FROM #SMATemp M 
+	INNER JOIN CustStakeLevel_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
+	
+DELETE M
+FROM #MemberTemp M 
+	INNER JOIN CustStakeLevel_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
 
+-------------end of Dummy processing ----------------			
+--- get list of new customers
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, currency INT)
 
 INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, currency)
@@ -189,12 +192,13 @@ FROM custinfo ci WITH(NOLOCK)
 	INNER JOIN #Supers s ON ci.srecommend = s.custid
 WHERE ci.custid > @max_custid
 	AND ci.custid <= @max_custid2
+UNION ALL -- DUMMY
+SELECT custid, roleid, syncLiveCasino, currency
+FROM #SMATemp
+UNION ALL -- DUMMY
+SELECT custid, 1, syncLiveCasino, currency
+FROM #MemberTemp
 	
-UNION ALL
-
-SELECT DISTINCT ci.custid, roleid, d.syncLiveCasino, d.ExchangeID
-FROM custinfo ci WITH(NOLOCK) 
-INNER JOIN #Dummy_Result D ON ci.custid = d.CustID
 	
 INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT ci.custid, ISNULL (cs.StakeLevelList,'') AS StakeLevelList,ci.currency	
@@ -207,7 +211,7 @@ INSERT INTO #StakeLevel_PreMapping (StakeLevelList_LC,ExchangeID)
 SELECT DISTINCT StakeLevelList_LC,ExchangeID
 FROM #tmpCustGameType WITH (NOLOCK)
 
-DECLARE @Index_Start INT  = 0
+DECLARE @Index_Start INT  = 0, @ExchangeID INT
 DECLARE @Index_Stop INT = (SELECT MAX(ID) FROM #StakeLevel_PreMapping)
 
 DECLARE @v_str NVARCHAR(1000)
@@ -311,13 +315,15 @@ WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent sk WITH (NOLOCK) WHERE sk
 DROP TABLE #CodeCurrency
 DROP TABLE #CustStakeLevel_Agent_2401
 DROP TABLE #CustStakeLevel_Member_2401
-DROP TABLE #Dummy_Result
-DROP TABLE #Dummy_temp
 DROP TABLE #ExchangeIDListPerCurrency
 DROP TABLE #StakeLevel_PreMapping
 DROP TABLE #supers
 DROP TABLE #tmpCust
 DROP TABLE #tmpCustGameType
+DROP TABLE #DirectAgent
+DROP TABLE #DirectMaster
+DROP TABLE #MemberTemp
+DROP TABLE #SMATemp
 
 
 

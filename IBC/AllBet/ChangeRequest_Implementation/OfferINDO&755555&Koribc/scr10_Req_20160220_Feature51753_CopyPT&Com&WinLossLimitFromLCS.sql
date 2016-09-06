@@ -49,14 +49,10 @@ BEGIN
 		MaxWinLiveCasino SMALLMONEY,
 		isAutoResetLiveCasino BIT
 	)
-	CREATE TABLE #Dummy_temp
-	(
-		ID INT IDENTITY,
-		CustID INT ,
-		srecommend INT, mrecommend INT, recommend INT, roleid TINYINT
-	)
+	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
+	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 	
-	IF @srecommend NOT IN (4,13,15)
+	IF @srecommend NOT IN (2,4,13,15)
 	BEGIN
 		INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 		SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
@@ -69,89 +65,74 @@ BEGIN
 		FROM Custinfo WITH (NOLOCK)
 		WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
 	END
-	ELSE IF @srecommend IN (4,13,15)
+	ELSE IF @srecommend IN (2,4,13,15)
 	BEGIN 
 		
-		INSERT INTO #Dummy_temp (custid, srecommend, mrecommend, recommend, roleid)
-		SELECT  c.custid, c.srecommend, c.mrecommend, c.recommend, c.roleid
-		FROM Customer c WITH (NOLOCK)
-			JOIN custInfo CI WITH (NOLOCK) ON ci.custid = c.custid
-		WHERE c.site in ('INDO','755555','Koribc') AND c.srecommend = @srecommend AND CI.Enabled = 1 AND CI.custid <= @maxcustid
-		
-		------Member processing ----------
-		DECLARE @Start INT = 1, @Stop INT = 1
-
-		DECLARE @CustID INT, @mrecommend INT, @recommend INT, @RoleID INT
-
-		SET @Stop = (SELECT MAX(ID) FROM #Dummy_temp)
-		
-		WHILE (@Start < = @Stop)
-		BEGIN
+		--- get direct master
+		INSERT INTO #DirectMaster (CustID,roleid)
+		SELECT custid, roleid
+		FROM Customer with(nolock)
+		WHERE SITE in ('INDO','755555','Koribc')
+			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
 			
-			SELECT @CustID= custid, @srecommend =srecommend, @mrecommend =mrecommend, @recommend = recommend,@RoleID = roleid
-			FROM #Dummy_temp WHERE ID = @Start
-			
-			IF @RoleID = 1
-			BEGIN
-				INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-				SELECT CI.custid,CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid = @CustID AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = @CustID)
-				
-				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-				SELECT CI.custid,CI.roleid, CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend) AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
-				
-			END
-			ELSE IF @RoleID = 2
-			BEGIN
-				INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-				SELECT CI.custid,CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.recommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid <= @maxcustid
-					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
-				
-				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-				SELECT CI.custid,CI.roleid,CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid IN (@srecommend,@mrecommend,@recommend)
-					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
-			END
-			ELSE IF @RoleID = 3
-			BEGIN
-				INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-				SELECT CI.custid,CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.mrecommend = @CustID AND CI.roleid = 1 AND CI.Enabled = 1 AND CI.custid <= @maxcustid
-					AND NOT EXISTS (SELECT 1 FROM #MemberTemp t WHERE t.custid = CI.custid)
-				
-				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-				SELECT CI.custid,CI.roleid, CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.mrecommend = @CustID AND CI.roleid IN (2,3) AND CI.Enabled = 1 AND CI.custid <= @maxcustid
-					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
-					
-				INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-				SELECT CI.custid,CI.roleid,CI.SyncLiveCasino
-				FROM custInfo CI WITH (NOLOCK)
-				WHERE CI.custid = @srecommend
-					AND NOT EXISTS (SELECT 1 FROM #SMATemp t WHERE t.custid = ci.custid)
-				
-			END
-			
-			SET @Start = @Start + 1
+		--- get direct agent
+		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
+		SELECT custid, mrecommend,roleid
+		FROM Customer WITH(NOLOCK)
+		WHERE site in ('INDO','755555','Koribc')
+			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
 
-		END
+		----------- For SMA  -----------
+		INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
+		SELECT CustID,roleid,SyncLiveCasino
+		FROM custInfo CI WITH (NOLOCK)
+		WHERE CI.custid = @srecommend -- SUPER
+		UNION ALL
+
+		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
+		FROM custInfo CI WITH (NOLOCK)
+			INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+		UNION ALL
+		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
+		FROM custInfo CI WITH (NOLOCK)
+			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+			
+		UNION ALL
+
+		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
+		FROM custInfo CI WITH (NOLOCK)
+			INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+		WHERE CI.roleid = 2
+		UNION ALL
+		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
+		FROM custInfo CI WITH (NOLOCK)
+			INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+		---------- For members ---------
+		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
+		SELECT CI.custid, SyncLiveCasino
+		FROM Custinfo CI WITH (NOLOCK)
+			INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
+		WHERE CI.roleid = 1	
+
+		UNION ALL
+		SELECT CI.custid, SyncLiveCasino
+		FROM Custinfo CI WITH (NOLOCK)
+			INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
+		WHERE CI.roleid = 1
+
 		
 		---- REMOVE SMA OR member if existing Allbet Setting
 		DELETE M
 		FROM #SMATemp M 
-			INNER JOIN CustStakeLevel_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
+			INNER JOIN CustWinLossLimit_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
 			
 		DELETE M
 		FROM #MemberTemp M 
-			INNER JOIN CustStakeLevel_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211	
+			INNER JOIN CustWinLossLimit_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
 	END		
 	
 	DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
@@ -209,7 +190,7 @@ BEGIN
 	WHERE ci.srecommend = @srecommend AND ci.roleid = 2 AND dest.SettingType = 6
 	
 	--Member Level
-	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
+	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT ci.custid, dest.tSportType, dest.tBetType	
 		,CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 				WHEN ai.SyncLiveCasino = 1 THEN ai.MaxWinLiveCasino 
@@ -405,7 +386,7 @@ WHERE (ci.roleid = 4
 		AND ci.custid <= @max_custid
 		-- Production
 		AND ci.site in ('INDO','755555','Koribc')
-	) OR ci.custid IN (4,13,15) -- DUMMY 
+	) OR ci.custid IN (2,4,13,15) -- DUMMY 
 
 WHILE (1 = 1)
 BEGIN
@@ -442,7 +423,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND ci.site in ('INDO','755555','Koribc'))
 	
-	OR ci.custid IN (4,13,15) -- DUMMY 
+	OR ci.custid IN (2,4,13,15) -- DUMMY 
 
 WHILE (1 = 1)
 BEGIN
