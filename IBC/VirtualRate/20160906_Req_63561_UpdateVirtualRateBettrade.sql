@@ -1,5 +1,5 @@
  /*
-	Created: 20160805@Winnie
+	Created: 20160907@Winnie
 	Task: Modify Virtual Rate data following new requirements - [Redmine: #61713]
 	DB: DBCUST/CustDB
 */
