@@ -8,9 +8,6 @@
 --GO
 
 /****** Object:  Table [dbo].[Dep_AgentCommRate]    Script Date: 08/25/2016 03:53:48 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Dep_AgentCommRate]') AND type in (N'U'))
-DROP TABLE [dbo].[Dep_AgentCommRate]
-GO
 
 /****** Object:  Table [dbo].[Dep_AgentCommRate]    Script Date: 08/25/2016 03:53:48 ******/
 SET ANSI_NULLS ON
@@ -29,15 +26,12 @@ CREATE TABLE [dbo].[Dep_AgentCommRate](
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustSetting3rd_table]
-) ON [CustSetting3rd_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustSetting3rd_table]
+) ON [Dep_CustSetting3rd_table]
 
 GO
 
 /****** Object:  Table [dbo].[Dep_CustCommRate]    Script Date: 08/25/2016 03:53:28 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Dep_CustCommRate]') AND type in (N'U'))
-DROP TABLE [dbo].[Dep_CustCommRate]
-GO
 
 /****** Object:  Table [dbo].[Dep_CustCommRate]    Script Date: 08/25/2016 03:53:28 ******/
 SET ANSI_NULLS ON
@@ -59,7 +53,7 @@ CREATE TABLE [dbo].[Dep_CustCommRate](
 	[CustID] ASC,
 	[SportType] ASC,
 	[BetType] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [CustSetting3rd_table]
-) ON [CustSetting3rd_table]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Dep_CustSetting3rd_table]
+) ON [Dep_CustSetting3rd_table]
 
 GO
