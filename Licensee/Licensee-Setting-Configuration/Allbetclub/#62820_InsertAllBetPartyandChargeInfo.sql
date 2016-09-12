@@ -1,3 +1,6 @@
+USE bodb_licensee
+GO
+
 /*  
 	Created: 20160907@Harper		
 	Task:	#62820_LA - Implement Allbet - Insert AllBet Party and ChargeInfo information of this party
@@ -13,9 +16,11 @@ GO
 -- Insert Charge Info
 DECLARE @ProductID INT, -- 21
 		@AllbetID INT
+		@BaseCurrencyID	INT
 
 SELECT @ProductID = ProductID FROM dbo.Product3rd (NOLOCK) WHERE ProductName = 'Allbet'
 SELECT @AllbetID = PartyID FROM dbo.OAS_Party (NOLOCK) WHERE PartyName = 'AllBet'
+SET @BaseCurrencyID = (SELECT TOP 1 ExchangeId FROM bodb02.dbo.ExchangeDailyOanda (NOLOCK) WHERE Code = 'HKD')
 
 INSERT INTO dbo.OAS_ChargeInfo
         ( ProductID ,
