@@ -79,7 +79,7 @@ INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT cs.custid, StakeLevelList_LC,ci.currency	
 FROM CustGameType_LCS cs WITH(NOLOCK) --DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType
 	INNER JOIN Customer ci WITH(NOLOCK) ON cs.custid = ci.custid
-WHERE GameTypeID = 108 AND ci.currency = 20
+WHERE ci.currency = 20
 
 
 GO
