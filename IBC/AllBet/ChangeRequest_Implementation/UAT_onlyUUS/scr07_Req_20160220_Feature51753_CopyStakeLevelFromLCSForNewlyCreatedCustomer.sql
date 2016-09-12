@@ -135,7 +135,7 @@ FROM #tmpCustGameType T1
 SELECT @max_custid = 100
 		,@max_custid2 = 1001
 
-INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID, srecommend, currency)
+INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, currency)
 SELECT DISTINCT ci.custid, roleid, syncLiveCasino, s.currency
 FROM custinfo ci WITH(NOLOCK) 
 	INNER JOIN #Supers s ON ci.srecommend = s.custid
