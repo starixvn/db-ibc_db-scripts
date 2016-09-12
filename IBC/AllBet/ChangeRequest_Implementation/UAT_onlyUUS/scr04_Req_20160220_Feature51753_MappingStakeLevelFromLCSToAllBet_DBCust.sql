@@ -281,13 +281,13 @@ FROM #StakeLEvel_Result T
 ------- 2.1 StakeLevel, & temporary table for mapping named tmpStakeLevelMapping only run on DBCUST.CUSTDB ----------------------------
 DELETE StakeLevel WHERE GameTypeID IN (2401,2402)
 
-SET IDENTITY_INSERT StakeLevel OFF
+SET IDENTITY_INSERT StakeLevel ON
 
-INSERT INTO StakeLevel (GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId)
-SELECT GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId
+INSERT INTO StakeLevel (StakeLevelID,GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId)
+SELECT StakeLevelID,GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId
 FROM #StakeLEvel_Result
 
-SET IDENTITY_INSERT StakeLevel ON
+SET IDENTITY_INSERT StakeLevel OFF
 
 IF EXISTS (SELECT * FROM sys.objects WHERE name = 'tmpStakeLevelMapping' and TYPE = 'U')
     DROP TABLE tmpStakeLevelMapping
@@ -342,5 +342,3 @@ DROP TABLE #StakeLevel_2401_final
 DROP TABLE #StakeLevel_2402_final
 DROP TABLE #StakeLevel_Result
 DROP TABLE #tmpStakeLevel
-
-
