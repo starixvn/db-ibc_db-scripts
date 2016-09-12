@@ -35,7 +35,7 @@ FROM (
 		SELECT StakeLevelID, exchangeID, GameTypeID
 		FROM DBBingoAdmin.LiveCasinoAdmin.dbo.gameTemplate gt with(nolock) 
 			INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.gameStakeLevel gs with(nolock) ON gt.gameTemplateid = gs.gameTemplateid 
-		WHERE gt.GameTypeid = 108 AND gt.gameTemplateid = 193
+		WHERE gt.GameTypeid = 108 AND gt.gameTemplateid = 193 and exchangeid = 20
 			--AND exchangeID in (1,2,3,4,5,6,9,12,13,15,16,17,21,22,31,32,33,34,35,36,37,40,41,43,44,45,47,50,51,52,54,55,58,61,62,64,65,66,67,68)
 		)t    
 INNER JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.stakeLevel s with(Nolock) on t.stakeLevelID = s.stakelevelID
@@ -117,46 +117,47 @@ CREATE TABLE #StakeLEvel_tmp_LC (ID INT,MappingID INT, MinLabel NVARCHAR(50), Ma
 INSERT INTO #StakeLEvel_tmp_LC (MappingID,ID,MinLabel,MaxLabel,ResourceID)
 VALUES
 (1,1,'2.5','500',241),
-(2,1,'10','1000',2),
-(3,1,'50','2500',244),
-(4,1,'100','5000',245),
+(2,1,'10','1000',241),
+(3,1,'50','2500',241),
+(4,1,'100','5000',2),
 (5,2,'10','1500',241),
 (6,2,'50','5000',2),
 (7,2,'250','10000',244),
 (8,2,'500','25000',245),
 (9,3,'5','1000',241),
-(10,3,'25','2500',2),
-(11,3,'100','5000',244),
-(12,3,'250','10000',245),
-(17,5,'2500','300000',74),
-(18,5,'7500','750000',76),
-(19,5,'25000','1000000',37),
-(20,5,'75000','3000000',139),
-(21,6,'50','10000',3),
-(22,6,'250','25000',30),
-(23,6,'1000','50000',44),
-(24,6,'2500','100000',152),
-(25,7,'25','3000',243),
-(26,7,'75','7500',4),
-(27,7,'250','10000',30),
-(28,7,'750','30000',5),
-(29,8,'25','3000',242),
-(30,8,'75','7500',3),
-(31,8,'250','10000',30),
-(32,8,'750','30000',5),
-(33,9,'100','20000',30),
-(34,9,'500','50000',44),
-(35,9,'2500','100000',8),
-(36,9,'5000','250000',35),
-(37,10,'2.5','300',39),
-(38,10,'10','1000',53),
-(39,10,'50','2500',181),
-(40,10,'75','3000',182),
-(41,11,'25','2500',241),
-(42,11,'50','500',241),
-(43,11,'1000','5000',2),
-(44,11,'100','10000',244),
-(45,11,'25000','1000000',245)
+(10,3,'25','2500',241),
+(11,3,'100','5000',2),
+(12,3,'250','10000',244),
+(13,5,'2500','300000',74),
+(14,5,'7500','750000',76),
+(15,5,'25000','1000000',37),
+(16,5,'75000','3000000',139),
+(17,6,'50','10000',3),
+(18,6,'250','25000',30),
+(19,6,'1000','50000',44),
+(20,6,'2500','100000',152),
+(21,7,'25','3000',243),
+(22,7,'75','7500',243),
+(23,7,'250','10000',4),
+(24,7,'750','30000',5),
+(25,8,'25','3000',242),
+(26,8,'75','7500',3),
+(27,8,'250','10000',3),
+(28,8,'750','30000',5),
+(29,9,'100','20000',30),
+(30,9,'500','50000',44),
+(31,9,'2500','100000',8),
+(32,9,'5000','250000',35),
+(33,10,'2.5','300',39),
+(34,10,'10','1000',53),
+(35,10,'50','2500',181),
+(36,10,'75','3000',182),
+(37,11,'25','2500',241),
+(38,11,'50','500',241),
+(39,11,'1000','5000',2),
+(40,11,'100','10000',244),
+(41,11,'25000','1000000',245)
+
 
 INSERT INTO #StakeLEvel_tmp_2401 (MappingID,ID,MinLabel,MaxLabel,MinStake,MaxStake,ResourceID)
 VALUES
@@ -279,6 +280,7 @@ FROM #StakeLEvel_Result T
 
 ------- STEP 2: INSERT DATA ----------------------------
 ------- 2.1 StakeLevel, & temporary table for mapping named tmpStakeLevelMapping only run on DBCUST.CUSTDB ----------------------------
+
 DELETE StakeLevel WHERE GameTypeID IN (2401,2402)
 
 SET IDENTITY_INSERT StakeLevel ON
@@ -286,6 +288,7 @@ SET IDENTITY_INSERT StakeLevel ON
 INSERT INTO StakeLevel (StakeLevelID,GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId)
 SELECT StakeLevelID,GameTypeID, MinLabel, MaxLabel, MinStake, MaxStake, ExchangeId, ResourceId
 FROM #StakeLEvel_Result
+
 
 SET IDENTITY_INSERT StakeLevel OFF
 
