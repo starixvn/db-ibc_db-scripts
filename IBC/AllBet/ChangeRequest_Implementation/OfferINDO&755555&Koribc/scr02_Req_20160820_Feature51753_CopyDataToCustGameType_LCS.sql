@@ -14,6 +14,7 @@ CREATE TABLE CustGameType_LCS(CustID INT PRIMARY KEY, StakeLevelList_LC VARCHAR(
 GO
 
 INSERT INTO CustGameType_LCS (CustID,StakeLevelList_LC)
-SELECT Custid, StakeLevelList
-FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType WITH (NOLOCK)
-WHERE GameTypeID = 108 
+SELECT C.Custid, CGT.StakeLevelList
+FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType CGT WITH (NOLOCK)
+	INNER JOIN Customer C (NOLOCK) ON CGT.CustID = C.custid 
+WHERE CGT.GameTypeID = 108 AND C.site in ('INDO','755555','Koribc')
