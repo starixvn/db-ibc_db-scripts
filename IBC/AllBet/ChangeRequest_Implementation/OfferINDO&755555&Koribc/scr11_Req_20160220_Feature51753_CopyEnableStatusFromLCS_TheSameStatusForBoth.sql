@@ -142,7 +142,7 @@ CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, 
 DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.site in ('INDO','755555','Koribc')
@@ -154,11 +154,11 @@ WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	--					)
 						
 
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site in ('INDO','755555','Koribc')
+--INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
+--SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
+--FROM dbo.Customer ci WITH(NOLOCK)
+--WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+--	AND ci.site in ('INDO','755555','Koribc')
 	-- Production get Username from excel file
 	--AND ci.username IN (--733333 site
 	--					'S922H','M922M','S922M','S922N','S922L','S922P','S922W','S922G','S922MA','S922A','SKKM','S09H','S09M','MMYBRM','PTM','S69R','S47R',
@@ -198,7 +198,7 @@ CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, 
 DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	-- Production
@@ -210,11 +210,11 @@ WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	--					)
 						
 
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site in ('INDO','755555','Koribc')
+--INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
+--SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
+--FROM dbo.Customer ci WITH(NOLOCK)
+--WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+--	AND ci.site in ('INDO','755555','Koribc')
 	-- Production
 	--AND ci.site in ('INDO','755555','Koribc')
 	--AND ci.username IN (--733333 site

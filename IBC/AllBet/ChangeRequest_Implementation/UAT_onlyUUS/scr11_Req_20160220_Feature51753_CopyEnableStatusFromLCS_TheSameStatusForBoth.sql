@@ -143,7 +143,7 @@ CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, 
 DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
@@ -180,7 +180,7 @@ CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, 
 DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
