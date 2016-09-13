@@ -67,7 +67,6 @@ VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
 
 
 
-
 DELETE #CodeCurrency WHERE currency = ''
 
 CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )
@@ -82,8 +81,7 @@ INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT cs.custid, StakeLevelList_LC,ci.currency	
 FROM CustGameType_LCS cs WITH(NOLOCK) --DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType
 	INNER JOIN Customer ci WITH(NOLOCK) ON cs.custid = ci.custid
-WHERE ci.site in ('INDO','755555','Koribc') 
-
+WHERE ci.site in ('INDO','755555','Koribc') AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 
 GO
 
