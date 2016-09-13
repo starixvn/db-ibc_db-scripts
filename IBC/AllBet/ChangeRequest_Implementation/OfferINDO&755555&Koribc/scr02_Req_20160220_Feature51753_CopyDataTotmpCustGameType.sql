@@ -81,7 +81,9 @@ INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT cs.custid, StakeLevelList_LC,ci.currency	
 FROM CustGameType_LCS cs WITH(NOLOCK) --DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType
 	INNER JOIN Customer ci WITH(NOLOCK) ON cs.custid = ci.custid
+	INNER JOIN #ExchangeIDListPerCurrency  tmp ON tmp.ExchangeID = ci.currency
 WHERE ci.site in ('INDO','755555','Koribc') AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+
 
 GO
 
