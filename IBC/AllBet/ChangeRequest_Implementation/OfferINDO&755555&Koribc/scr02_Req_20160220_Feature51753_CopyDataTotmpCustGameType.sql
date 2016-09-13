@@ -77,12 +77,22 @@ FROM #CodeCurrency t
 				FROM strSplit (t.Currency,',') AS T
 					INNER JOIN DBCUST.CUSTDB.dbo.exchange e(NOLOCK) ON LTRIM(RTRIM(T.val)) =e.currency) AS cur
 
+CREATE TABLE #supers (custid int)
+
+INSERT INTO #supers(custid)
+SELECT ci.custid
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.site in ('INDO','755555','Koribc'))
+		OR ci.custid IN (2,4,13,15)
+		
 INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID])
 SELECT cs.custid, StakeLevelList_LC,ci.currency	
 FROM CustGameType_LCS cs WITH(NOLOCK) --DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType
 	INNER JOIN Customer ci WITH(NOLOCK) ON cs.custid = ci.custid
 	INNER JOIN #ExchangeIDListPerCurrency  tmp ON tmp.ExchangeID = ci.currency
-WHERE ci.site in ('INDO','755555','Koribc') AND ci.srecommend NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+	INNER JOIN #supers s (nolock) on ci.srecommend = s.custid	
 
 
 GO
