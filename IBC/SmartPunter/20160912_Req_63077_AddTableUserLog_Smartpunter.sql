@@ -16,8 +16,8 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[UserLog_SmartPunter](
-	[logid] [bigint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	[logdate] [datetime] NOT NULL,
+	[Logid] [bigint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[Logdate] [datetime] NOT NULL,
 	UserId INT NOT NULL,
 	CustId INT NOT NULL,
 	[ActionID] INT NOT NULL,
