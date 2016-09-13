@@ -15,7 +15,7 @@ GO
 
 --Use SSIS to import data for 
 /*
-Source: DBCASINOADMIN.CasinoAdmin - with select Query below
+Source: DBBingoAdmin.LiveCasinoAdmin - with select Query below
 Destination: DBCUST.custDB.tmpCustGameType_LCS
 */   
 SELECT CustID,StakeLevelList
