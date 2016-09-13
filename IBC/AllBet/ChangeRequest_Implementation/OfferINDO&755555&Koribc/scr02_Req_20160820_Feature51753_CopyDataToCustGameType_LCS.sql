@@ -13,8 +13,22 @@ CREATE TABLE CustGameType_LCS(CustID INT PRIMARY KEY, StakeLevelList_LC VARCHAR(
 
 GO
 
+
+CREATE TABLE #supers (custid int)
+
+INSERT INTO #supers(custid)
+SELECT ci.custid
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		AND ci.site in ('INDO','755555','Koribc'))
+		OR ci.custid IN (2,4,13,15)
+		
 INSERT INTO CustGameType_LCS (CustID,StakeLevelList_LC)
 SELECT C.Custid, CGT.StakeLevelList
-FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType CGT WITH (NOLOCK)
+FROM tmpCustGameType_LCS CGT WITH (NOLOCK)
 	INNER JOIN Customer C (NOLOCK) ON CGT.CustID = C.custid 
-WHERE CGT.GameTypeID = 108 AND C.site in ('INDO','755555','Koribc')
+	INNER JOIN #supers s (nolock) on c.srecommend = s.custid	
+WHERE CGT.GameTypeID = 108 
+
+DROP TABLE #supers
