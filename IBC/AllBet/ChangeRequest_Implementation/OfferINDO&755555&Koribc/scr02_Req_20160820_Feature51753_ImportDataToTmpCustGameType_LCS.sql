@@ -26,5 +26,5 @@ Destination: DBCUST.custDB.tmpCustGameType_LCS
 
 */   
 SELECT CustID,StakeLevelList
-FROM DBCASINOADMINCS.LiveCasinoAdmin.dbo.CustGameType WITH (NOLOCK)
+FROM CustGameType WITH (NOLOCK)
 WHERE GameTypeID = 108 
