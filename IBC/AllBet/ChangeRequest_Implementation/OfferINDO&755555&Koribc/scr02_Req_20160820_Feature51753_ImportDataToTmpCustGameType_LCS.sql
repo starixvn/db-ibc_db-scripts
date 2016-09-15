@@ -20,9 +20,11 @@ GO
 
 --Use SSIS to import data for 
 /*
-Source: DBBingoAdmin.LiveCasinoAdmin - with select Query below
+Source: DBCASINOADMINCS.LiveCasinoAdmin - with select Query below
 Destination: DBCUST.custDB.tmpCustGameType_LCS
+
+
 */   
 SELECT CustID,StakeLevelList
-FROM DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType WITH (NOLOCK)
+FROM DBCASINOADMINCS.LiveCasinoAdmin.dbo.CustGameType WITH (NOLOCK)
 WHERE GameTypeID = 108 
