@@ -122,6 +122,29 @@ BEGIN
 	SET @Index_Start =  @Index_Start + 1
 END
 
+SELECT t1.*,t2.*
+INTO #tmpStakeLevelMapping_DuplicateProcess
+FROM #StakeLevel_PreMapping t1 (NOLOCK)
+	CROSS APPLY (SELECT val,COUNT(*) as count_duplicate
+				 FROM strSplit (t1.StakeLevelList_Allbet,',')
+				 GROUP BY val
+				 HAVING COUNT(*) > 1
+				 ) as t2
+IF EXISTS (SELECT 1 FROM #tmpStakeLevelMapping_DuplicateProcess)
+BEGIN
+	UPDATE T1
+		SET StakeLevelList_Allbet = STUFF(t2.StakelevelList,1,1,'') 
+	FROM #tmpStakeLevelMapping_DuplicateProcess T1
+		CROSS APPLY (SELECT ','+t.VAL 
+					 FROM ( SELECT DISTINCT val 
+							from strSplit (t1.StakeLevelList_Allbet,',')
+						  ) as t
+					 FOR XML PATH ('')	  
+					 ) as t2 (StakelevelList)
+
+
+END
+
 UPDATE T1
 	SET StakeLevelList_Allbet = T2.StakeLevelList_Allbet
 FROM tmpCustGameType T1

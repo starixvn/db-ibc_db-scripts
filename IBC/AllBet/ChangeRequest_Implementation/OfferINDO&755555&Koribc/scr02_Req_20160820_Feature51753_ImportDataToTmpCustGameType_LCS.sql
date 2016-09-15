@@ -9,7 +9,12 @@ IF EXISTS (SELECT * FROM sys.objects WHERE name = 'tmpCustGameType_LCS' and type
     DROP TABLE tmpCustGameType_LCS
 GO  
 
-CREATE TABLE tmpCustGameType_LCS(CustID INT PRIMARY KEY, StakeLevelList VARCHAR(100))
+CREATE TABLE tmpCustGameType_LCS(
+		CustID INT 
+		, StakeLevelList VARCHAR(100)
+		,PRIMARY KEY CLUSTERED( CustID ASC) WITH (IGNORE_DUP_KEY = ON) 
+)
+
 
 GO
 
