@@ -12,3 +12,6 @@ ADD  Ignored BIT
 GO
 ALTER TABLE [dbo].crmCustomer ADD  CONSTRAINT [DF_crmCustomer_Ignored]  DEFAULT (0) FOR Ignored
 GO
+ALTER TABLE crmCustomer
+ADD  Checker NVARCHAR(50)
+GO
