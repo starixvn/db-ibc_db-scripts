@@ -29,6 +29,5 @@ SELECT C.Custid, CGT.StakeLevelList
 FROM tmpCustGameType_LCS CGT WITH (NOLOCK)
 	INNER JOIN Customer C (NOLOCK) ON CGT.CustID = C.custid 
 	INNER JOIN #supers s (nolock) on c.srecommend = s.custid	
-WHERE CGT.GameTypeID = 108 
 
 DROP TABLE #supers
