@@ -132,9 +132,10 @@ FROM #StakeLevel_PreMapping t1 (NOLOCK)
 				 ) as t2
 IF EXISTS (SELECT 1 FROM #tmpStakeLevelMapping_DuplicateProcess)
 BEGIN
-	UPDATE T1
+	UPDATE Temp
 		SET StakeLevelList_Allbet = STUFF(t2.StakelevelList,1,1,'') 
-	FROM #tmpStakeLevelMapping_DuplicateProcess T1
+	FROM #StakeLevel_PreMapping Temp
+		INNER JOIN #tmpStakeLevelMapping_DuplicateProcess T1 ON TEMP.ExchangeID = T1.ExchangeID AND TEMP.StakeLevelList_Allbet=T1.StakeLevelList_Allbet 
 		CROSS APPLY (SELECT ','+t.VAL 
 					 FROM ( SELECT DISTINCT val 
 							from strSplit (t1.StakeLevelList_Allbet,',')
