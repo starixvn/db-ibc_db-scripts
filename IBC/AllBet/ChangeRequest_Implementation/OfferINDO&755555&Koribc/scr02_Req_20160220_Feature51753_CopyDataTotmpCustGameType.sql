@@ -145,11 +145,23 @@ BEGIN
 
 
 END
-
+-- Update mapping
 UPDATE T1
 	SET StakeLevelList_Allbet = T2.StakeLevelList_Allbet
 FROM tmpCustGameType T1
 	INNER JOIN #StakeLevel_PreMapping T2 ON T1.ExchangeID = T2.ExchangeID AND T1.StakeLevelList_LC = T2.StakeLevelList_LC
+	
+-- Update lowest if (StakelevelList = '' OR NULL) FOR custid(s) have SyncLiveCasino = 1
+UPDATE T1
+	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+FROM tmpCustGameType T1
+	INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.Enabled = 1 AND CI.SyncLiveCasino = 1
+	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+				FROM dbo.StakeLevel SL WITH(NOLOCK) 
+				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
+				ORDER BY MaxStake, MinStake) AS temp
+WHERE T1.StakeLevelList_LC = ''	OR T1.StakeLevelList_LC IS NULL			
+	
 GO
 
 DROP TABLE #CodeCurrency
