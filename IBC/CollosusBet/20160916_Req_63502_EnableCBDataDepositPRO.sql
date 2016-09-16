@@ -23,7 +23,7 @@ BEGIN
 		RETURN		
 	UPDATE custInfo WITH(ROWLOCK,UPDLOCK)	
 	SET DisableColossusBet=0,HideColossusBet=0
-	WHERE srecommend=@srecommend AND Enabled=1
+	WHERE srecommend=@srecommend AND Enabled=1 AND custid <= @maxcustid
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
