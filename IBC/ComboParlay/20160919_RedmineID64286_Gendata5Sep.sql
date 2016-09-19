@@ -125,12 +125,7 @@ UPDATE bb
 	  
 	  CREATE CLUSTERED INDEX [CIX_TMPrmSumWinloss_Old_Sep8] ON [dbo].TMPrmSumWinloss_Old_Sep8 
 (
-	[custid] ASC,
-	[winlostdate] ASC,
-	[sporttype] ASC,
-	[statusid] ASC,
-	[combo] ASC,
-	ParlayType ASC
+	[custid] ASC	
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON rmDATA
 GO
 
@@ -169,7 +164,7 @@ GO
            ,a.recommend
            ,[parlaytype]
            FROM #TemprmSumWinloss a
-           INNER JOIN DBEXT.bodb02.dbo.Customer b (NOLOCK) ON a.custid=b.custid
+           INNER JOIN bodb02.dbo.Customer b (NOLOCK) ON a.custid=b.custid
 		--drop table #tmpbettrans
 		drop table #TemprmSumWinloss
 		drop table #tmpbettransm
