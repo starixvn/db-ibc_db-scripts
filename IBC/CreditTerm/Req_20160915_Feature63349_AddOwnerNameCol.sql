@@ -7,7 +7,7 @@
 USE [CustDB]
 GO
 
-ALTER TABLE dbo.CustGroupHeadline ADD OwnerName NVARCHAR(200) NULL
+ALTER TABLE dbo.CustGroupHeadline ADD OwnerName NVARCHAR(100) NULL
 GO
 
-ALTER TABLE dbo.CustGroupHeadline DROP COLUMN OwnerID
+--ALTER TABLE dbo.CustGroupHeadline DROP COLUMN OwnerID
