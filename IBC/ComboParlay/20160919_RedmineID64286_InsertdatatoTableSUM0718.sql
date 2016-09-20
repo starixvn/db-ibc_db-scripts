@@ -6,9 +6,13 @@
 */
 USE bodb_RMS
 GO
+		DECLARE @FromDate DATETIME
+		DECLARE @ToDate DATETIME
 
+		SELECT @FromDate= '2016-07-18' 
+		SELECT @ToDate= '2016-07-18' 
 	  
-		DELETE FROM rmSumWinloss_Old WHERE winlostdate='2016-07-18'
+		DELETE FROM rmSumWinloss_Old WHERE winlostdate between @FromDate AND @ToDate
 		INSERT INTO rmSumWinloss_Old
            ([winlostdate]
            ,[custid]
@@ -42,6 +46,6 @@ GO
            ,[betcount]
            ,recommend
            ,[parlaytype]
-           FROM [TMPrmSumWinloss_Old_0718] 
+           FROM [TMPrmSumWinloss_Old_Fixdata] 
         
 	

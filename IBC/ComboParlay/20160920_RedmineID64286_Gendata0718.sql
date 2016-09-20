@@ -37,25 +37,25 @@ CREATE TABLE  #TemprmSumWinloss(
 				
 	INSERT INTO #tmpbettransm(	refno ,	sporttype)
 	SELECT a.refno,m.sporttype 
-	FROM [tmpbettrans0718] b (NOLOCK)
+	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN DBARC.bodb_Archive.dbo.bettransm a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN DBARC.bodb_Archive.dbo.match_bk m(NOLOCK) ON a.matchid=m.matchid	
 	
 	INSERT INTO #tmpbettransm(	refno ,	sporttype)
 	SELECT a.refno,m.sporttype 
-	FROM [tmpbettrans0718] b (NOLOCK)
+	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN bodb02.dbo.bettransm a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN bodb02.dbo.match m(NOLOCK) ON a.matchid=m.matchid	
 	
 	INSERT INTO #tmpbettransm(	refno ,	sporttype)
 	SELECT a.refno,m.sporttype 
-	FROM [tmpbettrans0718] b (NOLOCK)
+	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN bodb02.dbo.bettransm14 a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN bodb02.dbo.match14 m(NOLOCK) ON a.matchid=m.matchid	
 	
 UPDATE bb
 	SET bb.transid2 = aa.transid2
-	FROM [tmpbettrans0718]  bb INNER JOIN 
+	FROM [tmpbettransFixdata]  bb INNER JOIN 
 	(SELECT b.refno,
 	CASE WHEN COUNT(DISTINCT(sporttype))=1 THEN MIN(sporttype)
 	WHEN COUNT(DISTINCT(sporttype))<>1 AND MIN(sporttype)=1 THEN  -3
@@ -96,7 +96,7 @@ UPDATE bb
 				,CASE WHEN bettype=9 THEN 1 
 					  WHEN bettype=29 AND betteam='1' THEN 2
 					  ELSE 3 END AS ParlayType	
-		FROM [tmpbettrans0718] b			
+		FROM [tmpbettransFixdata] b			
 		GROUP BY winlostdate, b.custid, transid2, statusid,  currency, actualrate,
 				CASE WHEN bettype=9 THEN RIGHT(betcheck,len(betcheck)-1) ELSE b.hdp2 END,
 				recommend,
@@ -104,7 +104,7 @@ UPDATE bb
 					  WHEN bettype=29 AND betteam='1' THEN 2
 					  ELSE 3 END 	
 					  
-	CREATE TABLE [dbo].[TMPrmSumWinloss_Old_0718](
+	CREATE TABLE [dbo].[TMPrmSumWinloss_Old_Fixdata](
 	[winlostdate] [smalldatetime] NOT NULL,
 	[custid] [int] NOT NULL,
 	[sporttype] [smallint] NULL,
@@ -123,14 +123,14 @@ UPDATE bb
 	[parlaytype] [tinyint] NULL
 ) ON [rmDATA]
 	  
-	  CREATE CLUSTERED INDEX [CIX_TMPrmSumWinloss_Old_Sep8] ON [dbo].[TMPrmSumWinloss_Old_0718] 
+	  CREATE CLUSTERED INDEX [CIX_TMPrmSumWinloss_Old_Sep8] ON [dbo].[TMPrmSumWinloss_Old_Fixdata] 
 (
 	[custid] ASC	
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON rmDATA
 GO
 
 
-		INSERT INTO [bodb_RMS].[dbo].[TMPrmSumWinloss_Old_0718]
+		INSERT INTO [bodb_RMS].[dbo].[TMPrmSumWinloss_Old_Fixdata]
            ([winlostdate]
            ,[custid]
            ,[sporttype]
