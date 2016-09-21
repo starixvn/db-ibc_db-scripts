@@ -6,24 +6,44 @@
 */
 USE bodb_RMS
 GO
-		EXEC sp_rename 'rmSumWinloss', 'rmSumWinloss_bk';  
-		GO
-	
-		EXEC sp_rename 'TMPrmSumWinloss_Old_Fixdata', 'rmSumWinloss';  
-		
-		CREATE CLUSTERED INDEX [CIX_rmSumWinloss] ON [dbo].[rmSumWinloss] 
-		(
-			[custid] ASC,
-			[winlostdate] ASC,
-			[sporttype] ASC,
-			[statusid] ASC,
-			[combo] ASC
-		)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [rmSumWinloss]
-		GO
-		
-		CREATE NONCLUSTERED INDEX [IX_recommend] ON [dbo].[rmSumWinloss] 
-		(
-			[recommend] ASC
-		)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-		GO
-	
+		DECLARE @FromDate DATETIME
+		DECLARE @ToDate DATETIME
+
+		SELECT @FromDate= xx--MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
+		SELECT @ToDate=  xx--MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
+	  
+		DELETE FROM rmSumWinloss_Old WHERE winlostdate between @FromDate AND @ToDate
+		INSERT INTO rmSumWinloss_Old
+           ([winlostdate]
+           ,[custid]
+           ,[sporttype]
+           ,[statusid]
+           ,[combo]
+           ,[username]
+           ,[currency]
+           ,[stake]
+           ,[winlost]
+           ,[company_stake]
+           ,[company_winlost]
+           ,[actualrate]
+           ,[odds]
+           ,[betcount]
+           ,[recommend]
+           ,[parlaytype])
+         SELECT [winlostdate]
+           ,custid
+           ,[sporttype]
+           ,[statusid]
+           ,[combo]
+           ,[username]
+           ,currency
+           ,[stake]
+           ,[winlost]
+           ,[company_stake]
+           ,[company_winlost]
+           ,[actualrate]
+           ,[odds]
+           ,[betcount]
+           ,recommend
+           ,[parlaytype]
+           FROM [TMPrmSumWinloss_Old_Fixdata] 

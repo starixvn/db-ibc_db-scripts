@@ -19,8 +19,8 @@ Truncate table [tmpbettransFixdata]
 DECLARE @FromDate DATETIME
 DECLARE @ToDate DATETIME
 
-SELECT @FromDate= MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
-SELECT @ToDate=  MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
+SELECT @FromDate= xx--MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
+SELECT @ToDate=  xx--MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
 	--INSERT INTO [tmpbettransFixdata](
 	--Transid ,
 	--[winlostdate] ,
