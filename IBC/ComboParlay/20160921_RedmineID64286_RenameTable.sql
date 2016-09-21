@@ -12,8 +12,8 @@ GO
 		SELECT @FromDate= xx--MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
 		SELECT @ToDate=  xx--MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
 	  
-		DELETE FROM rmSumWinloss_Old WHERE winlostdate between @FromDate AND @ToDate
-		INSERT INTO rmSumWinloss_Old
+		DELETE FROM rmSumWinloss WHERE winlostdate between @FromDate AND @ToDate
+		INSERT INTO rmSumWinloss
            ([winlostdate]
            ,[custid]
            ,[sporttype]
