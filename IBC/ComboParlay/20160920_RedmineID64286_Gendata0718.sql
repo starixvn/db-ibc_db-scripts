@@ -83,7 +83,9 @@ UPDATE bb
 				,b.custid
 				,transid2
 				,statusid
-				,CASE WHEN bettype=9 THEN RIGHT(betcheck,len(betcheck)-1) ELSE b.hdp2 END  AS combo				
+				,CASE WHEN bettype=9 THEN RIGHT(betcheck,len(betcheck)-1) 
+					WHEN bettype=29 AND betcheck IS NULL THEN LEN(betteam)
+					ELSE hdp2 END AS combo				
 				,currency
 				,SUM(stake)
 				,SUM(winlost)
@@ -98,7 +100,9 @@ UPDATE bb
 					  ELSE 3 END AS ParlayType	
 		FROM [tmpbettransFixdata] b			
 		GROUP BY winlostdate, b.custid, transid2, statusid,  currency, actualrate,
-				CASE WHEN bettype=9 THEN RIGHT(betcheck,len(betcheck)-1) ELSE b.hdp2 END,
+				CASE WHEN bettype=9 THEN RIGHT(betcheck,len(betcheck)-1) 
+					WHEN bettype=29 AND betcheck IS NULL THEN LEN(betteam)
+					ELSE hdp2 END,	
 				recommend,
 				CASE WHEN bettype=9 THEN 1 
 					  WHEN bettype=29 AND betteam='1' THEN 2
