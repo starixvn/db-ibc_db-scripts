@@ -15,7 +15,7 @@ GO
 
 -- Insert Charge Info
 DECLARE @ProductID INT, -- 21
-		@AllbetID INT
+		@AllbetID INT,
 		@BaseCurrencyID	INT
 
 SELECT @ProductID = ProductID FROM dbo.Product3rd (NOLOCK) WHERE ProductName = 'Allbet'
@@ -39,8 +39,8 @@ INSERT INTO dbo.OAS_ChargeInfo
           BasisOfBilling
         )
 VALUES  ( @ProductID , 1 , @AllbetID , 0 , 0.05 , 9 , '20160930' , '20500101' , NULL , NULL , 
-          N'Credit group charge rate' , NULL , NULL , NULL ),
+          N'Credit group charge rate' , @BaseCurrencyID , NULL , NULL ),
 		( @ProductID , 1 , @AllbetID , 0 , 0.04 , 10 , '20160930' , '20500101' , NULL , NULL , 
-          N'Deposit group charge rate' , NULL , NULL , NULL ),
+          N'Deposit group charge rate' , @BaseCurrencyID , NULL , NULL ),
 		( @ProductID , 1 , @AllbetID , 0 , 0.01 , 11 , '20160930' , '20500101' , NULL , NULL , 
-          N'Rebate Commission charge rate' , NULL , NULL , NULL )
+          N'Rebate Commission charge rate' , @BaseCurrencyID , NULL , NULL )
