@@ -44,7 +44,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND site in ('spondemo','12bet')
+	AND site in ('spondemo')
 
 WHILE (1 = 1)
 BEGIN
@@ -79,7 +79,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND site in ('spondemo','12bet')
+	AND site in ('spondemo')
 
 WHILE (1 = 1)
 BEGIN

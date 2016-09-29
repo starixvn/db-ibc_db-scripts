@@ -24,7 +24,14 @@ BEGIN
 			)
 		RETURN		
 	
-		
+	DELETE cg
+	FROM Dep_AgentCommRate cg WITH(UPDLOCK,ROWLOCK)		
+	WHERE SportType = 204
+						
+	DELETE cg
+	FROM Dep_CustCommRate cg WITH(UPDLOCK,ROWLOCK)		
+	WHERE SportType = 204		
+	
 	INSERT INTO Dep_AgentCommRate 
 			   ([CustID]
 			   ,[SportType]
@@ -71,7 +78,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND site in ('spondemo','12bet')
+	AND site in ('spondemo')
 
 WHILE (1 = 1)
 BEGIN
@@ -106,7 +113,7 @@ SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND custid <= @max_custid	
-	AND site in ('spondemo','12bet')
+	AND site in ('spondemo')
 
 WHILE (1 = 1)
 BEGIN
