@@ -1,7 +1,7 @@
 /*
 	Created by: Winnie
-	Date: 2016-09-21
-	Task: PRMS: Top Winners/ Winloss report: data of won tickets are not shown on report
+	Date: 2016-09-29
+	Task: PRMS: PRMS: fix data conflict refno with racing
 	Regen data table rmSumWinloss
 */
 USE bodb_RMS
@@ -40,18 +40,21 @@ CREATE TABLE  #TemprmSumWinloss(
 	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN DBARC.bodb_Archive.dbo.bettransm a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN DBARC.bodb_Archive.dbo.match_bk m(NOLOCK) ON a.matchid=m.matchid	
+	WHERE m.sporttype<=99
 	
 	INSERT INTO #tmpbettransm(	refno ,	sporttype)
 	SELECT a.refno,m.sporttype 
 	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN bodb02.dbo.bettransm a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN bodb02.dbo.match m(NOLOCK) ON a.matchid=m.matchid	
+	WHERE m.sporttype<=99
 	
 	INSERT INTO #tmpbettransm(	refno ,	sporttype)
 	SELECT a.refno,m.sporttype 
 	FROM [tmpbettransFixdata] b (NOLOCK)
 	INNER JOIN bodb02.dbo.bettransm14 a(NOLOCK) ON a.refno=b.refno
 	INNER JOIN bodb02.dbo.match14 m(NOLOCK) ON a.matchid=m.matchid	
+	WHERE m.sporttype<=99
 	
 UPDATE bb
 	SET bb.transid2 = aa.transid2

@@ -1,7 +1,7 @@
 /*
 	Created by: Winnie
-	Date: 2016-09-21
-	Task: PRMS: Top Winners/ Winloss report: data of won tickets are not shown on report
+	Date: 2016-09-29
+	Task: PRMS: fix data conflict refno with racing
 	Regen data in table rmSumWinloss
 */
 USE [bodb_RMS]
@@ -14,59 +14,43 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-Truncate table [tmpbettransFixdata]
+--Truncate table [tmpbettransFixdata]
 
 DECLARE @FromDate DATETIME
 DECLARE @ToDate DATETIME
 
-SELECT @FromDate= xx--MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
-SELECT @ToDate=  xx--MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
-	--INSERT INTO [tmpbettransFixdata](
-	--Transid ,
-	--[winlostdate] ,
-	--[custid] ,	
-	--[statusid] ,	
-	--[currency],
-	--[stake] ,
-	--[winlost] ,	
-	--[actualrate],
-	--[odds] ,
-	--[recommend] ,
-	--bettype,
-	--tpositiontaking ,
-	--hdp2 ,
-	--betcheck,
-	--modds,
-	--betteam,
-	--refno,
-	--matchId
-	--)
-	--SELECT
-	--Transid ,
-	--[winlostdate] ,
-	--[custid] ,	
-	--[statusid] ,		
-	--[currency],
-	--[stake] ,
-	--[winlost] ,	
-	--[actualrate],
-	--[odds] ,	
-	--[recommend] ,
-	--bettype,
-	--tpositiontaking ,
-	--hdp2 ,
-	--betcheck,
-	--modds,
-	--betteam,
-	--refno,
-	--matchId
-	--FROM
-	--DBARC.bodb_Archive.dbo.bettrans_bk b WITH(NOLOCK) 
-	--WHERE	b.winlostdate between @Fromdate and @Todate
-	--			AND matchid IN(9,29)
-	--			AND bettype IN(9,29)				
-	--			AND b.statusid IN (111,112,113)
-				
+SELECT @FromDate= '2016-09-21'
+SELECT @ToDate= '2016-09-25'
+--drop table [tmpbettransFixdata]
+	CREATE TABLE [dbo].[tmpbettransFixdata](
+	Transid BIGINT NOT NULL PRIMARY KEY,
+	[winlostdate] [smalldatetime] NOT NULL,
+	[custid] [int] NOT NULL,
+	[statusid] [tinyint] NOT NULL,	
+	[currency] [tinyint] NULL,
+	[stake] [money] NULL,
+	[winlost] [money] NULL,
+	[actualrate] [float] NULL,
+	[odds] [smallmoney] NULL,	
+	[recommend] [int] NULL,
+	bettype SMALLINT NULL,
+	tpositiontaking SMALLMONEY NULL,
+	hdp2 SMALLMONEY NULL,
+	betcheck NVARCHAR(50) NULL,
+	transid2 BIGINT NULL,
+	modds   SMALLMONEY NULL,
+	betteam NVARCHAR(10) NULL,
+	refno BIGINT NOT NULL,
+	matchId INT NULL
+) ON [rmDATA]
+
+
+CREATE NONCLUSTERED INDEX [IX_refno] ON [dbo].[tmpbettransFixdata] 
+(
+	[refno] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
 	INSERT INTO [tmpbettransFixdata](
 	Transid ,
 	[winlostdate] ,

@@ -1,7 +1,7 @@
 /*
 	Created by: Winnie
-	Date: 2016-09-21
-	Task: PRMS: Top Winners/ Winloss report: data of won tickets are not shown on report
+	Date: 2016-09-29
+	Task: PRMS: fix data conflict refno with racing
 	Regen data rmSumWinloss
 */
 USE bodb_RMS
@@ -9,8 +9,8 @@ GO
 		DECLARE @FromDate DATETIME
 		DECLARE @ToDate DATETIME
 
-		SELECT @FromDate= xx--MIN(winlostdate) FROM rmSumWinloss(NOLOCK)
-		SELECT @ToDate=  xx--MAX(winlostdate) FROM rmSumWinloss(NOLOCK)
+		SELECT @FromDate= '2016-09-21'
+		SELECT @ToDate=  '2016-09-25'
 	  
 		DELETE FROM rmSumWinloss WHERE winlostdate between @FromDate AND @ToDate
 		INSERT INTO rmSumWinloss
