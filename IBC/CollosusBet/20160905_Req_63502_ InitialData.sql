@@ -6,7 +6,14 @@
 */ 
 
 ------------------------------------------------------
-
+	DELETE cg
+	FROM Dep_AgentCommRate cg WITH(UPDLOCK,ROWLOCK)		
+	WHERE SportType = 204
+						
+	DELETE cg
+	FROM Dep_CustCommRate cg WITH(UPDLOCK,ROWLOCK)		
+	WHERE SportType = 204		
+	
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@srecommend INT	
 	,@target VARCHAR(30)
@@ -23,14 +30,6 @@ BEGIN
 			AND dbo.f_CheckRepTable('DEP_CustCommRate') = 1
 			)
 		RETURN		
-	
-	DELETE cg
-	FROM Dep_AgentCommRate cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 204
-						
-	DELETE cg
-	FROM Dep_CustCommRate cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 204		
 	
 	INSERT INTO Dep_AgentCommRate 
 			   ([CustID]
