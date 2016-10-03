@@ -7,6 +7,7 @@
 USE bodb02
 GO
 GRANT SELECT ON match14 TO [bodbRMSNet]
+GRANT SELECT ON bettransm14 TO [bodbRMSNet]
 
  /*
 	Created: 20160907@Winnie
@@ -18,3 +19,4 @@ GRANT SELECT ON match14 TO [bodbRMSNet]
 USE bodb_archive
 GO
 GRANT SELECT ON match_bk TO [bodbRMSNet]
+GRANT SELECT ON bettransm TO [bodbRMSNet]
