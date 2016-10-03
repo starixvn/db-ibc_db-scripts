@@ -386,6 +386,7 @@ WHERE (ci.roleid = 4
 		AND ci.custid <= @max_custid
 		-- Production
 		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.custid <> 72
 	) OR ci.custid IN (2,4,13,15) -- DUMMY 
 
 WHILE (1 = 1)
@@ -421,7 +422,9 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid 
 		-- Production
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.custid <> 72
+		)
 	
 	OR ci.custid IN (2,4,13,15) -- DUMMY 
 
