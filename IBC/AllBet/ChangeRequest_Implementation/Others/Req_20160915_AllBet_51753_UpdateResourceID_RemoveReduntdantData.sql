@@ -58,7 +58,7 @@
 	UPDATE StakeLevel SET ResourceId = 12
 	WHERE ExchangeId IN (5,67,13) AND GameTypeID = 2402
 	--RM
-	UPDATE StakeLevel SET ResourceId = 12
+	UPDATE StakeLevel SET ResourceId = 135
 	WHERE ExchangeId IN (2) AND GameTypeID = 2402
 	-- Won
 	UPDATE StakeLevel SET ResourceId = 42
@@ -69,7 +69,7 @@
 
 	-- INH
 	UPDATE StakeLevel SET ResourceId = 13
-	WHERE ExchangeId IN (4,43) AND GameTypeID = 2402
+	WHERE ExchangeId IN (51) AND GameTypeID = 2402
 	-- IDD,IDR,IN, IND, DDD
 	UPDATE StakeLevel SET ResourceId = 157
 	WHERE ExchangeId IN (33,34,15,22,47) AND GameTypeID = 2402

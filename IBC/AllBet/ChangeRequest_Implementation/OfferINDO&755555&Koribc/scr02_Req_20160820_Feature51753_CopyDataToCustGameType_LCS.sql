@@ -21,7 +21,8 @@ SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.custid <> 72)
 		OR ci.custid IN (2,4,13,15)
 		
 INSERT INTO CustGameType_LCS (CustID,StakeLevelList_LC)

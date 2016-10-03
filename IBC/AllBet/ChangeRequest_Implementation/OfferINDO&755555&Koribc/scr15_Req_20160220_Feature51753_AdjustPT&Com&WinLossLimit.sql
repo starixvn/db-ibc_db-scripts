@@ -14,7 +14,9 @@ WHERE ci.roleid = 4
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	-- Production
 	AND ci.site in ('INDO','755555','Koribc')
-
+	AND ci.custid <> 72
+	AND ci.custid NOT IN (2,4,13,15)
+	
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 INSERT INTO #DestinationSportBetType
 VALUES
@@ -38,7 +40,7 @@ CREATE TABLE #SMATemp
 	MaxWinLiveCasino SMALLMONEY,
 	isAutoResetLiveCasino BIT
 )
-	
+
 INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
 FROM Custinfo WITH (NOLOCK)
@@ -49,6 +51,71 @@ INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoRe
 SELECT custid, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1
+
+
+------------STARTING Dummy Processing
+CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
+CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
+
+--- get direct master
+INSERT INTO #DirectMaster (CustID,roleid)
+SELECT custid, roleid
+FROM Customer with(nolock)
+WHERE SITE in ('INDO','755555','Koribc')
+	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and roleid=3 AND srecommend IN (2,4,13,15)
+
+--- get direct agent
+INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
+SELECT custid, mrecommend,roleid
+FROM Customer WITH(NOLOCK)
+WHERE site in ('INDO','755555','Koribc')
+	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and roleid=2 AND srecommend IN (2,4,13,15)
+
+----------- For SMA  -----------
+INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
+-- NO NEED TO ADD SUPER, it's added already
+SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Direct Master 
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+
+
+UNION ALL
+SELECT DISTINCT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Master of direct agent
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+
+	
+UNION ALL
+
+SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Agent of direct master
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+WHERE CI.roleid = 2
+	
+UNION ALL
+SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Direct Agent
+FROM custInfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+
+---------- For members ---------
+INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
+SELECT ci.CustID, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino
+FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
+WHERE CI.roleid = 1	
+	
+UNION ALL
+SELECT ci.CustID, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino
+FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
+WHERE CI.roleid = 1 
+
+
+-------------END of Dummny Processing----------------------------
 
 DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 1

@@ -30,12 +30,14 @@ BEGIN
 	CREATE TABLE #MemberTemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
+		DirectUplineID INT,
 		SyncLiveCasino BIT
 	)
 
 	CREATE TABLE #SMATemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
+		DirectUplineID INT,
 		roleid TINYINT,
 		SyncLiveCasino BIT
 	)
@@ -79,39 +81,42 @@ BEGIN
 		INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
 		SELECT CustID,roleid,SyncLiveCasino
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.custid = @srecommend -- SUPER
+		WHERE CI.custid = @srecommend  AND ci.Enabled = 1 AND ci.custid <= @maxcustid -- SUPER
 		UNION ALL
 
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+		WHERE  ci.Enabled = 1 AND ci.custid <= @maxcustid 			
 		UNION ALL
 		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+		WHERE  ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 			
 		UNION ALL
 
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-		WHERE CI.roleid = 2
+		WHERE CI.roleid = 2 AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 		UNION ALL
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+		WHERE ci.Enabled = 1 AND ci.custid <= @maxcustid 		
 		---------- For members ---------
 		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
 		SELECT CI.custid, SyncLiveCasino
 		FROM Custinfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-		WHERE CI.roleid = 1	
+		WHERE CI.roleid = 1	AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 
 		UNION ALL
 		SELECT CI.custid, SyncLiveCasino
 		FROM Custinfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-		WHERE CI.roleid = 1
+		WHERE CI.roleid = 1 AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 
 		
 		---- REMOVE SMA OR member if existing Allbet Setting
@@ -182,24 +187,72 @@ BEGIN
 		
 		RETURN
 	END
-		
+	
+
+	UPDATE T1
+		SET DirectUplineID = CASE WHEN ci.roleid = 2 THEN CI.mrecommend
+								  WHEN ci.roleid = 3 THEN CI.srecommend
+							ELSE 0 END 	 
+	FROM #SMATemp T1
+		INNER JOIN custInfo ci (NOLOCK) ON T1.CustID = CI.custid
+	
+	UPDATE T1
+		SET DirectUplineID = ci.recommend	 
+	FROM #MemberTemp T1
+		INNER JOIN custInfo ci (NOLOCK) ON T1.CustID = CI.custid
+	
+	DECLARE @StakeLevelLowestSuper VARCHAR(100)
+	
+	SET @StakeLevelLowestSuper = ISNULL((SELECT TOP 1 CONVERT(VARCHAR(100),SL.StakeLevelID) 
+									FROM strSplit (@stakeLevelList2401_super,',') tmp 
+										INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+									WHERE SL.ExchangeId = @exchangeID AND GameTypeID = 2401
+									ORDER BY SL.MaxStake, SL.MinStake),'')
+					
 	IF @stakeLevelList2401_super <> ''
 	BEGIN
 		-- all done, start insert
+		
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
-		SELECT @srecommend, 211, 2401, @stakeLevelList2401_super 
+		-- Role = 4
+		SELECT @srecommend, 211, 2401, @stakeLevelList2401_super  
 		UNION ALL
-		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelList_2401_lowest) ELSE '' END AS stakeLevelList
+		-- Rolid = 3
+		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelLowestSuper) ELSE '' END AS stakeLevelList
 		FROM #SMATemp T1
 			LEFT JOIN tmpCustGameType T2 WITH (NOLOCK) ON T1.CustID = T2.CustID
-			
-		WHERE T1.roleid IN (2,3)
+		WHERE T1.roleid = 3
 		
-		--------------------------------------
+		-- Roleid = 2
+		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
+		SELECT T1.custid, 211, 2401, CASE WHEN t1.SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,ISNULL(CONVERT(VARCHAR(100),temp.StakeLevelID),'')) ELSE '' END AS stakeLevelList
+		FROM #SMATemp T1
+			LEFT JOIN tmpCustGameType T2 WITH (NOLOCK) ON T1.CustID = T2.CustID AND t1.SyncLiveCasino = 1
+			OUTER APPLY (SELECT TOP 1  SL.StakeLevelID 
+						FROM strSplit ((SELECT ISNULL(T3.StakeLevelList,-1)  
+										FROM CustStakeLevel_Agent T3 WITH (NOLOCK) 
+										WHERE T3.custid = t1.DirectUplineID
+											  AND T3.SportType = 211 AND T3.BetType = 2401),',') tmp 
+							INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+						WHERE SL.ExchangeId = @exchangeID AND sl.GameTypeID = 2401
+						ORDER BY SL.MaxStake, SL.MinStake
+						) AS temp
+		WHERE T1.roleid = 2
+		
+		-- RoleID = 1
 		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)
-		SELECT T1.custid, 211, 2401, CASE WHEN T1.SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelList_2401_lowest) ELSE '' END AS stakeLevelList
+		SELECT T1.custid, 211, 2401, CASE WHEN T1.SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,ISNULL(CONVERT(VARCHAR(100),temp.StakeLevelID),'')) ELSE '' END AS stakeLevelList
 		FROM #MemberTemp T1
 			LEFT JOIN tmpCustGameType T2 WITH (NOLOCK) ON T1.CustID = T2.CustID
+			OUTER APPLY (SELECT TOP 1  SL.StakeLevelID 
+						FROM strSplit ((SELECT ISNULL(T3.StakeLevelList,-1)  
+										FROM CustStakeLevel_Agent T3 WITH (NOLOCK) 
+										WHERE T3.custid = t1.DirectUplineID
+											AND T3.SportType = 211 AND T3.BetType = 2401),',') tmp 
+							INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+						WHERE SL.ExchangeId = @exchangeID AND sl.GameTypeID = 2401
+						ORDER BY SL.MaxStake, SL.MinStake
+						) AS temp
 			
 	END	
 	
@@ -227,7 +280,8 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid
 		-- Production
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.srecommend <> 72)
 	
 	OR ci.custid IN (2,4,13,15) -- DUMMY ACCOUNT
 WHILE (1 = 1)
@@ -264,7 +318,8 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid 
 		-- Production
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.srecommend <> 72)
 	OR ci.custid IN (2,4,13,15)
 
 WHILE (1 = 1)

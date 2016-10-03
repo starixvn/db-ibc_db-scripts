@@ -18,10 +18,8 @@ DECLARE @StakeLevelList_2401_Lowest VARCHAR(100)= ''
 		,@max_custid2 INT
 		,@srecommend INT
 		
-SELECT @max_custid = 23134000
-		,@max_custid2 = 23134062
-
-
+SELECT @max_custid = xxx
+		
 CREATE TABLE #supers (custid int, currency INT)
 
 INSERT INTO #supers(custid,currency)
@@ -30,13 +28,15 @@ FROM Customer WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND site in ('INDO','755555','Koribc')
+	AND custid <> 72
 	
-
 --step 1: copy settings for newly created customers
 
 ---- data preparation ----
 CREATE TABLE #tmpCustGameType (
 	[CustID] [int] NOT NULL PRIMARY KEY,
+	[roleID] [int] ,
+	[DirectUplineID] [int],
 	[ExchangeID] [int] NOT NULL, 
 	[StakeLevelList_LC] [varchar](100) NULL,
 	[StakeLevelList_AllBet] [varchar](100) NULL
@@ -140,13 +140,13 @@ INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino,currency)
 SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2
+WHERE ci.custid > @max_custid 
 
 UNION ALL
 SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Master of direct agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2
+WHERE ci.custid > @max_custid 
 	
 UNION ALL
 
@@ -154,24 +154,24 @@ SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Agent of direct mast
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 WHERE CI.roleid = 2
-	AND ci.custid > @max_custid AND ci.custid <= @max_custid2
+	AND ci.custid > @max_custid 
 UNION ALL
 SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Direct Agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
-WHERE ci.custid > @max_custid AND ci.custid <= @max_custid2	
+WHERE ci.custid > @max_custid 
 ---------- For members ---------
 INSERT INTO #MemberTemp (CustID, SyncLiveCasino,currency)
 SELECT CI.custid, ci.SyncLiveCasino,ci.currency
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-WHERE CI.roleid = 1	AND ci.custid > @max_custid AND ci.custid <= @max_custid2
+WHERE CI.roleid = 1	AND ci.custid > @max_custid 
 	
 UNION ALL
 SELECT CI.custid, ci.SyncLiveCasino,ci.currency
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-WHERE CI.roleid = 1 AND ci.custid > @max_custid AND ci.custid <= @max_custid2
+WHERE CI.roleid = 1 AND ci.custid > @max_custid 
 
 ---- REMOVE SMA OR member if existing Allbet Setting
 DELETE M
@@ -187,23 +187,24 @@ FROM #MemberTemp M
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, currency INT)
 
 INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, currency)
-SELECT DISTINCT ci.custid, roleid, syncLiveCasino, s.currency
+SELECT DISTINCT ci.custid, roleid, syncLiveCasino, ci.currency
 FROM custinfo ci WITH(NOLOCK) 
 	INNER JOIN #Supers s ON ci.srecommend = s.custid
 WHERE ci.custid > @max_custid
-	AND ci.custid <= @max_custid2
+	
 UNION ALL -- DUMMY
 SELECT custid, roleid, syncLiveCasino, currency
 FROM #SMATemp
 UNION ALL -- DUMMY
 SELECT custid, 1, syncLiveCasino, currency
 FROM #MemberTemp
-	
-	
-INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID])
-SELECT ci.custid, ISNULL (cs.StakeLevelList,'') AS StakeLevelList,ci.currency	
+
+
+INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID],roleID)
+SELECT ci.custid, ISNULL (cs.StakeLevelList,'') AS StakeLevelList,ci.currency,CI.roleid	
 FROM #tmpCust ci WITH(NOLOCK)
-	LEFT JOIN DBBingoAdmin.LiveCasinoAdmin.dbo.CustGameType cs WITH (NOLOCK) ON cs.custid = ci.custid AND cs.custid > @max_custid AND cs.custid <= @max_custid2
+	LEFT JOIN DBCASINOADMINCS.LiveCasinoAdmin.dbo.CustGameType cs WITH (NOLOCK) ON cs.custid = ci.custid AND cs.custid > @max_custid 
+	
 	
 CREATE TABLE #StakeLevel_PreMapping (ID INT IDENTITY (1,1),ExchangeID INT, StakeLevelList_LC VARCHAR(1000),StakeLevelList_Allbet VARCHAR (1000))
 
@@ -236,7 +237,75 @@ UPDATE T1
 FROM #tmpCustGameType T1
 	INNER JOIN #StakeLevel_PreMapping T2 ON T1.ExchangeID = T2.ExchangeID AND T1.StakeLevelList_LC = T2.StakeLevelList_LC
 
-	
+-- Lowest PROCESSING 
+-- use this table to trace problem #CustList_ResetLowest
+SELECT T1.CustID,T1.roleID
+INTO #CustList_ResetLowest
+FROM #tmpCustGameType T1 (NOLOCK)
+	INNER JOIN custInfo ci (NOLOCK) ON T1.CustID = CI.custid AND CI.SyncLiveCasino = 1 AND CI.Enabled = 1
+WHERE T1.StakeLevelList_AllBet = '' OR T1.StakeLevelList_AllBet IS NULL
+
+
+UPDATE T1
+	SET DirectUplineID = CASE WHEN ci.roleid = 1 THEN CI.recommend
+								 WHEN ci.roleid = 2 THEN CI.mrecommend
+								 WHEN ci.roleid = 3 THEN CI.srecommend
+							ELSE 0 END 	 
+FROM #tmpCustGameType T1
+	INNER JOIN #CustList_ResetLowest T2 on T1.CustID = T2.CustID
+	INNER JOIN custInfo ci (NOLOCK) ON T1.CustID = CI.custid
+
+-- Process roleid = 4
+UPDATE T1
+	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+FROM #tmpCustGameType T1
+	INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.Enabled = 1 AND CI.SyncLiveCasino = 1
+	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+				FROM dbo.StakeLevel SL WITH(NOLOCK) 
+				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
+				ORDER BY MaxStake, MinStake) AS temp
+WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND CI.roleid = 4	
+
+-- Process RoleID = 3
+UPDATE T1
+	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+FROM #tmpCustGameType T1
+	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+				FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_AllBet,-1)  
+								FROM #tmpCustGameType T2 WITH (NOLOCK) 
+								WHERE T2.custid = t1.DirectUplineID),',') tmp 
+					INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
+				ORDER BY SL.MaxStake, SL.MinStake) AS temp
+WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 3 AND T1.DirectUplineID <> 0  
+
+-- Process RoleID = 2
+UPDATE T1
+	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+FROM #tmpCustGameType T1
+	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+				FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_AllBet,-1)  
+								FROM #tmpCustGameType T2 WITH (NOLOCK) 
+								WHERE T2.custid = t1.DirectUplineID),',') tmp 
+					INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
+				ORDER BY SL.MaxStake, SL.MinStake) AS temp
+WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 2 AND T1.DirectUplineID <> 0 	
+
+-- Process RoleID = 1
+UPDATE T1
+	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+FROM #tmpCustGameType T1
+	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+				FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_AllBet,-1)  
+								FROM #tmpCustGameType T2 WITH (NOLOCK) 
+								WHERE T2.custid = t1.DirectUplineID),',') tmp 
+					INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID
+				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
+				ORDER BY SL.MaxStake, SL.MinStake) AS temp
+WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 1 AND T1.DirectUplineID <> 0 	
+
+
 --Bettype 2402: Lowest VIP Bet limit
 	
 --Member Level
@@ -244,40 +313,20 @@ CREATE TABLE #CustStakeLevel_Member_2401 (CustID INT, SportType INT, BetType INT
 CREATE TABLE #CustStakeLevel_Agent_2401 (CustID INT, SportType INT, BetType INT, StakeLevelList VARCHAR(100), ExchangeID INT, syncLiveCasino BIT)		
 
 INSERT INTO #CustStakeLevel_Member_2401(CustID, SportType, BetType, StakeLevelList,ExchangeID,syncLiveCasino)		
-SELECT C.custid, 211, 2401, CASE WHEN c.syncLiveCasino = 1 THEN ISNULL(StakeLevelList_Allbet,'') ELSE '' END AS StakeLevelList, C1.ExchangeID,C.syncLiveCasino
+SELECT C.custid, 211, 2401, CASE WHEN c.syncLiveCasino = 1 THEN ISNULL(c1.StakeLevelList_Allbet,'') ELSE '' END AS StakeLevelList, C1.ExchangeID,C.syncLiveCasino
 FROM #tmpCust c
 	LEFT JOIN #tmpCustGameType C1 ON c.custid = c1.CustID
 WHERE c.roleid = 1 AND NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member sk WITH (NOLOCK) WHERE sk.CustID = c.custid AND sk.SportType = 211 AND sk.BetType = 2401)
 
+
 INSERT INTO #CustStakeLevel_Agent_2401(CustID, SportType, BetType, StakeLevelList,ExchangeID,syncLiveCasino)		
-SELECT C.custid, 211, 2401, CASE WHEN c.syncLiveCasino = 1 THEN ISNULL(StakeLevelList_Allbet,'') ELSE '' END AS StakeLevelList, C1.ExchangeID,C.syncLiveCasino
+SELECT C.custid, 211, 2401, CASE WHEN c.syncLiveCasino = 1 THEN ISNULL(c1.StakeLevelList_Allbet,'') ELSE '' END AS StakeLevelList, C1.ExchangeID,C.syncLiveCasino
 FROM #tmpCust c
 	LEFT JOIN #tmpCustGameType C1 ON c.custid = c1.CustID
 WHERE c.roleid IN (2,3,4) AND NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent sk WITH (NOLOCK) WHERE sk.CustID = c.custid AND sk.SportType = 211 AND sk.BetType = 2401)
 
 
--- Get lowest if not offer Live Bacarat
-UPDATE T
-	SET StakeLevelList = T1.StakeLevelList
-FROM #CustStakeLevel_Member_2401 T
-	CROSS APPLY (SELECT TOP 1 ISNULL(StakeLevelID ,'') AS StakeLevelList
-									FROM dbo.StakeLevel sl WITH(NOLOCK) 
-									WHERE sl.ExchangeId = T.ExchangeID AND GameTypeID = 2401 
-									ORDER BY MaxStake, MinStake
-					) AS T1
-WHERE T.StakeLevelList = '' AND T.syncLiveCasino = 1 
-
-
-UPDATE T
-	SET StakeLevelList = T1.StakeLevelList
-FROM #CustStakeLevel_Agent_2401 T
-	CROSS APPLY (SELECT TOP 1 ISNULL(StakeLevelID ,'') AS StakeLevelList
-									FROM dbo.StakeLevel WITH(NOLOCK) 
-									WHERE ExchangeId = T.ExchangeId AND GameTypeID = 2401 
-									ORDER BY MaxStake, MinStake
-					) AS T1
-WHERE T.StakeLevelList = '' AND T.syncLiveCasino = 1 
-
+-- insert data 
 
 INSERT INTO CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
 SELECT CustID, SportType, BetType, StakeLevelList
@@ -293,7 +342,7 @@ FROM (  SELECT CustID, SportType, BetType, StakeLevelList
 		WHERE c.roleid = 1 
 		) AS tmp
 
-WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member sk WITH (NOLOCK) WHERE sk.CustID = tmp.custid AND sk.SportType = 211 AND sk.BetType = 2402)
+WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Member sk WITH (NOLOCK) WHERE sk.CustID = tmp.custid AND sk.SportType = 211 AND sk.BetType = tmp.BetType)
 
 --SMA Level
 INSERT INTO CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
@@ -310,7 +359,7 @@ FROM (  SELECT CustID, SportType, BetType, StakeLevelList
 		WHERE c.roleid IN (2,3,4) 
 		) AS tmp
 
-WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent sk WITH (NOLOCK) WHERE sk.CustID = tmp.custid AND sk.SportType = 211 AND sk.BetType = 2402)
+WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent sk WITH (NOLOCK) WHERE sk.CustID = tmp.custid AND sk.SportType = 211 AND sk.BetType = tmp.BetType)
 
 DROP TABLE #CodeCurrency
 DROP TABLE #CustStakeLevel_Agent_2401

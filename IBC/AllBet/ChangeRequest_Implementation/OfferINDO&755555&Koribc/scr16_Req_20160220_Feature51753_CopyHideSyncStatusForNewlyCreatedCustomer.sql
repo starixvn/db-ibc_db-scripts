@@ -15,6 +15,7 @@ SELECT custid
 FROM  Customer WITH (NOLOCK)
 WHERE roleid = 4 AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND site in ('INDO','755555','Koribc')
+	AND custid <> 72
 
 DECLARE @xmlStrHidden_0 XML
 DECLARE @xmlStrSync_0 XML
@@ -92,7 +93,7 @@ BEGIN
 							END	 
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.CustID > @max_custid AND ((ci.mrecommend IN (SELECT custid FROM #DirrectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/)) --OR ci.custid = @srecommend)
+	WHERE ci.CustID > @max_custid AND (ci.mrecommend IN (SELECT custid FROM #DirrectMaster))
 END
 
 IF EXISTS (SELECT 1 FROM #DirrectAgent)
@@ -108,9 +109,10 @@ BEGIN
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	
-	WHERE ci.CustID > @max_custid AND (ci.recommend IN (SELECT custid FROM #DirrectAgent) 
-		--OR ci.custid = @srecommend 
-		OR ci.custid IN (SELECT mrecommend FROM #DirrectAgent)) 
+	WHERE ci.CustID > @max_custid 
+		AND (ci.recommend IN (SELECT custid FROM #DirrectAgent) 
+			 OR ci.custid IN (SELECT mrecommend FROM #DirrectAgent)
+			 )
 END	
 			
 	

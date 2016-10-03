@@ -1,6 +1,6 @@
 /*
-	Created: Elodie
-	Date: 20160225
+	Created: Helen
+	Date: 20161003
 	Task: Delete existing All Bet settings
 	DB: DBCust/CustDB
 */
@@ -21,12 +21,14 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustStakeLevel_Member') = 0 RETURN
 			
 	DELETE cg
-	FROM CustStakeLevel_Agent cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 211
+	FROM CustStakeLevel_Agent cg 
+		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
+	WHERE CG.SportType = 211
 
 	DELETE cg
-	FROM CustStakeLevel_Member cg WITH(UPDLOCK,ROWLOCK)		
-	WHERE SportType = 211
+	FROM CustStakeLevel_Member cg 		
+		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
+	WHERE CG.SportType = 211
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
