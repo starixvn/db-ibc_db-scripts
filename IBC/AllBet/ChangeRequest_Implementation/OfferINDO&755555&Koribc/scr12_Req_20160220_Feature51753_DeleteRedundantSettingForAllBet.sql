@@ -72,7 +72,7 @@ WHERE cs.CustID > @maxcustID
 	AND cs.Bettype in (2401,2402)
 
 DELETE cs
-FROM [dbo].CustWinLossLimit_Member cs WITH(UPDLOCK,ROWLOCK)
+FROM [dbo].CustStakeLevel_Member cs WITH(UPDLOCK,ROWLOCK)
 INNER JOIN custInfo CI WITH (NOLOCK) ON ci.custid = cs.CustID AND ci.srecommend <> 72
 WHERE cs.CustID > @maxcustID
 	AND cs.Sporttype = 211
