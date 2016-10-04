@@ -60,9 +60,7 @@ BEGIN
 		
 		CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 		CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-	
-		
-		
+			
 		INSERT INTO #DirectMaster (CustID,roleid)
 		SELECT custid, roleid
 		FROM Customer with(nolock)
@@ -148,7 +146,8 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid 
 		-- Production
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.custid <> 72)
 	OR ci.custid IN (2,4,13,15)
 
 WHILE (1 = 1)
@@ -182,7 +181,8 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		-- Production
-		AND ci.site in ('INDO','755555','Koribc'))
+		AND ci.site in ('INDO','755555','Koribc')
+		AND ci.custid <> 72)
 		OR ci.custid IN (2,4,13,15)
 
 WHILE (1 = 1)
