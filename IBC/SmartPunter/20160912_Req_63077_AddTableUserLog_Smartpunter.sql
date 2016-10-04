@@ -22,7 +22,8 @@ CREATE TABLE [dbo].[UserLog_SmartPunter](
 	CustId INT NOT NULL,
 	[ActionID] INT NOT NULL,
 	[IP] VARCHAR(15) NULL,
-	IsRestricted BIT NOT NULL	
+	IsRestricted BIT NOT NULL,
+	UplineId  INT  NULL	
 )
 
 GO
