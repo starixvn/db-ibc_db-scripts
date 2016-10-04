@@ -57,27 +57,30 @@ BEGIN
 	
 	IF @srecommend IN (2,4,13,15)
 	BEGIN
-		CREATE TABLE #DirrectMaster (custid INT)
-		CREATE TABLE #DirrectAgent (custid INT, mrecommend INT)
-
-		--Get Dirrect master
-		INSERT INTO #DirrectMaster(custid)
-		SELECT ci.custid
-		FROM customer c WITH(NOLOCK)
-			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
-		WHERE ci.srecommend = @srecommend AND c.site IN ('INDO','755555','Koribc') AND ci.roleid = 3
-
-		--Get Dirrect agent
-		INSERT INTO #DirrectAgent(custid, mrecommend)
-		SELECT ci.custid, ci.mrecommend
-		FROM customer c WITH(NOLOCK)
-			INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
-		WHERE ci.srecommend = @srecommend AND c.site IN ('INDO','755555','Koribc') AND ci.roleid = 2
-			AND ci.mrecommend NOT IN (SELECT custid FROM #DirrectMaster)
-
+		
+		CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
+		CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
+	
 		
 		
-		IF EXISTS (SELECT 1 FROM #DirrectMaster)
+		INSERT INTO #DirectMaster (CustID,roleid)
+		SELECT custid, roleid
+		FROM Customer with(nolock)
+		WHERE SITE in ('INDO','755555','Koribc')
+			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
+			
+		--- get direct agent
+		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
+		SELECT custid, mrecommend,roleid
+		FROM Customer WITH(NOLOCK)
+		WHERE site in ('INDO','755555','Koribc')
+			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+			and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
+		
+		IF EXISTS (SELECT 1 FROM #DirectMaster)
 		BEGIN
 			UPDATE cs
 				SET 	
@@ -89,10 +92,10 @@ BEGIN
 									END	 
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE (ci.mrecommend IN (SELECT custid FROM #DirrectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
 		END
 		
-		IF EXISTS (SELECT 1 FROM #DirrectAgent)
+		IF EXISTS (SELECT 1 FROM #DirectAgent)
 		BEGIN
 			UPDATE cs
 				SET 	
@@ -105,9 +108,9 @@ BEGIN
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			
-			WHERE ci.recommend IN (SELECT custid FROM #DirrectAgent) 
+			WHERE ci.recommend IN (SELECT custid FROM #DirectAgent) 
 				OR ci.custid = @srecommend 
-				OR ci.custid IN (SELECT mrecommend FROM #DirrectAgent) 
+				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent) 
 		END
 	END
 	ELSE
