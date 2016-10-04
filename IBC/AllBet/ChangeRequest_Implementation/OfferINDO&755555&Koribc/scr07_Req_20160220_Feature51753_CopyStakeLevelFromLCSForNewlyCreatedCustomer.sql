@@ -203,7 +203,7 @@ FROM #MemberTemp
 INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID],roleID)
 SELECT ci.custid, ISNULL (cs.StakeLevelList,'') AS StakeLevelList,ci.currency,CI.roleid	
 FROM #tmpCust ci WITH(NOLOCK)
-	LEFT JOIN DBCASINOADMINCS.LiveCasinoAdmin.dbo.CustGameType cs WITH (NOLOCK) ON cs.custid = ci.custid AND cs.custid > @max_custid 
+	LEFT JOIN DBBINGOADMIN.LiveCasinoAdmin.dbo.CustGameType cs WITH (NOLOCK) ON cs.custid = ci.custid AND cs.custid > @max_custid AND CS.GameTypeID = 108
 	
 	
 CREATE TABLE #StakeLevel_PreMapping (ID INT IDENTITY (1,1),ExchangeID INT, StakeLevelList_LC VARCHAR(1000),StakeLevelList_Allbet VARCHAR (1000))
