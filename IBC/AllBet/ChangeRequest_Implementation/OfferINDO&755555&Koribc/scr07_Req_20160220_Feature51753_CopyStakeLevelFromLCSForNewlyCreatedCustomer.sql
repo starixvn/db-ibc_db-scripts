@@ -277,7 +277,7 @@ SELECT CustID, SportType, BetType, StakeLevelList
 FROM (  SELECT CustID, SportType, BetType, StakeLevelList
 		FROM #CustStakeLevel_Member_2401
 		UNION ALL 
-		SELECT c.custid, 211, 2402, CASE WHEN C.syncLiveCasino = 1 THEN T1.StakeLevelList ELSE '' END AS StakeLevelList
+		SELECT c.custid, 211, 2402, CASE WHEN C.syncLiveCasino = 1 THEN CONVERT(VARCHAR(100),T1.StakeLevelList) ELSE '' END AS StakeLevelList
 		FROM #tmpCust c
 			CROSS APPLY (SELECT TOP 1 ISNULL(StakeLevelID ,'') AS StakeLevelList
 						FROM dbo.StakeLevel sl WITH(NOLOCK) 
@@ -294,7 +294,7 @@ SELECT CustID, SportType, BetType, StakeLevelList
 FROM (  SELECT CustID, SportType, BetType, StakeLevelList
 		FROM #CustStakeLevel_Agent_2401
 		UNION ALL 
-		SELECT c.custid, 211, 2402, CASE WHEN C.syncLiveCasino = 1 THEN T1.StakeLevelList ELSE '' END AS StakeLevelList
+		SELECT c.custid, 211, 2402, CASE WHEN C.syncLiveCasino = 1 THEN CONVERT(VARCHAR(100),T1.StakeLevelList) ELSE '' END AS StakeLevelList
 		FROM #tmpCust c
 			CROSS APPLY (SELECT TOP 1 ISNULL(StakeLevelID ,'') AS StakeLevelList
 						FROM dbo.StakeLevel sl WITH(NOLOCK) 
