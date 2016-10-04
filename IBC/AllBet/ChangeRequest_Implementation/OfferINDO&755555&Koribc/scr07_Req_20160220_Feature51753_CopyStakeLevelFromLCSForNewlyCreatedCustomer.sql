@@ -42,62 +42,6 @@ CREATE TABLE #tmpCustGameType (
 	[StakeLevelList_AllBet] [varchar](100) NULL
  )
 
-CREATE TABLE #CodeCurrency (ID INT, Currency VARCHAR(1000) )
-
-INSERT INTO #CodeCurrency (ID,Currency)
-VALUES
-(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
-(1,''),
-(1,''),
-(1,''),
-(2,'HK$,HKK, RMB'),
-(2,''),
-(2,''),
-(2,''),
-(3,'RM'),
-(3,''),
-(3,''),
-(3,''),
-(5,'Won'),
-(5,''),
-(5,''),
-(5,''),
-(6,'TB, THB'),
-(6,''),
-(6,''),
-(6,''),
-(7,'INH'),
-(7,''),
-(7,''),
-(7,''),
-(8,'IDD,IDR,IN, IND, DDD'),
-(8,''),
-(8,''),
-(8,''),
-(9,'INR'),
-(9,''),
-(9,''),
-(9,''),
-(10,'MMK,MKK'),
-(10,''),
-(10,''),
-(10,''),
-(11,'UUS'),
-(11,''),
-(11,''),
-(11,''),
-(11,'')
-
-DELETE #CodeCurrency WHERE currency = ''
-
-CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )
-INSERT INTO #ExchangeIDListPerCurrency (ID,ExchangeID,Currency)
-SELECT t.ID,cur.exchangeid,cur.currency as currency
-FROM #CodeCurrency t
-	OUTER APPLY (SELECT e.exchangeid AS exchangeid,e.currency
-				FROM strSplit (t.Currency,',') AS T
-					INNER JOIN DBCUST.CUSTDB.dbo.exchange e(NOLOCK) ON LTRIM(RTRIM(T.val)) =e.currency) AS cur
-
 ------------- Dummy processing ----------------
 CREATE TABLE #MemberTemp
 (
@@ -361,10 +305,10 @@ FROM (  SELECT CustID, SportType, BetType, StakeLevelList
 
 WHERE  NOT EXISTS ( SELECT 1 FROM CustStakeLevel_Agent sk WITH (NOLOCK) WHERE sk.CustID = tmp.custid AND sk.SportType = 211 AND sk.BetType = tmp.BetType)
 
-DROP TABLE #CodeCurrency
+
 DROP TABLE #CustStakeLevel_Agent_2401
 DROP TABLE #CustStakeLevel_Member_2401
-DROP TABLE #ExchangeIDListPerCurrency
+
 DROP TABLE #StakeLevel_PreMapping
 DROP TABLE #supers
 DROP TABLE #tmpCust
