@@ -57,9 +57,8 @@ VALUES
 
 INSERT INTO #exchange 
 SELECT DISTINCT Currency
-FROM ProductLaunchedSiteCurrency
+FROM #ProductLaunchedSiteCurrency
 WHERE siteID in (22,11,35) and sporttype = 211
-
 
 DELETE FROM ProductStatusSiteCurrency 
 WHERE SportType = 211
