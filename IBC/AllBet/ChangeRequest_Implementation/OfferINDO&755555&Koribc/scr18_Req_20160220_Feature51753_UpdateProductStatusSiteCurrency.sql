@@ -11,7 +11,7 @@
 
 CREATE TABLE #exchange (exchangeid INT)
 
-DELETE ProductLaunchedSiteCurrency WHERE sporttype = 211 --and siteid in (1,22,11,35)
+--DELETE ProductLaunchedSiteCurrency WHERE sporttype = 211 --and siteid in (1,22,11,35)
 go
 
 CREATE TABLE #ProductLaunchedSiteCurrency (SiteID INT, Currency INT,SportType INT,IsLaunched BIT,IsTest BIT)
