@@ -49,16 +49,18 @@ VALUES
 	--Koribc: 35
 	, (35,45,211,1,1)
 	-- Currenyc YNG for  INDO, KORIBC,755555
-	--, (1,72,211,1,1)
 	, (11,72,211,1,1)
 	, (22,72,211,1,1)
 	, (35,72,211,1,1)
-
+	
+	-- Currenyc UUS for  Best-odd--
+	, (1,20,211,1,1)
+	
 
 INSERT INTO #exchange 
 SELECT DISTINCT Currency
 FROM #ProductLaunchedSiteCurrency
-WHERE siteID in (22,11,35) and sporttype = 211
+WHERE siteID in (1,22,11,35) and sporttype = 211
 
 DELETE FROM ProductStatusSiteCurrency 
 WHERE SportType = 211
@@ -66,46 +68,38 @@ WHERE SportType = 211
 INSERT INTO ProductStatusSiteCurrency (SportType,BetType,SiteID, Currency, IsHidden,IsDisabled)
 SELECT 211,2401,siteid, 0,1,1
 FROM Site (NOLOCK)
-WHERE siteID NOT IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
+WHERE siteID NOT IN (1,22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
 	AND isLicensee = 0
 
 UNION ALL
 
 SELECT 211,2402,siteid, 0,1,1
 FROM Site (NOLOCK)
-WHERE siteID NOT IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
+WHERE siteID NOT IN (1,22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
 	AND isLicensee = 0
 
 UNION ALL
 
-SELECT 211,2401,siteid, e.exchangeid,1,1
-FROM Site (NOLOCK)
-	cross join exchange e (nolock) 
-WHERE siteID IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
-	AND isLicensee = 0
-	and e.exchangeid NOT IN (select exchangeid from #exchange)
 
+SELECT 211,2401,siteid, e.exchangeid,1,1
+FROM Site S (NOLOCK)
+	CROSS JOIN exchange e (nolock) 
+WHERE S.siteID IN (1,22,11,35)
+	AND isLicensee = 0
+	and e.exchangeid NOT IN (SELECT currency FROM #ProductLaunchedSiteCurrency T WHERE S.SiteID =  T.SiteID)
+	
 UNION ALL
 
 SELECT 211,2402,siteid, e.exchangeid,1,1
-FROM Site (NOLOCK)
-	cross join exchange e (nolock) 
-WHERE siteID IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
+FROM Site  S (NOLOCK)
+	CROSS JOIN exchange e (nolock) 
+WHERE S.siteID IN (1,22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
 	AND isLicensee = 0
-	and e.exchangeid not in (select exchangeid from #exchange)
-
-UNION ALL
-
-SELECT 211,2401,siteid,72,0,0
-FROM Site (NOLOCK)
-WHERE siteID IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
-	AND isLicensee = 0
-
-UNION ALL
-
-SELECT 211,2402,siteid,72,1,1
-FROM Site (NOLOCK)
-WHERE siteID IN (22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
-	AND isLicensee = 0
+	and e.exchangeid NOT IN (SELECT currency FROM #ProductLaunchedSiteCurrency T WHERE S.SiteID =  T.SiteID)
 	
+
+DROP TABLE #ProductLaunchedSiteCurrency
+
+DROP TABLE #exchange
+
 
