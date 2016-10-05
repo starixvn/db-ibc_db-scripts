@@ -52,7 +52,7 @@ VALUES
 	, (11,72,211,1,1)
 	, (22,72,211,1,1)
 	, (35,72,211,1,1)
-	
+	, (1,72,211,1,1)
 	-- Currenyc UUS for  Best-odd--
 	, (1,20,211,1,1)
 	
@@ -101,5 +101,4 @@ WHERE S.siteID IN (1,22,11,35)-- INDO: 11; 755555:22;  Koribc: 35
 DROP TABLE #ProductLaunchedSiteCurrency
 
 DROP TABLE #exchange
-
 
