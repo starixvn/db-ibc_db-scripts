@@ -28,8 +28,8 @@ GO
 	--09/25/16
 		SELECT @ToDate=  xx
 	  
-		DELETE FROM rmSumWinloss WHERE winlostdate between @FromDate AND @ToDate
-		INSERT INTO rmSumWinloss
+		DELETE FROM rmSumWinloss_OLD WHERE winlostdate between @FromDate AND @ToDate
+		INSERT INTO rmSumWinloss_OLD
            ([winlostdate]
            ,[custid]
            ,[sporttype]
