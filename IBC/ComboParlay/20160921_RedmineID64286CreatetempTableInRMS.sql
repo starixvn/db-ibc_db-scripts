@@ -1,7 +1,7 @@
 /*
 	Created by: Winnie
 	Date: 2016-09-29
-	Task: PRMS: fix data conflict refno with racing
+	Task: PRMS: fix data conflict refno with racing RedmindID: #64996
 	Regen data in table rmSumWinloss
 */
 USE [bodb_RMS]
@@ -19,8 +19,10 @@ GO
 DECLARE @FromDate DATETIME
 DECLARE @ToDate DATETIME
 
-SELECT @FromDate= '2016-09-21'
+SELECT @FromDate= '2016-09-23'
 SELECT @ToDate= '2016-09-25'
+--SELECT @FromDate= '2016-10-01'
+--SELECT @ToDate= '2016-10-02'
 --drop table [tmpbettransFixdata]
 	CREATE TABLE [dbo].[tmpbettransFixdata](
 	Transid BIGINT NOT NULL PRIMARY KEY,
