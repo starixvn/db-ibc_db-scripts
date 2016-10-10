@@ -264,6 +264,7 @@ INSERT INTO #TempHeadline(
 FROM bodb02.dbo.CustAccount hed INNER JOIN 
  bodb02.dbo.Customer hedinfo WITH(NOLOCK)  ON hed.IsGroupHeadLine=1 AND hed.custid=hedinfo.custid
  LEFT JOIN bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
+ WHERE hedinfo.custid NOT IN (SELECT CustID FROM crmCustomer a WITH(NOLOCK))
 
 INSERT INTO [bodb_CRM].[dbo].[crmCustomer]
            ([CustID]
@@ -427,7 +428,7 @@ SELECT [CustID]
            ,[Ignored]
            ,[Checker]
 FROM #TempHeadline hedinfo
-WHERE hedinfo.custid NOT IN (SELECT CustID FROM crmCustomer a WITH(NOLOCK))
+
  
 DROP TABLE 	#TempHeadline
 
