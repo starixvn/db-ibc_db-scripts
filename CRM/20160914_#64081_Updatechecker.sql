@@ -6,15 +6,20 @@
 	DB: DBCRM/bodb_CRM
 */ 
 
-
+-- update checker for headline existed in CRM
 USE bodb_CRM
 GO
-update a
-SET a.Checker=chinfo.username 
+update a WITH(ROWLOCK,UPDLOCK)
+SET a.Checker=ch.username 
 FROM crmCustomer a 
 INNER JOIN bodb02.dbo.CustAccount cus WITH(NOLOCK) ON a.custid=cus.Custid AND cus.IsGroupHeadLine=1
 INNER JOIN bodb02.dbo.customer ch WITH(NOLOCK) ON cus.checker=ch.custid 
-INNER JOIN bodb02.dbo.customer chinfo WITH(NOLOCK) ON ch.custid=chinfo.custid 
+
+----Insert headline who not existed in CRM
+CREATE TABLE #TempHeadline (CUSTID INT)
+INSERT INTO #TempHeadline(CUSTID)
+SELECT a.Custid FROM crmCustomer a WITH(NOLOCK)
+INNER JOIN bodb02.dbo.CustAccount cus WITH(NOLOCK) ON a.custid=cus.Custid AND cus.IsGroupHeadLine=1
 
 INSERT INTO [bodb_CRM].[dbo].[crmCustomer]
            ([CustID]
@@ -180,4 +185,7 @@ SELECT hedinfo.CustID
 FROM bodb02.dbo.CustAccount hed INNER JOIN 
  bodb02.dbo.Customer hedinfo WITH(NOLOCK)  ON hed.IsGroupHeadLine=1 AND hed.custid=hedinfo.custid
  LEFT JOIN bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
- WHERE hedinfo.custid NOT IN (SELECT CustID FROM crmCustomer a WITH(NOLOCK))
+ WHERE hedinfo.custid NOT IN (SELECT CustID FROM #TempHeadline a WITH(NOLOCK))
+ 
+ -- Update default values for ignored column
+ Update crmCustomer WITH(ROWLOCK,UPDLOCK) SET Ignored=0
