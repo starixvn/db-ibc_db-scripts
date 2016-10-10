@@ -12,9 +12,9 @@ GO
 update a
 SET a.Checker=chinfo.username 
 FROM crmCustomer a 
-INNER JOIN DBAGE.bodb02.dbo.CustAccount cus WITH(NOLOCK) ON a.custid=cus.Custid AND cus.IsGroupHeadLine=1
-INNER JOIN DBAGE.bodb02.dbo.customer ch WITH(NOLOCK) ON cus.checker=ch.custid 
-INNER JOIN DBAGE.bodb02.dbo.customer chinfo WITH(NOLOCK) ON ch.custid=chinfo.custid 
+INNER JOIN bodb02.dbo.CustAccount cus WITH(NOLOCK) ON a.custid=cus.Custid AND cus.IsGroupHeadLine=1
+INNER JOIN bodb02.dbo.customer ch WITH(NOLOCK) ON cus.checker=ch.custid 
+INNER JOIN bodb02.dbo.customer chinfo WITH(NOLOCK) ON ch.custid=chinfo.custid 
 
 INSERT INTO [bodb_CRM].[dbo].[crmCustomer]
            ([CustID]
@@ -177,7 +177,7 @@ SELECT hedinfo.CustID
            ,NULL
            ,0
            ,ch.username
-FROM DBAGE.bodb02.dbo.CustAccount hed INNER JOIN 
- DBAGE.bodb02.dbo.Customer hedinfo WITH(NOLOCK)  ON hed.IsGroupHeadLine=1 AND hed.custid=hedinfo.custid
- LEFT JOIN DBAGE.bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
+FROM bodb02.dbo.CustAccount hed INNER JOIN 
+ bodb02.dbo.Customer hedinfo WITH(NOLOCK)  ON hed.IsGroupHeadLine=1 AND hed.custid=hedinfo.custid
+ LEFT JOIN bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
  WHERE hedinfo.custid NOT IN (SELECT CustID FROM crmCustomer a WITH(NOLOCK))
