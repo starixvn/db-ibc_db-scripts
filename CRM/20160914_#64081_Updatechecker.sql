@@ -263,7 +263,7 @@ INSERT INTO #TempHeadline(
            ,ch.username
 FROM bodb02.dbo.CustAccount hed INNER JOIN 
  bodb02.dbo.Customer hedinfo WITH(NOLOCK)  ON hed.IsGroupHeadLine=1 AND hed.custid=hedinfo.custid
- INNER JOIN bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
+ LEFT JOIN bodb02.dbo.Customer ch WITH(NOLOCK)   ON hed.checker=ch.custid
 
 INSERT INTO [bodb_CRM].[dbo].[crmCustomer]
            ([CustID]
