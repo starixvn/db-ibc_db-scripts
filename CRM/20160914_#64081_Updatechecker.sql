@@ -430,7 +430,7 @@ FROM #TempHeadline hedinfo
 WHERE hedinfo.custid NOT IN (SELECT CustID FROM crmCustomer a WITH(NOLOCK))
  
 DROP TABLE 	#TempHeadline
- -- Update default values for ignored column
- 
- 
+
+
+ -- Update default values for ignored column 
  Update crmCustomer WITH(ROWLOCK,UPDLOCK) SET Ignored=0
