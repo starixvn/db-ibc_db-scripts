@@ -18,9 +18,12 @@ sp_RENAME 'WinLimit_CustGameSetting.BetTypeID' , 'GroupID', 'COLUMN'
 GO
 ALTER TABLE WinLimit_ProductSettingDetail ADD MaxWinLimit_RM MONEY 
 GO
+ALTER TABLE WinLimit_CustGameSetting ADD MaxWinLimit_RM MONEY 
+GO
 ALTER TABLE [dbo].[WinLimit_ProductSettingDetail] ADD CONSTRAINT [DF_WinLimit_ProductSettingDetail_MaxWinLimit_RM] DEFAULT ((0)) FOR [MaxWinLimit_RM]
 go
-
+ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGameSetting_MaxWinLimit_RM] DEFAULT ((0)) FOR [MaxWinLimit_RM]
+go
 GO
 CREATE TABLE [dbo].[Winlimit_Group](
 	[GroupID] [int] NOT NULL,

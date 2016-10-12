@@ -1,0 +1,240 @@
+CREATE TABLE #Temp (ProductID INT, BetTypeID INT,GroupID INT,GroupName VARCHAR(200),Level1 MONEY, Level2 MONEY,Level3 MONEY)
+
+INSERT INTO #Temp (ProductID,BetTypeID,GroupID,GroupName,Level1,Level2,Level3)
+VALUES (3,81,1,'NG Group 1',5000,10000,50000),
+(3,82,1,'NG Group 1',5000,10000,50000),
+(3,83,1,'NG Group 1',5000,10000,50000),
+(3,84,1,'NG Group 1',5000,10000,50000),
+(3,85,1,'NG Group 1',5000,10000,50000),
+(3,86,1,'NG Group 1',5000,10000,50000),
+(3,87,1,'NG Group 1',5000,10000,50000),
+(3,88,1,'NG Group 1',5000,10000,50000),
+(3,89,1,'NG Group 1',5000,10000,50000),
+(3,90,1,'NG Group 1',5000,10000,50000),
+(5,1201,3,'VS Group 1',5000,10000,50000),
+(5,1203,3,'VS Group 1',5000,10000,50000),
+(5,1204,3,'VS Group 1',5000,10000,50000),
+(5,1205,3,'VS Group 1',5000,10000,50000),
+(5,1206,3,'VS Group 1',5000,10000,50000),
+(5,1220,3,'VS Group 1',5000,10000,50000),
+(5,1224,3,'VS Group 1',5000,10000,50000),
+(5,1231,4,'VS Group 2',5000,10000,50000),
+(5,1232,4,'VS Group 2',5000,10000,50000),
+(5,1233,4,'VS Group 2',5000,10000,50000),
+(5,1235,5,'VS Group 3',5000,10000,50000),
+(5,1236,5,'VS Group 3',5000,10000,50000),
+(5,1237,5,'VS Group 3',5000,10000,50000),
+(5,1238,5,'VS Group 3',5000,10000,50000),
+(6,2125,6,'Arcade Games',5000,10000,50000),
+(6,2126,6,'Arcade Games',5000,10000,50000),
+(6,2127,6,'Arcade Games',5000,10000,50000),
+(6,2128,6,'Arcade Games',5000,10000,50000),
+(6,2101,7,'Card Games',5000,10000,50000),
+(6,2102,7,'Card Games',5000,10000,50000),
+(6,2103,7,'Card Games',5000,10000,50000),
+(6,2104,7,'Card Games',5000,10000,50000),
+(6,2105,7,'Card Games',5000,10000,50000),
+(6,2106,7,'Card Games',5000,10000,50000),
+(6,2112,7,'Card Games',5000,10000,50000),
+(6,2113,7,'Card Games',5000,10000,50000),
+(6,2115,7,'Card Games',5000,10000,50000),
+(6,2116,7,'Card Games',5000,10000,50000),
+(6,2120,7,'Card Games',5000,10000,50000),
+(6,2121,7,'Card Games',5000,10000,50000),
+(6,2122,7,'Card Games',5000,10000,50000),
+(6,2123,7,'Card Games',5000,10000,50000),
+(6,2201,8,'Mini Game',5000,10000,50000),
+(6,2202,8,'Mini Game',5000,10000,50000),
+(6,2203,8,'Mini Game',5000,10000,50000),
+(6,2204,8,'Mini Game',5000,10000,50000),
+(6,2205,8,'Mini Game',5000,10000,50000),
+(6,2206,8,'Mini Game',5000,10000,50000),
+(6,2301,9,'Mobile Card Games',5000,10000,50000),
+(6,2302,9,'Mobile Card Games',5000,10000,50000),
+(6,2303,9,'Mobile Card Games',5000,10000,50000),
+(6,2304,9,'Mobile Card Games',5000,10000,50000),
+(6,2305,9,'Mobile Card Games',5000,10000,50000),
+(6,2307,9,'Mobile Card Games',5000,10000,50000),
+(6,2308,9,'Mobile Card Games',5000,10000,50000),
+(6,2309,9,'Mobile Card Games',5000,10000,50000),
+(6,2306,9,'Mobile Card Games',5000,10000,50000),
+(6,2310,9,'Mobile Card Games',5000,10000,50000),
+(6,2131,10,'Scratch Card',5000,10000,50000),
+(6,2132,10,'Scratch Card',5000,10000,50000),
+(6,2133,10,'Scratch Card',5000,10000,50000),
+(6,2134,10,'Scratch Card',5000,10000,50000),
+(6,2135,10,'Scratch Card',5000,10000,50000),
+(6,2136,10,'Scratch Card',5000,10000,50000),
+(6,2137,10,'Scratch Card',5000,10000,50000),
+(6,2138,10,'Scratch Card',5000,10000,50000),
+(6,2139,10,'Scratch Card',5000,10000,50000),
+(6,2140,10,'Scratch Card',5000,10000,50000),
+(6,2141,10,'Scratch Card',5000,10000,50000),
+(6,2142,10,'Scratch Card',5000,10000,50000),
+(6,2147,11,'Slot Games',5000,10000,50000),
+(6,2148,11,'Slot Games',5000,10000,50000),
+(6,2149,11,'Slot Games',5000,10000,50000),
+(6,2150,11,'Slot Games',5000,10000,50000),
+(6,2151,11,'Slot Games',5000,10000,50000),
+(6,2152,11,'Slot Games',5000,10000,50000),
+(6,2153,11,'Slot Games',5000,10000,50000),
+(6,2154,11,'Slot Games',5000,10000,50000),
+(6,2155,11,'Slot Games',5000,10000,50000),
+(6,2156,11,'Slot Games',5000,10000,50000),
+(6,2157,11,'Slot Games',5000,10000,50000),
+(6,2158,11,'Slot Games',5000,10000,50000),
+(6,2159,11,'Slot Games',5000,10000,50000),
+(6,2160,11,'Slot Games',5000,10000,50000),
+(6,2161,11,'Slot Games',5000,10000,50000),
+(6,2162,11,'Slot Games',5000,10000,50000),
+(6,2163,11,'Slot Games',5000,10000,50000),
+(6,2164,11,'Slot Games',5000,10000,50000),
+(6,2165,11,'Slot Games',5000,10000,50000),
+(6,2166,11,'Slot Games',5000,10000,50000),
+(6,2167,11,'Slot Games',5000,10000,50000),
+(6,2168,11,'Slot Games',5000,10000,50000),
+(6,2169,11,'Slot Games',5000,10000,50000),
+(6,2170,11,'Slot Games',5000,10000,50000),
+(6,2171,11,'Slot Games',5000,10000,50000),
+(6,2172,11,'Slot Games',5000,10000,50000),
+(6,2173,11,'Slot Games',5000,10000,50000),
+(6,2174,11,'Slot Games',5000,10000,50000),
+(6,2175,11,'Slot Games',5000,10000,50000),
+(6,2176,11,'Slot Games',5000,10000,50000),
+(6,2177,11,'Slot Games',5000,10000,50000),
+(6,2107,12,'Table Games',5000,10000,50000),
+(6,2108,12,'Table Games',5000,10000,50000),
+(6,2109,12,'Table Games',5000,10000,50000),
+(6,2111,12,'Table Games',5000,10000,50000),
+(6,2114,12,'Table Games',5000,10000,50000),
+(6,2117,12,'Table Games',5000,10000,50000),
+(6,2118,12,'Table Games',5000,10000,50000),
+(6,2119,12,'Table Games',5000,10000,50000),
+(6,2124,12,'Table Games',5000,10000,50000),
+(6,2110,13,'Video Poker',5000,10000,50000),
+(6,2143,13,'Video Poker',5000,10000,50000),
+(6,2144,13,'Video Poker',5000,10000,50000),
+(6,2145,13,'Video Poker',5000,10000,50000),
+(6,2146,13,'Video Poker',5000,10000,50000),
+(6,2129,14,'Virtual Games',5000,10000,50000),
+(6,2130,14,'Virtual Games',5000,10000,50000),
+(8,1501,15,'Keno Asia',5000,10000,50000),
+(8,1502,15,'Keno Asia',5000,10000,50000),
+(8,1503,16,'Keno EU',5000,10000,50000),
+(8,1504,17,'Keno America',5000,10000,50000),
+(8,1505,17,'Keno America',5000,10000,50000),
+(8,1506,15,'Keno Asia',5000,10000,50000),
+(8,1507,17,'Keno America',5000,10000,50000),
+(8,1508,17,'Keno America',5000,10000,50000),
+(8,1509,15,'Keno Asia',5000,10000,50000),
+(8,1511,17,'Keno America',5000,10000,50000),
+(8,1513,17,'Keno America',5000,10000,50000),
+(8,1514,15,'Keno Asia',5000,10000,50000),
+(8,1515,18,'Max Keno',5000,10000,50000),
+(12,1700,19,'Gold Deluxe - Deposit',5000,10000,50000),
+(12,1702,20,'GD LC',5000,10000,50000),
+(12,1703,20,'GD LC',5000,10000,50000),
+(12,1701,20,'GD LC',5000,10000,50000),
+(13,2002,21,'MG LC Generic',5000,10000,50000),
+(13,2005,22,'MG LC Branded',5000,10000,50000),
+(13,2006,22,'MG LC Branded',5000,10000,50000),
+(13,2007,22,'MG LC Branded',5000,10000,50000),
+(13,2001,21,'MG LC Generic',5000,10000,50000),
+(13,2003,21,'MG LC Generic',5000,10000,50000),
+(13,2004,21,'MG LC Generic',5000,10000,50000),
+(14,1900,24,'Macau - Deposit',5000,10000,50000),
+(17,2008,25,'MG RNG Branded',5000,10000,50000),
+(17,2009,26,'MG RNG Generic',5000,10000,50000),
+(21,2402,27,'Allbet LC',5000,10000,50000),
+(21,2403,27,'Allbet LC',5000,10000,50000),
+(21,2404,27,'Allbet LC',5000,10000,50000),
+(21,2401,27,'Allbet LC',5000,10000,50000),
+(21,2405,27,'Allbet LC',5000,10000,50000),
+(22,4001,28,'Macau Slot 1',5000,10000,50000),
+(22,4002,28,'Macau Slot 1',5000,10000,50000),
+(22,4003,28,'Macau Slot 1',5000,10000,50000),
+(22,4004,28,'Macau Slot 1',5000,10000,50000),
+(22,4005,28,'Macau Slot 1',5000,10000,50000),
+(22,4006,28,'Macau Slot 1',5000,10000,50000),
+(22,4008,28,'Macau Slot 1',5000,10000,50000),
+(22,4009,28,'Macau Slot 1',5000,10000,50000),
+(22,4010,28,'Macau Slot 1',5000,10000,50000),
+(22,4011,28,'Macau Slot 1',5000,10000,50000),
+(22,4012,28,'Macau Slot 1',5000,10000,50000),
+(22,4013,28,'Macau Slot 1',5000,10000,50000),
+(22,4014,28,'Macau Slot 1',5000,10000,50000),
+(22,4015,28,'Macau Slot 1',5000,10000,50000),
+(22,4016,28,'Macau Slot 1',5000,10000,50000),
+(22,4017,28,'Macau Slot 1',5000,10000,50000),
+(22,4018,29,'Macau Slot 2',5000,10000,50000),
+(22,4019,29,'Macau Slot 2',5000,10000,50000),
+(22,4020,29,'Macau Slot 2',5000,10000,50000),
+(22,4021,29,'Macau Slot 2',5000,10000,50000),
+(22,4022,29,'Macau Slot 2',5000,10000,50000),
+(22,4023,29,'Macau Slot 2',5000,10000,50000),
+(22,4024,29,'Macau Slot 2',5000,10000,50000),
+(22,4025,29,'Macau Slot 2',5000,10000,50000),
+(22,4026,29,'Macau Slot 2',5000,10000,50000),
+(22,4027,29,'Macau Slot 2',5000,10000,50000),
+(22,4028,29,'Macau Slot 2',5000,10000,50000),
+(22,4029,29,'Macau Slot 2',5000,10000,50000),
+(22,4030,29,'Macau Slot 2',5000,10000,50000),
+(22,4007,29,'Macau Slot 2',5000,10000,50000)
+
+
+
+/*
+select GroupName, COUNT(distinct GroupID)
+from #Temp
+group by GroupName
+having COUNT(distinct GroupID) > 1
+*/
+
+TRUNCATE TABLE WinLimit_ProductSettingDetail
+
+TRUNCATE TABLE WinLimit_CustGameSetting
+
+TRUNCATE TABLE Winlimit_GameGroupSetting
+
+TRUNCATE TABLE Winlimit_Group
+
+INSERT INTO Winlimit_Group(GroupID, GroupName)
+SELECT DISTINCT GroupID,GroupName
+FROM #Temp
+
+
+INSERT INTO dbo.Winlimit_GameGroupSetting (ProductID, BetTypeID, GroupID)
+SELECT DISTINCT ProductID, BetTypeID, GroupID
+FROM #Temp
+
+INSERT INTO WinLimit_ProductSettingDetail (ProductID, GroupID, ExchangeID, SiteID, LevelID,  IsBlockedPlaceBet, IsBlockedTransfer, MaxWinLimit_RM)
+SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 1, 0, 0,t.Level1 MaxWinLimit_RM
+FROM #Temp t
+	CROSS JOIN EXCHANGE E (NOLOCK) 
+	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S
+
+UNION ALL
+SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 2, 0, 0,t.Level2 MaxWinLimit_RM
+FROM #Temp t
+	CROSS JOIN EXCHANGE E (NOLOCK) 
+	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S
+UNION ALL
+SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 3, 0, 0,t.Level3 MaxWinLimit_RM
+FROM #Temp t
+	CROSS JOIN EXCHANGE E (NOLOCK) 
+	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S	
+
+
+INSERT INTO winlimit_productsetting (ProductID,BettypeID,LevelID,SettingStatus)
+SELECT DISTINCT ProductID,MIN(BettypeID),T.LevelID,1
+FROM #Temp t1
+	CROSS JOIN (SELECT LEVELID FROM winlimit_levelSetting WITH (NOLOCK)) AS T
+WHERE NOT EXISTS (SELECT 1 FROM winlimit_productsetting t2 (nolock) WHERE T1.ProductID = T2.ProductID)
+GROUP BY ProductID,T.LevelID
+
+
+
+--SELECT ProductId,BettypeId,* FROM dbo.f_Nap_WinLimit_ProductSettingSel(22)
+     --SELECT DISTINCT groupID FROM WinLimit_GameGroupSetting WHERE productID = 22
+     
+     --select * from Winlimit_Group
