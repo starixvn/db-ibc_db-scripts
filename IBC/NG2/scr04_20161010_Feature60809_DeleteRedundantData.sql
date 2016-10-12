@@ -33,7 +33,7 @@ FROM [dbo].CustDiscount3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 WHERE cs.CustID > @maxcustID
 	AND cs.Sporttype BETWEEN 213 AND 218
 
---WinLossLimit
+--Bet Setting
 DELETE cs
 FROM [dbo].CustBetSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 WHERE cs.CustID > @maxcustID

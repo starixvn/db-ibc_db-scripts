@@ -80,8 +80,8 @@ SELECT
 	,cs.autopositiontaking  *100
 	,CASE WHEN ci.roleid = 4 THEN 0 ELSE co.minpositiontaking  *100 END
 	,@MaxPT
-FROM dbo.CustSettingGame cs WITH(NOLOCK) 
-	INNER JOIN dbo.custOverrideGame co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
+FROM dbo.CustSetting cs WITH(NOLOCK) 
+	INNER JOIN dbo.custOverride co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
 	INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
 	
@@ -107,7 +107,7 @@ SELECT
 	,cs.autompositiontaking *100
 	,cs.isautopositiontaking 
 	,cs.autopositiontaking  *100
-FROM dbo.CustSettingGame cs WITH(NOLOCK)
+FROM dbo.CustSetting cs WITH(NOLOCK)
 	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
 	
@@ -151,29 +151,33 @@ FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 WHERE cs.MasterPT + cs.SuperPT > @MaxPT	AND roleid = 3
 		
 UPDATE cs
-SET cs.SuperPT = CASE WHEN cs.SuperPT > @MaxPT THEN @MaxPT ELSE cs.SuperPT END 		
+SET cs.SuperPT = CASE WHEN cs.SuperPT > @MaxPT THEN @MaxPT ELSE cs.SuperPT END, 		
+	cs.MasterPT = CASE WHEN cs.MasterPT > @MaxPT THEN @MaxPT ELSE cs.MasterPT END, 	
+	cs.AgentPT = CASE WHEN cs.AgentPT > @MaxPT THEN @MaxPT ELSE cs.AgentPT END 	
 FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK) 
 	INNER JOIN #supers ci WITH(NOLOCK) ON ci.custid = cs.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.tBetType AND cs.sporttype = dest.tSportType
-WHERE cs.SuperPT > @MaxPT	
+WHERE (cs.SuperPT > @MaxPT	
+		OR cs.MasterPT > @MaxPT
+		OR cs.AgentPT > @MaxPT)
 
 --------------------------------------Commission Setting-------------------------------------------------		
 --Agent Level
 INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
-SELECT cs.custid, dest.tsporttype, dest.tbettype, 
+SELECT ci.custid, dest.tsporttype, dest.tbettype, 
 		CASE	WHEN roleid = 4 THEN @MaxComm
 				WHEN roleid = 3 THEN 0
 				WHEN roleid = 2 THEN 0 END
-FROM dbo.CustSettingGame cs WITH(NOLOCK)
-	INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
-	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-		 
+FROM #SMATemp ci WITH(NOLOCK) 
+	CROSS APPLY #DestinationSportBetType dest WITH(NOLOCK) 
+WHERE dest.SettingType = 3
+
 --Member Level
 INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
-SELECT cs.custid, dest.tsporttype, dest.tbettype, 0, 0, 0, @MaxComm
-FROM dbo.CustSettingGame cs WITH(NOLOCK)
-	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
-	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
+SELECT ci.custid, dest.tsporttype, dest.tbettype, 0, 0, 0, @MaxComm
+FROM #MemberTemp ci WITH(NOLOCK) 
+	CROSS APPLY #DestinationSportBetType dest WITH(NOLOCK) 
+WHERE dest.SettingType = 3
 
 --------------------------------------Bet Setting-------------------------------------------------		
 --Agent Level
@@ -189,7 +193,7 @@ SELECT ci.custid, dest.tsporttype, dest.tbettype,
 				WHEN roleid = 3 THEN 0
 				WHEN roleid = 2 THEN 0 END
 FROM  dbo.ProductBetSetting ps WITH (NOLOCK)
-	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 9 AND ps.bettype = dest.fBetType AND ps.sporttype = dest.fSportType
+	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 9 AND ps.bettype = dest.tBetType AND ps.sporttype = dest.tSportType
 	INNER JOIN #SMATemp ci ON ci.currency = ps.Currency
 		 
 --Member Level
