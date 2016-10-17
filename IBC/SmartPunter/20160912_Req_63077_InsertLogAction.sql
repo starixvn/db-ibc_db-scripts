@@ -23,7 +23,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31003
-           ,4
+           ,NULL
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'Select smart punter'
            ,'Select smart punter'
@@ -52,7 +52,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31004
-           ,4
+           ,NULL
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'Select smart punter'
            ,'Select smart punter'
@@ -81,7 +81,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31005
-           ,4
+           ,NULL
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'View Bet List'
            ,'View Bet List'
@@ -110,7 +110,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31006
-           ,4
+           ,NULL
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'View Bet List'
            ,'View Bet List'
@@ -139,7 +139,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31008
-           ,4
+           ,NULL
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'View Bet List'
            ,'View Bet List'
@@ -168,7 +168,7 @@ INSERT INTO [LogAction]
            ,[ActionNameVI])
      VALUES
            (31007
-           ,4
+           ,NULL
            ,'Acc_BetList_SelByRefNo'
            ,'View Bet List'
            ,'View Bet List'
