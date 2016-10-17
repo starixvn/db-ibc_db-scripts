@@ -22,7 +22,7 @@ INSERT INTO [LogAction]
            ,[IsInternal]
            ,[ActionNameVI])
      VALUES
-           (663
+           (31003
            ,4
            ,'Acc_CustomerSelCheckSmartPunter'
            ,'Select smart punter'
@@ -35,4 +35,149 @@ INSERT INTO [LogAction]
            ,'Select smart punter'
            ,1
            ,'Select smart punter')
+GO
+INSERT INTO [LogAction]
+           ([ActionID]
+           ,[ActionTypeID]
+           ,[SPName]
+           ,[ActionNameEN]
+           ,[ActionNameCH]
+           ,[ActionNameCS]
+           ,[ActionNameJP]
+           ,[ActionNameIT]
+           ,[ActionNameTH]
+           ,[ActionNameKO]
+           ,[XsltContent]
+           ,[IsInternal]
+           ,[ActionNameVI])
+     VALUES
+           (31004
+           ,4
+           ,'Acc_CustomerSelCheckSmartPunter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,'Select smart punter'
+           ,1
+           ,'Select smart punter')
+GO
+INSERT INTO [LogAction]
+           ([ActionID]
+           ,[ActionTypeID]
+           ,[SPName]
+           ,[ActionNameEN]
+           ,[ActionNameCH]
+           ,[ActionNameCS]
+           ,[ActionNameJP]
+           ,[ActionNameIT]
+           ,[ActionNameTH]
+           ,[ActionNameKO]
+           ,[XsltContent]
+           ,[IsInternal]
+           ,[ActionNameVI])
+     VALUES
+           (31005
+           ,4
+           ,'Acc_CustomerSelCheckSmartPunter'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,1
+           ,'View Bet List')
+GO
+INSERT INTO [LogAction]
+           ([ActionID]
+           ,[ActionTypeID]
+           ,[SPName]
+           ,[ActionNameEN]
+           ,[ActionNameCH]
+           ,[ActionNameCS]
+           ,[ActionNameJP]
+           ,[ActionNameIT]
+           ,[ActionNameTH]
+           ,[ActionNameKO]
+           ,[XsltContent]
+           ,[IsInternal]
+           ,[ActionNameVI])
+     VALUES
+           (31006
+           ,4
+           ,'Acc_CustomerSelCheckSmartPunter'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,1
+           ,'View Bet List')
+GO
+INSERT INTO [LogAction]
+           ([ActionID]
+           ,[ActionTypeID]
+           ,[SPName]
+           ,[ActionNameEN]
+           ,[ActionNameCH]
+           ,[ActionNameCS]
+           ,[ActionNameJP]
+           ,[ActionNameIT]
+           ,[ActionNameTH]
+           ,[ActionNameKO]
+           ,[XsltContent]
+           ,[IsInternal]
+           ,[ActionNameVI])
+     VALUES
+           (31008
+           ,4
+           ,'Acc_CustomerSelCheckSmartPunter'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,1
+           ,'View Bet List')
+GO
+INSERT INTO [LogAction]
+           ([ActionID]
+           ,[ActionTypeID]
+           ,[SPName]
+           ,[ActionNameEN]
+           ,[ActionNameCH]
+           ,[ActionNameCS]
+           ,[ActionNameJP]
+           ,[ActionNameIT]
+           ,[ActionNameTH]
+           ,[ActionNameKO]
+           ,[XsltContent]
+           ,[IsInternal]
+           ,[ActionNameVI])
+     VALUES
+           (31007
+           ,4
+           ,'Acc_BetList_SelByRefNo'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,'View Bet List'
+           ,1
+           ,'View Bet List')
 GO
