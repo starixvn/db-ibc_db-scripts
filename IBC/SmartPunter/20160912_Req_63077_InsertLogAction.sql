@@ -7,35 +7,7 @@
 USE bodb_CustomerLog
 GO
 
-INSERT INTO [LogAction]
-           ([ActionID]
-           ,[ActionTypeID]
-           ,[SPName]
-           ,[ActionNameEN]
-           ,[ActionNameCH]
-           ,[ActionNameCS]
-           ,[ActionNameJP]
-           ,[ActionNameIT]
-           ,[ActionNameTH]
-           ,[ActionNameKO]
-           ,[XsltContent]
-           ,[IsInternal]
-           ,[ActionNameVI])
-     VALUES
-           (31003
-           ,NULL
-           ,'Acc_CustomerSelCheckSmartPunter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,'Select smart punter'
-           ,1
-           ,'Select smart punter')
-GO
+
 INSERT INTO [LogAction]
            ([ActionID]
            ,[ActionTypeID]
