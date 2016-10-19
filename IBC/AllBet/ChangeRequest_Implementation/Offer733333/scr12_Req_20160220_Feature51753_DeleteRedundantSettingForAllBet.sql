@@ -18,7 +18,7 @@ FROM customer ci WITH(NOLOCK)
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
 WHERE (ci.roleid = 4  
 			AND ci.username NOT LIKE '3rdSuper%'
-			AND cs.isinternal = 0
+			--AND cs.isinternal = 0
 			AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 			AND s.islicensee = 0
 			AND ci.site IN ('733333'))

@@ -305,6 +305,13 @@ FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.tBetType AND cs.sporttype = dest.tSportType
 WHERE cs.SuperPT > @MaxPT	
 
+--Update m4 = s4, a4 = s4 
+UPDATE CustPTSetting3rd_Agent
+	SET  [MasterPT] = [SuperPT],
+		[AgentPT] = [SuperPT]
+WHERE SportType = 211 AND BetType = 2401
+	AND Custid IN (SELECT CustID FROM #SMATemp WHERE roleid = 4)
+
 --------------------------------------Commission Setting-------------------------------------------------		
 --Agent Level
 INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
