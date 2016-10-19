@@ -89,7 +89,7 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.site = '733333'
 		AND ci.custid <> 72)
-		OR ci.custid IN (2)
+		OR ci.custid IN (2,3,5,12,13)
 		
 INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID],roleID)
 SELECT cs.custid, cs.StakeLevelList_LC,ci.currency,ci.roleid	

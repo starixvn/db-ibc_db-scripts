@@ -52,7 +52,7 @@ BEGIN
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 	
-	IF @srecommend NOT IN (2)
+	IF @srecommend NOT IN (2,3,5,12,13)
 	BEGIN
 		INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 		SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
@@ -65,7 +65,7 @@ BEGIN
 		FROM Custinfo WITH (NOLOCK)
 		WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
 	END
-	ELSE IF @srecommend IN (2)
+	ELSE IF @srecommend IN (2,3,5,12,13)
 	BEGIN 
 		
 		--- get direct master
@@ -395,7 +395,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND ci.site = '733333'
 		AND ci.custid <> 72
-	) OR ci.custid IN (2) -- DUMMY 
+	) OR ci.custid IN (2,3,5,12,13) -- DUMMY 
 
 WHILE (1 = 1)
 BEGIN
@@ -434,7 +434,7 @@ WHERE (ci.roleid = 4
 		AND ci.custid <> 72
 		)
 	
-	OR ci.custid IN (2) -- DUMMY 
+	OR ci.custid IN (2,3,5,12,13) -- DUMMY 
 
 WHILE (1 = 1)
 BEGIN

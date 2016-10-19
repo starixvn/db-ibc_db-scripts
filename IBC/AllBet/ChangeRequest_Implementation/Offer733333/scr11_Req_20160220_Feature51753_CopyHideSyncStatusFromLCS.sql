@@ -55,7 +55,7 @@ BEGIN
 	
 			)
 	
-	IF @srecommend IN (2,4,13,15)
+	IF @srecommend IN (2,3,5,12,13)
 	BEGIN
 		
 		CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
@@ -148,7 +148,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND ci.site ='733333'
 		AND ci.custid <> 72)
-	OR ci.custid IN (2)
+	OR ci.custid IN (2,3,5,12,13)
 
 WHILE (1 = 1)
 BEGIN
@@ -183,7 +183,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND ci.site = '733333'
 		AND ci.custid <> 72)
-		OR ci.custid IN (2)
+		OR ci.custid IN (2,3,5,12,13)
 
 WHILE (1 = 1)
 BEGIN

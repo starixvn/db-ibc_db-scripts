@@ -71,14 +71,14 @@ INSERT INTO #DirrectMaster(custid)
 SELECT ci.custid
 FROM customer c WITH(NOLOCK)
 	INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
-WHERE ci.srecommend in (2) AND c.site = '733333' AND ci.roleid = 3
+WHERE ci.srecommend in (2,3,5,12,13) AND c.site = '733333' AND ci.roleid = 3
 
 --Get Dirrect agent
 INSERT INTO #DirrectAgent(custid, mrecommend)
 SELECT ci.custid, ci.mrecommend
 FROM customer c WITH(NOLOCK)
 	INNER JOIN CustInfo ci WITH(NOLOCK) ON c.custid = ci.custid
-WHERE ci.srecommend in (2) AND c.site = '733333' AND ci.roleid = 2
+WHERE ci.srecommend in (2,3,5,12,13) AND c.site = '733333' AND ci.roleid = 2
 	AND ci.mrecommend NOT IN (SELECT custid FROM #DirrectMaster)
 
 IF EXISTS (SELECT 1 FROM #DirrectMaster)

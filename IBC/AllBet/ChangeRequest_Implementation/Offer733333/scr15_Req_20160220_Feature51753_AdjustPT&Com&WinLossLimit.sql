@@ -15,7 +15,7 @@ WHERE ci.roleid = 4
 	-- Production
 	AND ci.site = '733333'
 	AND ci.custid <> 72
-	AND ci.custid NOT IN (2)
+	AND ci.custid NOT IN (2,3,5,12,13)
 	
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 INSERT INTO #DestinationSportBetType
@@ -64,7 +64,7 @@ FROM Customer with(nolock)
 WHERE SITE = '733333'
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=3 AND srecommend IN (2)
+	and roleid=3 AND srecommend IN (2,3,5,12,13)
 
 --- get direct agent
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -73,7 +73,7 @@ FROM Customer WITH(NOLOCK)
 WHERE site = '733333'
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend IN (2)
+	and roleid=2 AND srecommend IN (2,3,5,12,13)
 
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)

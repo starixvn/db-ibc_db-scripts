@@ -22,7 +22,7 @@ WHERE (ci.roleid = 4
 			AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 			AND s.islicensee = 0
 			AND ci.site IN ('733333'))
-		OR ci.custid IN (2) --Dummy account
+		OR ci.custid IN (3,5,12) --Dummy account (2,13) run setting Allbet
 
 --PT
 DELETE cs
