@@ -39,9 +39,8 @@ BEGIN
 		
 	DELETE cg
 	FROM CustPTGroupSetting3rd_Member cg
-		INNER JOIN custInfo CI (NOLOCK) ON CI.custid = CG.AgentID AND CI.srecommend <> 72		 
-		INNER JOIN Customer C_agent (NOLOCK) ON C_agent.custid = CI.recommend
-	WHERE CG.SportType = 211 AND C_agent.site = '733333'
+		INNER JOIN Customer CI (NOLOCK) ON CI.custid = CG.AgentID AND CI.srecommend <> 72		 
+	WHERE CG.SportType = 211 AND ci.site = '733333'
 			
 	DELETE cg
 	FROM CustDiscount3rd_Agent cg 
