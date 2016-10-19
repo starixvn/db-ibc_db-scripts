@@ -142,7 +142,7 @@ VALUES (3,81,1,'NG Group 1',5000,10000,50000),
 (13,2001,21,'MG LC Generic',5000,10000,50000),
 (13,2003,21,'MG LC Generic',5000,10000,50000),
 (13,2004,21,'MG LC Generic',5000,10000,50000),
-(14,1900,24,'Macau - Deposit',5000,10000,50000),
+--(14,1900,24,'Macau - Deposit',5000,10000,50000),
 (17,2008,25,'MG RNG Branded',5000,10000,50000),
 (17,2009,26,'MG RNG Generic',5000,10000,50000),
 (21,2402,27,'Allbet LC',5000,10000,50000),
@@ -188,7 +188,6 @@ select GroupName, COUNT(distinct GroupID)
 from #Temp
 group by GroupName
 having COUNT(distinct GroupID) > 1
-*/
 
 TRUNCATE TABLE WinLimit_ProductSettingDetail
 
@@ -197,6 +196,11 @@ TRUNCATE TABLE WinLimit_CustGameSetting
 TRUNCATE TABLE Winlimit_GameGroupSetting
 
 TRUNCATE TABLE Winlimit_Group
+
+
+*/
+
+
 
 INSERT INTO Winlimit_Group(GroupID, GroupName)
 SELECT DISTINCT GroupID,GroupName
@@ -233,8 +237,3 @@ WHERE NOT EXISTS (SELECT 1 FROM winlimit_productsetting t2 (nolock) WHERE T1.Pro
 GROUP BY ProductID,T.LevelID
 
 
-
---SELECT ProductId,BettypeId,* FROM dbo.f_Nap_WinLimit_ProductSettingSel(22)
-     --SELECT DISTINCT groupID FROM WinLimit_GameGroupSetting WHERE productID = 22
-     
-     --select * from Winlimit_Group
