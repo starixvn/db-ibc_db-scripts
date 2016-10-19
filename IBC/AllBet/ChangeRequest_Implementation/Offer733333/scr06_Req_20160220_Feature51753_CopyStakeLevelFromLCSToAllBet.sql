@@ -212,11 +212,14 @@ BEGIN
 	IF @stakeLevelList2401_super <> ''
 	BEGIN
 		-- all done, start insert
+		IF @srecommend NOT IN (2,13)
+		BEGIN
+			INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
+			-- Role = 4
+			SELECT @srecommend, 211, 2401, @stakeLevelList2401_super  
+		END
 		
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
-		-- Role = 4
-		SELECT @srecommend, 211, 2401, @stakeLevelList2401_super  
-		UNION ALL
 		-- Rolid = 3
 		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelLowestSuper) ELSE '' END AS stakeLevelList
 		FROM #SMATemp T1
