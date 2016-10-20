@@ -1,0 +1,59 @@
+USE bodb_licensee
+GO
+
+/*
+	Created:	Harper@20161020
+	Task:		#61220: Insert discount information for HAIFA
+	DB:			DBLIC.bodb_licensee
+
+	Revisions:
+
+	Param's Explanation:
+				Currency = 13 (CNY)		
+				DiscountGroupType = 3 (Discount based on Licensee WL)
+*/
+
+DECLARE @PartyID INT
+SELECT @PartyID = PartyID FROM dbo.OAS_Party (NOLOCK) WHERE PartyName LIKE '%HAIFA%'
+
+-- Change Type of Rate from Money To Decimal
+ALTER TABLE dbo.LA_DiscountGroupDetail
+ALTER COLUMN Rate DECIMAL(9, 8)
+
+IF EXISTS (SELECT 1 FROM dbo.LA_DiscountGroupAssignment WHERE PartyID = @PartyID)
+BEGIN
+	UPDATE dgh
+	SET ToDate = '20160831'
+	FROM dbo.LA_DiscountGroupHeader dgh
+	WHERE DiscountGroupType = 1 AND 
+		EXISTS (SELECT 1 
+				FROM dbo.LA_DiscountGroupAssignment dga (NOLOCK) 
+				WHERE dga.DiscountGroupId = dgh.DiscountGroupId AND dga.PartyID = @PartyID)
+
+	-- Insert new discount header
+	INSERT INTO dbo.LA_DiscountGroupHeader(DiscountGroupName, DiscountGroupType, CurrencyId, FromDate, ToDate, Priority)
+	VALUES  ('Discount for Haifa_SB (Sep2016)' , 3 , 13 , '20160901' , '20500101' , 1), -- If DistGroupType = 1 then 1
+			('Discount for Haifa_VS (Sep2016)' , 3 , 13 , '20160901' , '20500101' , 1)
+
+	-- Insert new discount assginment
+	DECLARE @DiscountGroupSBID INT,
+			@DiscountGroupVSID INT
+
+	SELECT @DiscountGroupSBID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount for Haifa_SB (Sep2016)'
+	SELECT @DiscountGroupVSID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount for Haifa_VS (Sep2016)'
+	
+	INSERT INTO dbo.LA_DiscountGroupAssignment( DiscountGroupId, PartyID )
+	VALUES  (@DiscountGroupSBID, @PartyID),
+			(@DiscountGroupVSID, @PartyID)
+
+	-- Insert new discount Detail
+	INSERT INTO dbo.LA_DiscountGroupDetail( DiscountGroupId, FromAmount, ToAmount, Rate)
+	VALUES  (@DiscountGroupSBID , NULL , NULL , 0.055),
+			( @DiscountGroupVSID , NULL , NULL , 0.025)
+
+	-- Insert new discount Product
+	INSERT INTO dbo.LA_DiscountGroupProduct
+	        ( DiscountGroupId, ProductId )
+	VALUES  (@DiscountGroupSBID, 0), -- SB
+			(@DiscountGroupVSID, 5)  -- VS
+END
