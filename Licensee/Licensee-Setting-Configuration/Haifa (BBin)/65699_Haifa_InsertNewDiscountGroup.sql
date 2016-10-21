@@ -16,19 +16,18 @@ GO
 DECLARE @PartyID INT
 SELECT @PartyID = PartyID FROM dbo.OAS_Party (NOLOCK) WHERE PartyName LIKE '%HAIFA%'
 
--- Change Type of Rate from Money To Decimal
-ALTER TABLE dbo.LA_DiscountGroupDetail
-ALTER COLUMN Rate DECIMAL(9, 8)
-
 IF EXISTS (SELECT 1 FROM dbo.LA_DiscountGroupAssignment WHERE PartyID = @PartyID)
 BEGIN
 	UPDATE dgh
 	SET ToDate = '20160831'
 	FROM dbo.LA_DiscountGroupHeader dgh
-	WHERE DiscountGroupType = 1 AND 
-		EXISTS (SELECT 1 
-				FROM dbo.LA_DiscountGroupAssignment dga (NOLOCK) 
-				WHERE dga.DiscountGroupId = dgh.DiscountGroupId AND dga.PartyID = @PartyID)
+	WHERE DiscountGroupType = 1 
+		AND EXISTS (SELECT 1 
+					FROM dbo.LA_DiscountGroupAssignment dga (NOLOCK) 
+					WHERE dga.DiscountGroupId = dgh.DiscountGroupId AND dga.PartyID = @PartyID)
+		AND EXISTS (SELECT 1
+					FROM dbo.LA_DiscountGroupProduct dgp (NOLOCK)
+					WHERE dgp.DiscountGroupId = dgh.DiscountGroupId AND dgp.ProductId IN (0, 5))
 
 	-- Insert new discount header
 	INSERT INTO dbo.LA_DiscountGroupHeader(DiscountGroupName, DiscountGroupType, CurrencyId, FromDate, ToDate, Priority)
