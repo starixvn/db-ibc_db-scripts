@@ -27,7 +27,13 @@ SELECT custid, currency
 FROM Customer WITH(NOLOCK)
 WHERE roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND site = '733333'
+	AND site in ('733333','222223')
+	and custid not in (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
+		/* 
+			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
+			2. Super yes, master yes, agent no: 796555, 5005322		
+		*/
+
 	AND custid <> 72
 	
 --step 1: copy settings for newly created customers
@@ -64,7 +70,7 @@ CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 INSERT INTO #DirectMaster (CustID,roleid)
 SELECT custid, roleid
 FROM Customer with(nolock)
-WHERE site = '733333'
+WHERE site in ('733333','222223')
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and roleid=3 AND srecommend = @srecommend 
@@ -73,7 +79,7 @@ WHERE site = '733333'
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
 SELECT custid, mrecommend,roleid
 FROM Customer WITH(NOLOCK)
-WHERE site = '733333'
+WHERE site in ('733333','222223')
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and roleid=2 AND srecommend = @srecommend 

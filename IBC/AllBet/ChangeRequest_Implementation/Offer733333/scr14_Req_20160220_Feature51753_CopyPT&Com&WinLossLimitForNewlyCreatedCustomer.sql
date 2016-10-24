@@ -17,7 +17,13 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	-- Production
-	AND ci.site = '733333'
+	AND ci.site in ('733333','222223')
+	and ci.srecommend not in (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
+		/* 
+			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
+			2. Super yes, master yes, agent no: 796555, 5005322		
+		*/
+
 	AND ci.custid <> 72
 	AND ci.custid NOT IN (2,3,5,12,13)
 
@@ -58,7 +64,8 @@ CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 INSERT INTO #DirectMaster (CustID,roleid)
 SELECT custid, roleid
 FROM Customer with(nolock)
-WHERE SITE  = '733333'
+WHERE SITE in ('733333','222223')
+
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and roleid=3 AND srecommend IN (2,3,5,12,13)
@@ -67,7 +74,8 @@ WHERE SITE  = '733333'
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
 SELECT custid, mrecommend,roleid
 FROM Customer WITH(NOLOCK)
-WHERE site  = '733333'
+WHERE site in ('733333','222223')
+
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and roleid=2 AND srecommend IN (2,3,5,12,13)

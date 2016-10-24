@@ -125,7 +125,8 @@ INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site = '733333'
+	AND ci.site in ('733333','222223')
+
 	AND CI.roleid = 4
 /*	AND ci.username IN ('WW',
 'JJ',
@@ -172,7 +173,8 @@ INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site = '733333'
+	AND ci.site in ('733333','222223')
+
 	AND CI.roleid = 4
 --	AND ci.username IN ('WW',
 --'JJ',

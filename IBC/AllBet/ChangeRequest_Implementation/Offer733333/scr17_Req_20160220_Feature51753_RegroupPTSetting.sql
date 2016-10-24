@@ -195,7 +195,8 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	-- Production
-	AND ci.site = '733333'
+	AND ci.site in ('733333','222223')
+
 	
 WHILE (1 = 1)
 BEGIN
@@ -242,7 +243,7 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	
-	AND ci.site = '733333'
+	AND ci.site in ('733333','222223')
 	
 WHILE (1 = 1)
 BEGIN

@@ -23,13 +23,14 @@ BEGIN
 	DELETE cg
 	FROM CustStakeLevel_Agent cg 
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
-	WHERE CG.SportType = 211 AND C.site = '733333'
+		INNER JOIN Customer Super (NOLOCK) ON Super.custid = C.srecommend
+	WHERE CG.SportType = 211 AND (Super.site IN ('733333','222223') OR c.srecommend IN (3,5,12)) --Dummy account (2,13) run setting Allbet
 
 	DELETE cg
 	FROM CustStakeLevel_Member cg 		
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
-		INNER JOIN Customer C_agent (NOLOCK) ON C_agent.custid = C.recommend
-	WHERE CG.SportType = 211 AND C_agent.site = '733333'
+		INNER JOIN Customer Super (NOLOCK) ON Super.custid = C.srecommend
+	WHERE CG.SportType = 211 AND (Super.site IN ('733333','222223') OR c.srecommend IN (3,5,12)) --Dummy account (2,13) run setting Allbet
 	 
 END	
 GO

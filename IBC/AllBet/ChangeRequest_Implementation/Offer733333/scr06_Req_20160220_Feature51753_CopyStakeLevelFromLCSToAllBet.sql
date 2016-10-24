@@ -63,7 +63,8 @@ BEGIN
 		INSERT INTO #DirectMaster (CustID,roleid)
 		SELECT custid, roleid
 		FROM Customer with(nolock)
-		WHERE SITE ='733333'
+		WHERE SITE in ('733333','222223')
+
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and roleid=3 AND srecommend = @srecommend
@@ -72,7 +73,8 @@ BEGIN
 		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
 		SELECT custid, mrecommend,roleid
 		FROM Customer WITH(NOLOCK)
-		WHERE SITE ='733333'
+		WHERE SITE in ('733333','222223')
+
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and roleid=2 AND srecommend = @srecommend
@@ -212,14 +214,12 @@ BEGIN
 	IF @stakeLevelList2401_super <> ''
 	BEGIN
 		-- all done, start insert
-		IF @srecommend NOT IN (2,13)
-		BEGIN
-			INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
-			-- Role = 4
-			SELECT @srecommend, 211, 2401, @stakeLevelList2401_super  
-		END
-		
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
+		-- Rolid = 4
+		SELECT T1.CustID, 211, 2401, @stakeLevelList2401_super  
+		FROM #SMATemp T1
+		WHERE T1.roleid = 4
+		UNION ALL
 		-- Rolid = 3
 		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelLowestSuper) ELSE '' END AS stakeLevelList
 		FROM #SMATemp T1
@@ -283,10 +283,15 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid
 		-- Production
-		AND ci.site ='733333'
-		AND ci.srecommend <> 72)
-	
-	OR ci.custid IN (2,3,5,12,13) -- DUMMY ACCOUNT
+		AND ci.site in ('733333','222223')
+		AND ci.srecommend NOT IN (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
+		/* 
+			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
+			2. Super yes, master yes, agent no: 796555, 5005322		
+		*/
+
+		AND ci.srecommend <> 72
+		) OR ci.custid IN (2,3,5,12,13) -- DUMMY ACCOUNT
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -321,7 +326,13 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid 
 		-- Production
-		AND ci.site ='733333'
+		AND ci.site in ('733333','222223')
+		AND ci.srecommend NOT IN (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
+		/* 
+			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
+			2. Super yes, master yes, agent no: 796555, 5005322		
+		*/
+
 		AND ci.srecommend <> 72)
 	OR ci.custid IN (2,3,5,12,13)
 

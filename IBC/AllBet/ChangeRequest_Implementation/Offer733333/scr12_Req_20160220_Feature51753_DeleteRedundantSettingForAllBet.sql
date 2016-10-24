@@ -21,7 +21,7 @@ WHERE (ci.roleid = 4
 			--AND cs.isinternal = 0
 			AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 			AND s.islicensee = 0
-			AND ci.site IN ('733333'))
+			AND ci.site IN ('733333','222223'))
 		OR ci.custid IN (3,5,12) --Dummy account (2,13) run setting Allbet
 
 --PT
