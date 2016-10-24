@@ -21,7 +21,7 @@ SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.site ='733333'
+		AND ci.site in ('733333','222223')
 		AND ci.custid <> 72)
 		OR ci.custid IN (2,3,5,12,13)
 		
