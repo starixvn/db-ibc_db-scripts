@@ -23,7 +23,13 @@ WHERE (ci.roleid = 4
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.site in ('733333','222223')
 		AND ci.custid <> 72)
-		OR ci.custid IN (2,3,5,12,13)
+		OR ci.custid IN 
+		(
+			-- dummy account
+			2,3,5,12,13
+			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 -- cross site
+		)
+		
 		
 INSERT INTO CustGameType_LCS (CustID,StakeLevelList_LC)
 SELECT C.Custid, CGT.StakeLevelList

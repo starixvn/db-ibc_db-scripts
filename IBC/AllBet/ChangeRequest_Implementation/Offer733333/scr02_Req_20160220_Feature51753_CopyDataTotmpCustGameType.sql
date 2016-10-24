@@ -88,17 +88,19 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.site in ('733333','222223')
-
 		AND ci.custid <> 72
-		
-		AND ci.srecommend NOT IN (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
-		/* 
+		)
+		OR ci.custid IN 
+		(
+			-- dummy account
+			2,3,5,12,13
+			-- cross site
+			/* 
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
-		*/
-
+			*/
+			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
 		)
-		OR ci.custid IN (2,3,5,12,13)
 		
 INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID],roleID)
 SELECT cs.custid, cs.StakeLevelList_LC,ci.currency,ci.roleid	

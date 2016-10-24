@@ -47,15 +47,67 @@ BEGIN
 		
 	IF @srecommend NOT IN (2,3,5,12,13)
 	BEGIN
-		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-		SELECT custid, SyncLiveCasino
-		FROM Custinfo WITH (NOLOCK)
-		WHERE srecommend = @srecommend AND roleid = 1  AND Enabled = 1 AND custid <= @maxcustid
 		
-		INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-		SELECT custid, roleid, SyncLiveCasino
-		FROM Custinfo WITH (NOLOCK)
-		WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
+		IF @srecommend IN (1266057,900371,4204225,674248,877004,6032879) --super no, master yes, agent yes
+		BEGIN
+			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
+			SELECT custid, roleid, SyncLiveCasino
+			FROM Custinfo WITH (NOLOCK)
+			WHERE custid = @srecommend
+			UNION ALL
+			-- Roleid = 3
+			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
+			FROM Custinfo CI WITH (NOLOCK)
+				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
+			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
+				AND CI.roleid = 3
+				
+			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
+			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
+			FROM Custinfo CI WITH (NOLOCK)
+				INNER JOIN Customer C (NOLOCK) ON CI.custid = C.custid
+				INNER JOIN #SMATemp master_tmp (NOLOCK) ON master_tmp.custid = CI.mrecommend AND master_tmp.roleid = 3
+			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
+				AND CI.roleid = 2
+			
+			INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
+			SELECT ci.custid, ci.SyncLiveCasino
+			FROM Custinfo ci WITH (NOLOCK)
+				INNER JOIN #SMATemp agent_tmp ON ci.recommend = agent_tmp.CustID AND agent_tmp.roleid = 2
+			WHERE CI.srecommend = @srecommend AND CI.roleid = 1  AND Enabled = 1 AND CI.custid <= @maxcustid	
+				
+		END
+		ELSE IF @srecommend IN (796555,5005322) --Super yes, master yes, agent no
+		BEGIN
+			
+			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
+			SELECT custid, roleid, SyncLiveCasino
+			FROM Custinfo WITH (NOLOCK)
+			WHERE custid = @srecommend
+			UNION ALL
+			-- Roleid = 3
+			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
+			FROM Custinfo CI WITH (NOLOCK)
+				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
+			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
+				AND CI.roleid = 3
+		END
+		ELSE
+		BEGIN
+			INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
+			SELECT custid, SyncLiveCasino
+			FROM Custinfo WITH (NOLOCK)
+			WHERE srecommend = @srecommend AND roleid = 1  AND Enabled = 1 AND custid <= @maxcustid
+			
+			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
+			SELECT custid, roleid, SyncLiveCasino
+			FROM Custinfo WITH (NOLOCK)
+			WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 
+		END
+		
 	END
 	ELSE IF @srecommend IN (2,3,5,12,13)
 	BEGIN -- @IsDummy = 1
@@ -284,14 +336,19 @@ WHERE (ci.roleid = 4
 		AND ci.custid <= @max_custid
 		-- Production
 		AND ci.site in ('733333','222223')
-		AND ci.srecommend NOT IN (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
-		/* 
+		AND ci.srecommend <> 72
+		) 
+		OR ci.custid IN 
+		(
+			-- dummy account
+			2,3,5,12,13
+			-- cross site
+			/* 
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
-		*/
-
-		AND ci.srecommend <> 72
-		) OR ci.custid IN (2,3,5,12,13) -- DUMMY ACCOUNT
+			*/
+			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
+		)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -327,14 +384,18 @@ WHERE (ci.roleid = 4
 		AND ci.custid <= @max_custid 
 		-- Production
 		AND ci.site in ('733333','222223')
-		AND ci.srecommend NOT IN (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
-		/* 
+		AND ci.srecommend <> 72)
+		OR ci.custid IN 
+		(
+			-- dummy account
+			2,3,5,12,13
+			-- cross site
+			/* 
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
-		*/
-
-		AND ci.srecommend <> 72)
-	OR ci.custid IN (2,3,5,12,13)
+			*/
+			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
+		)
 
 WHILE (1 = 1)
 BEGIN
