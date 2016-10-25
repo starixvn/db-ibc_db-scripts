@@ -1,11 +1,13 @@
 /*
 	Created: Elodie	
-	Task: Initialize Product Status of NG2
+	Task: Initialize Synced Status of NG2
 	DB: DBCUST/CustDB
 	Date: 20161010
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
+	,@HasSynced BIT
+	,@MaxCustID INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -21,21 +23,15 @@ BEGIN
 	   )
 		RETURN
 
-	DECLARE @BitmapOrder TINYINT
-
-	SELECT @BitmapOrder = PSP.bitmapOrder
-	FROM dbo.ProductSettingDetail psd WITH(NOLOCK)  
-		INNER JOIN dbo.ProductStatusProfile psp WITH (NOLOCK) ON psp.Sporttype = psd.SportType AND psp.Bettype = psd.BetType
-	WHERE psd.SettingType = 11 AND psd.ProductID = 23
+	DECLARE @BitmapOrder TINYINT = 4
 
 	/*******************************CUST PRODUCTSTATUS TABLE*******************************/	
 	UPDATE cs
 	SET
-			bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, 1),
-			bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0)
+			bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, @BitmapOrder, @HasSynced)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend 
+	WHERE ci.srecommend = @srecommend AND ci.custid <= @MaxCustID
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -43,13 +39,14 @@ GO
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+CREATE TABLE #supers (custid int, HasSynced BIT, isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT, @HasSynced BIT, @MaxCustID INT
+SELECT @MaxCustID = xxx
 
-
-INSERT INTO #supers(custid)
-SELECT ci.custid
+INSERT INTO #supers(custid, HasSynced)
+SELECT ci.custid, 
+	CASE WHEN ci.site = '789y' THEN 1 ELSE 0 END
 FROM customer ci WITH(NOLOCK)
 	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
@@ -58,31 +55,34 @@ WHERE ci.roleid = 4
 		 AND cs.isinternal = 0
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
-		 AND ci.site IN ('789y')
+		 AND ci.custid <= @MaxCustID
 
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid	
+		,@HasSynced = HasSynced
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'REPLICATED'
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'REPLICATED', @HasSynced = @HasSynced, @MaxCustID = @MaxCustID
 			
 			
-	waitfor delay '00:00:0.280'
+	waitfor delay '00:00:0.100'
 END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+CREATE TABLE #supers (custid int, HasSynced BIT, isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT, @HasSynced BIT, @MaxCustID INT
+SELECT @MaxCustID = xxx
 
-INSERT INTO #supers(custid)
-SELECT ci.custid
+INSERT INTO #supers(custid, HasSynced)
+SELECT ci.custid, 
+	CASE WHEN ci.site = '789y' THEN 1 ELSE 0 END
 FROM customer ci WITH(NOLOCK)
 	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
@@ -91,18 +91,20 @@ WHERE ci.roleid = 4
 		 AND cs.isinternal = 0
 		 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		 AND s.islicensee = 0
-		 AND ci.site IN ('789y')
+		 AND ci.custid <= @MaxCustID
 
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid	
+		,@HasSynced = HasSynced
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'DBCUST'
-						
-	waitfor delay '00:00:0.280'
+			
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'DBCUST', @HasSynced = @HasSynced, @MaxCustID = @MaxCustID
+			
+			
+	waitfor delay '00:00:0.100'
 END
