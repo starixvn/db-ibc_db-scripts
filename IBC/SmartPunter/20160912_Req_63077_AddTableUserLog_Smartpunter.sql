@@ -18,24 +18,20 @@ GO
 CREATE TABLE [dbo].[UserLog_SmartPunter](
 	[Logid] [bigint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[Logdate] [datetime] NOT NULL,
-	UserId INT NOT NULL,
-	CustId INT NOT NULL,
-	[ActionID] INT NOT NULL,
-	[IP] VARCHAR(15) NULL,
-	IsRestricted BIT NOT NULL,
-	UplineId  INT  NULL	
-)
-
+	[UserId] [int] NOT NULL,
+	[CustId] [int] NOT NULL,
+	[ActionID] [int] NOT NULL,
+	[IP] [varchar](15) NULL,
+	[IsRestricted] [bit] NOT NULL,
+	[UplineId] [int] NULL
+) ON [DATA]
 GO
-
 SET ANSI_PADDING OFF
 GO
-
 CREATE CLUSTERED INDEX [IX_UserLog_SmartPunter] ON [dbo].[UserLog_SmartPunter] 
-(	
-	[LogDate] ASC,
+(
+	[Logdate] ASC,
 	[UserId] ASC,
 	[CustId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
 GO
-
