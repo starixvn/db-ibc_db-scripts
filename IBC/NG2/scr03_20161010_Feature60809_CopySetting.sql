@@ -156,16 +156,16 @@ BEGIN
 	WHERE cs.MasterPT + cs.SuperPT > @MaxPT	AND roleid = 3
 		
 	UPDATE cs
-	SET cs.SuperPT = CASE WHEN cs.SuperPT > @MaxPT THEN @MaxPT ELSE cs.SuperPT END, 		
-		cs.MasterPT = CASE WHEN cs.MasterPT > @MaxPT THEN @MaxPT ELSE cs.MasterPT END, 	
-		cs.AgentPT = CASE WHEN cs.AgentPT > @MaxPT THEN @MaxPT ELSE cs.AgentPT END 	
+	SET cs.SuperPT = CASE WHEN cs.SuperPT <> @MaxPT THEN @MaxPT ELSE cs.SuperPT END, 		
+		cs.MasterPT = CASE WHEN cs.MasterPT <> @MaxPT THEN @MaxPT ELSE cs.MasterPT END, 	
+		cs.AgentPT = CASE WHEN cs.AgentPT <> @MaxPT THEN @MaxPT ELSE cs.AgentPT END 	
 	FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK) 
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.tBetType AND cs.sporttype = dest.tSportType
 	WHERE ci.custid = @srecommend		
-		AND (cs.SuperPT > @MaxPT	
-			OR cs.MasterPT > @MaxPT
-			OR cs.AgentPT > @MaxPT)
+		AND (cs.SuperPT <> @MaxPT	
+			OR cs.MasterPT <> @MaxPT
+			OR cs.AgentPT <> @MaxPT)
 
 	--------------------------------------Commission Setting-------------------------------------------------		
 	--Agent Level
