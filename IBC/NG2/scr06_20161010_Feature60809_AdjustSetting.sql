@@ -25,7 +25,7 @@ FROM dbo.ProductSettingDetail WITH (NOLOCK)
 WHERE ProductID = 23 AND SettingType IN (1)
 
 --------------------------------------PT Setting-------------------------------------------------	
---Update PT for different settings (not adjust for line super who take pt RNG more than 93%)
+--Update PT for different settings (not adjust for super)
 --AGENT LEVEL
 UPDATE csa
 SET
@@ -36,7 +36,7 @@ SET
 	csa.AutoMasterPT = cs.AutoMPositionTaking *100, 
 	csa.IsAutoSuperPT = cs.IsAutoPositionTaking, 
 	csa.AutoSuperPT = cs.AutoPositionTaking, 
-	csa.MinPT = CASE WHEN ci.roleid <> 4 THEN co.MinPositionTaking  * 100 ELSE 0 END
+	csa.MinPT = co.MinPositionTaking  * 100
 FROM dbo.custinfo ci WITH(NOLOCK)	
 	INNER JOIN dbo.CustPTSetting3rd_Agent csa WITH(UPDLOCK,ROWLOCK) ON csa.custid = ci.custid
 	INNER JOIN dbo.custSetting cs WITH (NOLOCK) ON cs.custid = ci.CustID
@@ -44,7 +44,7 @@ FROM dbo.custinfo ci WITH(NOLOCK)
 	INNER JOIN #DestinationSportBetType dest ON dest.fSportType = cs.sporttype AND dest.fBetType = cs.bettype 
 												AND dest.tSportType = csa.SportType AND dest.tBetType = csa.BetType AND dest.IsLive = csa.IsLive
 WHERE ci.srecommend IN (SELECT custid FROM #supers) 
-		AND ci.roleid IN (2,3,4) AND Enabled = 1
+		AND ci.roleid IN (2,3) AND Enabled = 1
 		AND (
 			cs.SPositionTaking * 100 <> csa.SuperPT
 			OR cs.MPositionTaking *100 <> csa.MasterPT
