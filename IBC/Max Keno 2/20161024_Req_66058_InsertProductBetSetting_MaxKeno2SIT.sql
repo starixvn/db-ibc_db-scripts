@@ -15,7 +15,7 @@ SELECT Sporttype, 1516, Currency, MinBet, IsDep
 from ProductBetSetting(NOLOCK)  where Sporttype=202 and Bettype=1515 AND Currency=20
 
 ----------------------------------------------------------------
---Update data DBTXN.bodb02.dbo.GameType-------------------------
+--Insert data DBPRO.bodb02.dbo.GameType-------------------------
 ----------------------------------------------------------------
 USE bodb02 
 GO
