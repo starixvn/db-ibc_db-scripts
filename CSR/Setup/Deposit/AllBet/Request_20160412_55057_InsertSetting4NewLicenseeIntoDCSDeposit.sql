@@ -5,7 +5,6 @@
 */ 
 -- BEGIN STEP 1: Deploy this SP at DBCUST.CustDB, Run only in the FIRST running
 ------------------------------------------------------
-
 ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustSetting_09]
  	 @srecommend INT
 	, @currency int
@@ -32,7 +31,6 @@ BEGIN
 		OR dbo.f_CheckRepTable('Dep_ProductStatusProfile') = 0 
 		OR dbo.f_CheckRepTable('Dep_CustProductStatus') = 0 
 	
-		OR dbo.f_CheckRepTable('GameGroup') = 0
 		OR dbo.f_CheckRepTable('Dep_StakeLevel') = 0
 		OR dbo.f_CheckRepTable('Dep_CustStakeLevel_Agent') = 0 
 		OR dbo.f_CheckRepTable('Dep_CustStakeLevel_Member') = 0 
@@ -137,53 +135,26 @@ BEGIN
 	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 4) AND @IsProductStatus = 1	
 	BEGIN
 		PRINT 'Status'
-		SELECT DISTINCT psd.SportType,psd.Bettype, psd.SettingType,@IsDisable AS IsDisabled,@IsHidden AS IsHidden,pbs.bitmapOrder 
-		INTO #SportBettypeFilter4
-		FROM #ProductSettingDetail_tmp psd WITH(NOLOCK)  
-			INNER JOIN Dep_ProductStatusProfile pbs WITH (NOLOCK) ON pbs.[SportType] = psd.[SportType] AND pbs.[BetType] = psd.[BetType]
-		WHERE psd.SettingType = 4
-		
-		IF EXISTS(SELECT TOP 1 1 FROM #SportBettypeFilter4)
-		BEGIN
-							
-			DECLARE @xmlStrDisabled XML
-			DECLARE @xmlStrHidden XML
-		
-			SET @xmlStrDisabled = (
-					SELECT (
-							SELECT ft.bitmapOrder	AS '@b'
-								, ft.IsDisabled	AS '@s'
-							FROM #SportBettypeFilter4 ft 	
-							FOR XML PATH('r')
-								, TYPE
-							)
-					FOR XML PATH('root')
-						, TYPE
-					)
-				
-			SET @xmlStrHidden = (
-					SELECT (
-							SELECT ft.bitmapOrder	AS '@b'
-								, ft.IsHidden	AS '@s'
-							FROM #SportBettypeFilter4 ft 	
-							FOR XML PATH('r')
-								, TYPE
-							)
-					FOR XML PATH('root')
-						, TYPE
-					)
 					
-			
-			INSERT INTO [dbo].[Dep_CustProductStatus]([CustID],bitmapIsDisabled,bitmapIsHidden)
-			SELECT	c.custid
-					, (select bitmap from dbo.f_GenerateProductStatus_multiple (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, CONVERT(VARCHAR(MAX),@xmlStrDisabled)))	
-					, (select bitmap from dbo.f_GenerateProductStatus_multiple (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, CONVERT(VARCHAR(MAX),@xmlStrHidden)))
-			FROM #tblCust C
-			
-		END	
+		-- Update if exists
+		-- Update if exists
+		UPDATE T 
+				SET bitmapIsDisabled = dbo.f_GenerateProductStatus (t.bitmapIsDisabled, 2,0)		
+					, bitmapIsHidden = dbo.f_GenerateProductStatus(t.bitmapIsHidden , 2,0)
+		FROM [dbo].[Dep_CustProductStatus] T (ROWLOCK)
+			INNER JOIN #tblCust C ON C.custid = T.custid
+		
+		-- Insert new	
+		INSERT INTO [dbo].[Dep_CustProductStatus](CustID,bitmapIsDisabled,bitmapIsHidden)
+		SELECT	c.custid
+				, dbo.f_GenerateProductStatus (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, 2,0) AS bitmapIsDisabled
+				, dbo.f_GenerateProductStatus (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, 2,0)  AS bitmapIsHidden
+		FROM #tblCust C
+		WHERE NOT EXISTS (SELECT 1 FROM [dbo].[Dep_CustProductStatus] T (NOLOCK) WHERE t.custid = c.custid)
+		
 	END	
 
-	-- StakeLevelGroup
+	-- StakeLevel
 	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 7) AND @IsStakeLevel = 1
 	BEGIN
 		PRINT 'StakeLevelGroup'

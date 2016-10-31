@@ -48,7 +48,7 @@ BEGIN
 	IF @srecommend NOT IN (2,3,5,12,13)
 	BEGIN
 		
-		IF @srecommend IN (1266057,900371,4204225,674248,877004,6032879) --super no, master yes, agent yes
+		IF @srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708) --super no, master yes, agent yes
 		BEGIN
 			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 			SELECT custid, roleid, SyncLiveCasino
@@ -347,7 +347,7 @@ WHERE (ci.roleid = 4
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
 			*/
-			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
+			,1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322 
 		)
 WHILE (1 = 1)
 BEGIN
@@ -394,7 +394,7 @@ WHERE (ci.roleid = 4
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
 			*/
-			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
+			,1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322 
 		)
 
 WHILE (1 = 1)

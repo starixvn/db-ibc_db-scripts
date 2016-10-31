@@ -25,17 +25,11 @@ CREATE TABLE #supers (custid int, currency INT)
 INSERT INTO #supers(custid,currency)
 SELECT custid, currency
 FROM Customer WITH(NOLOCK)
-WHERE roleid = 4 	
+WHERE (roleid = 4 	
 	AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND site in ('733333','222223')
-	and custid not in (1266057,900371,4204225,674248,877004,6032879,796555,5005322) -- cross site
-		/* 
-			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
-			2. Super yes, master yes, agent no: 796555, 5005322		
-		*/
-
 	AND custid <> 72
-	
+	)
 --step 1: copy settings for newly created customers
 
 ---- data preparation ----
@@ -140,8 +134,7 @@ INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, currency)
 SELECT DISTINCT ci.custid, roleid, syncLiveCasino, ci.currency
 FROM custinfo ci WITH(NOLOCK) 
 	INNER JOIN #Supers s ON ci.srecommend = s.custid
-WHERE ci.custid > @max_custid
-	
+WHERE ci.custid > @max_custid 
 UNION ALL -- DUMMY
 SELECT custid, roleid, syncLiveCasino, currency
 FROM #SMATemp

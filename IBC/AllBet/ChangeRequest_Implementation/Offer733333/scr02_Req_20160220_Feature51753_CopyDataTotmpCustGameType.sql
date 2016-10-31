@@ -99,7 +99,7 @@ WHERE (ci.roleid = 4
 			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
 			2. Super yes, master yes, agent no: 796555, 5005322		
 			*/
-			,1266057,900371,4204225,674248,877004,6032879,796555,5005322 
+			,1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322 
 		)
 		
 INSERT INTO [dbo].[tmpCustGameType] ([CustID], [StakeLevelList_LC],[ExchangeID],roleID)
