@@ -103,7 +103,7 @@ BEGIN
 			,0
 			,CASE WHEN ci.roleid = 4 THEN @SuperPT ELSE 0 END AS SuperPT
 			,CASE WHEN ci.roleid IN (3,4) THEN @SuperPT ELSE 0 END AS MasterPT
-			,CASE WHEN ci.roleid IN (1,2,4) THEN @SuperPT ELSE 0 END AS AgentPT
+			,CASE WHEN ci.roleid IN (2,4) THEN @SuperPT ELSE 0 END AS AgentPT
 		FROM #tblCust ci
 			CROSS JOIN #ProductSettingDetail_tmp psd 
 		WHERE psd.SettingType = 1 
