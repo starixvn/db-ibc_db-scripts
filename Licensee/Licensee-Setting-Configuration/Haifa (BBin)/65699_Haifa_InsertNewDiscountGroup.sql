@@ -31,15 +31,15 @@ BEGIN
 
 	-- Insert new discount header
 	INSERT INTO dbo.LA_DiscountGroupHeader(DiscountGroupName, DiscountGroupType, CurrencyId, FromDate, ToDate, Priority)
-	VALUES  ('Discount for Haifa_SB (Sep2016)' , 3 , 13 , '20160901' , '20500101' , 1), -- If DistGroupType = 1 then 1
-			('Discount for Haifa_VS (Sep2016)' , 3 , 13 , '20160901' , '20500101' , 1)
+	VALUES  ('Discount HAIFA #3-SB: Sep-16 to current' , 3 , 13 , '20160901' , '20500101' , 1), -- If DistGroupType = 1 then 1
+			('Discount HAIFA #3-VS: Sep-16 to current' , 3 , 13 , '20160901' , '20500101' , 1)
 
 	-- Insert new discount assginment
 	DECLARE @DiscountGroupSBID INT,
 			@DiscountGroupVSID INT
 
-	SELECT @DiscountGroupSBID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount for Haifa_SB (Sep2016)'
-	SELECT @DiscountGroupVSID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount for Haifa_VS (Sep2016)'
+	SELECT @DiscountGroupSBID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount HAIFA #3-SB: Sep-16 to current'
+	SELECT @DiscountGroupVSID = DiscountGroupId FROM dbo.LA_DiscountGroupHeader WHERE DiscountGroupName = 'Discount HAIFA #3-VS: Sep-16 to current'
 	
 	INSERT INTO dbo.LA_DiscountGroupAssignment( DiscountGroupId, PartyID )
 	VALUES  (@DiscountGroupSBID, @PartyID),
