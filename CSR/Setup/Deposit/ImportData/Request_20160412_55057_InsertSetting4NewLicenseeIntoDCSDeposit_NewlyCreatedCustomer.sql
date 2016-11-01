@@ -81,7 +81,7 @@ BEGIN
 	FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 		INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID
 		INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-	WHERE lds.CustID =@srecommend 
+	WHERE lds.CustID =@srecommend  AND ps.ProductID= @ProductID
 
 	-- PT processing
 
@@ -128,7 +128,7 @@ BEGIN
 			INSERT INTO Dep_CustSettingMode (CustID,IsGroupedPT)
 			SELECT c.custid,1
 			FROM #tblCust C
-			WHERE C.roleid = 1 
+			WHERE C.roleid = 1 AND NOT EXISTS (SELECT 1 FROM Dep_CustSettingMode C1 (NOLOCK) WHERE c1.CustID = c.Custid)
 			
 		END
 	END	
