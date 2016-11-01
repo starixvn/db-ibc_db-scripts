@@ -126,7 +126,7 @@ BEGIN
 			INSERT INTO Dep_CustSettingMode (CustID,IsGroupedPT)
 			SELECT c.custid,1
 			FROM #tblCust C
-			WHERE C.roleid = 1 
+			WHERE C.roleid = 1 AND NOT EXISTS (SELECT 1 FROM Dep_CustSettingMode C1 (NOLOCK) WHERE c1.CustID = c.Custid)
 			
 		END
 	END	
