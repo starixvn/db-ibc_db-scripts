@@ -79,7 +79,7 @@ BEGIN
 	FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 		INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID
 		INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-	WHERE lds.CustID =@srecommend 
+	WHERE lds.CustID =@srecommend AND ps.ProductID = @ProductID
 
 	-- PT processing
 
