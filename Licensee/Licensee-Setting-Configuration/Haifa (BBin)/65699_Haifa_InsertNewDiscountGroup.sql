@@ -11,6 +11,7 @@ GO
 	Param's Explanation:
 				Currency = 13 (CNY)		
 				DiscountGroupType = 3 (Discount based on Licensee WL)
+				ToAmount = 10000000000000.00 (to display Unlimitted in Website)
 */
 
 DECLARE @PartyID INT
@@ -47,8 +48,8 @@ BEGIN
 
 	-- Insert new discount Detail
 	INSERT INTO dbo.LA_DiscountGroupDetail( DiscountGroupId, FromAmount, ToAmount, Rate)
-	VALUES  (@DiscountGroupSBID , NULL , NULL , 0.055),
-			( @DiscountGroupVSID , NULL , NULL , 0.025)
+	VALUES  (@DiscountGroupSBID , NULL , 10000000000000.00 , 0.055),
+			( @DiscountGroupVSID , NULL , 10000000000000.00 , 0.025)
 
 	-- Insert new discount Product
 	INSERT INTO dbo.LA_DiscountGroupProduct
