@@ -72,13 +72,13 @@ END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int, HasSynced BIT, isfinished bit default(0))
+CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @srecommend INT, @HasSynced BIT, @MaxCustID INT
+DECLARE @srecommend INT, @MaxCustID INT
 SELECT @MaxCustID = xxx
 
 INSERT INTO #supers(custid)
-SELECT ci.custid, 0	
+SELECT ci.custid
 FROM customer ci WITH(NOLOCK)
 	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
 	LEFT JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
