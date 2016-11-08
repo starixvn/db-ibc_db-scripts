@@ -31,11 +31,16 @@ BEGIN
 			   ,[CommRate])
 	SELECT  custid,204,18001,0.1215 FROM custInfo a WITH(NOLOCK) 
 	WHERE a.srecommend = @srecommend  AND a.roleid IN(2,3,4) AND Enabled=1
+	AND NOT EXISTS(SELECT TOP 1 1 FROM Dep_AgentCommRate d WITH(NOLOCK)  WHERE a.Custid=d.CustID AND d.SportType=204 AND d.BetType=18001)
 
-	UNION ALL
+	INSERT INTO Dep_AgentCommRate 
+			   ([CustID]
+			   ,[SportType]
+			   ,[BetType]
+			   ,[CommRate])
 	SELECT  custid,204,18002,0.45 FROM custInfo a WITH(NOLOCK) 
 	WHERE a.srecommend = @srecommend  AND a.roleid IN(2,3,4) AND Enabled=1
-
+	AND NOT EXISTS(SELECT TOP 1 1 FROM Dep_AgentCommRate d WITH(NOLOCK)  WHERE a.Custid=d.CustID AND d.SportType=204 AND d.BetType=18002)
 
 	INSERT INTO [Dep_CustCommRate]
 			   ([CustId]
@@ -47,9 +52,19 @@ BEGIN
 			   ,[playerdiscount])    
 	SELECT  a.custid,204,18001,0.1215,0.1215,0.1215,0 FROM custInfo a WITH(NOLOCK) 
 	 WHERE srecommend = @srecommend  AND a.roleid =1	AND Enabled=1
-	UNION ALL
+	 AND NOT EXISTS(SELECT TOP 1 1 FROM [Dep_CustCommRate] d WITH(NOLOCK)  WHERE a.Custid=d.CustID AND d.SportType=204 AND d.BetType=18001)
+	 
+	INSERT INTO [Dep_CustCommRate]
+			   ([CustId]
+			   ,[Sporttype]
+			   ,[Bettype]
+			   ,[sdiscount]
+			   ,[adiscount]
+			   ,[discount]
+			   ,[playerdiscount])   
 	SELECT  a.custid,204,18002,0.45,0.45,0.45,0 FROM custInfo a WITH(NOLOCK) 
 	 WHERE srecommend = @srecommend  AND a.roleid =1	AND Enabled=1
+	 AND NOT EXISTS(SELECT TOP 1 1 FROM [Dep_CustCommRate] d WITH(NOLOCK)  WHERE a.Custid=d.CustID AND d.SportType=204 AND d.BetType=18002)
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
