@@ -9,8 +9,7 @@
 
 ALTER PROCEDURE [dbo].Acc_CustomerInfo_Execrep_09
 	@srecommend INT	
-	,@target VARCHAR(30)
-	,@maxcustid INT
+	,@target VARCHAR(30)	
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -23,7 +22,7 @@ BEGIN
 		RETURN		
 	UPDATE custInfo WITH(ROWLOCK,UPDLOCK)	
 	SET DisableColossusBet=0,HideColossusBet=0
-	WHERE srecommend=@srecommend AND Enabled=1 AND custid <= @maxcustid
+	WHERE srecommend=@srecommend AND Enabled=1 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
@@ -35,15 +34,12 @@ GO
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid= xx
+DECLARE @srecommend INT
 
 INSERT INTO #supers(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
-WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid	
+WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))	
 	AND site ='TLC'
 
 WHILE (1 = 1)
@@ -55,8 +51,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend			
 			,@target = 'REPLICATED'
 	
 	WAITFOR DELAY '00:00:00.280'			
@@ -70,15 +65,14 @@ GO
 -------------------------------------------------
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT
+DECLARE @srecommend INT
 
-SELECT @max_custid= xx
+
 
 INSERT INTO #supers(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND custid <= @max_custid	
 	AND site ='TLC'
 WHILE (1 = 1)
 BEGIN
@@ -89,8 +83,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
-			,@maxcustid = @max_custid
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend			
 			,@target = 'DBCUST'
 	
 	WAITFOR DELAY '00:00:00.280'			
