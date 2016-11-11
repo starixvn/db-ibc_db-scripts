@@ -8,5 +8,5 @@ USE CustDB
 GO
 
 UPDATE dbo.ProductSettingDetail
-SET SettingStatus = 1
+SET SettingStatus = 0
 WHERE ProductID = 23

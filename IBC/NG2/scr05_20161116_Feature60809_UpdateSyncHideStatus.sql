@@ -6,6 +6,7 @@
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
+	,@maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -30,7 +31,7 @@ BEGIN
 			bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, @BitmapOrder, 0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend
+	WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -40,8 +41,9 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @max_custid INT, @srecommend INT
 
+SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -64,7 +66,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'REPLICATED'
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend,@maxcustid = @max_custid, @target = 'REPLICATED'
 			
 			
 	waitfor delay '00:00:0.280'
@@ -74,7 +76,9 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @max_custid INT, @srecommend INT
+
+SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -97,7 +101,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @target = 'DBCUST'
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @maxcustid = @max_custid, @target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'
 END
