@@ -31,9 +31,7 @@ BEGIN
 	UPDATE a
 	SET a.minbet=b.minbet,a.maxbet=b.maxbet
 	FROM CustSetting a  WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN #tmp b ON a.custid=b.CustID 
-	INNER JOIN custinfo ci WITH(NOLOCK) ON a.custid = ci.custid
-	WHERE ci.srecommend = @srecommend		
+	INNER JOIN #tmp b ON a.custid=b.CustID 	
 	AND Sporttype=1 AND bettype=9   
 		
 END

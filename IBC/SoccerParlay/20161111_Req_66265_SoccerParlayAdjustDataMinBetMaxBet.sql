@@ -1,7 +1,7 @@
 /*
 	Created: Winnie
 	Date: 2016-11-11
-	Task: Adjust Soccer parlay settings (minbet, maxbet) for credit customer RedmineID: #66265
+	Task: Copy Soccer parlay settings (minbet,maxbet) from Soccer for credit customer RedmineID: #66265
 	DB: DBCUST/CustDB
 */ 
 --Step 1: update customer settings in Custsetting
@@ -23,21 +23,16 @@ BEGIN
 		
 	CREATE TABLE #tmp (CustID INT  PRIMARY KEY,minbet MONEY, maxbet MONEY)	
 	INSERT INTO #tmp(CustID,minbet , maxbet )
-	SELECT 	sc.custid ,sc.minbet , sc.maxbet 
-	FROM custinfo ci WITH(NOLOCK)	
-	INNER JOIN CustSetting sc WITH(NOLOCK)  ON sc.custid = ci.custid AND sc.sporttype=1 AND sc.bettype=1
-	INNER JOIN CustSetting scp WITH(NOLOCK) ON sc.custid=scp.custid  AND sc.sporttype=1 AND sc.bettype=9
-	WHERE  ci.srecommend = @srecommend
-	AND (sc.minbet<>scp.minbet OR sc.maxbet<>scp.maxbet)		
+	SELECT 	a.custid ,minbet , maxbet 
+	FROM CustSetting a WITH(NOLOCK) 
+	INNER JOIN custinfo ci WITH(NOLOCK) ON a.custid = ci.custid
+	WHERE  Sporttype=1 AND bettype=1 AND ci.srecommend = @srecommend	
 	
-	UPDATE scp
-	SET scp.minbet=sc.minbet,scp.maxbet=sc.maxbet
-	FROM CustSetting scp  WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN #tmp sc ON scp.custid=sc.CustID 
-	INNER JOIN custinfo ci WITH(NOLOCK) ON sc.custid = ci.custid
-	WHERE ci.srecommend = @srecommend
+	UPDATE a
+	SET a.minbet=b.minbet,a.maxbet=b.maxbet
+	FROM CustSetting a  WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN #tmp b ON a.custid=b.CustID 	
 	AND Sporttype=1 AND bettype=9   
-
 		
 END
 GO
