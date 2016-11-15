@@ -7,8 +7,7 @@ SELECT @max_custid = xxx
 INSERT INTO #Cust(custid, srecommend, mrecommend, recommend, roleid)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.recommend, ci.roleid
 FROM customer ci WITH(NOLOCK)
-WHERE ci.site IN ('789y')
-	AND ci.username IN ('BA03US','SKUS','S56US','S56AU','S56BU','S56CU','S56DU','SLA','S88US','TV0','TVA7D','TV51','TV68','TV71','TV2E','TVA30','TVA94','TVA82',
+WHERE ci.username IN ('BA03US','SKUS','S56US','S56AU','S56BU','S56CU','S56DU','SLA','S88US','TV0','TVA7D','TV51','TV68','TV71','TV2E','TVA30','TVA94','TVA82',
 	'TVAA','TVA83','TVBA','TVA36','TVCA','TVDA','TV7A','TVEA','TVA84','TV1','TV2','TV3','TV4','TV5','TV6','TV7','TV8','TV9','TV10','TV11','TV12','SJKZZ','TV14',
 	'TV15','THAUS','TV16','TV17','TV18','TV19','TV20','THA1US','TV30','TV31','D-THAUS','TV91','TV92','TV80','TV46','TV81','TVA1','TVA2','TVA3','TVA4','TVA5','TVA6',
 	'TVA7','TVA8','TVA9','TVA10','TVA11','TVA12','TVA13','TVA6G','TV4E','TVA16','TVA17','TVA18','TVA19','TVA7i','TVA21','TVA22','TVA23','TVA24','TV88','TVA6I','TVA27',
