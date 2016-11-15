@@ -61,14 +61,14 @@ BEGIN
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 0)
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		WHERE cs.custid = @srecommend OR cs.custid = @mrecommend AND cs.custid <= @maxcustid
+		WHERE (cs.custid = @srecommend OR cs.custid = @mrecommend) AND cs.custid <= @maxcustid
 	END
 	ELSE IF @roleid = 1
 	BEGIN
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 0)
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		WHERE cs.CustID = @Custid AND cs.custid = @srecommend OR cs.custid = @mrecommend AND cs.CustID = @recommend AND cs.custid <= @maxcustid
+		WHERE (cs.CustID = @Custid OR cs.custid = @srecommend OR cs.custid = @mrecommend OR cs.CustID = @recommend) AND cs.custid <= @maxcustid
 	END
 END
 GO
