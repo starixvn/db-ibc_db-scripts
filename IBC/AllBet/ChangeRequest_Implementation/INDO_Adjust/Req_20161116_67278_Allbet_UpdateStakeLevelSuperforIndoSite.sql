@@ -24,15 +24,15 @@ WHERE (ci.roleid = 4
 		AND ci.site = 'INDO' --in ('INDO','755555','Koribc')
 		AND ci.srecommend <> 72
 		and ci.currency <> 20
-		) OR custid in (1038826,58969, 60809, 118211,15) -- direct Master/agent
+		) OR custid in (1038826,58969, 60809, 118211,15,4183) -- direct Master/agent
 -- get currencies
 INSERT INTO #currency_tmp (ExchangeID)
 SELECT DISTINCT ExchangeID 
 FROM #SuperAndDirectMasterAgent
 
 -- get stakelevelist of each currency
+INSERT INTO #currency_StakelevelList (ExchangeID,StakeLevelList)
 SELECT s.exchangeID, STUFF(tmp.StakeLevelList,1,1,'')  AS StakeLevelList
-INTO #currency_StakelevelList
 FROM #currency_tmp s
 	CROSS APPLY (SELECT TOP 100 ',' + CONVERT(VARCHAR(10),t.StakeLevelID)
 					 FROM StakeLevel T (NOLOCK)
