@@ -1,3 +1,4 @@
+--truncate table #Temp
 CREATE TABLE #Temp (ProductID INT, BetTypeID INT,GroupID INT,GroupName VARCHAR(200),Level1 MONEY, Level2 MONEY,Level3 MONEY)
 
 INSERT INTO #Temp (ProductID,BetTypeID,GroupID,GroupName,Level1,Level2,Level3)
@@ -179,7 +180,20 @@ VALUES (3,81,1,'NG Group 1',5000,10000,50000),
 (22,4028,29,'Macau Slot 2',5000,10000,50000),
 (22,4029,29,'Macau Slot 2',5000,10000,50000),
 (22,4030,29,'Macau Slot 2',5000,10000,50000),
-(22,4007,29,'Macau Slot 2',5000,10000,50000)
+(22,4007,29,'Macau Slot 2',5000,10000,50000),
+
+(4,1101,30,'SLI Live Casino 1',5000,10000,50000),
+(4,1102,30,'SLI Live Casino 1',5000,10000,50000),
+(4,1103,30,'SLI Live Casino 1',5000,10000,50000),
+(4,1104,30,'SLI Live Casino 1',5000,10000,50000),
+(4,1105,31,'SLI Live Casino 2',5000,10000,50000),
+(4,1106,31,'SLI Live Casino 2',5000,10000,50000),
+(4,1107,31,'SLI Live Casino 2',5000,10000,50000),
+(4,1108,31,'SLI Live Casino 2',5000,10000,50000),
+(4,1109,31,'SLI Live Casino 2',5000,10000,50000)
+
+
+
 
 
 
@@ -200,40 +214,42 @@ TRUNCATE TABLE Winlimit_Group
 
 */
 
-
-
 INSERT INTO Winlimit_Group(GroupID, GroupName)
 SELECT DISTINCT GroupID,GroupName
 FROM #Temp
+where productid = 4
 
 
 INSERT INTO dbo.Winlimit_GameGroupSetting (ProductID, BetTypeID, GroupID)
 SELECT DISTINCT ProductID, BetTypeID, GroupID
 FROM #Temp
+where productid = 4
 
 INSERT INTO WinLimit_ProductSettingDetail (ProductID, GroupID, ExchangeID, SiteID, LevelID,  IsBlockedPlaceBet, IsBlockedTransfer, MaxWinLimit_RM)
 SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 1, 0, 0,t.Level1 MaxWinLimit_RM
 FROM #Temp t
 	CROSS JOIN EXCHANGE E (NOLOCK) 
 	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S
-
+where productid = 4
 UNION ALL
 SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 2, 0, 0,t.Level2 MaxWinLimit_RM
 FROM #Temp t
 	CROSS JOIN EXCHANGE E (NOLOCK) 
 	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S
+where productid = 4	
 UNION ALL
 SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 3, 0, 0,t.Level3 MaxWinLimit_RM
 FROM #Temp t
 	CROSS JOIN EXCHANGE E (NOLOCK) 
 	CROSS JOIN (SELECT siteid FROM Site WITH (NOLOCK) WHERE isActive = 1) AS S	
-
+where productid = 4
 
 INSERT INTO winlimit_productsetting (ProductID,BettypeID,LevelID,SettingStatus)
 SELECT DISTINCT ProductID,MIN(BettypeID),T.LevelID,1
 FROM #Temp t1
 	CROSS JOIN (SELECT LEVELID FROM winlimit_levelSetting WITH (NOLOCK)) AS T
 WHERE NOT EXISTS (SELECT 1 FROM winlimit_productsetting t2 (nolock) WHERE T1.ProductID = T2.ProductID)
+and t1.ProductID = 4
 GROUP BY ProductID,T.LevelID
 
 
