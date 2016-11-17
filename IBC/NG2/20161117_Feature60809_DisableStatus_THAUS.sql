@@ -1,0 +1,242 @@
+/*
+	Created: Elodie	
+	Task: Disable Product Status of NG2 for THAUS Headline
+	DB: DBCUST/CustDB
+	Date: 20161117
+*/ 
+ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
+	@Custid INT
+	,@roleid TINYINT
+	,@srecommend INT
+	,@mrecommend INT	
+	,@recommend INT
+	,@maxcustid INT
+	,@target VARCHAR(20)
+AS
+BEGIN
+	SET NOCOUNT ON
+	
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
+	
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
+	   AND dbo.f_CheckRepTable('CustProductStatus') = 1
+	   AND dbo.f_CheckRepTable('ProductSettingDetail') = 1
+	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
+	   )
+		RETURN	
+
+	DECLARE @BitmapOrder TINYINT = 4
+
+	/*******************************CUST PRODUCT STATUS TABLE*******************************/	
+	IF @roleid = 4
+	BEGIN
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		WHERE ci.srecommend = @Custid AND ci.custid <= @maxcustid AND ci.roleid = 1
+	END
+	ELSE IF @roleid = 3
+	BEGIN
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		WHERE ci.mrecommend = @Custid AND ci.custid <= @maxcustid AND ci.roleid = 1
+	END
+	ELSE IF @roleid = 2
+	BEGIN
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		WHERE ci.recommend = @Custid AND ci.custid <= @maxcustid AND ci.roleid = 1
+	END
+	ELSE IF @roleid = 1
+	BEGIN
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @BitmapOrder, 1)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.CustID = @Custid AND cs.custid <= @maxcustid
+	END
+END
+GO
+-- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
+------------------------------------------------------	
+
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, recommend INT, roleid TINYINT, isfinished bit default(0)) 
+
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @recommend INT, @roleid TINYINT, @max_custid INT
+
+SELECT @max_custid = xxx
+
+INSERT INTO #Cust(custid, srecommend, mrecommend, recommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.recommend, ci.roleid
+FROM customer ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND ci.username IN ('TV0','TVA7D','TV51','TV68','TV71','TV2E','TVA30','TVA94','TVA82','TVAA','TVA83','TVBA','TVA36','TVCA','TVDA','TV7A','TVEA','TVA84','TV1','TV2',
+	'TV3','TV4','TV5','TV6','TV7','TV8','TV9','TV10','TV11','TV12','SJKZZ','TV14','TV15','THAUS','TV16','TV17','TV18','TV19','TV20','THA1US','TV30','TV31','D-THAUS','TV91',
+	'TV92','TV80','TV46','TV81','TVA1','TVA2','TVA3','TVA4','TVA5','TVA6','TVA7','TVA8','TVA9','TVA10','TVA11','TVA12','TVA13','TVA6G','TV4E','TVA16','TVA17','TVA18','TVA19',
+	'TVA7i','TVA21','TVA22','TVA23','TVA24','TV88','TVA6I','TVA27','TVA7J','tva6h','TVA30wrong','TVA7H','TVA1A','TV4H','TVA34','TVA35','TVA36wrong','TVA37','TVA38','TVA39',
+	'TVA40','TVA6B','TVA6A','TVHA','TVH8','TVA45','TVB1','TVA47','TVH9','TVH5','TVH6','TVA6C','TVH2','TVA53','TVCH','TVA55','TVA56','TVA57','TVA58','TVH3','TVA60','TVA61',
+	'TVA62','TVA63','TVA64','TVA65','TVA66','TVA67','TVA68','TVA69','TVA70','TVA71','TVA72','TVA73','TVA74','TVA75','TVA76','TVA77','TVA78','TVA79','TVA80','TVA81',
+	'TVA82wrong','TVA83wrong','TVA84wrong','TVA85','TVA41','TV93','TVGA','TV90','TVA90','TVA91','TVA92','TVA93','TVA7Dwrong','TVA7C','TVA96','TVA7B','TVA98','TVA7A',
+	'TV21','TV22','TV23','TV24','TV25','TV26','TV27','TV28','TV29','TV32','TV33','TV34','TV35','TV36','TV37','TV38','TVA6J','TV40','TV41','TV42','TV43','TV44','TV45',
+	'TV47','TV48','TV49','TV50','TV51wrong','TV52','TV4i','SJK4','TV55','TV56','TV57','TVHG','TV1D','TV60','TV61','TV62','TV63','TV64','TV65','TV66','TV67','TV68wrong',
+	'TV69','TV70','TV71wrong','TV72','TV73','TV74','SJKCA','TVA3C','TV77','TV78','TV79','TV82','TV83','TV84','TV85','TV86','TV87','TVFA','TV6A','TV6B','TVEAwrong',
+	'TVDAwrong','TVCAwrong','TVBAwrong','TVAAwrong','TVA94wrong','TVA9A','TV0wrong','TV2A','TV2B','TV2C','TV1A','TV1B','TV1C','TV4A','TV4C','TV4B','SJK61','TVDB',
+	'TVA8A','TV7Awrong','TV7B','TV7C','TV2D','TV2Ewrong','TV2F','TK01','SJK1','SJK66','SJK6','SJK60','TVA15','TV2I','TVH1','TV4D','TVi1','TVHD','TVA3A','TVA6D','TVAB',
+	'TVHB','TVHC','TVA86','TVF1','TVA3B','TVA7K','SJK5','TV2G','TVA7E','TVA7G','TVA6E','TV2H','TV4G','SJK3','TV4J','TVA20','TVI2','TV4L','TV53','XTV01','XTV02','TVHE',
+	'TV4K','PT55','PT52','SJK21','PT42','TN','TQ','TK02','TK03','TK54','TKH1','TKH2','TK53','TN02','TVA8H','TV4S','TVK2','TK04','TK05','TK06','TK07','TK08','TK09','TK10',
+	'TV39','TV4R','TV1L','TV4Q','TV4P','SJK8','TV4N','TV4M','TVHH','TV1K','SJK9','TVA43','TN03','TN04','TN05','TN06','TN07','TN08','TN10','TQ01','TQ02','TQ03','TQ04',
+	'TQ05','TQ06','TQ07','TQ08','TQ09','TQ10','TKA8','TKA2','TKA7','TKA9','TK51','TKA3','TKA4','TK52','TN11','TKA1','TKA6','PTX01','TKA5','TK11','TK12','TK13','TK14',
+	'TK15','TK16','TK17','TK18','TK19','TK20','TV1E','TV2K','TV2J','TVJ1','SJK30','TVA8B','TVK1','SJK32','TVA14','TK59','TKH3','TKH4','TKH5','TKH6','PTH2','TK58','TK56',
+	'TK57','TK55','TV1G','SJK33','SJK31','SJK7','COPA01','COPA02','COPA03','TVA31','SJK63','SJK62','TVA6K','SJK38','SJK37','SJK36','TVA8D','TVA8C','SJK35','SJK34',
+	'TV1H','TQ11','TQ12','TQ13','TQ14','TQ15','TQ16','TQ17','TQ18','TQ19','TQ20','TV4V','SJK39','TV4U','TVGB','TVN1','TQ70','TV4T','TKH7','TKH8','TKH9','TKH10',
+	'TKHA','TKHB','TKHC','TVA8E','TVA8G','TQ21','TQ22','TQ23','TQ24','TQ25','TV1I','TV1J','TQ26','TQ27','TQ28','TQ29','PT80','TVCI','TV2L','TQ30','TQ31','TQ32',
+	'TQ33','TQ34','PTH3','PTH4','TQ35','TQ36','TQ37','TQ38','TQ39','TKAA','TKAB','TKAC','TKAD','TKAE','TQ71','TQ72','TQ73','TQ74','TQ75','TQ76','TQ77','TQ78','TQ79',
+	'TK21','TK22','TK23','TK24','TV4W','SJK72','SJK68','SJK64','SJK3A','TV4Y','TV4X','SJK70','SSD01','SSD02','SSD03','TKAF','TKAG','TKAH','TKAI','TKAJ','SJK22','SJK23',
+	'SJK71','XTV03','SJK65','SJK67','TV58','TVK3','TV2M','XTV86','TV4Z','SJK20','TVZZ','TVA6L','TV89','TVA8i','TVK4','TL01','TL02','TL03','TL04','SSD73','TVHV','TVL1',
+	'SSD70','SSD71','SSD72','SD01','SJK73','SJK74','TV2N','TVA7Y','TVA7Z','TV59','TVA7N','SD03','TVA8K','TVCL','SJK75','TVA8J','TKAK','TKAL','TKAM','TQ40','TQ41',
+	'TQ42','TQ43','TQ44','XTV33','TVi3','SD02','TV54','TVH4','TVH7','TKAN','TKAO','TKAP','TKAQ','TKAR','SD09','TVA7P','TVBC','SJK3B','SJK3C','TV2P','SSD04','SD05',
+	'SD06','SJK3D','SSD05','TVA7Q','TVK5','TVK6','TVK7','SJK3E','TVK8','TVA8L','TVA1B','TVA8N','TVA8M','TVFB','TQ80','TQ81','TKAS','TKAU','TKAV','TKAW','TKAT','TQ66',
+	'SD08','TVA8P','TVA7R','TVA8Q','TL20','TVA54','TV5A','XTV18','TVB3','TVB2','TVA8U','SD86','SD85','SD84','SD83','TVA8S','SD82','SD81','SD80','TVA8R','TVP1','TVJ2',
+	'SSD74','SD0B','SD0A','SD0C','SD0D','SD0E','SD0F','SD0G','SD0H','SD0i','SD0J','SD0K','SD0L','SD0M','SJK76','TQ82','TQ83','TQ84','SSD75','SSD06','TQ85','TQ86','TQ87',
+	'TQ88','TQ89','SSD07','SSD08','SD0N','SD0P','TQ45','TQ46','TQ47','TQ48','TQ49','TQ90','TQ91','TVA8V','TV2Q','SD0Q','SD0R','SD0S','SD0T','SD0U','SD0V','SD0W','SD0X',
+	'SD0Y','SD0Z','SSD76','TV94','TVA6N','TQ50','TQ51','TQ52','TQ53','TQ54','TVA8X','TK25','TK26','TK27','TK28','TK29','TV2R','TN15','TVA8Y','TVA1C','SD87','TVA8Z',
+	'XTV05','XTV06','XTV07','TQ67','TVM1','TVM2','TVM3','TVM4','TVM5','TVM6','TVF2','TV2S','TVM7','XTV08','XTV09','TVCJ','TN16','TVA1D','XTV10','XTV11','XTV12','TVM8',
+	'XTV14','SJK10','SD04','TVM9','TVMA','TVMB','TVMC','TV3A','TV3B','TVCK','XTV15','XTV16','XTV17','SJK11','SJK12','TVMD','TVME','TVMG','TVMH','SSD77','SD07','TVA2A',
+	'SD1A','SD1B','SD1C','SD1D','SD1E','SD1F','SD1G','SD1H','SD1I','SD1J','TVA6M','TVA6T','TVA2B','TVA2C','TVA2D','TVA2E','TVA2F','TVA2G','TVA2H','TVA2I','TVA2J','TVA2K',
+	'TVA2L','TVA2M','TVA2N','TVMi','TVMJ','TVHi','XTV19','XTV20','XTV21','XTV22','XTV23','XTV24','XTV25','XTV26','XTV27','XTV28','XTV29','XTV30','XTV31','XTV32','TV3C',
+	'TVQ1','TVQ2','TVQ3','TVQ4','TVQ5','TVQ6','TVQ7','TVQ8','TVQ9','TVQA','TVL2','TVA6U','TVA5A','TVG1','TVB4','TVB5','TVB6','TVB7','TVB8','TVB9','TVY1','TVY2','TVY3',
+	'TV3D','SDB1','SDB2','SDB3','SDB4','SDB5','SDB6','SDB7','SDB8','SDB9','TVA5B','TVA5C','TVA5D','TVA5E','TVA5F','TVA5G','TVA5H','TVA5I','TVA5J','TVA5K','TVMK','TVML',
+	'TV3E','TV3F','TVMN','TVCV','TVMM','SJK3F','TVMP','SD88','SD8A','SD8B','SD8C','SD8D','SD8E','SD8F','TV3G','SJK77','SJK78','SJK79','TVMQ','TVMR','TVMS','TVMT','TVMU',
+	'TVMV','SD1K','SD1L','SD1M','SD1N','TVVH','TVA7S','TVA7U','TVA7V','TVA7W','TVA7X','TVDC','SSD78','SSD79','SSD7A','SSD7B','TVVV','TVV1','TVV2','TVV3','TVV4','TVV5',
+	'TVV6','TVV7','TVV8','TVV9','TVVT','TVK9','TVKA','TVKB','TVHJ','TV5B','TV5C','TV5D','TV5E','TV5F','TV5G','TV5H','SSD10','SSD11','SSD12','SSD13','SSD14','SSD15','SSD16',
+	'SSD17','SSD18','SSD19','TVY4','TVY5','TVY7','TVY8','TVY9','TVY6','TVCN','TVCM','TVCP','TVCQ','TVCR','TVCS','TVCU','TVCT','SD8S','XTV1A','XTV1B','XTV1C','XTV1D','XTV1E',
+	'XTV1F','XTV1G','XTV1H','XTV1I','XTV1J','TV3H','TV3I','TV3J','TV3K','TV3L','TV3M','TV3N','SJK3G','SJK3H','SJK3I','SJK3J','SJK3K','SJK3L','SJK3M','SJK3N','TVA2T','TVA2Q',
+	'TVA2R','TVA2S','TVA2U','TVA2V','TVA2W','TVA2X','TVA2Y','TVA2Z','TVA2P','SD1P','SD1Q','SD1S','SD1T','SD1U','SD1V','SD1W','TVHK','TVHL','TVHM','TVHN','TVHP','TVHQ',
+	'TVHR','TVHS','TV2T','TV2U','TV2W','TV2V','TV2X','TV2Y','TV2Z','SJK7A','SJK7B','SJK7C','SJK7D','SJK7E','SJK7F','SJK7G','SJK7H','SJK7i','SJK7J','SD1X','SD1Y','SD1Z',
+	'SDBA','SDBB','SDBC','SDBD','SDBE','SDBF','SDBG','SDBH','SDBi','SDBJ','SJK3P','SJK3Q','SJK3S','SJK3T','SJK3U','SJK3V','SJK3W','SJK3X','SJK3Y','SJK3Z','SJK3R','SD2A',
+	'SD2B','SD2C','SD2D','SD2E','SD2F','SD2G','SD2H','SD2i','SD2J','SD2K','SD2L','SD2M','SD2N','SD2P','SD2Q','SD2R','SD2S','SD2T','SD2U','TVGC','TVGD','TVGE','TV7D','TV7E',
+	'TV7F','TV7G','TV7H','TVMW','TVMX','TVMY','TVMZ','TVJ3','TVJ4','TVJ5','TVJ6','TVJ7','TVJ8','TVJ9','TV7J','TV7K','TV7L','TV7M','TV7N','TV7i','TVKE','TVKF','TVKG','TVKH',
+	'TVKI','TVKJ','TVKD','TVKC','SJK6E','SJK6F','SJK6D','SJK6C','SJK6B','SJK6A','SJK69','TVF8','TVF9','TVF4','TVF5','TVF6','TVF7','TVF3','SJK92','SJK93','SJK94','SJK95',
+	'SJK91','SJK90','TVYE','TVYF','TVYG','TVYH','TVYB','TVYC','TVYD','TVYA','TVA33','SD2W','SD2X','SD2Y','SD2Z','SD2V','TVA1L','TVA1M','TVA1N','TVA1H','TVA1i','TVA1J',
+	'TVA1K','TVA1F','TVA1G','TVA1E')
+
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Cust
+	SET isfinished = 1
+		,@custid = custid	
+		,@srecommend = srecommend	
+		,@mrecommend = mrecommend
+		,@recommend = recommend
+		,@roleid = roleid
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustomerInfo_09 
+			@custid = @custid			
+			,@srecommend = @srecommend
+			,@mrecommend = @mrecommend
+			,@recommend = @recommend
+			,@roleid = @roleid
+			,@maxcustid = @max_custid
+			,@target = 'REPLICATED'
+			
+			
+	waitfor delay '00:00:0.100'
+END
+
+-- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
+--------------------------------------------------------------------------------------
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, recommend INT, roleid TINYINT, isfinished bit default(0)) 
+
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @recommend INT, @roleid TINYINT, @max_custid INT
+
+SELECT @max_custid = xxx
+
+INSERT INTO #Cust(custid, srecommend, mrecommend, recommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.recommend, ci.roleid
+FROM customer ci WITH(NOLOCK)
+WHERE ci.custid <= @max_custid
+	AND ci.username IN ('TV0','TVA7D','TV51','TV68','TV71','TV2E','TVA30','TVA94','TVA82','TVAA','TVA83','TVBA','TVA36','TVCA','TVDA','TV7A','TVEA','TVA84','TV1','TV2',
+	'TV3','TV4','TV5','TV6','TV7','TV8','TV9','TV10','TV11','TV12','SJKZZ','TV14','TV15','THAUS','TV16','TV17','TV18','TV19','TV20','THA1US','TV30','TV31','D-THAUS','TV91',
+	'TV92','TV80','TV46','TV81','TVA1','TVA2','TVA3','TVA4','TVA5','TVA6','TVA7','TVA8','TVA9','TVA10','TVA11','TVA12','TVA13','TVA6G','TV4E','TVA16','TVA17','TVA18','TVA19',
+	'TVA7i','TVA21','TVA22','TVA23','TVA24','TV88','TVA6I','TVA27','TVA7J','tva6h','TVA30wrong','TVA7H','TVA1A','TV4H','TVA34','TVA35','TVA36wrong','TVA37','TVA38','TVA39',
+	'TVA40','TVA6B','TVA6A','TVHA','TVH8','TVA45','TVB1','TVA47','TVH9','TVH5','TVH6','TVA6C','TVH2','TVA53','TVCH','TVA55','TVA56','TVA57','TVA58','TVH3','TVA60','TVA61',
+	'TVA62','TVA63','TVA64','TVA65','TVA66','TVA67','TVA68','TVA69','TVA70','TVA71','TVA72','TVA73','TVA74','TVA75','TVA76','TVA77','TVA78','TVA79','TVA80','TVA81',
+	'TVA82wrong','TVA83wrong','TVA84wrong','TVA85','TVA41','TV93','TVGA','TV90','TVA90','TVA91','TVA92','TVA93','TVA7Dwrong','TVA7C','TVA96','TVA7B','TVA98','TVA7A',
+	'TV21','TV22','TV23','TV24','TV25','TV26','TV27','TV28','TV29','TV32','TV33','TV34','TV35','TV36','TV37','TV38','TVA6J','TV40','TV41','TV42','TV43','TV44','TV45',
+	'TV47','TV48','TV49','TV50','TV51wrong','TV52','TV4i','SJK4','TV55','TV56','TV57','TVHG','TV1D','TV60','TV61','TV62','TV63','TV64','TV65','TV66','TV67','TV68wrong',
+	'TV69','TV70','TV71wrong','TV72','TV73','TV74','SJKCA','TVA3C','TV77','TV78','TV79','TV82','TV83','TV84','TV85','TV86','TV87','TVFA','TV6A','TV6B','TVEAwrong',
+	'TVDAwrong','TVCAwrong','TVBAwrong','TVAAwrong','TVA94wrong','TVA9A','TV0wrong','TV2A','TV2B','TV2C','TV1A','TV1B','TV1C','TV4A','TV4C','TV4B','SJK61','TVDB',
+	'TVA8A','TV7Awrong','TV7B','TV7C','TV2D','TV2Ewrong','TV2F','TK01','SJK1','SJK66','SJK6','SJK60','TVA15','TV2I','TVH1','TV4D','TVi1','TVHD','TVA3A','TVA6D','TVAB',
+	'TVHB','TVHC','TVA86','TVF1','TVA3B','TVA7K','SJK5','TV2G','TVA7E','TVA7G','TVA6E','TV2H','TV4G','SJK3','TV4J','TVA20','TVI2','TV4L','TV53','XTV01','XTV02','TVHE',
+	'TV4K','PT55','PT52','SJK21','PT42','TN','TQ','TK02','TK03','TK54','TKH1','TKH2','TK53','TN02','TVA8H','TV4S','TVK2','TK04','TK05','TK06','TK07','TK08','TK09','TK10',
+	'TV39','TV4R','TV1L','TV4Q','TV4P','SJK8','TV4N','TV4M','TVHH','TV1K','SJK9','TVA43','TN03','TN04','TN05','TN06','TN07','TN08','TN10','TQ01','TQ02','TQ03','TQ04',
+	'TQ05','TQ06','TQ07','TQ08','TQ09','TQ10','TKA8','TKA2','TKA7','TKA9','TK51','TKA3','TKA4','TK52','TN11','TKA1','TKA6','PTX01','TKA5','TK11','TK12','TK13','TK14',
+	'TK15','TK16','TK17','TK18','TK19','TK20','TV1E','TV2K','TV2J','TVJ1','SJK30','TVA8B','TVK1','SJK32','TVA14','TK59','TKH3','TKH4','TKH5','TKH6','PTH2','TK58','TK56',
+	'TK57','TK55','TV1G','SJK33','SJK31','SJK7','COPA01','COPA02','COPA03','TVA31','SJK63','SJK62','TVA6K','SJK38','SJK37','SJK36','TVA8D','TVA8C','SJK35','SJK34',
+	'TV1H','TQ11','TQ12','TQ13','TQ14','TQ15','TQ16','TQ17','TQ18','TQ19','TQ20','TV4V','SJK39','TV4U','TVGB','TVN1','TQ70','TV4T','TKH7','TKH8','TKH9','TKH10',
+	'TKHA','TKHB','TKHC','TVA8E','TVA8G','TQ21','TQ22','TQ23','TQ24','TQ25','TV1I','TV1J','TQ26','TQ27','TQ28','TQ29','PT80','TVCI','TV2L','TQ30','TQ31','TQ32',
+	'TQ33','TQ34','PTH3','PTH4','TQ35','TQ36','TQ37','TQ38','TQ39','TKAA','TKAB','TKAC','TKAD','TKAE','TQ71','TQ72','TQ73','TQ74','TQ75','TQ76','TQ77','TQ78','TQ79',
+	'TK21','TK22','TK23','TK24','TV4W','SJK72','SJK68','SJK64','SJK3A','TV4Y','TV4X','SJK70','SSD01','SSD02','SSD03','TKAF','TKAG','TKAH','TKAI','TKAJ','SJK22','SJK23',
+	'SJK71','XTV03','SJK65','SJK67','TV58','TVK3','TV2M','XTV86','TV4Z','SJK20','TVZZ','TVA6L','TV89','TVA8i','TVK4','TL01','TL02','TL03','TL04','SSD73','TVHV','TVL1',
+	'SSD70','SSD71','SSD72','SD01','SJK73','SJK74','TV2N','TVA7Y','TVA7Z','TV59','TVA7N','SD03','TVA8K','TVCL','SJK75','TVA8J','TKAK','TKAL','TKAM','TQ40','TQ41',
+	'TQ42','TQ43','TQ44','XTV33','TVi3','SD02','TV54','TVH4','TVH7','TKAN','TKAO','TKAP','TKAQ','TKAR','SD09','TVA7P','TVBC','SJK3B','SJK3C','TV2P','SSD04','SD05',
+	'SD06','SJK3D','SSD05','TVA7Q','TVK5','TVK6','TVK7','SJK3E','TVK8','TVA8L','TVA1B','TVA8N','TVA8M','TVFB','TQ80','TQ81','TKAS','TKAU','TKAV','TKAW','TKAT','TQ66',
+	'SD08','TVA8P','TVA7R','TVA8Q','TL20','TVA54','TV5A','XTV18','TVB3','TVB2','TVA8U','SD86','SD85','SD84','SD83','TVA8S','SD82','SD81','SD80','TVA8R','TVP1','TVJ2',
+	'SSD74','SD0B','SD0A','SD0C','SD0D','SD0E','SD0F','SD0G','SD0H','SD0i','SD0J','SD0K','SD0L','SD0M','SJK76','TQ82','TQ83','TQ84','SSD75','SSD06','TQ85','TQ86','TQ87',
+	'TQ88','TQ89','SSD07','SSD08','SD0N','SD0P','TQ45','TQ46','TQ47','TQ48','TQ49','TQ90','TQ91','TVA8V','TV2Q','SD0Q','SD0R','SD0S','SD0T','SD0U','SD0V','SD0W','SD0X',
+	'SD0Y','SD0Z','SSD76','TV94','TVA6N','TQ50','TQ51','TQ52','TQ53','TQ54','TVA8X','TK25','TK26','TK27','TK28','TK29','TV2R','TN15','TVA8Y','TVA1C','SD87','TVA8Z',
+	'XTV05','XTV06','XTV07','TQ67','TVM1','TVM2','TVM3','TVM4','TVM5','TVM6','TVF2','TV2S','TVM7','XTV08','XTV09','TVCJ','TN16','TVA1D','XTV10','XTV11','XTV12','TVM8',
+	'XTV14','SJK10','SD04','TVM9','TVMA','TVMB','TVMC','TV3A','TV3B','TVCK','XTV15','XTV16','XTV17','SJK11','SJK12','TVMD','TVME','TVMG','TVMH','SSD77','SD07','TVA2A',
+	'SD1A','SD1B','SD1C','SD1D','SD1E','SD1F','SD1G','SD1H','SD1I','SD1J','TVA6M','TVA6T','TVA2B','TVA2C','TVA2D','TVA2E','TVA2F','TVA2G','TVA2H','TVA2I','TVA2J','TVA2K',
+	'TVA2L','TVA2M','TVA2N','TVMi','TVMJ','TVHi','XTV19','XTV20','XTV21','XTV22','XTV23','XTV24','XTV25','XTV26','XTV27','XTV28','XTV29','XTV30','XTV31','XTV32','TV3C',
+	'TVQ1','TVQ2','TVQ3','TVQ4','TVQ5','TVQ6','TVQ7','TVQ8','TVQ9','TVQA','TVL2','TVA6U','TVA5A','TVG1','TVB4','TVB5','TVB6','TVB7','TVB8','TVB9','TVY1','TVY2','TVY3',
+	'TV3D','SDB1','SDB2','SDB3','SDB4','SDB5','SDB6','SDB7','SDB8','SDB9','TVA5B','TVA5C','TVA5D','TVA5E','TVA5F','TVA5G','TVA5H','TVA5I','TVA5J','TVA5K','TVMK','TVML',
+	'TV3E','TV3F','TVMN','TVCV','TVMM','SJK3F','TVMP','SD88','SD8A','SD8B','SD8C','SD8D','SD8E','SD8F','TV3G','SJK77','SJK78','SJK79','TVMQ','TVMR','TVMS','TVMT','TVMU',
+	'TVMV','SD1K','SD1L','SD1M','SD1N','TVVH','TVA7S','TVA7U','TVA7V','TVA7W','TVA7X','TVDC','SSD78','SSD79','SSD7A','SSD7B','TVVV','TVV1','TVV2','TVV3','TVV4','TVV5',
+	'TVV6','TVV7','TVV8','TVV9','TVVT','TVK9','TVKA','TVKB','TVHJ','TV5B','TV5C','TV5D','TV5E','TV5F','TV5G','TV5H','SSD10','SSD11','SSD12','SSD13','SSD14','SSD15','SSD16',
+	'SSD17','SSD18','SSD19','TVY4','TVY5','TVY7','TVY8','TVY9','TVY6','TVCN','TVCM','TVCP','TVCQ','TVCR','TVCS','TVCU','TVCT','SD8S','XTV1A','XTV1B','XTV1C','XTV1D','XTV1E',
+	'XTV1F','XTV1G','XTV1H','XTV1I','XTV1J','TV3H','TV3I','TV3J','TV3K','TV3L','TV3M','TV3N','SJK3G','SJK3H','SJK3I','SJK3J','SJK3K','SJK3L','SJK3M','SJK3N','TVA2T','TVA2Q',
+	'TVA2R','TVA2S','TVA2U','TVA2V','TVA2W','TVA2X','TVA2Y','TVA2Z','TVA2P','SD1P','SD1Q','SD1S','SD1T','SD1U','SD1V','SD1W','TVHK','TVHL','TVHM','TVHN','TVHP','TVHQ',
+	'TVHR','TVHS','TV2T','TV2U','TV2W','TV2V','TV2X','TV2Y','TV2Z','SJK7A','SJK7B','SJK7C','SJK7D','SJK7E','SJK7F','SJK7G','SJK7H','SJK7i','SJK7J','SD1X','SD1Y','SD1Z',
+	'SDBA','SDBB','SDBC','SDBD','SDBE','SDBF','SDBG','SDBH','SDBi','SDBJ','SJK3P','SJK3Q','SJK3S','SJK3T','SJK3U','SJK3V','SJK3W','SJK3X','SJK3Y','SJK3Z','SJK3R','SD2A',
+	'SD2B','SD2C','SD2D','SD2E','SD2F','SD2G','SD2H','SD2i','SD2J','SD2K','SD2L','SD2M','SD2N','SD2P','SD2Q','SD2R','SD2S','SD2T','SD2U','TVGC','TVGD','TVGE','TV7D','TV7E',
+	'TV7F','TV7G','TV7H','TVMW','TVMX','TVMY','TVMZ','TVJ3','TVJ4','TVJ5','TVJ6','TVJ7','TVJ8','TVJ9','TV7J','TV7K','TV7L','TV7M','TV7N','TV7i','TVKE','TVKF','TVKG','TVKH',
+	'TVKI','TVKJ','TVKD','TVKC','SJK6E','SJK6F','SJK6D','SJK6C','SJK6B','SJK6A','SJK69','TVF8','TVF9','TVF4','TVF5','TVF6','TVF7','TVF3','SJK92','SJK93','SJK94','SJK95',
+	'SJK91','SJK90','TVYE','TVYF','TVYG','TVYH','TVYB','TVYC','TVYD','TVYA','TVA33','SD2W','SD2X','SD2Y','SD2Z','SD2V','TVA1L','TVA1M','TVA1N','TVA1H','TVA1i','TVA1J',
+	'TVA1K','TVA1F','TVA1G','TVA1E')
+
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #Cust
+	SET isfinished = 1
+		,@custid = custid	
+		,@srecommend = srecommend	
+		,@mrecommend = mrecommend
+		,@recommend = recommend
+		,@roleid = roleid
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+			
+	EXEC dbo.Acc_DynamicCustomerInfo_09 
+			@custid = @custid			
+			,@srecommend = @srecommend
+			,@mrecommend = @mrecommend
+			,@recommend = @recommend
+			,@roleid = @roleid
+			,@maxcustid = @max_custid
+			,@target = 'DBCUST'
+			
+			
+	waitfor delay '00:00:0.100'
+END
