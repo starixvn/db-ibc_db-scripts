@@ -18,5 +18,6 @@ WHERE GroupName = 'ACCYEN889'
 UPDATE cs
 SET cs.MinPT = 80
 FROM dbo.CustPTSetting3rd_Agent cs WITH (ROWLOCK,UPDLOCK)
+	INNER JOIN #Super s ON s.CustID = cs.CustID
 WHERE cs.SportType BETWEEN 213 AND 218
 
