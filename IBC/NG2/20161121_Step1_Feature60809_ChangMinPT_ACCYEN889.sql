@@ -9,7 +9,7 @@ GO
 
 CREATE TABLE #Super (CustID INT)
 
-INSERT TABLE #Super (CustID)
+INSERT INTO #Super (CustID)
 select CustID
 FROM DBAGE.bodb_age.dbo.Acc_CustGroup with (Nolock)
 WHERE GroupName = 'ACCYEN889'
