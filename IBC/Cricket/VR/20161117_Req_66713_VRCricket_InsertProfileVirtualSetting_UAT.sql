@@ -1,7 +1,7 @@
 /*
 	Created: Winnie
 	Date: 2016-11-17
-	Task: Insert ProfileVirtualSetting for Cricket RedmineID:#66713
+	Task: Insert ProfileVirtualSetting for UAT Cricket RedmineID:#66713
 	DB: DBCUST/CustDB
 */ 
 
