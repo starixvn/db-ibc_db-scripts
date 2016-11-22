@@ -27,9 +27,8 @@
 	CONVERT(binary(64), STUFF(0x64646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464, 1+((@profile_1x2_Live-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((@profile_MoneyLine_Live-1)%64), 1)))
 	,1+((@profile_1x2_NonLive-1)%64), 1,SUBSTRING(bitmapVirtual,   1+((@profile_MoneyLine_NonLive-1)%64), 1)))
 		
-	FROM        CustVirtualSetting    AS cvs WITH (NOLOCK) 
-	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid   
-    WHERE cvs.seqNo=2 AND ci.custid>@max_custid 
+	FROM        CustVirtualSetting    AS cvs WITH (NOLOCK) 	
+    WHERE cvs.seqNo=2 AND cvs.custid>@max_custid 
     
     
    
