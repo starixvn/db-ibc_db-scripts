@@ -39,7 +39,7 @@ BEGIN
 		RETURN
 	
 	DECLARE @ProductProfileList VARCHAR(200) = '4,5,6'
-	, @ProductID INT = 21 -- VB
+	, @ProductID INT = 21 -- Allbet
 	-- For ProductStatus param
 	, @IsProductStatus BIT = 1
 	, @IsDisable BIT = 0
@@ -79,10 +79,10 @@ BEGIN
 	FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 		INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID
 		INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-	WHERE lds.CustID =@srecommend 
+	WHERE lds.CustID = @srecommend  AND ps.ProductID= @ProductID
 
 	-- PT processing
-
+	
 	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 1) AND @IsPTSetting = 1
 	BEGIN
 		PRINT 'PT'
@@ -103,7 +103,7 @@ BEGIN
 			,0
 			,CASE WHEN ci.roleid = 4 THEN @SuperPT ELSE 0 END AS SuperPT
 			,CASE WHEN ci.roleid IN (3,4) THEN @SuperPT ELSE 0 END AS MasterPT
-			,CASE WHEN ci.roleid IN (1,2,4) THEN @SuperPT ELSE 0 END AS AgentPT
+			,CASE WHEN ci.roleid IN (2,4) THEN @SuperPT ELSE 0 END AS AgentPT
 		FROM #tblCust ci
 			CROSS JOIN #ProductSettingDetail_tmp psd 
 		WHERE psd.SettingType = 1 
@@ -126,7 +126,7 @@ BEGIN
 			INSERT INTO Dep_CustSettingMode (CustID,IsGroupedPT)
 			SELECT c.custid,1
 			FROM #tblCust C
-			WHERE C.roleid = 1 
+			WHERE C.roleid = 1 AND NOT EXISTS (SELECT 1 FROM Dep_CustSettingMode C1 (NOLOCK) WHERE c1.CustID = c.Custid)
 			
 		END
 	END	
@@ -136,7 +136,6 @@ BEGIN
 	BEGIN
 		PRINT 'Status'
 					
-		-- Update if exists
 		-- Update if exists
 		UPDATE T 
 				SET bitmapIsDisabled = dbo.f_GenerateProductStatus (t.bitmapIsDisabled, 2,0)		
@@ -187,7 +186,6 @@ BEGIN
 	END
 
 	DROP TABLE #ProductSettingDetail_tmp
-	DROP TABLE #SportBettypeFilter4
 	DROP TABLE #tblCust
 
 END	
@@ -202,14 +200,14 @@ GO
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   @site='12bet',
+SELECT   @site='spondemo',
 	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-					  where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS									
-AND custid <= @max_custid
+where site=@site and currency in (20)  -- IN,US$,RMB,TB,RM,UUS									
+	AND custid <= @max_custid
 
 
 WHILE (1 = 1)
@@ -239,14 +237,14 @@ GO
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int
-SELECT   @site='12bet',
+SELECT   @site='spondemo',
 		 @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS			
-AND custid <= @max_custid
+where site=@site and currency in (20)  -- IN,US$,RMB,TB,RM,UUS			
+	AND custid <= @max_custid
 
 
 WHILE (1 = 1)

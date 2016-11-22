@@ -24,7 +24,11 @@ ALTER TABLE [dbo].[WinLimit_ProductSettingDetail] ADD CONSTRAINT [DF_WinLimit_Pr
 go
 ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGameSetting_MaxWinLimit_RM] DEFAULT ((0)) FOR [MaxWinLimit_RM]
 go
+ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD MaxWinLimitSetting XML
+
 GO
+ALTER TABLE [dbo].WinLimit_CustGameMonitoring_History ADD MaxWinLimitSetting XML
+
 CREATE TABLE [dbo].[Winlimit_Group](
 	[GroupID] [int] NOT NULL,
 	[GroupName] [varchar](200) NOT NULL
@@ -49,3 +53,4 @@ CREATE TABLE [dbo].[Winlimit_GameGroupSetting](
 ) ON [WinlimitSetting_Tables]
 
 GO
+
