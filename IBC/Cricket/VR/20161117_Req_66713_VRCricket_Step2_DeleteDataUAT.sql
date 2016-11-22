@@ -22,7 +22,7 @@ BEGIN
 			)
 		RETURN
 		
-	DELETE FROM CustVirtualSetting WHERE seqNo=3
+	DELETE FROM CustVirtualSetting WITH(ROWLOCK) WHERE seqNo=3
 	
 END
 GO
