@@ -21,22 +21,34 @@ BEGIN
 			AND dbo.f_CheckRepTable('ProfileVirtualSetting') = 1
 			)
 		RETURN
+	
+	DECLARE @profile_1x2_Live			INT,
+		@profile_1x2_NonLive		INT,
+		@profile_MoneyLine_Live		INT,
+		@profile_MoneyLine_NonLive	INT
+			
 	CREATE TABLE #tempCustVirtualSetting(
 	[custid] [int] NOT NULL,
 	[seqNo] [tinyint] NOT NULL,
 	[bitmapVirtual] [binary](64) NOT NULL)		
 	
-	INSERT INTO #tempCustVirtualSetting([custid],[seqNo],[bitmapVirtual])
-	SELECT cvs.custid,3,CONVERT(binary(64), STUFF(0x64646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464, 1+(((select profileID from ProfileVirtualSetting where sporttype=27 AND bettype=5 AND islive=1)-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((pvs.profileID-1)%64), 1)))
-	FROM        CustVirtualSetting    AS cvs WITH (NOLOCK) 
-	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid AND	ci.srecommend = @srecommend
-    INNER JOIN  ProfileVirtualSetting       AS pvs WITH(NOLOCK)   
-            ON  cvs.seqNo = pvs.seqNo   AND sporttype=27 AND bettype=20 and islive=1
-    WHERE cvs.seqNo=2 AND ci.custid<=@max_custid
+	SELECT @profile_1x2_Live=129,@profile_1x2_NonLive=130
+	
+	SELECT @profile_MoneyLine_Live= ProfileID 
+	FROM ProfileVirtualSetting WITH(NOLOCK) WHERE sporttype=27 AND bettype=20 and islive=1
+	
+	SELECT @profile_MoneyLine_NonLive= ProfileID 
+	FROM ProfileVirtualSetting WITH(NOLOCK) WHERE sporttype=27 AND bettype=20 and islive=0
+	
+	INSERT INTO CustVirtualSetting([custid],[seqNo],[bitmapVirtual])
+	SELECT cvs.custid,3,
+	CONVERT(binary(64), STUFF(
+	CONVERT(binary(64), STUFF(0x64646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464, 1+((@profile_1x2_Live-1)%64), 1, SUBSTRING(bitmapVirtual,   1+((@profile_MoneyLine_Live-1)%64), 1)))
+	,1+((@profile_1x2_NonLive-1)%64), 1,SUBSTRING(bitmapVirtual,   1+((@profile_MoneyLine_NonLive-1)%64), 1)))
 		
-	INSERT INTO CustVirtualSetting(custid,seqNo,bitmapVirtual)
-	SELECT custid,seqNo,bitmapVirtual
-	FROM #tempCustVirtualSetting		
+	FROM        CustVirtualSetting    AS cvs WITH (NOLOCK) 
+	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid   
+    WHERE cvs.seqNo=2 AND ci.custid<=@max_custid AND ci.srecommend = @srecommend
 	
 END
 GO
@@ -49,7 +61,7 @@ GO
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 DECLARE @max_custid INT, @srecommend INT
-SELECT @max_custid= 10000000000000
+SELECT @max_custid= xx
 
 INSERT INTO #supers(custid)
 SELECT custid
