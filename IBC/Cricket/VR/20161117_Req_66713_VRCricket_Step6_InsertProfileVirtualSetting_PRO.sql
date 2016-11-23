@@ -33,5 +33,5 @@ INSERT INTO [CustDB].[dbo].[ProfileVirtualSetting]
            ,1)
 GO
 
-SET IDENTITY_INSERT [CustDB].[dbo].[ProfileVirtualSetting] ON
+SET IDENTITY_INSERT [CustDB].[dbo].[ProfileVirtualSetting] OFF
 

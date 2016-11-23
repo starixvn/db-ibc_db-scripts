@@ -91,7 +91,7 @@ SELECT @max_custid= xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
-WHERE roleid = 4 AND currency=20 AND custid <= @max_custid AND @max_custid=@max_custid
+WHERE roleid = 4 AND currency=20 AND custid <= @max_custid 
 
 WHILE (1 = 1)
 BEGIN
@@ -103,7 +103,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend			
-			,@target = 'DBCUST'
+			,@target = 'DBCUST',@max_custid=@max_custid
 	
 	WAITFOR DELAY '00:00:00.280'			
 END			

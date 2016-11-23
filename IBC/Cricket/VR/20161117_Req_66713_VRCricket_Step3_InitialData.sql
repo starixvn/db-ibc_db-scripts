@@ -43,7 +43,7 @@ BEGIN
 		
 	FROM        CustVirtualSetting    AS cvs WITH (NOLOCK) 
 	INNER JOIN	dbo.custInfo AS ci WITH(NOLOCK) ON	ci.custid = cvs.custid   
-    WHERE cvs.seqNo=2 AND ci.custid<=@max_custid AND ci.srecommend = @srecommend
+    WHERE cvs.seqNo=2 AND ci.custid<=@max_custid AND ci.srecommend = @srecommend AND ci.Enabled=1
 	
 END
 GO
@@ -60,8 +60,8 @@ SELECT @max_custid= xx
 
 INSERT INTO #supers(custid)
 SELECT custid
-FROM customer WITH(NOLOCK)
-WHERE roleid = 4	AND custid <= @max_custid
+FROM custInfo WITH(NOLOCK)
+WHERE roleid = 4	AND custid <= @max_custid AND Enabled=1
 
 WHILE (1 = 1)
 BEGIN
@@ -90,8 +90,8 @@ SELECT @max_custid= xx
 
 INSERT INTO #supers(custid)
 SELECT custid
-FROM customer WITH(NOLOCK)
-WHERE roleid = 4	AND custid <= @max_custid
+FROM custInfo WITH(NOLOCK)
+WHERE roleid = 4	AND custid <= @max_custid AND Enabled=1
 
 WHILE (1 = 1)
 BEGIN
