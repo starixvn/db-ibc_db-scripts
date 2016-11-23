@@ -1,7 +1,7 @@
 /*
 	Created: Winnie
 	Date: 2016-11-18
-	Task: Insert VR settings for Cricket
+	Task: Adjust VR settings for Cricket
 	DB: DBCUST/CustDB
 */ 
 
