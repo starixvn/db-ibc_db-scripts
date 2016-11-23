@@ -25,12 +25,7 @@ BEGIN
 	DECLARE @profile_1x2_Live			INT,
 		@profile_1x2_NonLive		INT,
 		@profile_MoneyLine_Live		INT,
-		@profile_MoneyLine_NonLive	INT
-			
-	CREATE TABLE #tempCustVirtualSetting(
-	[custid] [int] NOT NULL,
-	[seqNo] [tinyint] NOT NULL,
-	[bitmapVirtual] [binary](64) NOT NULL)		
+		@profile_MoneyLine_NonLive	INT			
 	
 	SELECT @profile_1x2_Live=129,@profile_1x2_NonLive=130
 	
