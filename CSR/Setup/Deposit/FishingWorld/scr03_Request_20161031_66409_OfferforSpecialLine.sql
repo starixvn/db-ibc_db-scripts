@@ -1,44 +1,4 @@
-/*
-	Created: 20160801@Helen
-	Task: DCS Deposit for Fishing World - [Redmine:67633]
-	Redmine: https://nexdev.net/issues/67633
-*/ 
--- BEGIN STEP 1: Deploy this SP at DBCUST.CustDB, Run only in the FIRST running
-------------------------------------------------------
-ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustSetting_09]
- 	 @srecommend INT
-	, @currency int
-	, @max_custid INT
-	, @target VARCHAR(20)
-	
-AS
-BEGIN	
-	SET NOCOUNT ON
-	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
-	
-	
-	IF (dbo.f_CheckRepTable('Dep_CustSettingMode') = 0
-		OR dbo.f_CheckRepTable('Dep_CustPTSetting_Member') = 0
-		OR dbo.f_CheckRepTable('Dep_CustPTSetting_Agent') = 0
-		OR dbo.f_CheckRepTable('Dep_CustPTGroupSetting_Member') = 0
-		
-		OR dbo.f_CheckRepTable('Dep_ProductSetting') = 0
-		OR dbo.f_CheckRepTable('Dep_ProductSettingDetail') = 0
-		OR dbo.f_CheckRepTable('Dep_LicenseeProductSetting') = 0 
-		
-		OR dbo.f_CheckRepTable('Dep_ProductStatusProfile') = 0 
-		OR dbo.f_CheckRepTable('Dep_CustProductStatus') = 0 
-	
-		OR dbo.f_CheckRepTable('Dep_StakeLevel') = 0
-		OR dbo.f_CheckRepTable('Dep_CustStakeLevel_Agent') = 0 
-		OR dbo.f_CheckRepTable('Dep_CustStakeLevel_Member') = 0 
-			
-	   )
-		RETURN
-	
-	DECLARE @ProductProfileList VARCHAR(200) = '7,8'
+DECLARE @ProductProfileList VARCHAR(200) = '7,8'
 	, @ProductID INT = 24 -- Fishing World
 	-- For ProductStatus param
 	, @IsProductStatus BIT = 1
@@ -50,6 +10,8 @@ BEGIN
 	, @SuperPT SMALLINT = 93
 	-- For StakelevelGroup params
 	--, @IsStakeLevel BIT = 1
+	, @srecommend int = 1015419
+	, @currency int
 	
 	CREATE TABLE #tblCust (custid int,agentid int, roleid int) 
 
@@ -59,7 +21,7 @@ BEGIN
 	WHERE srecommend =@srecommend
 		AND mrecommend NOT IN (SELECT custid FROM custinfo WITH(NOLOCK)
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
-		AND custid <= @max_custid
+		--AND custid <= @max_custid
 							   
 	SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
 
@@ -73,7 +35,8 @@ BEGIN
 		SELECT @srecommend, t.val
 		FROM dbo.strSplit(@ProductProfileList,',') t
 	END	
-
+	
+	
 	SELECT ps.SettingType,psd.SportType,psd.BetType
 	INTO #ProductSettingDetail_tmp
 	FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
@@ -153,87 +116,7 @@ BEGIN
 		
 	END	
 
+drop table #tblCust
+drop table #ProductSettingDetail_tmp
 
-	DROP TABLE #ProductSettingDetail_tmp
-	DROP TABLE #tblCust
-
-END	
-
-GO
--- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
-
-------------------------------------------------------	
--- BEGIN STEP 2: Run this SP at replicated DB -----
---------------------------------------------------------------------------------------
- 
-CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   @site='spondemo',
-	     @max_custid= xxx ---input maxcustid
-
-INSERT INTO #supers(custid,currency)
-SELECT custid,currency
-FROM  Dep_CustSuper with(nolock) 
-where site=@site and currency in (20)  -- IN,US$,RMB,TB,RM,UUS									
-	AND custid <= @max_custid
-
-
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #supers
-	SET isfinished = 1
-		,@srecommend = custid
-		,@currency=currency			
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
-				
-	WAITFOR DELAY '00:00:00.280'			
-END	
-
-DROP TABLE #supers		
-GO		
-
--- END STEP 2: Run this SP at replicated DB -----
------------------------------------------------------------------------------------
-
----
--- BEGIN STEP 3: Run this SP at DBCust -----
--------------------------------------------------
-CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
-
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int
-SELECT   @site='spondemo',
-		 @max_custid= xxx ---input maxcustid
-
-INSERT INTO #supers(custid,currency)
-SELECT custid,currency
-FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site and currency in (20)  -- IN,US$,RMB,TB,RM,UUS			
-	AND custid <= @max_custid
-
-
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #supers
-	SET isfinished = 1
-		,@srecommend = custid
-		,@currency=currency			
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST'
-		
-	WAITFOR DELAY '00:00:00.280'			
-END	
-
-DROP TABLE #supers		
-GO		
-
-
--- END STEP 3: Run this SP at DBCust -----
--------------------------------------------------
+-
