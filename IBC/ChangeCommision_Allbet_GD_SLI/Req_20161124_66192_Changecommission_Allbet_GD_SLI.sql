@@ -36,41 +36,21 @@ BEGIN
 		UPDATE cd
 			SET Discount = 0.009
 		FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-			INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 4 AND ci.CustID = @srecommend
-			INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-		WHERE SportType = 211 AND BetType = 2401 
+		WHERE cd.CustID = @srecommend AND SportType = 211 
 		
 		UPDATE cd
 			SET SuperDiscount = 0.009
 		FROM  CustDiscount3rd_Member cd (ROWLOCK)
-			INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.srecommend = @srecommend AND ci.custid <= @maxcustid
-			INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-		WHERE SportType = 211 AND ci.SyncLiveCasino = 1 
+			INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND  ci.srecommend = @srecommend 
+		WHERE SportType = 211 
 
 		PRINT 'Updating SLI Live Casino & GD ' 
-		-- SLI
+		-- SLI & GD
 		UPDATE cs
 			SET sdiscount = 0.009
 		FROM  CustSettingGame cs WITH(ROWLOCK)
 			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid IN (1,4) AND ci.srecommend = @srecommend
-		WHERE cs.sporttype = 162
-			AND cs.bettype = 1101
-			--SLI Live Casino:IsSyncLiveCasino = 1
-			AND ci.SyncLiveCasino = 1
-		
-		-- GD
-		UPDATE cs
-			SET sdiscount = 0.009
-		FROM  CustSettingGame cs WITH(ROWLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid IN (1,4) AND ci.srecommend = @srecommend
-		WHERE cs.sporttype = 255
-			AND cs.bettype = 1701
-			--Gold Deluxe:: HideGoldDeluxe = 0	
-			AND ci.HideGoldDeluxe = 0
+		WHERE cs.sporttype IN (162,255)
 				
 	END	
 	ELSE 
@@ -81,39 +61,23 @@ BEGIN
 		UPDATE cd
 			SET Discount = 0.009
 		FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-			INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 4 AND ci.CustID = @srecommend
-			INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-		WHERE CD.SportType = 211 AND ci.SyncLiveCasino = 1	and CD.BetType = 2401 
+		WHERE CD.SportType = 211 AND CustID = @srecommend
 		
 		PRINT 'Updating SLI Live Casino & GD ' 
 		UPDATE cs
 			SET sdiscount = 0.009
 		FROM  CustSettingGame cs WITH(ROWLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 4 AND ci.custid = @srecommend
-		WHERE cs.sporttype = 162
-			AND cs.bettype = 1101
-			--SLI Live Casino:IsSyncLiveCasino = 1
-			AND ci.SyncLiveCasino = 1
-		
-		UPDATE cs
-			SET sdiscount = 0.009
-		FROM  CustSettingGame cs WITH(ROWLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 4 AND ci.custid = @srecommend
-		WHERE cs.sporttype = 255
-			AND cs.bettype =1701
-			--Gold Deluxe:: HideGoldDeluxe = 0	
-			AND ci.HideGoldDeluxe = 0
+		WHERE cs.sporttype IN (162,255) AND custid = @srecommend
 				
 		----------- Direct Master PROCESSING ----------------------
 		INSERT INTO #DirectMaster (CustID)
 		SELECT custid
-		FROM Customer with(nolock)
+		FROM custInfo with(nolock)
 		WHERE srecommend = @srecommend
 			AND custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND srecommend  IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND roleid=3 AND  custid <= @maxcustid 
+			AND Enabled = 1
 		
 		IF EXISTS (SELECT 1 FROM #DirectMaster)
 		BEGIN
@@ -124,21 +88,15 @@ BEGIN
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
 				INNER JOIN #DirectMaster d ON cd.CustID = d.CustID
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1	and BetType = 2401 
-			-- Role 1
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+			WHERE SportType = 211 
+			-- Role 1 UNDER direct Master
 			UPDATE cd
 			SET SuperDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1 
+			WHERE SportType = 211 
 			
 			PRINT 'Updating SLI Live Casino & GD ' 
 			--Roleid = 3
@@ -146,49 +104,28 @@ BEGIN
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN #DirectMaster d ON cs.CustID = d.CustID
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 AND ci.custid <= @maxcustid
-			WHERE cs.sporttype =162
-				AND cs.bettype = 1101
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
-			
-			UPDATE cs
-				SET adiscount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN #DirectMaster d ON cs.CustID = d.CustID
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 AND ci.custid <= @maxcustid
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0	
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
+			WHERE cs.sporttype  IN (162,255)
 				
-			-- Roleid = 1
+			-- Role 1 UNDER direct Master
 			UPDATE cs
 				SET sdiscount = 0.009, adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.custid <= @maxcustid
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
-			WHERE cs.sporttype = 162
-				AND cs.bettype = 1101
-			
-			UPDATE cs
-				SET sdiscount = 0.009, adiscount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.custid <= @maxcustid
-				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701 
+			WHERE cs.sporttype IN (162,255)
 					
 					
 		END
 		----------- Direct Agent PROCESSING ----------------------
 		INSERT INTO #DirectAgent (CustID,mrecommend)
 		SELECT custid,mrecommend
-		FROM Customer with(nolock)
+		FROM custInfo with(nolock)
 		WHERE srecommend = @srecommend
 			AND custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND mrecommend  IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
-			AND roleid=2 AND  custid <= @maxcustid 
+			AND roleid=2 
+			AND Enabled = 1
 		
 		IF EXISTS (SELECT 1 FROM #DirectAgent)
 		BEGIN
@@ -198,32 +135,23 @@ BEGIN
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1	and BetType = 2401 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT mrecommend FROM #DirectAgent)
 			-- Role 2
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
 				INNER JOIN #DirectAgent d ON cd.CustID = d.CustID
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1	and BetType = 2401 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 
+			WHERE SportType = 211 
 			-- Role 1
 			UPDATE cd
 			SET SuperDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1 
+			WHERE SportType = 211 
 			
 			PRINT 'Updating SLI Live Casino & GD ' 
 			
@@ -232,72 +160,37 @@ BEGIN
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
-			WHERE cs.sporttype = 162
-				AND cs.bettype = 1101
+			WHERE cs.sporttype IN  (162,255)
 				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectAgent)
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
 				
-			UPDATE cs
-				SET adiscount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectAgent)
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0	
-					
 			--Roleid = 2
 			UPDATE cs
 				SET discount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN #DirectAgent d ON cs.CustID = d.CustID
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
-			WHERE cs.sporttype = 162
-				AND cs.bettype =1101
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
-			UPDATE cs
-				SET discount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN #DirectAgent d ON cs.CustID = d.CustID
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0		
+			WHERE cs.sporttype IN  (162,255)
+			
 			-- Roleid = 1
 			UPDATE cs
 				SET sdiscount = 0.009, adiscount = 0.009,discount = 0.009 
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
-			WHERE cs.sporttype  = 162
-				AND cs.bettype = 1101
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
-			
-			UPDATE cs
-				SET sdiscount = 0.009, adiscount = 0.009,discount = 0.009 
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
-				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0			
+			WHERE cs.sporttype  IN (162,255)
+				
 			
 		END
 		----------- Direct Member PROCESSING ----------------------
 		INSERT INTO #DirectMember(CustID,mrecommend,recommend)
 		SELECT custid,mrecommend,recommend
-		FROM Customer with(nolock)
+		FROM custInfo with(nolock)
 		WHERE srecommend = @srecommend
 			AND custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND recommend  IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND roleid=1 AND  custid <= @maxcustid 
-		
+			AND Enabled = 1	
+			
 		IF EXISTS (SELECT 1 FROM #DirectMember)
 		BEGIN
 			
@@ -306,34 +199,24 @@ BEGIN
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-								
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1	and BetType = 2401 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT mrecommend FROM #DirectMember)
 			-- Role 2
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1	and BetType = 2401 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 
+			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT recommend FROM #DirectMember)
 			
 			-- Role 1
 			UPDATE cd
 				SET SuperDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 AND ci.custid <= @maxcustid
-				INNER JOIN CustProductStatus CPS (NOLOCK) ON CPS.CustID = CI.custid 
-								-- HideAllBet = 0 and IsSyncAllBet = 1
-								AND dbo.f_GetProductStatus (cps.bitmapHasSynced,6) = 1 AND dbo.f_GetProductStatus (cps.bitmapIsHidden,6) = 0
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMember d ON ci.custid = d.CustID
-			WHERE SportType = 211 AND ci.SyncLiveCasino = 1 
+			WHERE SportType = 211 
 			
 			PRINT 'Updating SLI Live Casino & GD ' 
 			--Roleid = 3
@@ -341,42 +224,16 @@ BEGIN
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
-			WHERE cs.sporttype = 162
-				AND cs.bettype = 1101
+			WHERE cs.sporttype IN (162,255)
 				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectMember)
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
 				
-			UPDATE cs
-				SET adiscount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectMember)
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0
-					
 			--Roleid = 2
 			UPDATE cs
 				SET discount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
-			WHERE cs.sporttype = 162
-				AND cs.bettype = 1101
+			WHERE cs.sporttype IN (162,255)
 				AND cs.CustID IN (SELECT DISTINCT recommend FROM #DirectMember)
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
-				
-			UPDATE cs
-				SET discount = 0.009
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				AND cs.CustID IN (SELECT DISTINCT recommend FROM #DirectMember)
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0	
 				
 			-- Roleid = 1
 			UPDATE cs
@@ -384,20 +241,7 @@ BEGIN
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMember d ON ci.custid = d.CustID
-			WHERE cs.sporttype = 162
-				AND cs.bettype = 1101
-				--SLI Live Casino:IsSyncLiveCasino = 1
-				AND ci.SyncLiveCasino = 1
-			
-			UPDATE cs
-				SET sdiscount = 0.009, adiscount = 0.009,discount = 0.009 
-			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
-				INNER JOIN #DirectMember d ON ci.custid = d.CustID
-			WHERE cs.sporttype = 255
-				AND cs.bettype = 1701
-				--Gold Deluxe:: HideGoldDeluxe = 0	
-				AND ci.HideGoldDeluxe = 0	
+			WHERE cs.sporttype IN (162,255)
 					
 		END
 	END	
@@ -443,8 +287,7 @@ SELECT ci.custid,0
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @maxcustid
-		and ci.custid not in (SELECT custid FROM #supers_ExistingDirectAccount)
+		AND ci.custid NOT IN (SELECT custid FROM #supers_ExistingDirectAccount)
 UNION ALL
 SELECT custid, 1
 FROM #supers_ExistingDirectAccount
@@ -500,7 +343,7 @@ SELECT ci.custid,0
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @maxcustid
+		
 		and ci.custid NOT IN (SELECT custid FROM #supers_ExistingDirectAccount)
 UNION ALL
 SELECT custid, 1
