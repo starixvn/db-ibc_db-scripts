@@ -263,6 +263,8 @@ DECLARE @maxcustid INT, @srecommend INT, @isExistDirectAccount BIT
 SELECT @maxcustid = xxx
 
 CREATE TABLE #supers_ExistingDirectAccount (custid INT)
+
+INSERT INTO #supers_ExistingDirectAccount (custid)
 -- Get direct Master
 SELECT DISTINCT srecommend from Customer with(nolock)
 WHERE custid not in (select custid from Acc_CustDirect WITH(NOLOCK))
