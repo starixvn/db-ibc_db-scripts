@@ -250,13 +250,13 @@ BEGIN
 			SET sdiscount = 0.009
 		FROM CustSettingGame T (ROWLOCK)
 			INNER JOIN custInfo ci (NOLOCK) ON T.CustID = CI.custid AND roleid = 1 AND srecommend = @srecommend
-		WHERE sdiscount <> 0.009
+		WHERE sdiscount <> 0.009 AND T.sporttype IN (162,255) 
 		
 		UPDATE T
 			SET SuperDiscount = 0.009
 		FROM CustDiscount3rd_Member T (ROWLOCK)
 			INNER JOIN custInfo ci (NOLOCK) ON T.CustID = CI.custid AND roleid = 1 AND srecommend = @srecommend
-		WHERE SuperDiscount <> 0.009
+		WHERE SuperDiscount <> 0.009 AND T.SportType = 211
 		
 	END	
 	
