@@ -346,8 +346,7 @@ SELECT ci.custid,0
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		
-		and ci.custid NOT IN (SELECT custid FROM #supers_ExistingDirectAccount)
+		AND ci.custid NOT IN (SELECT custid FROM #supers_ExistingDirectAccount)
 UNION ALL
 SELECT custid, 1
 FROM #supers_ExistingDirectAccount
@@ -357,6 +356,7 @@ BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid	
+		,@isExistDirectAccount = isExistDirectAccount
 		
 	WHERE isfinished = 0
 	
