@@ -24,9 +24,9 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustDiscount3rd_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustSettingGame') = 0 RETURN
 
-	CREATE TABLE #DirectMaster (CustID INT)
-	CREATE TABLE #DirectAgent (CustID INT, mrecommend INT)
-	CREATE TABLE #DirectMember (CustID INT, recommend INT, mrecommend INT)
+	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY)
+	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY, mrecommend INT)
+	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY, recommend INT, mrecommend INT)
 	
 	IF @isExistDirectAccount = 0
 	BEGIN			
