@@ -6,7 +6,8 @@
 */ 
 ALTER PROCEDURE [dbo].Acc_CustomerInfo_Execrep_09
 	@srecommend INT	
-	,@target VARCHAR(30)	
+	,@target VARCHAR(30)
+	,@max_custid INT	
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -19,7 +20,7 @@ BEGIN
 		RETURN		
 	UPDATE custInfo WITH(UPDLOCK,ROWLOCK)
 	SET MaxPerMatch1MP=Maxpermatch
-	WHERE srecommend=@srecommend
+	WHERE srecommend=@srecommend AND custid<=@max_custid
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @ DBCUST.CustDB -------
@@ -31,13 +32,14 @@ GO
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT,@max_custid INT	
+SELECT @max_custid=xx
 
 INSERT INTO #supers(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND custid<=@max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -48,7 +50,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend			
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend,@max_custid=@max_custid		
 			,@target = 'REPLICATED'			
 	WAITFOR DELAY '00:00:00.280'			
 END			
@@ -61,13 +63,13 @@ GO
 -------------------------------------------------
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE  @srecommend INT
-
+DECLARE  @srecommend INT,@max_custid INT	
+SELECT @max_custid=1000
 INSERT INTO #supers(custid)
 SELECT custid
 FROM customer WITH(NOLOCK)
 WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND custid<=@max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -78,7 +80,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend			
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend	,@max_custid=@max_custid			
 			,@target = 'DBCUST'			
 	WAITFOR DELAY '00:00:00.280'			
 END			

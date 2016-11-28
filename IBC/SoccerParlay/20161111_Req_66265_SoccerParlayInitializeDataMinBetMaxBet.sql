@@ -10,6 +10,7 @@
 ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
 	@srecommend INT		
 	,@target VARCHAR(20)
+	,@max_custid INT	
 AS
 BEGIN	
 	SET NOCOUNT ON
@@ -26,7 +27,7 @@ BEGIN
 	SELECT 	a.custid ,minbet , maxbet 
 	FROM CustSetting a WITH(NOLOCK) 
 	INNER JOIN custinfo ci WITH(NOLOCK) ON a.custid = ci.custid
-	WHERE  Sporttype=1 AND bettype=1 AND ci.srecommend = @srecommend	
+	WHERE  Sporttype=1 AND bettype=1 AND ci.srecommend = @srecommend	AND ci.Custid<=@max_custid 	
 	
 	UPDATE a
 	SET a.minbet=b.minbet,a.maxbet=b.maxbet
@@ -45,13 +46,14 @@ GO
  
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @srecommend INT
+DECLARE @srecommend INT,@max_custid INT
+SELECT @max_custid=xx
 
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
 WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND custid<=@max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -63,7 +65,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend			
-			,@target = 'REPLICATED'
+			,@target = 'REPLICATED',@max_custid=@max_custid
 	
 	WAITFOR DELAY '00:00:00.280'			
 END			
@@ -76,13 +78,13 @@ GO
 -------------------------------------------------
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE  @srecommend INT
-
+DECLARE  @srecommend INT,@max_custid INT
+SELECT @max_custid=xx
 INSERT INTO #supers(custid)
 SELECT custid
 FROM custinfo WITH(NOLOCK)
 WHERE custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND roleid = 4
+	AND roleid = 4 AND custid<=@max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -94,7 +96,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_CustSetting3rd_19] @srecommend = @srecommend		
-			,@target = 'DBCUST'
+			,@target = 'DBCUST',@max_custid=@max_custid
 	
 	WAITFOR DELAY '00:00:00.280'			
 END			
