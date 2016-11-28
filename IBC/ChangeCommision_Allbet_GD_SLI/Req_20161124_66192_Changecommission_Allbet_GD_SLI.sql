@@ -28,8 +28,6 @@ BEGIN
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY, mrecommend INT)
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY, recommend INT, mrecommend INT)
 	
-	CREATE TABLE #DirectSpecialMember (CustID INT PRIMARY KEY)
-	
 	IF @isExistDirectAccount = 0
 	BEGIN			
 		--SLI Live Casino or GD or Allbet
