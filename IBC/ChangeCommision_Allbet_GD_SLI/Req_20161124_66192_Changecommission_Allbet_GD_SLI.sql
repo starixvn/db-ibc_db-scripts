@@ -28,6 +28,8 @@ BEGIN
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY, mrecommend INT)
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY, recommend INT, mrecommend INT)
 	
+	CREATE TABLE #DirectSpecialMember (CustID INT PRIMARY KEY)
+	
 	IF @isExistDirectAccount = 0
 	BEGIN			
 		--SLI Live Casino or GD or Allbet
@@ -68,7 +70,7 @@ BEGIN
 			SET sdiscount = 0.009
 		FROM  CustSettingGame cs WITH(ROWLOCK)
 		WHERE cs.sporttype IN (162,255) AND custid = @srecommend
-				
+							
 		----------- Direct Master PROCESSING ----------------------
 		INSERT INTO #DirectMaster (CustID)
 		SELECT custid
@@ -244,6 +246,20 @@ BEGIN
 			WHERE cs.sporttype IN (162,255)
 					
 		END
+		
+		-- Update member is not under Direct Master/Direct Agent/Direct member
+		UPDATE T
+			SET sdiscount = 0.009
+		FROM CustSettingGame T (ROWLOCK)
+			INNER JOIN custInfo ci (NOLOCK) ON T.CustID = CI.custid AND roleid = 1 AND srecommend = @srecommend
+		WHERE sdiscount <> 0.009
+		
+		UPDATE T
+			SET SuperDiscount = 0.009
+		FROM CustDiscount3rd_Member T (ROWLOCK)
+			INNER JOIN custInfo ci (NOLOCK) ON T.CustID = CI.custid AND roleid = 1 AND srecommend = @srecommend
+		WHERE SuperDiscount <> 0.009
+		
 	END	
 	
 	DROP TABLE #DirectAgent
