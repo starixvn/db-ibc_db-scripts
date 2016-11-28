@@ -92,7 +92,7 @@ BEGIN
 			WHERE SportType = 211 
 			-- Role 1 UNDER direct Master
 			UPDATE cd
-			SET SuperDiscount = 0.009
+			SET SuperDiscount = 0.009,MasterDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
 				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
@@ -147,7 +147,7 @@ BEGIN
 			WHERE SportType = 211 
 			-- Role 1
 			UPDATE cd
-			SET SuperDiscount = 0.009
+			SET SuperDiscount = 0.009, MasterDiscount=0.009, AgentDiscount=0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
 				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
@@ -212,7 +212,7 @@ BEGIN
 			
 			-- Role 1
 			UPDATE cd
-				SET SuperDiscount = 0.009
+				SET SuperDiscount = 0.009,MasterDiscount = 0.009, AgentDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
 				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
 				INNER JOIN #DirectMember d ON ci.custid = d.CustID
