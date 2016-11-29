@@ -19,9 +19,10 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1)
+		RETURN		
+		
 	CREATE TABLE #tmpCust (CustID INT PRIMARY KEY)
-	
-	CREATE TABLE #tmp (CustID INT  PRIMARY KEY,minbet MONEY, maxbet MONEY)	
 	
 	INSERT INTO #tmpCust (CustID)
 	SELECT ci.custid
@@ -36,21 +37,6 @@ BEGIN
 			INNER JOIN #tmpCust T1 ON T.custid = T1.CustID
 	END
 	
-	IF (dbo.f_CheckRepTable('CustSetting') = 1) 
-	BEGIN	
-		INSERT INTO #tmp(CustID,minbet, maxbet)
-		SELECT 	a.custid ,minbet , maxbet 
-		FROM CustSetting a WITH(NOLOCK) 
-			INNER JOIN #tmpCust ci WITH(NOLOCK) ON a.custid = ci.custid
-		WHERE  a.Sporttype = 1 AND a.bettype= 1 	
-	
-		UPDATE a
-			SET  minbet=b.minbet
-				, maxbet=b.maxbet
-		FROM CustSetting a  WITH(ROWLOCK,UPDLOCK)
-			INNER JOIN #tmp b ON a.custid=b.CustID AND a.Sporttype=1 AND a.bettype=9   
-	END
-	DROP TABLE #tmp
 	DROP TABLE #tmpCust
 	
 END
