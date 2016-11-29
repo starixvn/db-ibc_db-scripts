@@ -7,4 +7,4 @@
 */ 
 
 INSERT  INTO Sport_Bettype_Reference_VirtualRate(Sporttype, Bettype, SportTypeRefVirtualRate, BettypeRefVirtualRate, isActive)
-SELECT 50,5,27,5,1
+SELECT 50,5,27,5,0
