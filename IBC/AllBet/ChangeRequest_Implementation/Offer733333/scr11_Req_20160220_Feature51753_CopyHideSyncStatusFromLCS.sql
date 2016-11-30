@@ -83,7 +83,7 @@ BEGIN
 		WHERE SITE in ('733333','222223')
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
+			and roleid=3 AND srecommend = @srecommend 
 			
 		--- get direct agent
 		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -92,7 +92,7 @@ BEGIN
 		WHERE SITE in ('733333','222223')
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
+			and roleid=2 AND srecommend = @srecommend 
 		
 		IF EXISTS (SELECT 1 FROM #DirectMaster)
 		BEGIN
@@ -141,7 +141,7 @@ BEGIN
 			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
 			FROM Custinfo CI WITH (NOLOCK)
 				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
-			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+			WHERE Enabled = 1 
 				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
 				AND CI.roleid = 3
 				
@@ -150,7 +150,7 @@ BEGIN
 			FROM Custinfo CI WITH (NOLOCK)
 				INNER JOIN Customer C (NOLOCK) ON CI.custid = C.custid
 				INNER JOIN #SMATemp master_tmp (NOLOCK) ON master_tmp.custid = CI.mrecommend AND master_tmp.roleid = 3
-			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+			WHERE Enabled = 1 
 				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
 				AND CI.roleid = 2
 			
@@ -158,7 +158,7 @@ BEGIN
 			SELECT ci.custid, ci.SyncLiveCasino
 			FROM Custinfo ci WITH (NOLOCK)
 				INNER JOIN #SMATemp agent_tmp ON ci.recommend = agent_tmp.CustID AND agent_tmp.roleid = 2
-			WHERE CI.srecommend = @srecommend AND CI.roleid = 1  AND Enabled = 1 AND CI.custid <= @maxcustid	
+			WHERE CI.srecommend = @srecommend AND CI.roleid = 1  AND Enabled = 1 
 			
 			
 			UPDATE cs
@@ -198,7 +198,7 @@ BEGIN
 			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
 			FROM Custinfo CI WITH (NOLOCK)
 				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
-			WHERE Enabled = 1 AND ci.custid <= @maxcustid 
+			WHERE Enabled = 1 
 				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
 				AND CI.roleid = 3
 			
@@ -253,14 +253,11 @@ CREATE TABLE #supers (custid int,isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT
 
-SELECT @max_custid = xxx
-
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @max_custid 
 		-- Production
 		AND ci.site in ('733333','222223')
 		AND ci.custid <> 72
@@ -298,8 +295,6 @@ END
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT
-
-SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid)
 SELECT ci.custid

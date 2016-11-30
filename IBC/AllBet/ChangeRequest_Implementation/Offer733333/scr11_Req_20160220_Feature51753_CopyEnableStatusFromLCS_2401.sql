@@ -9,7 +9,6 @@ ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	,@roleid TINYINT
 	,@srecommend INT
 	,@mrecommend INT	
-	,@Mode BIT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -27,87 +26,68 @@ BEGIN
 	
 	
 	/*******************************CUST PRODUCT STATUS TABLE*******************************/	
-	IF @Mode = 1 -- NOT reply on LC
-	BEGIN
-		IF @roleid = 4
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.srecommend = @Custid
-		END
-		ELSE IF @roleid = 3
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.mrecommend = @Custid
-
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.custid = @srecommend
-		END
-		ELSE IF @roleid = 2
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.recommend = @Custid
-
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.custid = @srecommend OR ci.custid = @mrecommend
-		END
-	END
-
-	IF @Mode = 0 -- reply on LC
-	BEGIN
-		IF @roleid = 4
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.srecommend = @Custid
-		END
-		ELSE IF @roleid = 3
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.mrecommend = @Custid
-
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.custid = @srecommend
-		END
-		ELSE IF @roleid = 2
-		BEGIN
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.recommend = @Custid
-
-			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.custid = @srecommend OR ci.custid = @mrecommend
-		END
-	END
+	CREATE TABLE #cust_tmp (Custid INT PRIMARY KEY)
 	
+	IF @roleid = 4
+	BEGIN
+		INSERT INTO #cust_tmp (Custid)
+		SELECT ci.custid 
+		FROM custInfo CI WITH (NOLOCK)
+		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1
 	
+		UPDATE cs
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+		
+		UPDATE cs
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+	END
+	ELSE IF @roleid = 3
+	BEGIN
+		INSERT INTO #cust_tmp (Custid)
+		SELECT ci.custid 
+		FROM custInfo CI WITH (NOLOCK)
+		WHERE CI.mrecommend = @Custid AND ci.SyncLiveCasino = 1
+		UNION ALL
+		SELECT @srecommend
+		
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+	END
+	ELSE IF @roleid = 2
+	BEGIN
+		INSERT INTO #cust_tmp (Custid)
+		SELECT ci.custid 
+		FROM custInfo CI WITH (NOLOCK)
+		WHERE CI.recommend = @Custid AND ci.SyncLiveCasino = 1
+		UNION ALL
+		SELECT @srecommend 
+		UNION ALL
+		SELECT @mrecommend 
+		
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+
+		UPDATE cs
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+	END
 	
 END
 GO
@@ -116,27 +96,103 @@ GO
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
 
-
-CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, Mode BIT,IsDownLine BIT, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT, @IsDownLine BIT = 0
-
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site in ('733333','222223')
+	AND ci.username IN ('S12M',
+'S12MM',
+'SBHK',
+'MMYBRM',
+'M83RM',
+'RM8',
+'MJRMB',
+'SJM',
+'SJJM',
+'SHKK',
+'SHHK2',
+'SHHK7',
+'hhma',
+'HHN',
+'HHK4',
+'SAKM',
+'SWM',
+'SLLM',
+'SATM',
+'SKPRMB',
+'KPM',
+'JJB',
+'XKM',
+'XKH',
+'TLM',
+'TLN',
+'D71',
+'cks',
+'C1',
+'C2',
+'C3',
+'C5',
+'C7',
+'TLH',
+'C8',
+'C9',
+'C10',
+'C11',
+'C12',
+'C13',
+'C15',
+'H9',
+'H1',
+'C6',
+'H2',
+'H3',
+'HZ',
+'H5',
+'CV',
+'9H',
+'1C',
+'EPL',
+'KP',
+'H8',
+'S1',
+'S2',
+'S3',
+'S6',
+'S7',
+'S9',
+'SR',
+'CM',
+'ZS',
+'CN',
+'JD',
+'JG',
+'A6',
+'R8',
+'A1',
+'A2',
+'A3',
+'A5',
+'US',
+'J1',
+'ZJ',
+'CQ',
+'A7',
+'FJM',
+'TS1',
+'TS2',
+'TS3',
+'TS4',
+'TS5',
+'TS6',
+'DK',
+'DM',
+'CTV',
+'CTM'
+)
 
-	AND CI.roleid = 4
-/*	AND ci.username IN ('WW',
-'JJ',
-'II',
-'IM',
-'IK',
-'IA',
-'IE',
-'IG')
-*/
 
 WHILE (1 = 1)
 BEGIN
@@ -146,7 +202,6 @@ BEGIN
 		,@srecommend = srecommend	
 		,@mrecommend = mrecommend
 		,@roleid = roleid
-		,@Mode = Mode
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -156,8 +211,6 @@ BEGIN
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
 			,@roleid = @roleid
-			,@Mode = @Mode
-			
 			,@target = 'REPLICATED'
 			
 			
@@ -166,24 +219,102 @@ END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, Mode BIT, isfinished bit default(0)) --Mode 0: depend on disable OneRNG, 1: enable all
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @Mode BIT
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
 
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid, Mode)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 1 AS mode
+INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND ci.site in ('733333','222223')
-
-	AND CI.roleid = 4
---	AND ci.username IN ('WW',
---'JJ',
---'II',
---'IM',
---'IK',
---'IA',
---'IE',
---'IG',
+	AND ci.username IN ('S12M',
+'S12MM',
+'SBHK',
+'MMYBRM',
+'M83RM',
+'RM8',
+'MJRMB',
+'SJM',
+'SJJM',
+'SHKK',
+'SHHK2',
+'SHHK7',
+'hhma',
+'HHN',
+'HHK4',
+'SAKM',
+'SWM',
+'SLLM',
+'SATM',
+'SKPRMB',
+'KPM',
+'JJB',
+'XKM',
+'XKH',
+'TLM',
+'TLN',
+'D71',
+'cks',
+'C1',
+'C2',
+'C3',
+'C5',
+'C7',
+'TLH',
+'C8',
+'C9',
+'C10',
+'C11',
+'C12',
+'C13',
+'C15',
+'H9',
+'H1',
+'C6',
+'H2',
+'H3',
+'HZ',
+'H5',
+'CV',
+'9H',
+'1C',
+'EPL',
+'KP',
+'H8',
+'S1',
+'S2',
+'S3',
+'S6',
+'S7',
+'S9',
+'SR',
+'CM',
+'ZS',
+'CN',
+'JD',
+'JG',
+'A6',
+'R8',
+'A1',
+'A2',
+'A3',
+'A5',
+'US',
+'J1',
+'ZJ',
+'CQ',
+'A7',
+'FJM',
+'TS1',
+'TS2',
+'TS3',
+'TS4',
+'TS5',
+'TS6',
+'DK',
+'DM',
+'CTV',
+'CTM'
+)
 
 
 WHILE (1 = 1)
@@ -194,7 +325,6 @@ BEGIN
 		,@srecommend = srecommend	
 		,@mrecommend = mrecommend
 		,@roleid = roleid
-		,@Mode = Mode
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -204,7 +334,6 @@ BEGIN
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
 			,@roleid = @roleid
-			,@Mode = @Mode
 			,@target = 'DBCUST'
 			
 			
