@@ -200,14 +200,16 @@ FROM #tmpCustGameType T1
 
 -- Process roleid = 4
 UPDATE T1
-	SET StakeLevelList_Allbet = CONVERT(VARCHAR(100),temp.StakeLevelID)
+	SET StakeLevelList_Allbet = STUFF(temp.StakeLevelID,1,1,'')
 FROM #tmpCustGameType T1
 	INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.Enabled = 1 AND CI.SyncLiveCasino = 1
-	CROSS APPLY (SELECT TOP 1  SL.StakeLevelID 
+	CROSS APPLY (SELECT ',' +  CONVERT(VARCHAR(10),SL.StakeLevelID) 
 				FROM dbo.StakeLevel SL WITH(NOLOCK) 
 				WHERE SL.ExchangeId = T1.ExchangeID AND GameTypeID = 2401
-				ORDER BY MaxStake, MinStake) AS temp
-WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND CI.roleid = 4	
+				ORDER BY MaxStake, MinStake
+				FOR XML PATH ('')
+				) AS temp (StakeLevelID)
+WHERE CI.roleid = 4	
 
 -- Process RoleID = 3
 UPDATE T1

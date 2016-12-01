@@ -220,20 +220,33 @@ BEGIN
 	FROM dbo.tmpCustGameType WITH(NOLOCK)
 	WHERE custid = @srecommend
 	
-	DECLARE @StakeLevelList_2401_lowest VARCHAR(100)
+	DECLARE @StakeLevelList_2401_lowest VARCHAR(100),@StakeLevelList_2401_allLevel4Super VARCHAR (100)
 	
 	SELECT TOP 1 @StakeLevelList_2401_lowest =  StakeLevelID 
 	FROM dbo.StakeLevel WITH(NOLOCK) 
 	WHERE ExchangeId = @exchangeID AND GameTypeID = 2401
 	ORDER BY MaxStake, MinStake
-		
+	
+	-- Supper: full stake level	
+	SET @StakeLevelList_2401_allLevel4Super = STUFF((SELECT  ',' + CONVERT(VARCHAR(10),StakeLevelID) 
+										FROM dbo.StakeLevel WITH(NOLOCK) 
+										WHERE ExchangeId = @exchangeID AND GameTypeID = 2401
+									 ORDER BY MaxStake, MinStake
+									 FOR XML PATH ('')),1,1,'')
 	--If don't have stake level for this line yet, just put lowest value 
 	IF ISNULL(@stakeLevelList2401_super,'') = '' 
 	BEGIN
 		--SMA Level
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)		
+		
 		SELECT custid, 211, 2401, @StakeLevelList_2401_lowest
 		FROM #SMATemp ci 
+		WHERE ci.roleid IN (2,3)
+		
+		UNION ALL
+		
+		SELECT @srecommend, 211, 2401, @StakeLevelList_2401_allLevel4Super
+		
 		--Member Level
 		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
 		SELECT custid, 211, 2401, @StakeLevelList_2401_lowest
@@ -268,9 +281,10 @@ BEGIN
 		-- all done, start insert
 		INSERT INTO dbo.CustStakeLevel_Agent(CustID, SportType, BetType, StakeLevelList)
 		-- Rolid = 4
-		SELECT T1.CustID, 211, 2401, @stakeLevelList2401_super  
+		SELECT T1.CustID, 211, 2401, @StakeLevelList_2401_allLevel4Super  
 		FROM #SMATemp T1
 		WHERE T1.roleid = 4
+		
 		UNION ALL
 		-- Rolid = 3
 		SELECT T1.custid, 211, 2401, CASE WHEN SyncLiveCasino = 1 THEN ISNULL(T2.StakeLevelList_AllBet,@StakeLevelLowestSuper) ELSE '' END AS stakeLevelList
