@@ -40,14 +40,14 @@ BEGIN
 	SELECT ci.custid
 	FROM custInfo CI (NOLOCK)
 		LEFT JOIN CustWinLossLimit_Agent PT (NOLOCK) ON CI.custid = PT.CustID AND PT.SportType = 211 AND PT.BetType = 2401 
-	WHERE PT.custid IS NULL	AND CI.roleid IN (4,3,2)
+	WHERE CI.srecommend = @srecommend AND PT.custid IS NULL	AND CI.roleid IN (4,3,2)
 	
 	UNION ALL
 	
 	SELECT CI.custId
 	FROM custInfo CI (NOLOCK)
 		LEFT JOIN CustWinLossLimit_Member PT (NOLOCK) ON CI.custid = PT.CustID AND PT.SportType = 211 AND PT.BetType = 2401 
-	WHERE PT.custid IS NULL	AND CI.roleid = 1
+	WHERE CI.srecommend = @srecommend AND PT.custid IS NULL	AND CI.roleid = 1
 	
 	--- Update sync Status
 	UPDATE cs
