@@ -313,7 +313,11 @@ WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 'DK',
 'DM',
 'CTV',
-'CTM'
+'CTM',
+-- add 222223
+'KMM',
+'KHH'
+
 )
 
 

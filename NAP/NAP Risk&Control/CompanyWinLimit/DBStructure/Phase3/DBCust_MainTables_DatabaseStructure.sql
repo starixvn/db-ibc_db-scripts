@@ -37,6 +37,7 @@ go
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring_History ADD TotalWinAmt_RM MONEY
 GO
 
+
 CREATE TABLE [dbo].[Winlimit_Group](
 	[GroupID] [int] NOT NULL,
 	[GroupName] [varchar](200) NOT NULL
@@ -61,4 +62,7 @@ CREATE TABLE [dbo].[Winlimit_GameGroupSetting](
 ) ON [WinlimitSetting_Tables]
 
 GO
-
+/* DBTXN/bodb02
+ALTER TABLE dbo.BalancePendingDebitGame ADD GameTypeID smallint
+ALTER TABLE dbo.BalancePendingCreditGame ADD GameTypeID smallint
+*/
