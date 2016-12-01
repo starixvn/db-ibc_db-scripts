@@ -26,51 +26,7 @@ GO
 CREATE TABLE #CodeCurrency (ID INT, Currency VARCHAR(1000) )
 
 INSERT INTO #CodeCurrency (ID,Currency)
-VALUES(1,'$US, NTD, US$, UT, Yen, IRR, EURO, SD$, GBP'),
-(1,''),
-(1,''),
-(1,''),
-(2,'HK$,HKK, RMB'),
-(2,''),
-(2,''),
-(2,''),
-(3,'RM'),
-(3,''),
-(3,''),
-(3,''),
-(5,'Won'),
-(5,''),
-(5,''),
-(5,''),
-(6,'TB, THB'),
-(6,''),
-(6,''),
-(6,''),
-(7,'INH'),
-(7,''),
-(7,''),
-(7,''),
-(8,'IDD,IDR,IN, IND, DDD'),
-(8,''),
-(8,''),
-(8,''),
-(9,'INR'),
-(9,''),
-(9,''),
-(9,''),
-(10,'MMK,MKK'),
-(10,''),
-(10,''),
-(10,''),
-(11,'UUS'),
-(11,''),
-(11,''),
-(11,''),
-(11,'')
-
-
-
-DELETE #CodeCurrency WHERE currency = ''
+VALUES(1,'HK$,HKK,RM,RMB,SD$')
 
 CREATE TABLE #ExchangeIDListPerCurrency (ID INT, ExchangeID INT, Currency VARCHAR(20) )
 INSERT INTO #ExchangeIDListPerCurrency (ID,ExchangeID,Currency)
