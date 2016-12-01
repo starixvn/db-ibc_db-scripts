@@ -18,6 +18,7 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Member') = 0 RETURN	
+	IF dbo.f_CheckRepTable('CustProductStatus') = 0 RETURN	
 	
 	DECLARE @xmlStrSync XML
 	
