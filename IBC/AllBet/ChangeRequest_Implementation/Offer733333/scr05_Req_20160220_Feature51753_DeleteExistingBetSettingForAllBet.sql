@@ -24,13 +24,21 @@ BEGIN
 	FROM CustStakeLevel_Agent cg 
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
 		INNER JOIN Customer Super (NOLOCK) ON Super.custid = C.srecommend
-	WHERE CG.SportType = 211 AND (Super.site IN ('733333','222223') OR c.srecommend IN (3,5,12)) --Dummy account (2,13) run setting Allbet
+	WHERE CG.SportType = 211 
+			AND (Super.site IN ('733333','222223') 
+				OR c.srecommend IN (3,5,12) --Dummy account (2,13) run setting Allbet
+				OR c.srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)
+				) 
 
 	DELETE cg
 	FROM CustStakeLevel_Member cg 		
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID AND C.srecommend <> 72
 		INNER JOIN Customer Super (NOLOCK) ON Super.custid = C.srecommend
-	WHERE CG.SportType = 211 AND (Super.site IN ('733333','222223') OR c.srecommend IN (3,5,12)) --Dummy account (2,13) run setting Allbet
+	WHERE CG.SportType = 211 
+		AND (Super.site IN ('733333','222223') 
+			OR c.srecommend IN (3,5,12)
+			OR c.srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)
+			) --Dummy account (2,13) run setting Allbet
 	 
 END	
 GO
