@@ -23,6 +23,7 @@ WHERE (ci.roleid = 4
 			AND s.islicensee = 0
 			AND ci.site IN ('733333','222223'))
 		OR ci.custid IN (3,5,12) --Dummy account (2,13) run setting Allbet
+		OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322) -- CROSS SITE
 
 --PT
 DELETE cs
