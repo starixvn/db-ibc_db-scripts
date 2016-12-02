@@ -31,7 +31,7 @@ BEGIN
 	CREATE TABLE #tmpCust (Custid INT PRIMARY KEY)
 	
 	INSERT INTO #tmpCust (Custid)
-	SELECT Custid,SyncLiveCasino,DisableLiveCasino
+	SELECT Custid
 	FROM custInfo WITH (NOLOCK)
 	WHERE srecommend = @Custid AND SyncLiveCasino = 1 AND DisableLiveCasino = 0
 	
@@ -556,7 +556,7 @@ VALUES
 ('SA-RM','Super',1)
 
 INSERT INTO #cust_Excelfile_Result(custid)
-SELECT ci.custID,ci.srecommend,ci.roleid,ci.DisableLiveCasino,SyncLiveCasino
+SELECT ci.custID
 FROM Custinfo ci WITH (NOLOCK)
 	INNER JOIN #cust_ExcelFile T ON T.username = ci.username
 WHERE T.IsSuperOnly = 0 
