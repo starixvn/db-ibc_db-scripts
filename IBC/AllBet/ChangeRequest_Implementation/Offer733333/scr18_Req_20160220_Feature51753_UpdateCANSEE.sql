@@ -9,10 +9,14 @@
 */ 
 
 INSERT INTO ProductLaunchedSiteCurrency (SiteID,Currency,SportType,IsLaunched,IsTest)
-SELECT S.siteid,E.exchangeid,211,1,0
-FROM Site S WITH (NOLOCK)
-	CROSS JOIN exchange e WITH (NOLOCK) 
-WHERE e.exchangeid IN (1,2,5,13,67) -- ('HK$','HKK','RM','RMB','SD$')
-	AND S.siteid IN (21,23)	
 
-		
+SELECT 21,E.exchangeid,211,1,0
+FROM exchange e WITH (NOLOCK) 
+WHERE e.exchangeid IN (1,2,5,13,67) --  SD$,RM,HK$,RMB,HKK
+
+UNION ALL
+
+SELECT 23,E.exchangeid,211,1,0
+FROM exchange e WITH (NOLOCK) 
+WHERE e.exchangeid IN (2,5,67) -- RM,HK$,HKK	
+			
