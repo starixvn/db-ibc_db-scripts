@@ -1,5 +1,5 @@
 /*
-	Created: Elodie
+	Created: Helen
 	Date: 20160301
 	Task: Delete redundant All Bet settings except StakeLevel
 	DB: DBCust/CustDB
@@ -22,7 +22,7 @@ WHERE (ci.roleid = 4
 			AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 			AND s.islicensee = 0
 			AND ci.site IN ('733333','222223'))
-		OR ci.custid IN (3,5,12) --Dummy account (2,13) run setting Allbet
+		OR ci.custid IN (3,5,12,2,13) 
 		OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322) -- CROSS SITE
 
 --PT
