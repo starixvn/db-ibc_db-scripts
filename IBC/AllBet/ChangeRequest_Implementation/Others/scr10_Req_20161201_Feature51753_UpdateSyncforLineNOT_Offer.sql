@@ -55,6 +55,8 @@ BEGIN
 		SET bitmapHasSynced = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync))) 
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN #tbl_ListCusts ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+	
+	DROP TABLE #tbl_ListCusts	
 		
 END
 GO
