@@ -7,7 +7,7 @@
 
 alter PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT	
-	,@maxcustid INT
+	--,@maxcustid INT
 	,@target VARCHAR(20) = null
 	,@isExistDirectAccount BIT = 0
 	
@@ -76,7 +76,7 @@ BEGIN
 		WHERE srecommend = @srecommend
 			AND custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND srecommend  IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
-			AND roleid=3 AND  custid <= @maxcustid 
+			AND roleid=3 --AND  custid <= @maxcustid 
 			AND Enabled = 1
 		
 		IF EXISTS (SELECT 1 FROM #DirectMaster)
@@ -188,7 +188,7 @@ BEGIN
 		WHERE srecommend = @srecommend
 			AND custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
 			AND recommend  IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
-			AND roleid=1 AND  custid <= @maxcustid 
+			AND roleid=1 --AND  custid <= @maxcustid 
 			AND Enabled = 1	
 			
 		IF EXISTS (SELECT 1 FROM #DirectMember)
@@ -274,7 +274,7 @@ CREATE TABLE #supers (custid int,isfinished bit default(0), isExistDirectAccount
 
 DECLARE @maxcustid INT, @srecommend INT, @isExistDirectAccount BIT
 
-SELECT @maxcustid = xxx
+--SELECT @maxcustid = xxx
 
 CREATE TABLE #supers_ExistingDirectAccount (custid INT)
 
@@ -283,19 +283,19 @@ INSERT INTO #supers_ExistingDirectAccount (custid)
 SELECT DISTINCT srecommend from Customer with(nolock)
 WHERE custid not in (select custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend  in (select custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=3 AND srecommend <= @maxcustid 
+	and roleid=3 --AND srecommend <= @maxcustid 
 --- get direct agent
 UNION 
 SELECT DISTINCT srecommend from Customer with(nolock)
 WHERE custid NOT IN (select custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (select custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend <= @maxcustid
+	and roleid=2 --AND srecommend <= @maxcustid
 -- direct member
 UNION
 SELECT DISTINCT srecommend from Customer WITH(NOLOCK)
 WHERE custid NOT IN (select custid from Acc_CustDirect WITH(NOLOCK))
 	AND recommend IN (select custid from Acc_CustDirect WITH(NOLOCK))
-	AND roleid=1 AND srecommend <= @maxcustid 
+	AND roleid=1 --AND srecommend <= @maxcustid 
 
 -- list of supers
 INSERT INTO #supers(custid,isExistDirectAccount)
@@ -319,7 +319,8 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend 
-			,@maxcustid = @maxcustid, @isExistDirectAccount = @isExistDirectAccount
+			--,@maxcustid = @maxcustid
+			, @isExistDirectAccount = @isExistDirectAccount
 			,@target = 'REPLICATED'
 			
 			
@@ -340,19 +341,19 @@ INSERT INTO #supers_ExistingDirectAccount (custid)
 SELECT DISTINCT srecommend from Customer with(nolock)
 WHERE custid not in (select custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend  in (select custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=3 AND srecommend <= @maxcustid 
+	and roleid=3 --AND srecommend <= @maxcustid 
 --- get direct agent
 UNION 
 SELECT DISTINCT srecommend from Customer with(nolock)
 WHERE custid NOT IN (select custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (select custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend <= @maxcustid
+	and roleid=2 --AND srecommend <= @maxcustid
 -- direct member
 UNION
 SELECT DISTINCT srecommend from Customer WITH(NOLOCK)
 WHERE custid NOT IN (select custid from Acc_CustDirect WITH(NOLOCK))
 	AND recommend IN (select custid from Acc_CustDirect WITH(NOLOCK))
-	AND roleid=1 AND srecommend <= @maxcustid 
+	AND roleid=1 --AND srecommend <= @maxcustid 
 
 -- list of supers
 INSERT INTO #supers(custid,isExistDirectAccount)
@@ -377,7 +378,8 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.Acc_ExecRep_Cust_09 @srecommend = @srecommend
-			,@maxcustid = @maxcustid, @isExistDirectAccount = @isExistDirectAccount
+			--,@maxcustid = @maxcustid
+			, @isExistDirectAccount = @isExistDirectAccount
 			,@target = 'DBCUST'
 						
 	WAITFOR DELAY '00:00:0.280'
