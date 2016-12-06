@@ -28,8 +28,16 @@ BEGIN
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY, mrecommend INT)
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY, recommend INT, mrecommend INT)
 	
+	CREATE TABLE #Cust_tmp (CustID INT PRIMARY KEY,roleID INT)
+	
 	IF @isExistDirectAccount = 0
-	BEGIN			
+	BEGIN	
+		
+		INSERT INTO #Cust_tmp (CustID,roleID)
+		SELECT ci.custid,ci.roleid
+		FROM custInfo ci (NOLOCK) 
+		WHERE ci.Enabled = 1 AND  ci.srecommend = @srecommend 
+				
 		--SLI Live Casino or GD or Allbet
 		-- DCS 
 		PRINT  'Updating ALLBET' 
@@ -41,15 +49,15 @@ BEGIN
 		UPDATE cd
 			SET SuperDiscount = 0.009
 		FROM  CustDiscount3rd_Member cd (ROWLOCK)
-			INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND  ci.srecommend = @srecommend 
-		WHERE SportType = 211 
+			INNER JOIN #Cust_tmp c ON cd.CustID = c.CustID
+		WHERE cd.SportType = 211 AND C.roleID = 1
 
 		PRINT 'Updating SLI Live Casino & GD ' 
 		-- SLI & GD
 		UPDATE cs
 			SET sdiscount = 0.009
 		FROM  CustSettingGame cs WITH(ROWLOCK)
-			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid IN (1,4) AND ci.srecommend = @srecommend
+			INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid IN (1,4) 
 		WHERE cs.sporttype IN (162,255)
 				
 	END	
@@ -263,6 +271,7 @@ BEGIN
 	DROP TABLE #DirectAgent
 	DROP TABLE #DirectMaster
 	DROP TABLE #DirectMember	
+	DROP TABLE #Cust_tmp
 		
 END
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
