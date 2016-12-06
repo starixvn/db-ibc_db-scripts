@@ -6,10 +6,10 @@
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@Custid INT
-	,@roleid TINYINT
-	,@srecommend INT
-	,@mrecommend INT	
-	,@Mode BIT = 0
+	--,@roleid TINYINT
+	--,@srecommend INT
+	--,@mrecommend INT	
+	--,@Mode BIT = 0
 	,@target VARCHAR(20)
 AS
 BEGIN
