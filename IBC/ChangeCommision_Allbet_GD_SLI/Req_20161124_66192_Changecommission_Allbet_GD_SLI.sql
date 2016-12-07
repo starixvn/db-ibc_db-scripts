@@ -36,7 +36,7 @@ BEGIN
 		INSERT INTO #Cust_tmp (CustID,roleID)
 		SELECT ci.custid,ci.roleid
 		FROM custInfo ci (NOLOCK) 
-		WHERE ci.Enabled = 1 AND  ci.srecommend = @srecommend 
+		WHERE ci.srecommend = @srecommend 
 				
 		--SLI Live Casino or GD or Allbet
 		-- DCS 
@@ -96,13 +96,13 @@ BEGIN
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
 				INNER JOIN #DirectMaster d ON cd.CustID = d.CustID
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.roleid = 3 
 			WHERE SportType = 211 
 			-- Role 1 UNDER direct Master
 			UPDATE cd
 			SET SuperDiscount = 0.009,MasterDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.roleid = 1 
 				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
 			WHERE SportType = 211 
 			
@@ -112,14 +112,14 @@ BEGIN
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN #DirectMaster d ON cs.CustID = d.CustID
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 3 
 			WHERE cs.sporttype  IN (162,255)
 				
 			-- Role 1 UNDER direct Master
 			UPDATE cs
 				SET sdiscount = 0.009, adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 1 
 				INNER JOIN #DirectMaster d ON ci.mrecommend = d.CustID
 			WHERE cs.sporttype IN (162,255)
 					
@@ -143,7 +143,7 @@ BEGIN
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.roleid = 3 
 			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT mrecommend FROM #DirectAgent)
 			-- Role 2
@@ -151,13 +151,13 @@ BEGIN
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
 				INNER JOIN #DirectAgent d ON cd.CustID = d.CustID
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.roleid = 2 
 			WHERE SportType = 211 
 			-- Role 1
 			UPDATE cd
 			SET SuperDiscount = 0.009, MasterDiscount=0.009, AgentDiscount=0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.roleid = 1 
 				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
 			WHERE SportType = 211 
 			
@@ -167,7 +167,7 @@ BEGIN
 			UPDATE cs
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 3 
 			WHERE cs.sporttype IN  (162,255)
 				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectAgent)
 				
@@ -176,14 +176,14 @@ BEGIN
 				SET discount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
 				INNER JOIN #DirectAgent d ON cs.CustID = d.CustID
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 2 
 			WHERE cs.sporttype IN  (162,255)
 			
 			-- Roleid = 1
 			UPDATE cs
 				SET sdiscount = 0.009, adiscount = 0.009,discount = 0.009 
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid  AND ci.roleid = 1 
 				INNER JOIN #DirectAgent d ON ci.recommend = d.CustID
 			WHERE cs.sporttype  IN (162,255)
 				
@@ -207,14 +207,14 @@ BEGIN
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 3 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid  AND ci.roleid = 3 
 			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT mrecommend FROM #DirectMember)
 			-- Role 2
 			UPDATE cd
 				SET Discount = 0.009
 			FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1  AND ci.roleid = 2 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid  AND ci.roleid = 2 
 			WHERE SportType = 211 
 				AND cd.CustID IN (SELECT DISTINCT recommend FROM #DirectMember)
 			
@@ -222,7 +222,7 @@ BEGIN
 			UPDATE cd
 				SET SuperDiscount = 0.009,MasterDiscount = 0.009, AgentDiscount = 0.009
 			FROM  CustDiscount3rd_Member cd (ROWLOCK)
-				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custInfo ci (NOLOCK) ON cd.CustID = ci.custid  AND ci.roleid = 1 
 				INNER JOIN #DirectMember d ON ci.custid = d.CustID
 			WHERE SportType = 211 
 			
@@ -231,7 +231,7 @@ BEGIN
 			UPDATE cs
 				SET adiscount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 3 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid  AND ci.roleid = 3 
 			WHERE cs.sporttype IN (162,255)
 				AND cs.CustID IN (SELECT DISTINCT mrecommend FROM #DirectMember)
 				
@@ -239,7 +239,7 @@ BEGIN
 			UPDATE cs
 				SET discount = 0.009
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 2 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid  AND ci.roleid = 2 
 			WHERE cs.sporttype IN (162,255)
 				AND cs.CustID IN (SELECT DISTINCT recommend FROM #DirectMember)
 				
@@ -247,7 +247,7 @@ BEGIN
 			UPDATE cs
 				SET sdiscount = 0.009, adiscount = 0.009,discount = 0.009 
 			FROM  CustSettingGame cs WITH(ROWLOCK)
-				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.Enabled = 1 AND ci.roleid = 1 
+				INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid  AND ci.roleid = 1 
 				INNER JOIN #DirectMember d ON ci.custid = d.CustID
 			WHERE cs.sporttype IN (162,255)
 					
