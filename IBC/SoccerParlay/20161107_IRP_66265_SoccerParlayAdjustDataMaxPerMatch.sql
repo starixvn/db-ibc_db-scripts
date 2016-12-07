@@ -8,4 +8,4 @@
 
 UPDATE custInfo WITH(UPDLOCK,ROWLOCK)
 	SET MaxPerMatch1MP=Maxpermatch
-WHERE  ISNULL(MaxPerMatch1MP,0) <> Maxpermatch		
+WHERE  ISNULL(MaxPerMatch1MP,-1) <> Maxpermatch		
