@@ -6,25 +6,83 @@
 	
 */
 
--------- Update stake level for supers ------------------
-CREATE TABLE #super (Custid INT PRIMARY KEY,StakeLevelList VARCHAR(200))
-INSERT INTO #super (Custid,StakeLevelList)
-SELECT sl.CustID,tmp.StakeLevelList
-FROM CustStakeLevel_Agent SL WITH (NOLOCK)
-	INNER JOIN custInfo ci WITH (NOLOCK) ON SL.CustID = CI.custid AND CI.roleid = 4 AND CI.SyncLiveCasino = 1
+--------STEP 1: Update stake level for supers ------------------
+CREATE TABLE #SuperAndDirectMasterAgent (custID INT PRIMARY KEY, ExchangeID INT, RoleID INT)
+CREATE TABLE #currency_tmp (ExchangeID INT)
+CREATE TABLE #currency_StakelevelList (ExchangeID INT, StakeLevelList VARCHAR(100))
+
+-- list of super, direct master/agent need to be updated
+INSERT INTO #SuperAndDirectMasterAgent (custID,ExchangeID,RoleID)
+SELECT ci.custid,ci.currency AS ExchangeID, roleid
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE (ci.roleid = 4 	
+		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+		-- Production
+		AND ci.site in ('755555','Koribc')
+		AND ci.srecommend <> 72
+		and ci.currency <> 20
+		) 
+INSERT INTO #SuperAndDirectMasterAgent (custID,ExchangeID,RoleID)
+SELECT ci.custid,ci.currency AS ExchangeID, roleid
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE (ci.roleid = 3 -- Direct Master	
+		AND ci.custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
+		AND ci.srecommend IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
+		AND ci.site in ('755555','Koribc')
+		AND ci.srecommend <> 72
+		and ci.currency <> 20
+		)
+INSERT INTO #SuperAndDirectMasterAgent (custID,ExchangeID,RoleID)
+SELECT ci.custid,ci.currency AS ExchangeID, roleid
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE (ci.roleid = 2 -- Direct Agent	
+		AND ci.custid NOT IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
+		AND ci.mrecommend IN (SELECT custid FROM Acc_CustDirect WITH(NOLOCK))
+		AND ci.site in ('755555','Koribc')
+		AND ci.srecommend <> 72
+		and ci.currency <> 20
+		)
+-- Dummy accounts
+INSERT INTO #SuperAndDirectMasterAgent (custID,ExchangeID,RoleID)
+SELECT distinct ci.mrecommend,ci.currency AS ExchangeID, 3
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE custid in (select custid from #SuperAndDirectMasterAgent where roleid = 2)
+
+INSERT INTO #SuperAndDirectMasterAgent (custID,ExchangeID,RoleID)
+SELECT distinct ci.srecommend,ci.currency AS ExchangeID, 4
+FROM dbo.Customer ci WITH(NOLOCK)
+WHERE custid in (select custid from #SuperAndDirectMasterAgent where roleid = 3)
+
+
+-- get currencies
+INSERT INTO #currency_tmp (ExchangeID)
+SELECT DISTINCT ExchangeID 
+FROM #SuperAndDirectMasterAgent
+
+-- get stakelevelist of each currency
+INSERT INTO #currency_StakelevelList (ExchangeID,StakeLevelList)
+SELECT s.exchangeID, STUFF(tmp.StakeLevelList,1,1,'')  AS StakeLevelList
+FROM #currency_tmp s
 	CROSS APPLY (SELECT TOP 100 ',' + CONVERT(VARCHAR(10),t.StakeLevelID)
-						 FROM StakeLevel T (NOLOCK)
-						 WHERE T.ExchangeId = CI.currency AND T.GameTypeID = 2401
-						 ORDER BY T.MaxStake, T.MinStake
-						 FOR XML PATH ('')
-						 ) tmp (StakeLevelList)
-WHERE SL.SportType = 211 AND SL.BetType = 2401						 
-					 
+					 FROM StakeLevel T (NOLOCK)
+					 WHERE T.ExchangeId = s.exchangeID AND T.GameTypeID = 2401
+					 ORDER BY T.MaxStake, T.MinStake
+					 FOR XML PATH ('')
+					 ) tmp (StakeLevelList)
+				 		
+--------STEP 2: 
+-------------------- update stakelevel: Offer ALL STAKELEVEL FOR SUPER AND DIRECT MASTER/AGENT ----------------------------
 UPDATE 	T
-	SET StakeLevelList = S.StakeLevelList
+	SET StakeLevelList = SLL.stakelevelList
 FROM CustStakeLevel_Agent T (ROWLOCK)
-	INNER JOIN #super S ON T.CustID = S.custID
+	INNER JOIN #SuperAndDirectMasterAgent S ON T.CustID = S.custID
+	INNER JOIN #currency_StakelevelList SLL ON SLL.exchangeID = S.ExchangeID
 WHERE T.SportType = 211 AND T.BetType = 2401
+
+DROP TABLE #SuperAndDirectMasterAgent
+DROP TABLE #currency_StakelevelList
+DROP TABLE #currency_tmp
+
 
 /************** Enable VIP *********************/
 -- only offer Super: list of follow LC
