@@ -1,6 +1,6 @@
 /*
 	Created: Helen	
-	Task: Initialize Product Status of AllBet for Credit customers
+	Task: Initialize Product Status of Fishing World for Credit customers
 	DB: DBCUST/CustDB
 	Date: 20160820
 */ 
@@ -22,38 +22,8 @@ BEGIN
 	   )
 		RETURN
 	
-	
-	DECLARE @xmlStrHidden_0 XML
-	
-	DECLARE @xmlStrSync_0 XML
-	
-	SET @xmlStrSync_0 =(
-			SELECT (
-					SELECT psp.bitmapOrder	AS '@b'
-						, 0	AS '@s'
-					FROM ProductStatusProfile psp WITH (NOLOCK)
-					WHERE psp.Sporttype = 211 AND Bettype IN (2401,2402)	
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-			)
-					
-	SET @xmlStrHidden_0 =(
-			SELECT (
-					SELECT psp.bitmapOrder	AS '@b'
-						, 0	AS '@s'
-					FROM ProductStatusProfile psp WITH (NOLOCK)
-					WHERE psp.Sporttype = 211 AND Bettype IN (2401,2402)	
-	
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-	
-			)
+	DECLARE @bitmapOrder INT
+	SET @bitmapOrder = (SELECT bitmapOrder FROM ProductStatusProfile (NOLOCK) WHERE Sporttype = 219 AND Bettype = 1011)
 	
 	IF @srecommend IN (2,4,13,15)
 	BEGIN
@@ -81,13 +51,7 @@ BEGIN
 		IF EXISTS (SELECT 1 FROM #DirectMaster)
 		BEGIN
 			UPDATE cs
-				SET 	
-				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
-										 ELSE cs.bitmapHasSynced
-									END	 
-				, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
-										 ELSE cs.bitmapIsHidden
-									END	 
+				SET bitmapIsHidden =  dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0) 
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
@@ -96,13 +60,7 @@ BEGIN
 		IF EXISTS (SELECT 1 FROM #DirectAgent)
 		BEGIN
 			UPDATE cs
-				SET 	
-				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
-										 ELSE cs.bitmapHasSynced
-									END	 
-				, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
-										 ELSE cs.bitmapIsHidden
-									END	 
+				SET bitmapIsHidden =  dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0) 
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			
@@ -114,13 +72,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE cs
-		SET 	
-			  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
-									 ELSE cs.bitmapHasSynced
-								END	 
-			, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
-									 ELSE cs.bitmapIsHidden
-								END	 
+		SET bitmapIsHidden =  dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0) 
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 		WHERE ci.srecommend = @srecommend 

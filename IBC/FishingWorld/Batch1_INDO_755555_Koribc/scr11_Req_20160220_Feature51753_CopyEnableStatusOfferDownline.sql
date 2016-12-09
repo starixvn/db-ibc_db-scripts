@@ -25,7 +25,9 @@ BEGIN
 	   )
 		RETURN
 	
-	
+	DECLARE @bitmapOrder INT
+	SET @bitmapOrder = (SELECT bitmapOrder FROM ProductStatusProfile (NOLOCK) WHERE Sporttype = 219 AND Bettype = 1011)
+
 	/*******************************CUST PRODUCT STATUS TABLE*******************************/	
 	/*
 	IF @Mode = 1 -- NOT reply on LC
@@ -33,7 +35,7 @@ BEGIN
 		IF @roleid = 4
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled,@bitmapOrder , 0) ELSE bitmapIsDisabled END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.srecommend = @Custid
@@ -41,13 +43,13 @@ BEGIN
 		ELSE IF @roleid = 3
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0) ELSE bitmapIsDisabled END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.mrecommend = @Custid
 
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0) ELSE bitmapIsDisabled END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.custid = @srecommend
@@ -55,13 +57,13 @@ BEGIN
 		ELSE IF @roleid = 2
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0) ELSE bitmapIsDisabled END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.recommend = @Custid
 
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0) ELSE bitmapIsDisabled END
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.custid = @srecommend OR ci.custid = @mrecommend
@@ -73,7 +75,7 @@ BEGIN
 		IF @roleid = 4
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0)
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.srecommend = @Custid
@@ -81,13 +83,13 @@ BEGIN
 		ELSE IF @roleid = 3
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0)
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.mrecommend = @Custid
 
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled =  dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0)
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.custid = @srecommend
@@ -95,13 +97,13 @@ BEGIN
 		ELSE IF @roleid = 2
 		BEGIN
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0) 
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.recommend = @Custid
 
 			UPDATE cs
-			SET bitmapIsDisabled = CASE WHEN ci.SyncLiveCasino = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0) ELSE bitmapIsDisabled END
+				SET bitmapIsDisabled =  dbo.f_GenerateProductStatus(bitmapIsDisabled, @bitmapOrder, 0)
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			WHERE ci.custid = @srecommend OR ci.custid = @mrecommend
@@ -127,165 +129,12 @@ SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.site in ('INDO','755555','Koribc')
+	AND ci.roleid = 4
+	/*
 	AND ci.username IN ('CHTB',
 'ST',
 'STT',
-'ST1T',
-'ST2T',
-'ST3T',
-'ST4T',
-'ST5T',
-'ST6T',
-'ST7T',
-'ST8T',
-'ST9T',
-'BT',
-'B5T',
-'B1T',
-'B2T',
-'B3T',
-'B4T',
-'B6T',
-'B7T',
-'B8T',
-'B9T',
-'B10T',
-'B11T',
-'B12T',
-'B13T',
-'B14T',
-'B15T',
-'B16T',
-'B17T',
-'B18T',
-'B19T',
-'B20T',
-'B21T',
-'B22T',
-'B23T',
-'B24T',
-'B25T',
-'STEB',
-'SABT',
-'B26T',
-'B27T',
-'B28t',
-'B29T',
-'B30T',
-'B31T',
-'B32T',
-'B33T',
-'B35T',
-'B34T',
-'B36T',
-'B37T',
-'B38T',
-'B39T',
-'B40T',
-'B41T',
-'B42T',
-'B43T',
-'B44T',
-'B45T',
-'B46T',
-'B47T',
-'B48T',
-'B49T',
-'B50T',
-'B51T',
-'B52T',
-'B53T',
-'B54T',
-'MGTB',
-'MGBTB',
-'MGCTB',
-'SGTB',
-'SGATB',
-'SGI',
-'SGT',
-'SGAT',
-'SGBT',
-'SGCT',
-'SGKB',
-'THT',
-'THD',
-'THF',
-'S6RUP',
-'S6ARUP',
-'AA',
-'BA',
-'DA',
-'FA',
-'VC',
-'VD',
-'VM',
-'VF',
-'GA',
-'VO',
-'GG',
-'VP',
-'S6KW',
-'S7KW',
-'VQ',
-'FM',
-'VI',
-'AKO1',
-'AKO2',
-'VE',
-'KRW',
-'VA',
-'VG',
-'S9KW',
-'MD',
-'AKO3',
-'S6T',
-'S9KS',
-'VJ',
-'S9KK',
-'S6S',
-'VN',
-'VR',
-'S88ID',
-'S88IE',
-'JAT',
-'MBO',
-'HPI',
-'HPJ',
-'HPH',
-'HPE',
-'HPA',
-'MO',
-'MP',
-'HPG',
-'MQ',
-'MG',
-'HTB',
-'MU',
-'MV',
-'MZ',
-'ML',
-'MX',
-'SLS',
-'SLT',
-'ALTH',
-'ALRP',
-'ALKR',
-'KKT',
-'KKB',
-'KAE',
-'KAF',
-'KBF',
-'KBT',
-'KCT',
-'KDT',
-'KET',
-'KND',
-'KNE',
-'KFT',
-'KFU',
-'HGW',
-'S7D',
-'S7W')
+*/
 
 WHILE (1 = 1)
 BEGIN
@@ -323,165 +172,12 @@ SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid, 0 AS mode
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND ci.site in ('INDO','755555','Koribc')
+		AND ci.roleid = 4
+	/*
 	AND ci.username IN ('CHTB',
 'ST',
 'STT',
-'ST1T',
-'ST2T',
-'ST3T',
-'ST4T',
-'ST5T',
-'ST6T',
-'ST7T',
-'ST8T',
-'ST9T',
-'BT',
-'B5T',
-'B1T',
-'B2T',
-'B3T',
-'B4T',
-'B6T',
-'B7T',
-'B8T',
-'B9T',
-'B10T',
-'B11T',
-'B12T',
-'B13T',
-'B14T',
-'B15T',
-'B16T',
-'B17T',
-'B18T',
-'B19T',
-'B20T',
-'B21T',
-'B22T',
-'B23T',
-'B24T',
-'B25T',
-'STEB',
-'SABT',
-'B26T',
-'B27T',
-'B28t',
-'B29T',
-'B30T',
-'B31T',
-'B32T',
-'B33T',
-'B35T',
-'B34T',
-'B36T',
-'B37T',
-'B38T',
-'B39T',
-'B40T',
-'B41T',
-'B42T',
-'B43T',
-'B44T',
-'B45T',
-'B46T',
-'B47T',
-'B48T',
-'B49T',
-'B50T',
-'B51T',
-'B52T',
-'B53T',
-'B54T',
-'MGTB',
-'MGBTB',
-'MGCTB',
-'SGTB',
-'SGATB',
-'SGI',
-'SGT',
-'SGAT',
-'SGBT',
-'SGCT',
-'SGKB',
-'THT',
-'THD',
-'THF',
-'S6RUP',
-'S6ARUP',
-'AA',
-'BA',
-'DA',
-'FA',
-'VC',
-'VD',
-'VM',
-'VF',
-'GA',
-'VO',
-'GG',
-'VP',
-'S6KW',
-'S7KW',
-'VQ',
-'FM',
-'VI',
-'AKO1',
-'AKO2',
-'VE',
-'KRW',
-'VA',
-'VG',
-'S9KW',
-'MD',
-'AKO3',
-'S6T',
-'S9KS',
-'VJ',
-'S9KK',
-'S6S',
-'VN',
-'VR',
-'S88ID',
-'S88IE',
-'JAT',
-'MBO',
-'HPI',
-'HPJ',
-'HPH',
-'HPE',
-'HPA',
-'MO',
-'MP',
-'HPG',
-'MQ',
-'MG',
-'HTB',
-'MU',
-'MV',
-'MZ',
-'ML',
-'MX',
-'SLS',
-'SLT',
-'ALTH',
-'ALRP',
-'ALKR',
-'KKT',
-'KKB',
-'KAE',
-'KAF',
-'KBF',
-'KBT',
-'KCT',
-'KDT',
-'KET',
-'KND',
-'KNE',
-'KFT',
-'KFU',
-'HGW',
-'S7D',
-'S7W')
+*/
 
 WHILE (1 = 1)
 BEGIN

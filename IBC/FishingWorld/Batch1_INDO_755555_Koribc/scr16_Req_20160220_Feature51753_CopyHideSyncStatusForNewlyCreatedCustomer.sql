@@ -17,27 +17,13 @@ WHERE roleid = 4 AND custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK
 	AND site in ('INDO','755555','Koribc')
 	AND custid <> 72
 
-DECLARE @xmlStrHidden_0 XML
-				
-SET @xmlStrHidden_0 =(
-		SELECT (
-				SELECT psp.bitmapOrder	AS '@b'
-					, 0	AS '@s'
-				FROM ProductStatusProfile psp WITH (NOLOCK)
-				WHERE psp.Sporttype = 219 AND Bettype = 1011
-
-				FOR XML PATH('r')
-					, TYPE
-				)
-		FOR XML PATH('root')
-			, TYPE
-		)
+DECLARE @bitmapOrder INT
+SET @bitmapOrder = (SELECT bitmapOrder FROM ProductStatusProfile (NOLOCK) WHERE Sporttype = 219 AND Bettype = 1011)
 
 /*******************************CUST PRODUCTSTATUS TABLE*******************************/	
 --bitmapHasSynced = 1 BY DEFAULT
 UPDATE cs
-		SET 	
-			bitmapIsHidden =  (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
+		SET bitmapIsHidden =  dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0)
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 WHERE ci.srecommend IN (SELECT CustID FROM #supers)
@@ -66,13 +52,7 @@ WHERE ci.srecommend in (2,4,13,15) AND c.site IN ('INDO','755555','Koribc') AND 
 IF EXISTS (SELECT 1 FROM #DirrectMaster)
 BEGIN
 	UPDATE cs
-		SET 	
-		  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
-								 ELSE cs.bitmapHasSynced
-							END	 
-		, bitmapIsHidden =  CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
-								 ELSE cs.bitmapIsHidden
-							END	 
+		SET bitmapIsHidden =  dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0) 
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.CustID > @max_custid AND (ci.mrecommend IN (SELECT custid FROM #DirrectMaster))
@@ -81,7 +61,7 @@ END
 IF EXISTS (SELECT 1 FROM #DirrectAgent)
 BEGIN
 	UPDATE cs
-		SET bitmapIsHidden =  (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))	
+		SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, @bitmapOrder, 0)  
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.CustID > @max_custid 
