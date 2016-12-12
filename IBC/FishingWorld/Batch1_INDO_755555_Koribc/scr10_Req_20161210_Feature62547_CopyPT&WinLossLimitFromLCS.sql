@@ -84,7 +84,7 @@ BEGIN
 
 		----------- For SMA  -----------
 		INSERT INTO #SMATemp (CustID,roleid)
-		SELECT CustID,roleid,SyncLiveCasino
+		SELECT CustID,roleid
 		FROM custInfo CI WITH (NOLOCK)
 		WHERE CI.custid = @srecommend -- SUPER
 		UNION ALL
