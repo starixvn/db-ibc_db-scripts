@@ -1,4 +1,43 @@
---truncate table #Temp
+/*
+	Created By: Helen
+	Created Date: 20161212
+	Task: https://nexdev.net/issues/68356
+*/
+
+TRUNCATE TABLE WinLimit_ProductSettingDetail_UAT
+
+TRUNCATE TABLE WinLimit_ProductSetting_UAT
+
+TRUNCATE TABLE WinLimit_CustGameSetting_UAT
+
+TRUNCATE TABLE Winlimit_GameGroupSetting_UAT
+
+TRUNCATE TABLE Winlimit_Group_UAT
+
+TRUNCATE TABLE Winlimit_LevelSetting_UAT
+
+TRUNCATE TABLE Winlimit_ActionSetting_UAT
+
+GO
+
+INSERT INTO Winlimit_LevelSetting_UAT (LevelID, LevelName) 
+VALUES 
+ (1,	'Orange')
+, (2,	'Yellow')
+, (3,	'Red')
+GO
+
+INSERT INTO Winlimit_ActionSetting_UAT (ActionID, ActionName) 
+VALUES 
+ (0,	'Warning') 
+,(1,	'Blocked Placebet')
+,(2,	'Unblocked Placebet')
+,(3,	'Blocked Transfer/Withdraw')
+,(4,	'Unblocked Transfer/Withdraw')
+,(5,	'Blocked Placebet and Blocked Transfer/Withdraw')
+
+GO
+
 CREATE TABLE #Temp (ProductID INT, BetTypeID INT,GroupID INT,GroupName VARCHAR(200),Level1 MONEY, Level2 MONEY,Level3 MONEY)
 
 INSERT INTO #Temp (ProductID,BetTypeID,GroupID,GroupName,Level1,Level2,Level3)
@@ -192,11 +231,7 @@ VALUES (3,81,1,'NG Group 1',5000,10000,50000),
 (4,1108,31,'SLI Live Casino 2',5000,10000,50000),
 (4,1109,31,'SLI Live Casino 2',5000,10000,50000)
 
-
-
 --(24,1011 ,32,'Fishing World 1',5000,10000,50000)
-
-
 
 /*
 select GroupName, COUNT(distinct GroupID)
@@ -204,27 +239,18 @@ from #Temp
 group by GroupName
 having COUNT(distinct GroupID) > 1
 
-TRUNCATE TABLE WinLimit_ProductSettingDetail
-
-TRUNCATE TABLE WinLimit_CustGameSetting
-
-TRUNCATE TABLE Winlimit_GameGroupSetting
-
-TRUNCATE TABLE Winlimit_Group
-
-
 */
 
 INSERT INTO Winlimit_Group_UAT(GroupID, GroupName)
 SELECT DISTINCT GroupID,GroupName
 FROM #Temp
 
-
-
 INSERT INTO dbo.Winlimit_GameGroupSetting_UAT (ProductID, BetTypeID, GroupID)
-SELECT DISTINCT ProductID, BetTypeID, GroupID
-FROM #Temp
-
+SELECT DISTINCT t.ProductID, t.BetTypeID, t.GroupID,tmp.BetTypeRefID
+FROM #Temp T
+	CROSS APPLY (SELECT MIN(BetTypeID) AS BetTypeRefID
+				 FROM #Temp T1 WHERE T1.ProductID = T.ProductID
+				 )Tmp
 
 INSERT INTO WinLimit_ProductSettingDetail_UAT (ProductID, GroupID, ExchangeID, SiteID, LevelID,  IsBlockedPlaceBet, IsBlockedTransfer, MaxWinLimit_RM)
 SELECT DISTINCT ProductID, GroupID, ExchangeID, s.SiteID, 1, 0, 0,t.Level1 MaxWinLimit_RM

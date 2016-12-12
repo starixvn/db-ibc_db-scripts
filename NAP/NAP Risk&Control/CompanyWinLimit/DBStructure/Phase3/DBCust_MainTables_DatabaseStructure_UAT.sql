@@ -53,6 +53,7 @@ CREATE TABLE [dbo].[Winlimit_GameGroupSetting](
 	[ProductID] [tinyint] NOT NULL,
 	[BetTypeID] [smallint] NOT NULL,
 	[GroupID] [int] NOT NULL,
+	[BetTypeRefID] [smallint] NOT NULL
 	
  CONSTRAINT [PK_Winlimit_GroupSetting] PRIMARY KEY CLUSTERED 
 (
