@@ -104,7 +104,7 @@ BEGIN
 			INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 		WHERE CI.roleid = 2
 		UNION ALL
-		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
+		SELECT CI.CustID,CI.roleid -- Direct Agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 		---------- For members ---------
