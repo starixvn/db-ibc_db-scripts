@@ -585,4 +585,3 @@ FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 
 DROP TABLE #Cust_2
 DROP TABLE #Cust_3
-DROP TABLE #super
