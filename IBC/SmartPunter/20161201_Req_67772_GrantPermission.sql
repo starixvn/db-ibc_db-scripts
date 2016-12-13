@@ -1,6 +1,6 @@
 /*
 	Created: 20161201@Winnie
-	Task: Grant permission - [RedmineID: #67772]
+	Task: Grant permission and alter column to allow NULL - [RedmineID: #67772]
 	DB: DBPOLICY/bodb02
 */
 Use bodb02
@@ -18,10 +18,11 @@ GO
 */
 Use bodb_CustomerLog
 Go
+ALTER TABLE UserLog_SmartPunter
+ALTER COLUMN Custid INT NULL
+
 GRANT EXECUTE ON [dbo].NAP_UserLog_SmartPunterIns TO BODBDownlineNetView
 GRANT EXECUTE ON [dbo].NAP_UserLog_SmartPunterIns TO BODBDownlineNet
-
-
 GO
 
 /*
