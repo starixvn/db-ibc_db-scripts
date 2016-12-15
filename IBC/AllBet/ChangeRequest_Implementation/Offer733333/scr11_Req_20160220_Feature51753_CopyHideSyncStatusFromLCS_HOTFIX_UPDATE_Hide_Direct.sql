@@ -132,7 +132,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			--,@maxcustid = @max_custid
+			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
 			
@@ -163,7 +163,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			--,@maxcustid = @max_custid
+			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'
