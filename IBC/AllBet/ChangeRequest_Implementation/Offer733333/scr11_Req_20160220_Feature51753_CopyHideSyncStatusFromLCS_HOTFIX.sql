@@ -193,7 +193,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		IF @srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708) --super no, master yes, agent yes
+		IF @srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708,796555) --super no, master yes, agent yes
 		BEGIN
 		
 			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
@@ -267,7 +267,7 @@ BEGIN
 				  	
 			
 		END
-		ELSE IF @srecommend IN (796555,5005322) --Super yes, master yes, agent no
+		ELSE IF @srecommend IN (5005322) --Super yes, master yes, agent no
 		BEGIN
 			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
 			SELECT custid, roleid, SyncLiveCasino
