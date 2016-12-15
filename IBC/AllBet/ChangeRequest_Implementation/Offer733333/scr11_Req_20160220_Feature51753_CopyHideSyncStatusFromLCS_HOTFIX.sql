@@ -39,7 +39,7 @@ BEGIN
 		isAutoResetLiveCasino BIT
 	)
 	
-	
+	CREATE TABLE #TempCust (CustID INT PRIMARY KEY, roleID INT,SyncLiveCasino BIT)
 	
 	DECLARE @xmlStrSync_1 XML
 	DECLARE @xmlStrSync_0 XML
@@ -103,11 +103,8 @@ BEGIN
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
-		END
-		
-		IF EXISTS (SELECT 1 FROM #DirectAgent)
-		BEGIN
+			WHERE ci.custid = @srecommend
+			
 			UPDATE cs
 				SET 	
 				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
@@ -116,10 +113,82 @@ BEGIN
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) 
+				AND ci.roleid = 3
 			
-			WHERE ci.recommend IN (SELECT custid FROM #DirectAgent) 
-				OR ci.custid = @srecommend 
-				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent) 
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) 
+				AND ci.roleid = 2
+			
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) 
+					AND ci.roleid = 1
+			
+		END
+		
+		IF EXISTS (SELECT 1 FROM #DirectAgent)
+		BEGIN
+		
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.custid = @srecommend 
+				
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ( ci.recommend IN (SELECT custid FROM #DirectAgent) 
+				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent))
+				AND ci.roleid = 3
+			
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ( ci.recommend IN (SELECT custid FROM #DirectAgent) 
+				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent))
+				AND ci.roleid = 2	
+			
+			UPDATE cs
+				SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ( ci.recommend IN (SELECT custid FROM #DirectAgent) 
+				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent))
+				AND ci.roleid = 1		 
+				
 		END
 	END
 	ELSE
@@ -164,7 +233,27 @@ BEGIN
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
+			WHERE roleid = 4
 			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
+			WHERE roleid = 3
+				
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
+			WHERE roleid = 2		
 			
 			UPDATE cs
 			SET 	
@@ -200,8 +289,29 @@ BEGIN
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
+				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID 
+			WHERE tmp.roleid = 4
+				
 			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID 
+			WHERE tmp.roleid = 3
+			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID 
+			WHERE tmp.roleid = 2
 			
 			UPDATE cs
 			SET 	
@@ -215,6 +325,11 @@ BEGIN
 		END
 		ELSE 
 		BEGIN
+			INSERT INTO #TempCust (CustID,roleID,SyncLiveCasino)
+			SELECT CI.custid,roleid,SyncLiveCasino
+			FROM custInfo CI WITH (NOLOCK) 
+			WHERE ci.srecommend = @srecommend 
+			
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
@@ -222,8 +337,40 @@ BEGIN
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-			WHERE ci.srecommend = @srecommend 
+				INNER JOIN #TempCust CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.roleID = 4
+			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #TempCust CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.roleID = 3
+			
+			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #TempCust CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.roleID = 2
+			
+			UPDATE cs
+			SET 	
+				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
+									END	 
+				
+			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+				INNER JOIN #TempCust CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+			WHERE ci.roleID = 1
+			
 		END
 	END
 	
