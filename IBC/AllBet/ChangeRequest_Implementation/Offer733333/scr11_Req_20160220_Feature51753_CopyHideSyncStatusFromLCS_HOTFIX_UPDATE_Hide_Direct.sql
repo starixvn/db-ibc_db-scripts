@@ -86,7 +86,7 @@ BEGIN
 									
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) OR ci.custid = @srecommend
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) 
 		END
 		
 		IF EXISTS (SELECT 1 FROM #DirectAgent)
@@ -97,9 +97,8 @@ BEGIN
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
 			
-			WHERE ci.recommend IN (SELECT custid FROM #DirectAgent) 
-				OR ci.custid = @srecommend 
-				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent) 
+			WHERE (ci.recommend IN (SELECT custid FROM #DirectAgent) 
+				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent) ) AND CS.CustID <> 4300
 		END
 	END
 	ELSE
