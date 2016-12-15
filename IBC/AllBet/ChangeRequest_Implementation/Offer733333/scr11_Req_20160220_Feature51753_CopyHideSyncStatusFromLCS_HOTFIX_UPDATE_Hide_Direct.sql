@@ -6,7 +6,7 @@
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
-	--,@maxcustid INT
+	,@maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -66,7 +66,7 @@ BEGIN
 		WHERE SITE in ('733333','222223')
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=3 AND srecommend = @srecommend 
+			and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid
 			
 		--- get direct agent
 		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -75,7 +75,7 @@ BEGIN
 		WHERE SITE in ('733333','222223')
 			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=2 AND srecommend = @srecommend 
+			and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
 		
 		IF EXISTS (SELECT 1 FROM #DirectMaster)
 		BEGIN
@@ -86,7 +86,7 @@ BEGIN
 									
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 				INNER JOIN dbo.custInfo ci WITH(NOLOCK) ON cs.CustID = ci.CustID
-			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) 
+			WHERE (ci.mrecommend IN (SELECT custid FROM #DirectMaster) /*AND ci.recommend NOT IN (16129,59308,68531)*/) AND cs.custid <= @maxcustid
 		END
 		
 		IF EXISTS (SELECT 1 FROM #DirectAgent)
@@ -99,88 +99,10 @@ BEGIN
 			
 			WHERE (ci.recommend IN (SELECT custid FROM #DirectAgent) 
 				OR ci.custid IN (SELECT mrecommend FROM #DirectAgent) ) AND CS.CustID <> 4300
+				AND cs.custid <= @maxcustid
 		END
 	END
-	ELSE
-	BEGIN
-		IF @srecommend IN (1266057,913628,877004,900371,4204225,6032879,896708,796555) --super no, master yes, agent yes
-		BEGIN
-
-			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-			SELECT custid, roleid, SyncLiveCasino
-			FROM Custinfo WITH (NOLOCK)
-			WHERE custid = @srecommend
-			UNION ALL
-			-- Roleid = 3
-			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
-			FROM Custinfo CI WITH (NOLOCK)
-				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
-			WHERE Enabled = 1 
-				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
-				AND CI.roleid = 3
-				
-			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
-			FROM Custinfo CI WITH (NOLOCK)
-				INNER JOIN Customer C (NOLOCK) ON CI.custid = C.custid
-				INNER JOIN #SMATemp master_tmp (NOLOCK) ON master_tmp.custid = CI.mrecommend AND master_tmp.roleid = 3
-			WHERE Enabled = 1 
-				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
-				AND CI.roleid = 2
-			
-			INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-			SELECT ci.custid, ci.SyncLiveCasino
-			FROM Custinfo ci WITH (NOLOCK)
-				INNER JOIN #SMATemp agent_tmp ON ci.recommend = agent_tmp.CustID AND agent_tmp.roleid = 2
-			WHERE CI.srecommend = @srecommend AND CI.roleid = 1  AND Enabled = 1 
-			
-			
-			UPDATE cs
-			SET 	
-				 bitmapIsHidden = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_1)))	
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
-			
-			
-			UPDATE cs
-			SET 	
-				 bitmapIsHidden = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_1)))	
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN #MemberTemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
-			
-				  	
-			
-		END
-		ELSE IF @srecommend IN (5005322) --Super yes, master yes, agent no
-		BEGIN
-			INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino)
-			SELECT custid, roleid, SyncLiveCasino
-			FROM Custinfo WITH (NOLOCK)
-			WHERE custid = @srecommend
-			UNION ALL
-			-- Roleid = 3
-			SELECT CI.custid, CI.roleid, CI.SyncLiveCasino
-			FROM Custinfo CI WITH (NOLOCK)
-				INNER JOIN Customer C (NOLOCK) ON CI.custid = c.custid
-			WHERE Enabled = 1 
-				AND ci.srecommend = @srecommend AND c.Site  IN ('733333','222223')
-				AND CI.roleid = 3
-			
-			UPDATE cs
-			SET 	
-				 bitmapIsHidden = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_1)))	
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN #SMATemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
-			
-			
-			UPDATE cs
-			SET 	
-				 bitmapIsHidden = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_1)))	
-			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-				INNER JOIN #MemberTemp tmp WITH (NOLOCK) ON tmp.CustID = cs.CustID
-				
-		END
-	END
+	
 END
 
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -197,13 +119,7 @@ SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE  ci.custid IN (
 			-- dummy account
-			2,3,5,12,13
-			-- cross site
-			/* 
-			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
-			2. Super yes, master yes, agent no: 796555, 5005322		
-			*/
-			,1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322 
+			2,13
 		)
 
 WHILE (1 = 1)
@@ -232,15 +148,9 @@ DECLARE @max_custid INT, @srecommend INT
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid IN (
+WHERE  ci.custid IN (
 			-- dummy account
-			2,3,5,12,13
-			-- cross site
-			/* 
-			1. super no, master yes, agent yes(1266057,900371,4204225,674248,877004,6032879)
-			2. Super yes, master yes, agent no: 796555, 5005322		
-			*/
-			,1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322 
+			2,13
 		)
 
 WHILE (1 = 1)
