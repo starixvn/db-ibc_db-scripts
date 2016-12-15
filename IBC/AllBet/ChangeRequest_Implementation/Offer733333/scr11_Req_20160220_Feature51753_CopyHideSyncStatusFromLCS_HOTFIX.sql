@@ -379,7 +379,7 @@ GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
 ------------------------------------------------------	
 
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB04x/DB05x/DB06/DBTP) -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
