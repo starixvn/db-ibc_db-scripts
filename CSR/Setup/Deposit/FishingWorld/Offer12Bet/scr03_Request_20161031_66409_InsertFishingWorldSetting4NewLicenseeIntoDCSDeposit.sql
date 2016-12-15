@@ -169,7 +169,7 @@ SELECT   @site='12Bet',
 	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
-SELECT top 10 custid,currency
+SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 where site=@site 									
 	AND custid <= @max_custid
