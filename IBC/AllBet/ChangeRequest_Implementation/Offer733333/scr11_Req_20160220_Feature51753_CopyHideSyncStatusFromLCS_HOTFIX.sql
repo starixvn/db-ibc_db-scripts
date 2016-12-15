@@ -42,6 +42,7 @@ BEGIN
 	
 	
 	DECLARE @xmlStrSync_1 XML
+	DECLARE @xmlStrSync_0 XML
 	
 	SET @xmlStrSync_1 =(
 			SELECT (
@@ -55,7 +56,20 @@ BEGIN
 			FOR XML PATH('root')
 				, TYPE
 			)
-					
+	
+	SET @xmlStrSync_0 =(
+			SELECT (
+					SELECT psp.bitmapOrder	AS '@b'
+						, 0	AS '@s'
+					FROM ProductStatusProfile psp WITH (NOLOCK)
+					WHERE psp.Sporttype = 211 AND Bettype IN (2401,2402)	
+					FOR XML PATH('r')
+						, TYPE
+					)
+			FOR XML PATH('root')
+				, TYPE
+			)
+								
 	IF @srecommend IN (2,3,5,12,13)
 	BEGIN
 		
@@ -84,7 +98,7 @@ BEGIN
 			UPDATE cs
 				SET 	
 				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -97,7 +111,7 @@ BEGIN
 			UPDATE cs
 				SET 	
 				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -145,7 +159,7 @@ BEGIN
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -155,7 +169,7 @@ BEGIN
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -182,7 +196,7 @@ BEGIN
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -192,7 +206,7 @@ BEGIN
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN tmp.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
@@ -204,7 +218,7 @@ BEGIN
 			UPDATE cs
 			SET 	
 				  bitmapHasSynced = CASE WHEN ci.SyncLiveCasino = 1 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))	
-										 ELSE cs.bitmapHasSynced
+										 ELSE (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_0)))	
 									END	 
 				
 			FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
