@@ -222,7 +222,7 @@ BEGIN
 		INNER JOIN dbo.custOverrideGame co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	
+	WHERE cs.CustID <> @srecommend
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
 		(	[custid]
@@ -248,7 +248,7 @@ BEGIN
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE cs.CustID <> @srecommend
+	
 	DECLARE @apos SMALLMONEY,
 			@mpos SMALLMONEY
 	
@@ -314,7 +314,8 @@ BEGIN
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE CS.CustID <> @srecommend	 
+	WHERE CS.CustID <> @srecommend
+		 
 	--Member Level
 	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
 	SELECT cs.custid, dest.tsporttype, dest.tbettype, cs.PlayerDiscount, cs.discount, cs.adiscount, cs.sdiscount
