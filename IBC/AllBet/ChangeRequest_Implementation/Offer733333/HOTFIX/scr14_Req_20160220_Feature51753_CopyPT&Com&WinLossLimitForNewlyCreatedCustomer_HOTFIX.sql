@@ -14,7 +14,7 @@ CREATE TABLE #supers (custid int,exchangeid INT)
 INSERT INTO #supers(custid,exchangeid)
 SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid NOT IN (2,13)
+WHERE ci.custid IN (2,3,5,12,13)
 
 CREATE TABLE #DestinationSportBetType(fSportType SMALLINT, fBetType SMALLINT,tSportType SMALLINT, tBetType SMALLINT, IsLive BIT,  SettingType INT)
 INSERT INTO #DestinationSportBetType
@@ -33,18 +33,6 @@ CREATE TABLE #SMATemp
 	CustID INT PRIMARY KEY CLUSTERED,	
 	roleid TINYINT
 )
-
-	
-INSERT INTO #MemberTemp (CustID)
-SELECT custid
-FROM Custinfo WITH (NOLOCK)
-WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1 AND custid > @maxcustid
-	
-INSERT INTO #SMATemp (CustID, roleid)
-SELECT custid, roleid
-FROM Custinfo WITH (NOLOCK)
-WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @maxcustid 
-
 ------------STARTING Dummy Processing
 CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
