@@ -76,11 +76,6 @@ BEGIN
 
 		----------- For SMA  -----------
 		INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
-		SELECT CustID,roleid,SyncLiveCasino
-		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.custid = @srecommend -- SUPER
-		UNION ALL
-
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
@@ -88,8 +83,8 @@ BEGIN
 		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-		WHERE CI.custid <= @maxcustid 			
-			
+		WHERE CI.custid <= @maxcustid AND ci.custid <> 4300 -- under this master having direct agent of 7555555			
+		
 		UNION ALL
 
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
@@ -134,16 +129,6 @@ BEGIN
 	FROM LossLimit_GlobalSetting WITH (NOLOCK)
 	WHERE ProductId = 21 AND ExchangeId = @ExchangeID
 	--------------------------------------WinLossLimit-------------------------------------------------
-	--SuperLevel
-	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
-	SELECT custid, dest.tSportType, dest.tBetType	
-		, CASE WHEN ci.SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END AS MaxWinLimit
-		, @DefaultLossLimit AS MaxLossLimit 
-		,CASE WHEN ci.SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END AS IsAutoReset
-	FROM #SMATemp ci WITH(NOLOCK)	
-		CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-	WHERE ci.custid = @srecommend AND dest.SettingType = 6 
-									
 	--Master Level
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT ci.custid, dest.tSportType, dest.tBetType	
