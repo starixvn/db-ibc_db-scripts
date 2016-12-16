@@ -102,18 +102,6 @@ BEGIN
 	FROM CustWinLossLimit_Member cg 		
 		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
 	WHERE CG.SportType = 211 
-	
-	-- Stake Level
-	DELETE cg
-	FROM CustStakeLevel_Agent cg 		
-		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE SportType = 211 
-
-	DELETE cg
-	FROM CustStakeLevel_Member cg 		
-		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE CG.SportType = 211 
-	
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
