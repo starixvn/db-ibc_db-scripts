@@ -76,6 +76,8 @@ BEGIN
 
 		----------- For SMA  -----------
 		INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
+		SELECT @srecommend,4,1 -- Super
+		UNION ALL
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
@@ -113,10 +115,12 @@ BEGIN
 		DELETE M
 		FROM #SMATemp M 
 			INNER JOIN CustWinLossLimit_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-			
+		WHERE PS.CustId <> @srecommend	
+		
 		DELETE M
 		FROM #MemberTemp M 
 			INNER JOIN CustWinLossLimit_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
+		WHERE PS.CustId <> @srecommend	
 	END		
 	
 	DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
