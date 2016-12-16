@@ -413,7 +413,7 @@ SELECT @max_custid = xxx
 INSERT INTO #supers(custid,exchangeid)
 SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE WHERE ci.custid IN (
+WHERE ci.custid IN (
 			-- dummy account
 			2,3,5,12,13
 		)
