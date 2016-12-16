@@ -1,7 +1,7 @@
 /*
-	Created: Elodie
+	Created: Helen
 	Date: 20160225
-	Task: Delete existing All Bet settings
+	Task: Delete existing All Bet settings for dummy account under batch 2
 	DB: DBCust/CustDB
 */
  

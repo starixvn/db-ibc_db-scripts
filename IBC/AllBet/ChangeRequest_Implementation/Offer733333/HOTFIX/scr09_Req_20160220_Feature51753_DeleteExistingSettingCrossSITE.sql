@@ -1,6 +1,6 @@
 /*
-	Created: Elodie
-	Date: 20160225
+	Created: Helen
+	Date: 20161216
 	Task: Delete existing All Bet settings for cross site batch 2
 	DB: DBCust/CustDB
 */

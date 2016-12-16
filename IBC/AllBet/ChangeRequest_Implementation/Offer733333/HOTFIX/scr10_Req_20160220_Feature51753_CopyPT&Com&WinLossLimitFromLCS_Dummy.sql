@@ -1,6 +1,6 @@
 /*
 	Created: Helen
-	Task: Copy PT & Comm & WinLossLimit for All Bet from Live Casino
+	Task: Fix Bug Dummy - PT & Comm & WinLossLimit for All Bet from Live Casino
 	DB: DBCUST/CustDB
 	Date: 20160226
 */ 
