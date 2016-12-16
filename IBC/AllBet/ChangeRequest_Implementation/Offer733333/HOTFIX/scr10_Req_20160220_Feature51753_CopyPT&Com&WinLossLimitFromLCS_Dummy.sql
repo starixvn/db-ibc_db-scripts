@@ -184,7 +184,7 @@ BEGIN
 				WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino 
 				ELSE 1 END AS IsAutoReset
 	FROM dbo.custInfo ci WITH(NOLOCK)
-		INNER JOIN #SMATemp member WITH (NOLOCK) ON ci.custid = member.custid
+		INNER JOIN #MemberTemp member WITH (NOLOCK) ON ci.custid = member.custid
 		INNER JOIN #SMATemp ai WITH (NOLOCK) ON ci.recommend = ai.custid
 		INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid
