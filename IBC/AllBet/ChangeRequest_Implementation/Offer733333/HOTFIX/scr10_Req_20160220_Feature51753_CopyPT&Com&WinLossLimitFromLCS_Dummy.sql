@@ -88,13 +88,15 @@ BEGIN
 		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+		WHERE CI.custid <= @maxcustid 			
 			
 		UNION ALL
 
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-		WHERE CI.roleid = 2
+		WHERE CI.roleid = 2 AND CI.custid <= @maxcustid 
+					
 		UNION ALL
 		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
 		FROM custInfo CI WITH (NOLOCK)
@@ -104,13 +106,13 @@ BEGIN
 		SELECT CI.custid, SyncLiveCasino
 		FROM Custinfo CI WITH (NOLOCK)
 			INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-		WHERE CI.roleid = 1	
+		WHERE CI.roleid = 1	AND CI.custid <= @maxcustid 			
 
 		UNION ALL
 		SELECT CI.custid, SyncLiveCasino
 		FROM Custinfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-		WHERE CI.roleid = 1
+		WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
 
 		---- REMOVE SMA OR member if existing Allbet Setting
 		DELETE M
