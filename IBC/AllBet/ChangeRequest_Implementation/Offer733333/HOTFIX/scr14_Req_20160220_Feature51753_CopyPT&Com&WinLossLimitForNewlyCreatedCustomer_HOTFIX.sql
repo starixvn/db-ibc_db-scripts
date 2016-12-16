@@ -172,7 +172,7 @@ SELECT ci.custid, dest.tSportType, dest.tBetType
 			WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino 
 			ELSE 1 END AS IsAutoReset
 FROM dbo.custInfo ci WITH(NOLOCK)
-	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
+	INNER JOIN #MemberTemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
 	INNER JOIN custInfo ai WITH (NOLOCK) ON ci.recommend = ai.custid
 	INNER JOIN custInfo mi WITH (NOLOCK) ON ci.mrecommend = mi.custid	
 	INNER JOIN custInfo si WITH (NOLOCK) ON ci.srecommend = si.custid
