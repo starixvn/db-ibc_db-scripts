@@ -85,7 +85,7 @@ BEGIN
 		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 		FROM custInfo CI WITH (NOLOCK)
 			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-		WHERE CI.custid <= @maxcustid AND ci.custid <> 4300 -- under this master having direct agent of 7555555			
+		WHERE CI.custid <= @maxcustid --AND ci.custid <> 4300 -- under this master having direct agent of 7555555			
 		
 		UNION ALL
 
@@ -115,7 +115,7 @@ BEGIN
 		DELETE M
 		FROM #SMATemp M 
 			INNER JOIN CustWinLossLimit_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-		WHERE PS.CustId <> @srecommend	
+		WHERE PS.CustId <> @srecommend	AND M.CustID <> 4300
 		
 		DELETE M
 		FROM #MemberTemp M 
@@ -148,7 +148,7 @@ BEGIN
 		INNER JOIN #SMATemp master_tmp WITH (NOLOCK) ON ci.custid = master_tmp.custid 
 		INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.custid 
 		CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-	WHERE ci.roleid = 3 AND dest.SettingType = 6 
+	WHERE ci.roleid = 3 AND dest.SettingType = 6 AND ci.CustID <> 4300
 
 	--Agent Level
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -222,7 +222,7 @@ BEGIN
 		INNER JOIN dbo.custOverrideGame co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE cs.CustID <> @srecommend
+	WHERE cs.CustID <> @srecommend AND cs.CustID <> 4300
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
 		(	[custid]
@@ -314,7 +314,7 @@ BEGIN
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE CS.CustID <> @srecommend
+	WHERE CS.CustID <> @srecommend AND cs.CustID <> 4300
 		 
 	--Member Level
 	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
