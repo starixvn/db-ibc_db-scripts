@@ -62,7 +62,7 @@ BEGIN
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 	FROM Customer CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-	WHERE CI.site IN ('733333','222223') AND CI.roleid = 3
+	WHERE CI.roleid = 3 and ci.custid <> 4300 -- under this master having direct agent of 7555555
 		
 	--- PT
 	DELETE cg
