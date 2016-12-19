@@ -225,8 +225,11 @@ WHERE ci.roleid IN (2,3,4) AND ci.Enabled = 1
 							INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
 						WHERE spositiontaking <= @MaxPT) 
 	AND (cs1.SuperPT <> (cs2.spositiontaking * 100) OR
-			cs1.MasterPT <> (cs2.mpositiontaking * 100) OR
-			cs1.AgentPT <> (cs2.apositiontaking * 100) OR
+			
+			(ci.roleid <> 4 AND cs1.MasterPT <> (cs2.mpositiontaking * 100)) OR -- not adjust m4,a4
+			
+			(ci.roleid <> 4 AND cs1.AgentPT  <> (cs2.apositiontaking  * 100)) OR --  not adjust m4,a4
+			
 			cs1.IsAutoMasterPT <> cs2.isautompositiontaking OR
 			cs1.AutoMasterPT <> (cs2.autompositiontaking * 100) OR
 			cs1.IsAutoSuperPT <> cs2.isautopositiontaking OR
@@ -245,7 +248,6 @@ SET cs1.SuperPT = cs2.spositiontaking * 100,
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Member cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSettingGame cs2 ON cs2.CustID = cs1.CustID
-	INNER JOIN dbo.CustOverrideGame co WITH (NOLOCK) ON cs1.CustID = co.CustID AND co.Sporttype = cs2.Sporttype AND co.Bettype = cs2.Bettype
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs2.bettype = dest.fBetType AND cs2.sporttype = dest.fSportType AND cs1.SportType = dest.tSportType AND cs1.BetType = dest.tBetType
 WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
