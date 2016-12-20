@@ -21,7 +21,7 @@ PRINT  'Updating ALLBET'
 UPDATE cd
 	SET Discount = 0.009
 FROM CustDiscount3rd_Agent  cd (ROWLOCK)
-	INNER JOIN #Cust_tmp c ON cd.CustID = c.CustID AND roleID IN (3)
+	INNER JOIN #Cust_tmp c ON cd.CustID = c.CustID AND roleID = 3
 WHERE cd.SportType = 211 
 
 UPDATE cd
@@ -36,12 +36,6 @@ UPDATE cs
 	SET sdiscount = 0.009,adiscount = 0.009
 FROM  CustSettingGame cs WITH(ROWLOCK)
 	INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 1
-WHERE cs.sporttype IN (162,255)
-
-UPDATE cs
-	SET sdiscount = 0.009
-FROM  CustSettingGame cs WITH(ROWLOCK)
-	INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 4
 WHERE cs.sporttype IN (162,255)
 
 UPDATE cs
