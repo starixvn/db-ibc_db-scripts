@@ -110,7 +110,7 @@ SELECT @maxcustid = xxx
 
 -- list of supers
 INSERT INTO #supers(custid)
-SELECT ci.custid,0
+SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid in (2138601,2251491)
 WHILE (1 = 1)
