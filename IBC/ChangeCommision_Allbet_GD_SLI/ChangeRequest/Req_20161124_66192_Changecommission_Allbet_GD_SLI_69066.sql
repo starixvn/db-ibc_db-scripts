@@ -29,7 +29,7 @@ BEGIN
 	INSERT INTO #Cust_tmp (CustID,roleID)
 	SELECT ci.custid,ci.roleid
 	FROM custInfo ci (NOLOCK) 
-	WHERE ci.srecommend = @srecommend
+	WHERE ci.srecommend = @srecommend AND ci.custid <= @maxcustid
 
 	PRINT  'Updating ALLBET' 
 	UPDATE cd
