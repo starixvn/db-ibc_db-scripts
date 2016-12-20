@@ -49,9 +49,21 @@ BEGIN
 	UPDATE cs
 		SET sdiscount = 0.009,adiscount = 0.009
 	FROM  CustSettingGame cs WITH(ROWLOCK)
-		INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid IN (1,3,4) 
+		INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 1
 	WHERE cs.sporttype IN (162,255)
-				
+	
+	UPDATE cs
+		SET sdiscount = 0.009
+	FROM  CustSettingGame cs WITH(ROWLOCK)
+		INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 4
+	WHERE cs.sporttype IN (162,255)
+
+	UPDATE cs
+		SET adiscount = 0.009
+	FROM  CustSettingGame cs WITH(ROWLOCK)
+		INNER JOIN #Cust_tmp ci WITH(NOLOCK) ON ci.custid = cs.custid AND ci.roleid = 3
+	WHERE cs.sporttype IN (162,255)
+					
 	DROP TABLE #Cust_tmp
 		
 END
