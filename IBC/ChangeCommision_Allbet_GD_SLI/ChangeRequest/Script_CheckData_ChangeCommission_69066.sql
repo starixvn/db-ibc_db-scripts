@@ -10,7 +10,7 @@ CREATE TABLE #Cust_tmp (CustID INT PRIMARY KEY,roleID INT)
 INSERT INTO #Cust_tmp (CustID,roleID)
 SELECT ci.custid,ci.roleid
 FROM custInfo ci (NOLOCK) 
-WHERE ci.srecommend IN (2138601,2251491) AND roleid IN (1,3,4)
+WHERE ci.srecommend IN (2138601,2251491) AND roleid IN (1,3,4) AND CI.Enabled = 1 AND CI.reject = 0 AND CI.closed = 0
 
 PRINT  'ALLBET' 
 SELECT COUNT(1) 
