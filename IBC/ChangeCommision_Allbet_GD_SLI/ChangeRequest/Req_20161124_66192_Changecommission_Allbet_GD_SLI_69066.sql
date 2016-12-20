@@ -100,7 +100,7 @@ SELECT @maxcustid = xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid,0
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid in (1)
+WHERE ci.custid in (2138601,2251491)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
