@@ -1,0 +1,24 @@
+/*
+	Created: 20161220@Elodie
+	Task: Clean data NAP User Control - [RedmineID: #67772]
+	DB: DBPOLICY/bodb02
+*/
+
+USE bodb02
+GO
+
+--46 affected rows
+DELETE FROM acccustomer_1 
+WHERE custid IN (3909102,2635408,8100066,3238092,2603283,5284570,2896927,2634546,3909105,8100071,3357455,3357438,3357452,3357434,
+3357436,8100059,3734537,5313121,3734528,8100068,3734544,7799033,3734540,8100056,4578191,9417955,10387876,8100053,4578192,9417959,
+10387877,5214495,8100074,8100070,7882363,7882368,7882365,11166518,11166516,11742728,11742731,11880025,11874333,12259176,12259202,
+12259178)
+
+--check data
+SELECT ci.username, ci.custid, ci.currency, ci.roleid,  ac.GroupID, g.GroupName,  srecommend, mrecommend, recommend, closed, ci.Enabled
+FROM dbo.acccustomer_1 ac WITH (NOLOCK)
+ INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON ci.custid = ac.custid
+ INNER JOIN DB052.bodb_EAS.dbo.eaUserInfo u WITH (NOLOCK) ON ci.custid = u.UserID
+ INNER JOIN Acc_GroupInfo_1 g WITH (NOLOCK) ON ac.groupID = g.GroupID
+WHERE ci.roleid > 4
+ORDER BY ci.username
