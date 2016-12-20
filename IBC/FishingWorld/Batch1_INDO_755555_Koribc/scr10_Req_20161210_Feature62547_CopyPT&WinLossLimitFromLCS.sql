@@ -180,22 +180,22 @@ BEGIN
 		cs.custid, dest.tsporttype, dest.tbettype, dest.IsLive
 		
 		, CASE WHEN c.custid IN (2,4,13,15) THEN 90
-				WHEN c.site = '755555' THEN 80
-				WHEN c.site = 'Indo' THEN 80
+				WHEN c.site = '755555' THEN 90
+				WHEN c.site = 'Indo' THEN 90
 				WHEN c.site = 'Koribc' THEN 90
 				ELSE 90
 				END
 		
 		, CASE WHEN c.custid IN (2,4,13,15) THEN 90
-				WHEN c.site = '755555' THEN 80
-				WHEN c.site = 'Indo' THEN 80
+				WHEN c.site = '755555' THEN 90
+				WHEN c.site = 'Indo' THEN 90
 				WHEN c.site = 'Koribc' THEN 90
 				ELSE 90
 				END
 		
 		, CASE WHEN c.custid IN (2,4,13,15) THEN 90
-				WHEN c.site = '755555' THEN 80
-				WHEN c.site = 'Indo' THEN 80
+				WHEN c.site = '755555' THEN 90
+				WHEN c.site = 'Indo' THEN 90
 				WHEN c.site = 'Koribc' THEN 90
 				ELSE 90
 				END
@@ -206,8 +206,8 @@ BEGIN
 		,cs.autopositiontaking  *100
 		,co.minpositiontaking  *100
 		, CASE WHEN c.custid IN (2,4,13,15) THEN 90
-				WHEN c.site = '755555' THEN 80
-				WHEN c.site = 'Indo' THEN 80
+				WHEN c.site = '755555' THEN 90
+				WHEN c.site = 'Indo' THEN 90
 				WHEN c.site = 'Koribc' THEN 90
 				ELSE 90
 				END
