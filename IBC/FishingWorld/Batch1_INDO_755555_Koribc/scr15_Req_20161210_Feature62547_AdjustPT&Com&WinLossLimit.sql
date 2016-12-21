@@ -162,7 +162,6 @@ SET cs1.SuperPT = cs2.spositiontaking * 100,
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Member cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSetting3rd cs2 ON cs2.CustID = cs1.CustID
-	INNER JOIN dbo.custOverride3rd co WITH (NOLOCK) ON cs1.CustID = co.CustID AND co.Sporttype = cs2.Sporttype AND co.Bettype = cs2.Bettype
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs2.bettype = dest.fBetType AND cs2.sporttype = dest.fSportType AND cs1.SportType = dest.tSportType AND cs1.BetType = dest.tBetType
 WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
