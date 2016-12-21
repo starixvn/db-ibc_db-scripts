@@ -40,14 +40,14 @@ CREATE TABLE #SMATemp
 	isAutoResetLiveCasino BIT
 )
 
-INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
-SELECT custid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+INSERT INTO #MemberTemp (CustID)
+SELECT custid
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1
 	
 	
-INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
-SELECT custid, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
+INSERT INTO #SMATemp (CustID, roleid)
+SELECT custid, roleid
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1
 
@@ -74,40 +74,40 @@ WHERE site in ('INDO','755555','Koribc')
 	and roleid=2 AND srecommend IN (2,4,13,15)
 
 ----------- For SMA  -----------
-INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
+INSERT INTO #SMATemp (CustID, roleid)
 -- NO NEED TO ADD SUPER, it's added already
-SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Direct Master 
+SELECT ci.custid, ci.roleid -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 
 
 UNION ALL
-SELECT DISTINCT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Master of direct agent
+SELECT DISTINCT ci.custid, ci.roleid -- Master of direct agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 
 	
 UNION ALL
 
-SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Agent of direct master
+SELECT ci.custid, ci.roleid-- Agent of direct master
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 WHERE CI.roleid = 2
 	
 UNION ALL
-SELECT ci.custid, ci.roleid, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino -- Direct Agent
+SELECT ci.custid, ci.roleid-- Direct Agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 
 ---------- For members ---------
-INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
-SELECT ci.CustID, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino
+INSERT INTO #MemberTemp (CustID)
+SELECT ci.CustID
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
 WHERE CI.roleid = 1	
 	
 UNION ALL
-SELECT ci.CustID, ci.SyncLiveCasino, ci.MaxWinLiveCasino, ci.isAutoResetLiveCasino
+SELECT ci.CustID
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 WHERE CI.roleid = 1 
