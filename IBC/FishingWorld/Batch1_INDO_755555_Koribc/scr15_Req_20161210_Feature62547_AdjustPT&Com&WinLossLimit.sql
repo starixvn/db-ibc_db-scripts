@@ -25,19 +25,14 @@ VALUES
 
 CREATE TABLE #MemberTemp
 (
-	CustID INT PRIMARY KEY CLUSTERED,
-	SyncLiveCasino BIT,
-	MaxWinLiveCasino SMALLMONEY,
-	isAutoResetLiveCasino BIT
+	CustID INT PRIMARY KEY CLUSTERED
+	
 )
 
 CREATE TABLE #SMATemp
 (
 	CustID INT PRIMARY KEY CLUSTERED,
-	roleid TINYINT,
-	SyncLiveCasino BIT,
-	MaxWinLiveCasino SMALLMONEY,
-	isAutoResetLiveCasino BIT
+	roleid TINYINT
 )
 
 INSERT INTO #MemberTemp (CustID)
