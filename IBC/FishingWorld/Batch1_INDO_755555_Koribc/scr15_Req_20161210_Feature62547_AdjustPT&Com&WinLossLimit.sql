@@ -123,14 +123,14 @@ SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductI
 --Update PT for different settings (not adjust for line super who take pt LCS more than 93%)
 --AGENT LEVEL
 UPDATE cs1
-SET cs1.SuperPT = cs2.spositiontaking * 100,
-	cs1.MasterPT = cs2.mpositiontaking * 100,
-	cs1.AgentPT = cs2.apositiontaking * 100,
-	cs1.IsAutoMasterPT = cs2.isautompositiontaking,
-	cs1.AutoMasterPT = cs2.autompositiontaking * 100,
-	cs1.IsAutoSuperPT = cs2.isautopositiontaking,
-	cs1.AutoSuperPT = cs2.autopositiontaking * 100,
-	cs1.MinPT = co.minpositiontaking * 100
+SET cs1.SuperPT = cs2.slivepositiontaking * 100,
+	cs1.MasterPT = cs2.mlivepositiontaking * 100,
+	cs1.AgentPT = cs2.alivepositiontaking * 100,
+	cs1.IsAutoMasterPT = cs2.isautolivempositiontaking,
+	cs1.AutoMasterPT = cs2.autolivempositiontaking * 100,
+	cs1.IsAutoSuperPT = cs2.isautolivepositiontaking,
+	cs1.AutoSuperPT = cs2.autolivepositiontaking * 100,
+	cs1.MinPT = co.minlivepositiontaking * 100
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Agent cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSetting3rd cs2 ON cs2.CustID = cs1.CustID
@@ -141,24 +141,24 @@ WHERE ci.roleid IN (2,3,4) AND ci.Enabled = 1
 						FROM #supers s 
 							INNER JOIN CustSetting3rd cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 161 AND cs.bettype = 85
 						WHERE spositiontaking <= @MaxPT) 
-	AND (cs1.SuperPT <> (cs2.spositiontaking * 100) OR
-			cs1.MasterPT <> (cs2.mpositiontaking * 100) OR
-			cs1.AgentPT <> (cs2.apositiontaking * 100) OR
-			cs1.IsAutoMasterPT <> cs2.isautompositiontaking OR
-			cs1.AutoMasterPT <> (cs2.autompositiontaking * 100) OR
-			cs1.IsAutoSuperPT <> cs2.isautopositiontaking OR
-			cs1.AutoSuperPT <> (cs2.autopositiontaking * 100) OR
-			cs1.MinPT <> co.minpositiontaking * 100)
+	AND (cs1.SuperPT <> (cs2.slivepositiontaking * 100) OR
+			cs1.MasterPT <> (cs2.mlivepositiontaking * 100) OR
+			cs1.AgentPT <> (cs2.alivepositiontaking * 100) OR
+			cs1.IsAutoMasterPT <> cs2.isautolivempositiontaking OR
+			cs1.AutoMasterPT <> (cs2.autolivempositiontaking * 100) OR
+			cs1.IsAutoSuperPT <> cs2.isautolivepositiontaking OR
+			cs1.AutoSuperPT <> (cs2.autolivepositiontaking * 100) OR
+			cs1.MinPT <> co.minlivepositiontaking * 100)
 
 --MEMBER LEVEL
 UPDATE cs1
-SET cs1.SuperPT = cs2.spositiontaking * 100,
-	cs1.MasterPT = cs2.mpositiontaking * 100,
-	cs1.AgentPT = cs2.apositiontaking * 100,
-	cs1.IsAutoMasterPT = cs2.isautompositiontaking,
-	cs1.AutoMasterPT = cs2.autompositiontaking * 100,
-	cs1.IsAutoSuperPT = cs2.isautopositiontaking,
-	cs1.AutoSuperPT = cs2.autopositiontaking * 100
+SET cs1.SuperPT = cs2.slivepositiontaking * 100,
+	cs1.MasterPT = cs2.mlivepositiontaking * 100,
+	cs1.AgentPT = cs2.alivepositiontaking * 100,
+	cs1.IsAutoMasterPT = cs2.isautolivempositiontaking,
+	cs1.AutoMasterPT = cs2.autolivempositiontaking * 100,
+	cs1.IsAutoSuperPT = cs2.isautolivepositiontaking,
+	cs1.AutoSuperPT = cs2.autolivepositiontaking * 100
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Member cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSetting3rd cs2 ON cs2.CustID = cs1.CustID
@@ -168,13 +168,13 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 						FROM #supers s 
 							INNER JOIN CustSetting3rd cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 161 AND cs.bettype = 85
 						WHERE spositiontaking <= @MaxPT) 
-	AND (cs1.SuperPT <> (cs2.spositiontaking * 100) OR
-			cs1.MasterPT <> (cs2.mpositiontaking * 100) OR
-			cs1.AgentPT <> (cs2.apositiontaking * 100) OR
-			cs1.IsAutoMasterPT <> cs2.isautompositiontaking OR
-			cs1.AutoMasterPT <> (cs2.autompositiontaking * 100) OR
-			cs1.IsAutoSuperPT <> cs2.isautopositiontaking OR
-			cs1.AutoSuperPT <> (cs2.autopositiontaking * 100))	
+	AND (cs1.SuperPT <> (cs2.slivepositiontaking * 100) OR
+			cs1.MasterPT <> (cs2.mlivepositiontaking * 100) OR
+			cs1.AgentPT <> (cs2.alivepositiontaking * 100) OR
+			cs1.IsAutoMasterPT <> cs2.isautolivempositiontaking OR
+			cs1.AutoMasterPT <> (cs2.autolivempositiontaking * 100) OR
+			cs1.IsAutoSuperPT <> cs2.isautolivepositiontaking OR
+			cs1.AutoSuperPT <> (cs2.autolivepositiontaking * 100))	
 
 DROP TABLE #SMATemp
 DROP TABLE #MemberTemp

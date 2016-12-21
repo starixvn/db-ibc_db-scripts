@@ -200,11 +200,11 @@ BEGIN
 				ELSE 90
 				END
 		
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-		,co.minpositiontaking  *100
+		,cs.isautolivempositiontaking
+		,cs.autolivempositiontaking *100
+		,cs.isautolivepositiontaking 
+		,cs.autolivepositiontaking  *100
+		,co.minlivepositiontaking  *100
 		, CASE WHEN c.custid IN (2,4,13,15) THEN 90
 				WHEN c.site = '755555' THEN 90
 				WHEN c.site = 'Indo' THEN 90
@@ -236,15 +236,15 @@ BEGIN
 	SELECT 
 		cs.custid, dest.tsporttype, dest.tbettype, dest.IsLive
 		
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
+		,cs.slivepositiontaking  *100
+		,cs.mlivepositiontaking  *100
+		,cs.alivepositiontaking  *100
 		
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
-		,co.minpositiontaking  *100
+		,cs.isautolivempositiontaking
+		,cs.autolivempositiontaking *100
+		,cs.isautolivepositiontaking 
+		,cs.autolivepositiontaking  *100
+		,co.minlivepositiontaking  *100
 		,90
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK) 
 		INNER JOIN dbo.custOverride3rd co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
@@ -267,13 +267,13 @@ BEGIN
 		  ,	[AutoSuperPT])
 	SELECT 
 		cs.custid, dest.tsporttype, dest.tbettype, dest.IsLive
-		,cs.spositiontaking  *100
-		,cs.mpositiontaking  *100
-		,cs.apositiontaking  *100
-		,cs.isautompositiontaking
-		,cs.autompositiontaking *100
-		,cs.isautopositiontaking 
-		,cs.autopositiontaking  *100
+		,cs.slivepositiontaking  *100
+		,cs.mlivepositiontaking  *100
+		,cs.alivepositiontaking  *100
+		,cs.isautolivempositiontaking
+		,cs.autolivempositiontaking *100
+		,cs.isautolivepositiontaking 
+		,cs.autolivepositiontaking  *100
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)
 		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType

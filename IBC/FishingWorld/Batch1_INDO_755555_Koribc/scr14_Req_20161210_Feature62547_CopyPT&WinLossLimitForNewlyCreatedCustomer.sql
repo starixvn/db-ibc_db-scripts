@@ -192,11 +192,11 @@ SELECT
 				ELSE 90
 				END
 	
-	,cs.isautompositiontaking
-	,cs.autompositiontaking *100
-	,cs.isautopositiontaking 
-	,cs.autopositiontaking  *100
-	,co.minpositiontaking  *100
+	,cs.isautolivempositiontaking
+	,cs.autolivempositiontaking *100
+	,cs.isautolivepositiontaking 
+	,cs.autolivepositiontaking  *100
+	,co.minlivepositiontaking  *100
 	
 	,CASE WHEN c.custid IN (2,4,13,15) THEN 90
 				WHEN c.site = '755555' THEN 80
@@ -229,15 +229,15 @@ INSERT INTO dbo.CustPTSetting3rd_Agent
 SELECT 
 	cs.custid, dest.tsporttype, dest.tbettype, dest.IsLive
 	
-	,cs.spositiontaking  *100
-	,cs.mpositiontaking  *100
-	,cs.apositiontaking  *100
+	,cs.slivepositiontaking  *100
+	,cs.mlivepositiontaking  *100
+	,cs.alivepositiontaking  *100
 	
-	,cs.isautompositiontaking
-	,cs.autompositiontaking *100
-	,cs.isautopositiontaking 
-	,cs.autopositiontaking  *100
-	,co.minpositiontaking  *100
+	,cs.isautolivempositiontaking
+	,cs.autolivempositiontaking *100
+	,cs.isautolivepositiontaking 
+	,cs.autolivepositiontaking  *100
+	,co.minlivepositiontaking  *100
 	,90
 FROM dbo.CustSetting3rd cs WITH(NOLOCK) 
 	INNER JOIN dbo.custOverride3rd co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
@@ -260,13 +260,13 @@ INSERT INTO dbo.CustPTSetting3rd_Member
 		,	[AutoSuperPT])
 SELECT 
 	cs.custid, dest.tsporttype, dest.tbettype, dest.IsLive
-	,cs.spositiontaking  *100
-	,cs.mpositiontaking  *100
-	,cs.apositiontaking  *100
-	,cs.isautompositiontaking
-	,cs.autompositiontaking *100
-	,cs.isautopositiontaking 
-	,cs.autopositiontaking  *100
+	,cs.slivepositiontaking  *100
+	,cs.mlivepositiontaking  *100
+	,cs.alivepositiontaking  *100
+	,cs.isautolivempositiontaking
+	,cs.autolivempositiontaking *100
+	,cs.isautolivepositiontaking 
+	,cs.autolivepositiontaking  *100
 FROM dbo.CustSetting3rd cs WITH(NOLOCK)
 	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
@@ -316,6 +316,7 @@ FROM  CustPTSetting3rd_Agent cs WITH(UPDLOCK,ROWLOCK)
 	INNER JOIN #supers ci WITH(NOLOCK) ON ci.custid = cs.custid
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.tBetType AND cs.sporttype = dest.tSportType
 WHERE cs.SuperPT > @MaxPT	
+
 
 --- Correct member
 DECLARE @srecommend INT
