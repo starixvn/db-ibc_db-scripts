@@ -1,6 +1,6 @@
 /*
 	Created: Helen
-	Task: Adjust PT &  WinLossLimit 
+	Task: Adjust PT 
 	DB: DBCUST/CustDB
 	Date: 20161210
 */ 
@@ -44,7 +44,8 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid = 1  AND Enabled = 1
 INSERT INTO #SMATemp (CustID, roleid)
 SELECT custid, roleid
 FROM Custinfo WITH (NOLOCK)
-WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1
+WHERE (srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1) OR custid IN (2,4,13,15)
+	
 
 ------------STARTING Dummy Processing
 CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
@@ -117,6 +118,8 @@ SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductI
 --------------------------------------PT Setting-------------------------------------------------	
 --Update PT for different settings (not adjust for line super who take pt LCS more than 93%)
 --AGENT LEVEL
+CREATE TABLE #MemberTemp_adjusted (custid INT)
+
 UPDATE cs1
 SET cs1.SuperPT = cs2.slivepositiontaking * 100,
 	cs1.MasterPT = cs2.mlivepositiontaking * 100,
@@ -126,6 +129,10 @@ SET cs1.SuperPT = cs2.slivepositiontaking * 100,
 	cs1.IsAutoSuperPT = cs2.isautolivepositiontaking,
 	cs1.AutoSuperPT = cs2.autolivepositiontaking * 100,
 	cs1.MinPT = co.minlivepositiontaking * 100
+
+OUTPUT inserted.CustId
+INTO #MemberTemp_adjusted(CustId) 
+
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Agent cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSetting3rd cs2 ON cs2.CustID = cs1.CustID
@@ -135,7 +142,7 @@ WHERE ci.roleid IN (2,3,4) AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
 							INNER JOIN CustSetting3rd cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 161 AND cs.bettype = 85
-						WHERE spositiontaking <= @MaxPT) 
+						WHERE slivepositiontaking <= @MaxPT) 
 	AND (cs1.SuperPT <> (cs2.slivepositiontaking * 100) OR
 			cs1.MasterPT <> (cs2.mlivepositiontaking * 100) OR
 			cs1.AgentPT <> (cs2.alivepositiontaking * 100) OR
@@ -146,6 +153,7 @@ WHERE ci.roleid IN (2,3,4) AND ci.Enabled = 1
 			cs1.MinPT <> co.minlivepositiontaking * 100)
 
 --MEMBER LEVEL
+
 UPDATE cs1
 SET cs1.SuperPT = cs2.slivepositiontaking * 100,
 	cs1.MasterPT = cs2.mlivepositiontaking * 100,
@@ -154,6 +162,10 @@ SET cs1.SuperPT = cs2.slivepositiontaking * 100,
 	cs1.AutoMasterPT = cs2.autolivempositiontaking * 100,
 	cs1.IsAutoSuperPT = cs2.isautolivepositiontaking,
 	cs1.AutoSuperPT = cs2.autolivepositiontaking * 100
+
+OUTPUT inserted.CustId
+	INTO #MemberTemp_adjusted(CustId) 
+						
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustPTSetting3rd_Member cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
 	INNER JOIN CustSetting3rd cs2 ON cs2.CustID = cs1.CustID
@@ -162,7 +174,7 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
 							INNER JOIN CustSetting3rd cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 161 AND cs.bettype = 85
-						WHERE spositiontaking <= @MaxPT) 
+						WHERE slivepositiontaking <= @MaxPT) 
 	AND (cs1.SuperPT <> (cs2.slivepositiontaking * 100) OR
 			cs1.MasterPT <> (cs2.mlivepositiontaking * 100) OR
 			cs1.AgentPT <> (cs2.alivepositiontaking * 100) OR
@@ -171,6 +183,40 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 			cs1.IsAutoSuperPT <> cs2.isautolivepositiontaking OR
 			cs1.AutoSuperPT <> (cs2.autolivepositiontaking * 100))	
 
+DECLARE @srecommend INT
+DECLARE @SportBettypeXML VARCHAR(MAX)
+CREATE TABLE #Super_Only (custid int,isfinished bit default(0))
+
+IF EXISTS (SELECT 1 FROM #MemberTemp_adjusted)
+BEGIN
+
+	INSERT INTO #Super_Only (custid)
+	SELECT DISTINCT ci.srecommend
+	FROM #MemberTemp_adjusted M
+		INNER JOIN custInfo CI WITH (NOLOCK) ON M.custid = ci.custid
+	
+	SET @SportBettypeXML = '<ROOT><PT SportType="219" BetType="1011" IsLive="0" /></ROOT>'
+	
+	WHILE (1 = 1)
+	BEGIN
+		UPDATE TOP (1) #Super_Only
+		SET isfinished = 1
+			,@srecommend = custid	
+		WHERE isfinished = 0
+		
+		IF @@ROWCOUNT = 0 BREAK
+				
+		EXEC Acc_DynamicCustSetting3rd_07 @SuperID = @srecommend,@SportBettypeXML = @SportBettypeXML, @Roleid = 4
+		
+	END
+	
+END
+
 DROP TABLE #SMATemp
 DROP TABLE #MemberTemp
 DROP TABLE #DestinationSportBetType	
+DROP TABLE #DirectAgent
+DROP TABLE #DirectMaster
+DROP TABLE #MemberTemp_adjusted
+DROP TABLE #Super_Only
+DROP TABLE #supers
