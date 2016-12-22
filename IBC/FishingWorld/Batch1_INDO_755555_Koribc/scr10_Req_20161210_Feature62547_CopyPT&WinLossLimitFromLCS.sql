@@ -332,7 +332,10 @@ BEGIN
 	
 	DROP TABLE #SMATemp
 	DROP TABLE #MemberTemp
-	DROP TABLE #DestinationSportBetType		
+	DROP TABLE #DestinationSportBetType	
+	DROP TABLE #DirectAgent
+	DROP TABLE #DirectMaster
+		
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
