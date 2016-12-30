@@ -256,18 +256,28 @@ BEGIN
 	--Agent Level
 	INSERT INTO dbo.CustDiscount3rd_Agent(CustID, SportType, BetType, Discount)
 	SELECT cs.custid, dest.tsporttype, dest.tbettype, 
-			CASE	WHEN roleid = 4 THEN cs.sdiscount
-					WHEN roleid = 3 THEN cs.adiscount
-					WHEN roleid = 2 THEN cs.discount END
+			CASE	WHEN roleid = 4 THEN (CASE WHEN CI.SyncLiveCasino = 1 THEN cs.sdiscount ELSE 0 END)
+					WHEN roleid = 3 THEN (CASE WHEN CI.SyncLiveCasino = 1 THEN cs.adiscount ELSE 0 END)
+					WHEN roleid = 2 THEN (CASE WHEN CI.SyncLiveCasino = 1 THEN cs.discount ELSE 0 END)
+			END
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
 		 
 	--Member Level
-	INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
-	SELECT cs.custid, dest.tsporttype, dest.tbettype, cs.PlayerDiscount, cs.discount, cs.adiscount, cs.sdiscount
+	INSERT INTO dbo.CustDiscount3rd_Member (CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
+	SELECT cs.custid, dest.tsporttype, dest.tbettype
+			, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.PlayerDiscount ELSE 0 END
+			, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.discount ELSE Agent.Discount END
+			, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.adiscount ELSE master.Discount END
+			, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.sdiscount ELSE super.Discount END
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
+		INNER JOIN custInfo member WITH (NOLOCK) ON member.CustID = cs.CustID
+		INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = member.srecommend
+		INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = member.mrecommend
+		INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = member.recommend
+		
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
 
 	--adjust commission Super = [0; 0.007]	
