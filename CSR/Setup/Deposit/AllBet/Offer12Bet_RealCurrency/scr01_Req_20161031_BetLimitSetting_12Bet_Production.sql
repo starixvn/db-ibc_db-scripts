@@ -102,8 +102,8 @@ VALUES
 
 UPDATE 	#Stake_Level_tmp SET StakeLevelID = @max_StakeLevelID + ID
 
-INSERT INTO Dep_StakeLevel (StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId])
-SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId]
+INSERT INTO Dep_StakeLevel (StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],ResourceId)
+SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],ResourceID
 FROM #Stake_Level_tmp
 
 DROP TABLE #Stake_Level_tmp
