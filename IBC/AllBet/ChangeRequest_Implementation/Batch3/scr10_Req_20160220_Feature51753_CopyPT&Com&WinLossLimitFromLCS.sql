@@ -274,12 +274,12 @@ BEGIN
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 		INNER JOIN custInfo member WITH (NOLOCK) ON member.CustID = cs.CustID
-		INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = member.srecommend
-		INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = member.mrecommend
-		INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = member.recommend
-		
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-
+		
+		INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = member.srecommend AND SUPER.SportType = dest.tSportType AND super.BetType = dest.tBetType
+		INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = member.mrecommend AND master.SportType = dest.tSportType AND master.BetType = dest.tBetType
+		INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = member.recommend AND agent.SportType = dest.tSportType AND agent.BetType = dest.tBetType
+		
 	--adjust commission Super = [0; 0.007]	
 	--correct for super level
 	IF EXISTS(	SELECT 1
