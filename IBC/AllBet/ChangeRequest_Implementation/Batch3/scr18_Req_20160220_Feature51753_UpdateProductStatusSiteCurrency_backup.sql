@@ -12,5 +12,5 @@
 
 SELECT * 
 INTO tmp_ProductStatusSiteCurrency_backup
-FROM ProductStatusSiteCurrency
+FROM ProductStatusSiteCurrency WITH (NOLOCK)
 WHERE  SportType = 211 
