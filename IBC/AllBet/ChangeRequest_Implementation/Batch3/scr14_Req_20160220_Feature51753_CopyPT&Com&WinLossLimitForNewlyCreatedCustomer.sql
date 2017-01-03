@@ -261,10 +261,21 @@ FROM dbo.CustSettingGame cs WITH(NOLOCK)
 --Member Level
 INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
 SELECT cs.custid, dest.tsporttype, dest.tbettype
-	, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.PlayerDiscount ELSE 0 END
-	, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.discount ELSE Agent.Discount END
-	, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.adiscount ELSE master.Discount END
-	, CASE WHEN ci.SyncLiveCasino = 1 THEN cs.sdiscount ELSE super.Discount END
+	, cs.PlayerDiscount 
+	, cs.discount
+	, cs.adiscount 
+	, cs.sdiscount
+FROM dbo.CustSettingGame cs WITH(NOLOCK)
+	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
+	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
+WHERE ci.SyncLiveCasino = 1	
+
+INSERT INTO dbo.CustDiscount3rd_Member(CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
+SELECT cs.custid, dest.tsporttype, dest.tbettype
+	, 0 AS PlayerDiscount
+	, Agent.Discount
+	, master.Discount
+	, super.Discount 
 FROM dbo.CustSettingGame cs WITH(NOLOCK)
 	INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
 	INNER JOIN custInfo member WITH (NOLOCK) ON member.CustID = cs.CustID
@@ -272,8 +283,7 @@ FROM dbo.CustSettingGame cs WITH(NOLOCK)
 	INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = member.srecommend AND SUPER.SportType = dest.tSportType AND super.BetType = dest.tBetType
 	INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = member.mrecommend AND master.SportType = dest.tSportType AND master.BetType = dest.tBetType
 	INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = member.recommend AND agent.SportType = dest.tSportType AND agent.BetType = dest.tBetType
-	
-
+WHERE ci.SyncLiveCasino = 0	
 --adjust commission Super = [0; 0.007]	
 --correct for super level
 
