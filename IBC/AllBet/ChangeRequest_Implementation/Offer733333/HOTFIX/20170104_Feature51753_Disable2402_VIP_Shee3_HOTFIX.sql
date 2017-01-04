@@ -27,7 +27,7 @@ BEGIN
 	INSERT INTO #tmpCust (Custid)
 	SELECT Custid
 	FROM custInfo WITH (NOLOCK)
-	WHERE srecommend = @Custid AND SyncLiveCasino = 1 AND DisableLiveCasino = 0 AND roleid IN (1,2,3) AND custid <> 23018473
+	WHERE srecommend = @Custid AND roleid IN (1,2,3) AND mrecommend <> 23018473
 	
 	UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1) 

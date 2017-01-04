@@ -34,7 +34,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3) AND CI.custid <> 23018473
+		WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.mrecommend <> 23018473
 	
 		UPDATE cs
 			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
@@ -47,7 +47,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.mrecommend = @Custid AND ci.SyncLiveCasino = 1  AND CI.custid <> 23018473
+		WHERE CI.mrecommend = @Custid  AND CI.mrecommend <> 23018473
 		
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
@@ -61,7 +61,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.recommend = @Custid AND ci.SyncLiveCasino = 1 AND CI.custid <> 23018473
+		WHERE CI.recommend = @Custid AND CI.mrecommend <> 23018473
 				
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
