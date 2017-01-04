@@ -572,7 +572,8 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_DynamicCustomerInfo_09 
-			@custid = @custid			
+			@custid = @custid	
+			,@maxcustid=@maxcustid		
 			,@target = 'REPLICATED'
 			
 			
