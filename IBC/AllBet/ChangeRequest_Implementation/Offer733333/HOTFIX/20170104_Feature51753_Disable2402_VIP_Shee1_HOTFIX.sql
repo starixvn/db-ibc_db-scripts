@@ -47,7 +47,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.mrecommend = @Custid  AND CI.mrecommend <> 23018473
+		WHERE CI.mrecommend = @Custid  AND CI.mrecommend <> 23018473 AND CI.roleid IN (1,2)
 		
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
