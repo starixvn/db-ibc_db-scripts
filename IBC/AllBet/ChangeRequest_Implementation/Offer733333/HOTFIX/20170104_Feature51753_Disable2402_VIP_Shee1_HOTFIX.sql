@@ -10,6 +10,7 @@ ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	,@roleid TINYINT
 	,@srecommend INT
 	,@mrecommend INT	
+	, @maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -36,14 +37,14 @@ BEGIN
 			INSERT INTO #cust_tmp (Custid)
 			SELECT ci.custid 
 			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.mrecommend <> 23018473
+			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.mrecommend <> 23018473 AND CI.custid <=@maxcustid
 		END	
 		ELSE
 		BEGIN
 			INSERT INTO #cust_tmp (Custid)
 			SELECT ci.custid 
 			FROM custInfo CI WITH (NOLOCK)
-			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) 
+			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.custid <=@maxcustid
 		END
 	
 		UPDATE cs
@@ -57,7 +58,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.mrecommend = @Custid  AND CI.mrecommend <> 23018473 AND CI.roleid IN (1,2)
+		WHERE CI.mrecommend = @Custid  AND CI.mrecommend <> 23018473 AND CI.roleid IN (1,2) AND CI.custid <=@maxcustid
 		
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
@@ -71,7 +72,7 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.recommend = @Custid AND CI.mrecommend <> 23018473
+		WHERE CI.recommend = @Custid AND CI.mrecommend <> 23018473 AND CI.custid <=@maxcustid
 				
 		UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
@@ -87,7 +88,9 @@ GO
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0, @maxcustid INT
+
+SET @maxcustid = xxxx
 
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
@@ -204,6 +207,7 @@ BEGIN
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
 			,@roleid = @roleid
+			, @maxcustid = @maxcustid
 			,@target = 'REPLICATED'
 			
 			
@@ -213,8 +217,9 @@ END
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
+DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0, @maxcustid INT
 
+SET @maxcustid = XXXX
 INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
@@ -331,6 +336,7 @@ BEGIN
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
 			,@roleid = @roleid
+			, @maxcustid = @maxcustid
 			,@target = 'DBCUST'
 			
 			

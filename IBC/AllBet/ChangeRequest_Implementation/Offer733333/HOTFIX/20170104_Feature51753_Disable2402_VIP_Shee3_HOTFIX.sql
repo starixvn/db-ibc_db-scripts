@@ -4,6 +4,7 @@ ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	--,@srecommend INT
 	--,@mrecommend INT	
 	--,@Mode BIT = 0
+	, @maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -27,7 +28,7 @@ BEGIN
 	INSERT INTO #tmpCust (Custid)
 	SELECT Custid
 	FROM custInfo WITH (NOLOCK)
-	WHERE srecommend = @Custid AND roleid IN (1,2,3) AND mrecommend <> 23018473
+	WHERE srecommend = @Custid AND roleid IN (1,2,3) AND mrecommend <> 23018473 AND custid <= @maxcustid
 	
 	UPDATE cs
 		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1) 
@@ -551,7 +552,9 @@ FROM Custinfo ci WITH (NOLOCK)
 WHERE T.IsSuperOnly = 0 
 
 CREATE TABLE #Cust (custid int, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
-DECLARE @custid int
+DECLARE @custid int, @maxcustid INT
+
+SET @maxcustid = XXX
 
 INSERT INTO #Cust(custid)
 SELECT ci.custid
@@ -1088,7 +1091,10 @@ FROM Custinfo ci WITH (NOLOCK)
 WHERE T.IsSuperOnly = 0 
 
 CREATE TABLE #Cust (custid int, isfinished bit default(0)) --Mode 0: depend on disable LC, 1: enable all
-DECLARE @custid int
+DECLARE @custid int, @maxcustid INT
+
+SET @maxcustid = XXX
+
 
 INSERT INTO #Cust(custid)
 SELECT ci.custid
@@ -1106,7 +1112,8 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_DynamicCustomerInfo_09 
-			@custid = @custid			
+			@custid = @custid
+			, @maxcustid = @maxcustid			
 			,@target = 'DBCUST'
 	waitfor delay '00:00:0.280'
 END
