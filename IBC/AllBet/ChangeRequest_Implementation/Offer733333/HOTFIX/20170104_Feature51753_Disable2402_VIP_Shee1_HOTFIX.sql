@@ -31,10 +31,20 @@ BEGIN
 	
 	IF @roleid = 4
 	BEGIN
-		INSERT INTO #cust_tmp (Custid)
-		SELECT ci.custid 
-		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.mrecommend <> 23018473
+		IF @Custid = 22524759
+		BEGIN
+			INSERT INTO #cust_tmp (Custid)
+			SELECT ci.custid 
+			FROM custInfo CI WITH (NOLOCK)
+			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) AND CI.mrecommend <> 23018473
+		END	
+		ELSE
+		BEGIN
+			INSERT INTO #cust_tmp (Custid)
+			SELECT ci.custid 
+			FROM custInfo CI WITH (NOLOCK)
+			WHERE CI.srecommend = @Custid AND roleid IN (1,2,3) 
+		END
 	
 		UPDATE cs
 			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 7, 1)
