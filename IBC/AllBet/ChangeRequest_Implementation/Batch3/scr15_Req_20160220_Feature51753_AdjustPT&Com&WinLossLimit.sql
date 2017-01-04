@@ -156,7 +156,7 @@ WHERE ci.roleid IN (2,3,4) AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
 							INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-						--WHERE spositiontaking <= @MaxPT
+						WHERE spositiontaking <= @MaxPT
 						) 
 	AND (cs1.SuperPT <> (cs2.spositiontaking * 100) OR
 			
@@ -187,7 +187,7 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (SELECT s.custid 
 						FROM #supers s 
 							INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-						--WHERE spositiontaking <= @MaxPT
+						WHERE spositiontaking <= @MaxPT
 						) 
 	AND (cs1.SuperPT <> (cs2.spositiontaking * 100) OR
 			cs1.MasterPT <> (cs2.mpositiontaking * 100) OR
@@ -225,7 +225,7 @@ WHERE ci.roleid = 3 AND ci.Enabled = 1
 	AND ci.srecommend IN (	SELECT s.custid 
 							FROM #supers s 
 								INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-							--WHERE cs.sdiscount <= @MaxComm
+							WHERE cs.sdiscount <= @MaxComm
 							) 
 	AND cs1.Discount <> cs2.adiscount
 	AND CI.SyncLiveCasino = 1
@@ -240,7 +240,7 @@ WHERE ci.roleid = 2 AND ci.Enabled = 1
 	AND ci.srecommend IN (	SELECT s.custid 
 							FROM #supers s 
 								INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-							--WHERE cs.sdiscount <= @MaxComm
+							WHERE cs.sdiscount <= @MaxComm
 							) 
 	AND cs1.Discount <> cs2.discount
 	AND CI.SyncLiveCasino = 1
@@ -259,7 +259,7 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (	SELECT s.custid 
 							FROM #supers s 
 								INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-							--WHERE cs.sdiscount <= @MaxComm
+							WHERE cs.sdiscount <= @MaxComm
 							) 
 	AND (cs1.SuperDiscount <> cs2.sdiscount OR
 			cs1.MasterDiscount <> cs2.adiscount OR
@@ -278,13 +278,12 @@ FROM dbo.custInfo ci WITH (NOLOCK)
 	INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = CI.srecommend
 	INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = CI.mrecommend
 	INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = CI.recommend
-	--INNER JOIN CustSettingGame cs2 ON cs2.CustID = cs1.CustID
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND 2401 = dest.fBetType AND 211 = dest.fSportType 
 WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (	SELECT s.custid 
 							FROM #supers s 
 								INNER JOIN CustSettingGame cs WITH(NOLOCK) ON s.custid = cs.custid AND cs.sporttype = 162 AND cs.bettype = 1101
-							--WHERE cs.sdiscount <= @MaxComm
+							WHERE cs.sdiscount <= @MaxComm
 							) 
 	AND (cs1.SuperDiscount <> super.Discount OR
 			cs1.MasterDiscount <> master.Discount OR
