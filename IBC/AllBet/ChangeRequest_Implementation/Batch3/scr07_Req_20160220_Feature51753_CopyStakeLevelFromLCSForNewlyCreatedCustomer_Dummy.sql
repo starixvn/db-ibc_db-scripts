@@ -87,7 +87,7 @@ UNION ALL
 SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Master of direct agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-WHERE ci.custid > @max_custid AND CI.custid NOT IN (4174,4178,4300,8619)
+WHERE ci.custid > @max_custid AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 	
 UNION ALL
 
