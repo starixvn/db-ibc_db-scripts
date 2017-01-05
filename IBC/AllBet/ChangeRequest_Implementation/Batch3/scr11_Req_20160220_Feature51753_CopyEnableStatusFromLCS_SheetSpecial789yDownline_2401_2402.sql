@@ -48,14 +48,24 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid,DisableLiveCasino)
 		SELECT ci.custid , ci.DisableLiveCasino
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1
+		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3)
 	
+		UPDATE cs
+			SET bitmapIsDisabled =  CASE WHEN ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+										 ELSE bitmapIsDisabled 
+									END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+		-- Supper
 		UPDATE cs
 			SET bitmapIsDisabled =  CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
 										 ELSE bitmapIsDisabled 
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
+		WHERE cs.CustID = @srecommend	
+			
 		
 	END
 	ELSE IF @roleid = 3
@@ -63,14 +73,23 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid,DisableLiveCasino)
 		SELECT ci.custid , ci.DisableLiveCasino
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE (CI.mrecommend = @Custid OR ci.custid = @srecommend) AND ci.SyncLiveCasino = 1
+		WHERE CI.mrecommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3)
 		
 		UPDATE cs
-		SET bitmapIsDisabled = CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		SET bitmapIsDisabled = CASE WHEN ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
 										 ELSE bitmapIsDisabled 
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+		-- Supper
+		UPDATE cs
+			SET bitmapIsDisabled =  CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+										 ELSE bitmapIsDisabled 
+									END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
+		WHERE cs.CustID = @srecommend		
 
 	END
 	ELSE IF @roleid = 2
@@ -78,14 +97,23 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid,DisableLiveCasino)
 		SELECT ci.custid , ci.DisableLiveCasino
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE (CI.recommend = @Custid  OR ci.custid IN (@srecommend,@mrecommend)) AND ci.SyncLiveCasino = 1
+		WHERE (CI.recommend = @Custid  OR ci.custid IN (@mrecommend)) AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3)
 		
 		UPDATE cs
-		SET bitmapIsDisabled =CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		SET bitmapIsDisabled =CASE WHEN ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
 										 ELSE bitmapIsDisabled 
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		
+		-- Supper
+		UPDATE cs
+			SET bitmapIsDisabled =  CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+										 ELSE bitmapIsDisabled 
+									END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
+		WHERE cs.CustID = @srecommend		
 	END
 	
 END

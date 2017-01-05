@@ -48,12 +48,17 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1
+		WHERE CI.srecommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3)
 	
+		UPDATE cs
+			SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		-- Super	
 		UPDATE cs
 			SET bitmapIsDisabled = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		WHERE cs.CustID = @srecommend	
 		
 	END
 	ELSE IF @roleid = 3
@@ -61,14 +66,17 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.mrecommend = @Custid AND ci.SyncLiveCasino = 1
-		UNION ALL
-		SELECT @srecommend
+		WHERE CI.mrecommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2,3)
 		
 		UPDATE cs
-		SET bitmapIsDisabled = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		-- Super
+		UPDATE cs
+			SET bitmapIsDisabled = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.CustID = @srecommend		
 
 	END
 	ELSE IF @roleid = 2
@@ -76,16 +84,19 @@ BEGIN
 		INSERT INTO #cust_tmp (Custid)
 		SELECT ci.custid 
 		FROM custInfo CI WITH (NOLOCK)
-		WHERE CI.recommend = @Custid AND ci.SyncLiveCasino = 1
-		UNION ALL
-		SELECT @srecommend 
+		WHERE CI.recommend = @Custid AND ci.SyncLiveCasino = 1 AND roleid IN (1,2)
 		UNION ALL
 		SELECT @mrecommend 
 		
 		UPDATE cs
-		SET bitmapIsDisabled =(SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		SET bitmapIsDisabled =dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN #cust_tmp ci WITH(NOLOCK) ON cs.CustID = ci.CustID
+		--Super
+		UPDATE cs
+			SET bitmapIsDisabled = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.CustID = @srecommend		
 	END
 	
 END

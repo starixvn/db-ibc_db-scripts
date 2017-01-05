@@ -106,16 +106,6 @@ BEGIN
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 
-		
-	---- REMOVE SMA OR member if existing Allbet Setting
-	DELETE M
-	FROM #SMATemp M 
-		INNER JOIN CustStakeLevel_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-		
-	DELETE M
-	FROM #MemberTemp M 
-		INNER JOIN CustStakeLevel_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211	
-	
 	--Bettype 2402: Lowest VIP Bet limit
 	DECLARE @StakeLevelList_2402 VARCHAR(100)
 	
@@ -283,7 +273,7 @@ WHERE ci.roleid = 4
 		AND ci.custid IN 
 		(
 			-- dummy account
-			2,3,5,12,13
+			2,3,4,5,12,13,15
 		)
 		
 WHILE (1 = 1)
@@ -323,7 +313,7 @@ WHERE ci.roleid = 4
 		AND ci.custid IN 
 		(
 			-- dummy account
-			2,3,5,12,13
+			2,3,4,5,12,13,15
 		)
 
 WHILE (1 = 1)

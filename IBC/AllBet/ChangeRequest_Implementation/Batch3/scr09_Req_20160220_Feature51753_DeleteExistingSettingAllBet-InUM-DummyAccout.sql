@@ -16,7 +16,7 @@ FROM Customer with(nolock)
 WHERE SITE IN  ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 	AND custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	AND srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	AND roleid=3 AND srecommend IN (2,3,5,12,13)
+	AND roleid=3 AND srecommend IN (2,3,4,5,12,13,15)
 
 --- get direct agent
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -25,7 +25,7 @@ FROM Customer WITH(NOLOCK)
 WHERE site in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend IN (2,3,5,12,13)
+	and roleid=2 AND srecommend IN (2,3,4,5,12,13,15)
 
 	
 INSERT INTO #Cust_tmp (CustID,roleid)

@@ -51,77 +51,64 @@ BEGIN
 	)
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-	
-	IF @srecommend IN (2,3,5,12,13)
-	BEGIN 
-		
-		--- get direct master
-		INSERT INTO #DirectMaster (CustID,roleid)
-		SELECT custid, roleid
-		FROM Customer with(nolock)
-		WHERE SITE in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
-			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
 			
-		--- get direct agent
-		INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
-		SELECT custid, mrecommend,roleid
-		FROM Customer WITH(NOLOCK)
-		WHERE SITE in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
-
-			and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-			and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
-
-		----------- For SMA  -----------
-		INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
-		SELECT @srecommend,4,1 -- Super
-		UNION ALL
-		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
-		FROM custInfo CI WITH (NOLOCK)
-			INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-		UNION ALL
-		SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
-		FROM custInfo CI WITH (NOLOCK)
-			INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-		WHERE CI.custid <= @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619) -- under this master having direct agent of 7555555			
+	--- get direct master
+	INSERT INTO #DirectMaster (CustID,roleid)
+	SELECT custid, roleid
+	FROM Customer with(nolock)
+	WHERE SITE in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
+		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
 		
-		UNION ALL
+	--- get direct agent
+	INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
+	SELECT custid, mrecommend,roleid
+	FROM Customer WITH(NOLOCK)
+	WHERE SITE in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 
-		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
-		FROM custInfo CI WITH (NOLOCK)
-			INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-		WHERE CI.roleid = 2 AND CI.custid <= @maxcustid 
-					
-		UNION ALL
-		SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
-		FROM custInfo CI WITH (NOLOCK)
-			INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
-		---------- For members ---------
-		INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
-		SELECT CI.custid, SyncLiveCasino
-		FROM Custinfo CI WITH (NOLOCK)
-			INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-		WHERE CI.roleid = 1	AND CI.custid <= @maxcustid 			
+		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
 
-		UNION ALL
-		SELECT CI.custid, SyncLiveCasino
-		FROM Custinfo CI WITH (NOLOCK)
-			INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-		WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
+	----------- For SMA  -----------
+	INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
+	--SELECT @srecommend,4,1 -- Super
+	--UNION ALL
+	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+	UNION ALL
+	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+	WHERE CI.custid <= @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619) -- under this master having direct agent of 7555555			
+	
+	UNION ALL
 
-		---- REMOVE SMA OR member if existing Allbet Setting
-		DELETE M
-		FROM #SMATemp M 
-			INNER JOIN CustWinLossLimit_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-		WHERE PS.CustId <> @srecommend	AND M.CustID <> 4300
-		
-		DELETE M
-		FROM #MemberTemp M 
-			INNER JOIN CustWinLossLimit_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-		WHERE PS.CustId <> @srecommend	
-	END		
+	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+	WHERE CI.roleid = 2 AND CI.custid <= @maxcustid 
+				
+	UNION ALL
+	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+	---------- For members ---------
+	INSERT INTO #MemberTemp (CustID, SyncLiveCasino)
+	SELECT CI.custid, SyncLiveCasino
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
+	WHERE CI.roleid = 1	AND CI.custid <= @maxcustid 			
+
+	UNION ALL
+	SELECT CI.custid, SyncLiveCasino
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
+	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
+
+	
 	
 	DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 	SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 1
@@ -222,7 +209,7 @@ BEGIN
 		INNER JOIN dbo.custOverrideGame co WITH(NOLOCK) ON cs.custid = co.custid and cs.sporttype = co.sporttype and cs.bettype = co.bettype
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 1 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE cs.CustID <> @srecommend AND cs.CustID <> 4300
+	WHERE cs.CustID <> @srecommend 
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
 		(	[custid]
@@ -314,7 +301,7 @@ BEGIN
 	FROM dbo.CustSettingGame cs WITH(NOLOCK)
 		INNER JOIN #SMATemp ci WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND cs.bettype = dest.fBetType AND cs.sporttype = dest.fSportType
-	WHERE CS.CustID <> @srecommend AND cs.CustID <> 4300
+	WHERE CS.CustID <> @srecommend 
 		 
 	--Member Level
 	INSERT INTO dbo.CustDiscount3rd_Member (CustID, SportType, BetType, PlayerDiscount, AgentDiscount, MasterDiscount, SuperDiscount)
@@ -395,7 +382,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,3,5,12,13
+			2,3,4,5,12,13,15
 		)
 
 WHILE (1 = 1)
@@ -429,7 +416,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,3,5,12,13
+			2,3,4,5,12,13,15
 		)
 
 

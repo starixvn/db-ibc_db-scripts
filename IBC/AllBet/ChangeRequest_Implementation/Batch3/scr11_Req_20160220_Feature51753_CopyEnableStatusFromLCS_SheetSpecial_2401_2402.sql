@@ -333,6 +333,9 @@ FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
 WHERE cp.LevelApplied = 1
 
+--S96h: direct master under this super
+
+
 -- Master only
 UPDATE cs
 	SET bitmapIsDisabled = CASE WHEN cp.IsFollowLC = 1 AND ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
@@ -356,13 +359,24 @@ FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 WHERE cp.LevelApplied = 6 --update AGENT & its upline
 
 -- Super, Master only : 5				
+-- 5.1 Super
 UPDATE cs
 	SET bitmapIsDisabled = CASE WHEN cp.IsFollowLC = 1 AND ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
 								WHEN cp.IsFollowLC = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
 								ELSE bitmapIsDisabled END
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid OR (CI.srecommend = CP.srecommend AND CI.roleid = 3 )
+	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid 
+WHERE cp.LevelApplied = 5 --update Super, Master of Super Account
+
+-- 5.2 Master only update 2401
+UPDATE cs
+	SET bitmapIsDisabled = CASE WHEN cp.IsFollowLC = 1 AND ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+								WHEN cp.IsFollowLC = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+								ELSE bitmapIsDisabled END
+FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
+	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON CI.srecommend = CP.srecommend AND CI.roleid = 3 
 WHERE cp.LevelApplied = 5 --update Super, Master of Super Account
 
 --------------------------------------------- DONE for special not for SMA & Member --------------------------------

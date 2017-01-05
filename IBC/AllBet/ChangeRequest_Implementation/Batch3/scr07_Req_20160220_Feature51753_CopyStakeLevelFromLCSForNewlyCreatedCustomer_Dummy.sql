@@ -57,7 +57,7 @@ FROM Customer with(nolock)
 WHERE site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=3 AND srecommend = @srecommend 
+	and roleid=3 AND srecommend IN  (2,3,4,5,12,13,15)
 	
 --- get direct agent
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -66,7 +66,7 @@ FROM Customer WITH(NOLOCK)
 WHERE site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend = @srecommend 
+	and roleid=2 AND srecommend IN  (2,3,4,5,12,13,15)
 
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino,currency)
@@ -107,15 +107,6 @@ SELECT CI.custid, ci.SyncLiveCasino,ci.currency
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 WHERE CI.roleid = 1 AND ci.custid > @max_custid 
-
----- REMOVE SMA OR member if existing Allbet Setting
-DELETE M
-FROM #SMATemp M 
-	INNER JOIN CustStakeLevel_Agent ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
-	
-DELETE M
-FROM #MemberTemp M 
-	INNER JOIN CustStakeLevel_Member ps WITH (NOLOCK) ON M.CustID = PS.CustID AND PS.SportType = 211
 
 -------------end of Dummy processing ----------------			
 --- get list of new customers

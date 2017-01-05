@@ -218,7 +218,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND (ci.site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666') OR ci.currency = 20)
 		AND ci.custid <> 72
-		AND ci.custid NOT IN (2,3,5,12,13)-- dummy account
+		AND ci.custid NOT IN (2,3,4,5,12,13,15)-- dummy account
 		)	
 		-- CROSS-SITE
 		OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)
@@ -258,7 +258,7 @@ WHERE (ci.roleid = 4
 		-- Production
 		AND (ci.site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666') OR ci.currency = 20)
 		AND ci.custid <> 72
-		AND ci.custid NOT IN (2,3,5,12,13)-- dummy account
+		AND ci.custid NOT IN (2,3,4,5,12,13,15)-- dummy account
 		)	
 		-- CROSS-SITE
 		OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)

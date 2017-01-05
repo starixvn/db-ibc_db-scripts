@@ -742,7 +742,8 @@ VALUES
 INSERT INTO #Cust_SMA_processing(custid,recommend,mrecommend,srecommend,roleID,DisableLiveCasino,SyncLiveCasino,IsFollowLC,LevelApplied)
 SELECT CI.custID,ci.recommend,ci.mrecommend,ci.srecommend,ci.roleid,ci.DisableLiveCasino,SyncLiveCasino,t.IsFollowLC,t.LevelApplied
 FROM #cust_tmp  T  WITH (NOLOCK)
-	INNER JOIN Custinfo ci ON T.username = ci.username AND ci.SyncLiveCasino = 1
+	INNER JOIN Custinfo ci WITH (NOLOCK) ON T.username = ci.username AND ci.SyncLiveCasino = 1
+WHERE T.LevelApplied = 1
 
 DECLARE @xmlDisable_0 XML
 
@@ -768,7 +769,6 @@ UPDATE cs
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
 	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
-WHERE cp.LevelApplied = 1
 
 --------------------------------------------- DONE for 789Y special not for SMA & Member --------------------------------
 
