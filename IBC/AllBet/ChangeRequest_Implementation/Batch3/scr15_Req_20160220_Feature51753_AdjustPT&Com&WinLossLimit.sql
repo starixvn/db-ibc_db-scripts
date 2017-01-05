@@ -79,6 +79,7 @@ SET cs.MaxWinLimit = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 	cs.IsAutoReset = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.isAutoResetLiveCasino
 							WHEN si.SyncLiveCasino = 1 THEN si.isAutoResetLiveCasino END
 FROM CustWinLossLimit_Agent cs WITH (NOLOCK)
+	INNER JOIN #SMATemp master WITH (NOLOCK) ON master.CustID = cs.CustId 
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON cs.SportType = dest.tSportType AND cs.BetType = dest.tBetType AND dest.SettingType = 6 
 	INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON ci.custid = cs.CustId 
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.CustId 
@@ -99,6 +100,7 @@ SET cs.MaxWinLimit = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 FROM CustWinLossLimit_Agent cs WITH (NOLOCK)
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON cs.SportType = dest.tSportType AND cs.BetType = dest.tBetType AND dest.SettingType = 6 
 	INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON ci.custid = cs.CustId 
+	INNER JOIN #SMATemp agent WITH (NOLOCK) ON cs.CustId = agent.CustId 
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.CustId 
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid
 WHERE ci.roleid = 2
@@ -122,6 +124,7 @@ SET cs.MaxWinLimit = CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 FROM dbo.CustWinLossLimit_Member cs WITH (NOLOCK)
 	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON cs.SportType = dest.tSportType AND cs.BetType = dest.tBetType AND dest.SettingType = 6 
 	INNER JOIN dbo.custInfo ci WITH (NOLOCK) ON ci.custid = cs.CustId 
+	INNER JOIN #MemberTemp member WITH (NOLOCK) ON ci.custid = member.custid
 	INNER JOIN #SMATemp si WITH (NOLOCK) ON ci.srecommend = si.CustId 
 	INNER JOIN #SMATemp mi WITH (NOLOCK) ON ci.mrecommend = mi.custid
 	INNER JOIN #SMATemp ai WITH (NOLOCK) ON ci.recommend = ai.custid
