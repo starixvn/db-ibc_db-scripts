@@ -195,7 +195,7 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	-- Production
-	AND ci.site in ('733333','222223')
+	AND ci.site in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 
 	
 WHILE (1 = 1)
@@ -243,7 +243,7 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	
-	AND ci.site in ('733333','222223')
+	AND ci.site in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 	
 WHILE (1 = 1)
 BEGIN
