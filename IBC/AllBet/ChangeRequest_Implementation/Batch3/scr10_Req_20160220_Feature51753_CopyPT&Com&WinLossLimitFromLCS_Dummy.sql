@@ -51,7 +51,7 @@ BEGIN
 	)
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-			
+	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,roleid INT)			
 	--- get direct master
 	INSERT INTO #DirectMaster (CustID,roleid)
 	SELECT custid, roleid
@@ -71,6 +71,13 @@ BEGIN
 		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
 
+	INSERT INTO #DirectMember(CustID,recommend,roleid)
+	SELECT custid, recommend,roleid
+	FROM Customer c WITH(NOLOCK)
+	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
+		
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
 	--SELECT @srecommend,4,1 -- Super
@@ -82,7 +89,7 @@ BEGIN
 	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-	WHERE CI.custid <= @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619) -- under this master having direct agent of 7555555			
+	WHERE CI.custid <= @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619,4177) -- under this master having direct agent of 7555555			
 	
 	UNION ALL
 
@@ -108,7 +115,12 @@ BEGIN
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
 
-	
+	-- Direct member
+	UNION ALL
+	SELECT CI.custid, CI.SyncLiveCasino
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 
+		
 	
 	DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 	SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 1

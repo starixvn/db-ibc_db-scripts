@@ -37,7 +37,7 @@ CREATE TABLE #SMATemp
 ------------STARTING Dummy Processing
 CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-
+CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,roleid INT)			
 --- get direct master
 INSERT INTO #DirectMaster (CustID,roleid)
 SELECT custid, roleid
@@ -57,6 +57,15 @@ WHERE site in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222
 	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	and roleid=2 AND srecommend IN (2,3,4,5,12,13,15)
+
+INSERT INTO #DirectMember(CustID,recommend,roleid)
+SELECT custid, recommend,roleid
+FROM Customer c WITH(NOLOCK)
+WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
+		
+			
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID,roleid)
 -- NO NEED TO ADD SUPER, it's added already
@@ -70,7 +79,7 @@ UNION ALL
 SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-WHERE ci.custid > @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619)
+WHERE ci.custid > @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 	
 UNION ALL
 
@@ -98,6 +107,11 @@ FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 WHERE CI.roleid = 1 AND ci.custid > @maxcustid 
 
+UNION ALL
+SELECT CI.custid, ci.SyncLiveCasino
+FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN #DirectMember M ON CI.custid = M.CustID
+WHERE ci.custid > @maxcustid
 -------------END of Dummny Processing----------------------------
 
 DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)

@@ -30,6 +30,8 @@ BEGIN
 	
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
+	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,roleid INT)
+	
 	CREATE TABLE #Cust_tmp(CustID INT PRIMARY KEY CLUSTERED,	roleid TINYINT	)
 
 	INSERT INTO #DirectMaster (CustID,roleid)
@@ -38,7 +40,7 @@ BEGIN
 	WHERE SITE IN  ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 		AND custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND roleid=3 AND srecommend IN (2,3,5,12,13)
+		AND roleid=3 AND srecommend IN (2,3,4,5,12,13,15) 
 	
 	--- get direct agent
 	INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
@@ -47,9 +49,16 @@ BEGIN
 	WHERE site in ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
 		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and roleid=2 AND srecommend IN (2,3,5,12,13)
+		and roleid=2 AND srecommend IN (2,3,4,5,12,13,15) 
 	
-		
+	INSERT INTO #DirectMember(CustID,recommend,roleid)
+	SELECT custid, recommend,roleid
+	FROM Customer c WITH(NOLOCK)
+	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
+
+	
 	INSERT INTO #Cust_tmp (CustID,roleid)
 	
 	SELECT CI.CustID,CI.roleid -- Direct Master 
@@ -66,7 +75,12 @@ BEGIN
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 	FROM Customer CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-	WHERE CI.roleid = 3 and ci.custid NOT IN (4174,4178,4300,8619) -- under this master having direct agent of 7555555
+	WHERE CI.roleid = 3 and ci.custid NOT IN (4174,4178,4300,8619,4177) -- under this master having direct agent of 7555555
+	
+	UNION ALL
+	
+	SELECT CustID,roleid -- DIRECT MEMBER
+	FROM #DirectMember
 		
 	--- PT
 	DELETE cg
