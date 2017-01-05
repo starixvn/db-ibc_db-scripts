@@ -278,10 +278,9 @@ UPDATE cs1
 		PlayerDiscount = 0 
 FROM dbo.custInfo ci WITH (NOLOCK) 
 	INNER JOIN dbo.CustDiscount3rd_Member cs1 WITH(ROWLOCK,UPDLOCK) ON ci.custid = cs1.CustID
-	INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = CI.srecommend
-	INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = CI.mrecommend
-	INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = CI.recommend
-	INNER JOIN #DestinationSportBetType dest WITH(NOLOCK) ON dest.SettingType = 3 AND 2401 = dest.fBetType AND 211 = dest.fSportType 
+	INNER JOIN CustDiscount3rd_Agent super WITH (NOLOCK) ON super.CustID = CI.srecommend AND CS1.SportType = SUPER.SportType AND cs1.BetType=SUPER.BetType
+	INNER JOIN CustDiscount3rd_Agent master WITH (NOLOCK) ON master.CustID = CI.mrecommend AND CS1.SportType = master.SportType AND cs1.BetType=master.BetType
+	INNER JOIN CustDiscount3rd_Agent agent WITH (NOLOCK) ON agent.CustID = CI.recommend AND CS1.SportType = agent.SportType AND cs1.BetType=agent.BetType
 WHERE ci.roleid = 1 AND ci.Enabled = 1
 	AND ci.srecommend IN (	SELECT s.custid 
 							FROM #supers s 
@@ -292,7 +291,7 @@ WHERE ci.roleid = 1 AND ci.Enabled = 1
 			cs1.MasterDiscount <> master.Discount OR
 			cs1.AgentDiscount <> Agent.Discount OR
 			cs1.PlayerDiscount <> 0)
-	
+	AND CS1.SportType = 211 AND CS1.BetType = 2401
 	AND CI.SyncLiveCasino = 0
 	
 	
