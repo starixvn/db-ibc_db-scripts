@@ -36,7 +36,6 @@ WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
 			
 INSERT INTO #Cust_tmp (CustID,roleid)
-
 SELECT CI.CustID,CI.roleid -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
@@ -54,13 +53,13 @@ FROM Customer CI WITH (NOLOCK)
 WHERE CI.roleid = 3 and ci.custid NOT IN (4174,4178,4300,8619,4177,4183) -- under this master having direct agent of 7555555
 UNION 
 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177,4183)
 
 UNION 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+SELECT DISTINCT CI.CustID,CI.roleid-- agent of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 WHERE  ci.Enabled = 1 
