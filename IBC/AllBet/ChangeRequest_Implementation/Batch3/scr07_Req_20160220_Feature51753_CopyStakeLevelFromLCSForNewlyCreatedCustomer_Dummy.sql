@@ -104,13 +104,13 @@ WHERE ci.custid > @max_custid
 
 UNION 
 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- Master of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 WHERE  ci.Enabled = 1 AND ci.custid <= @max_custid 	AND CI.custid NOT IN (4174,4178,4300,8619,4177,4183)
 
 UNION 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino,ci.currency -- agent of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 WHERE  ci.Enabled = 1 AND ci.custid <= @max_custid 	
