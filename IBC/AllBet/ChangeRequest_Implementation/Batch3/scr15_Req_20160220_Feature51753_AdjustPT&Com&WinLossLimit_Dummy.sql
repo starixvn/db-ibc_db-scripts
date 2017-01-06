@@ -78,6 +78,11 @@ AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15)
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 SELECT ci.custid, ci.roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino -- Direct Master 
+FROM custInfo CI (NOLOCK)
+WHERE CI.CUSTID IN (2,3,4,5,12,13,15) 
+
+INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
+SELECT ci.custid, ci.roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 UNION 
