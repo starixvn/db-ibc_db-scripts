@@ -51,7 +51,7 @@ BEGIN
 	)
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,roleid INT)			
+	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)			
 	--- get direct master
 	INSERT INTO #DirectMaster (CustID,roleid)
 	SELECT custid, roleid
@@ -71,8 +71,8 @@ BEGIN
 		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
 
-	INSERT INTO #DirectMember(CustID,recommend,roleid)
-	SELECT custid, recommend,roleid
+	INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
+	SELECT custid, recommend,mrecommend,roleid
 	FROM Customer c WITH(NOLOCK)
 	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
@@ -116,6 +116,19 @@ BEGIN
 	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
 
 	-- Direct member
+	UNION ALL
+
+	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
+	WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177)
+
+	UNION ALL
+	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
+	WHERE  ci.Enabled = 1 
+	
 	UNION ALL
 	SELECT CI.custid, CI.SyncLiveCasino
 	FROM Custinfo CI WITH (NOLOCK)
