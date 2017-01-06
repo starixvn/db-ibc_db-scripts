@@ -194,9 +194,9 @@ BEGIN
 		FROM #SMATemp ci 
 		WHERE ci.roleid IN (2,3)
 		
-		UNION ALL
+		--UNION ALL
 		
-		SELECT @srecommend, 211, 2401, @StakeLevelList_2401_allLevel4Super
+		--SELECT @srecommend, 211, 2401, @StakeLevelList_2401_allLevel4Super
 		
 		--Member Level
 		INSERT INTO dbo.CustStakeLevel_Member(CustID, SportType, BetType, StakeLevelList)		
