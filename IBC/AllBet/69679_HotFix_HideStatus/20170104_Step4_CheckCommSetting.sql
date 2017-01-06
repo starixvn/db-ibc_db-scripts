@@ -24,7 +24,7 @@ CREATE TABLE #CheckCommResult_Credit(
 )
 
 GO
-ALTER TABLE #CheckCommResult_Credit ADD  CONSTRAINT [DF_CheckPTRule_CreatedDate]  DEFAULT (getdate()) FOR [CreatedDate]
+ALTER TABLE #CheckCommResult_Credit ADD  CONSTRAINT [DF_CheckCommRule_CreatedDate]  DEFAULT (getdate()) FOR [CreatedDate]
 	
 CREATE TABLE #supers (custid int)
 	
