@@ -106,7 +106,7 @@ BEGIN
 	WHERE CI.roleid = 1 
 	-- Direct member
 		
-	UNION ALL
+	UNION 
 	
 	SELECT CI.custid, SyncLiveCasino
 	FROM Custinfo CI WITH (NOLOCK)
