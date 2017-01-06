@@ -73,11 +73,6 @@ BEGIN
 		
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
-	SELECT CustID,roleid,SyncLiveCasino
-	FROM custInfo CI WITH (NOLOCK)
-	WHERE CI.custid = @srecommend  AND ci.Enabled = 1 AND ci.custid <= @maxcustid -- SUPER
-	UNION 
-
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
