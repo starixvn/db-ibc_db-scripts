@@ -76,12 +76,12 @@ BEGIN
 	FROM Customer c WITH(NOLOCK)
 	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND roleid=1 AND srecommend = @srecommend
+		AND roleid=1 AND srecommend = @srecommend AND C.custid <= @maxcustid 
 		
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
-	--SELECT @srecommend,4,1 -- Super
-	--UNION ALL
+	SELECT @srecommend,4,1 -- Super
+	UNION ALL
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
