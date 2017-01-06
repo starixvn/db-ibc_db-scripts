@@ -76,7 +76,7 @@ BEGIN
 	FROM Customer c WITH(NOLOCK)
 	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
+		AND roleid=1 AND srecommend = @srecommend
 		
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,roleid,SyncLiveCasino)
