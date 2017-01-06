@@ -19,10 +19,10 @@ INSERT INTO #tblCust (custid,agentid,roleid,currency,srecommend)
 SELECT ci.custid,ci.recommend,roleid,ci.currency, ci.srecommend
 FROM custInfo CI WITH(NOLOCK)
 	INNER JOIN Dep_CustSuper CS with(nolock) ON ci.srecommend = cs.custid
-WHERE mrecommend NOT IN (SELECT custid FROM custinfo WITH(NOLOCK)
-						   WHERE srecommend=ci.srecommend and username like '%Acc%' and roleid=3 )
+WHERE ci.mrecommend NOT IN (SELECT custid FROM custinfo cs1 WITH(NOLOCK)
+						   WHERE cs1.srecommend=ci.srecommend and cs1.username like '%Acc%' and cs1.roleid=3 )
 	AND ci.custid > @max_custid
-	AND site=@site and CI.currency <> 20 
+	AND cs.site=@site and CI.currency <> 20 
 	AND ci.roleid = 1
 						   
 -- PT processing
