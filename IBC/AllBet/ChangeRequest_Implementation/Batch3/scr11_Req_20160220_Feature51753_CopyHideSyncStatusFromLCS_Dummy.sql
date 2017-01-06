@@ -75,19 +75,19 @@ BEGIN
 	WHERE CI.roleid = 2 
 				
 	UNION 
-	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
+	SELECT CI.CustID,CI.SyncLiveCasino -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 	
 	UNION 
 
-	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+	SELECT DISTINCT CI.CustID,CI.SyncLiveCasino -- Master of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 	WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177,4183)
 
 	UNION 
-	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+	SELECT DISTINCT CI.CustID,CI.SyncLiveCasino -- agent of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 	WHERE  ci.Enabled = 1 
