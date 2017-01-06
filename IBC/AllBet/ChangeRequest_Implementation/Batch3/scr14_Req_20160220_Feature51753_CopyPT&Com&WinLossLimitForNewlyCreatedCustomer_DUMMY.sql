@@ -69,6 +69,9 @@ WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID,roleid)
 -- NO NEED TO ADD SUPER, it's added already
+SELECT custid, 4
+FROM #supers
+UNION 
 SELECT CI.CustID,CI.roleid -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
@@ -96,13 +99,13 @@ WHERE ci.custid > @maxcustid
 
 UNION 
 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177,4183) AND ci.custid > @maxcustid 
 
 UNION 
-SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+SELECT DISTINCT CI.CustID,CI.roleid -- agent of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 WHERE  ci.Enabled = 1 AND ci.custid > @maxcustid 
@@ -131,20 +134,6 @@ DECLARE @MaxPT TINYINT, @MaxComm DECIMAL(9,8)
 SELECT @MaxPT = MaxPT FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 1
 SELECT @MaxComm = MaxDiscount FROM dbo.ProductSettingDetail WITH (NOLOCK) WHERE ProductID = 21 AND SettingType = 3
 --------------------------------------WinLossLimit-------------------------------------------------
---SuperLevel
-INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
-SELECT ci.custid, dest.tSportType, dest.tBetType	
-	,CASE WHEN ci.SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END AS MaxWinLimit
-	,ISNULL(gbs.DefaultLossLimit,0) AS MaxLossLimit 
-	,CASE WHEN ci.SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END AS IsAutoReset
-FROM dbo.custInfo ci WITH(NOLOCK)
-	INNER JOIN #SMATemp tmpci WITH (NOLOCK) ON ci.custid = tmpci.custid
-	INNER JOIN #supers S ON CI.srecommend = S.custid
-	INNER JOIN LossLimit_GlobalSetting gbs WITH (NOLOCK) ON gbs.ProductId = 21 AND gbs.ExchangeId = s.exchangeid
-	CROSS JOIN #DestinationSportBetType dest WITH(NOLOCK) 
-WHERE ci.roleid = 4 AND dest.SettingType = 6 
-	AND NOT EXISTS (SELECT 1 FROM CustWinLossLimit_Agent A WITH (NOLOCK) WHERE A.CustId =CI.custid AND a.SportType = 211 )
-									
 --Master Level
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 SELECT ci.custid, dest.tSportType, dest.tBetType	
