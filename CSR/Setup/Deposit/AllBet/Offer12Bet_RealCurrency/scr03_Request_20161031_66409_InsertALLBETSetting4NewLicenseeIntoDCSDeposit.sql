@@ -47,7 +47,7 @@ BEGIN
 	
 	-- For PT param
 	, @IsPTSetting BIT = 1
-	, @SuperPT SMALLINT = 93
+	, @SuperPT SMALLINT = 92
 	-- For StakelevelGroup params
 	, @IsStakeLevel BIT = 1
 	
