@@ -124,7 +124,7 @@ SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @max_custid
+		--AND ci.custid <= @max_custid
 		-- Production
 		AND (ci.site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666') OR ci.currency = 20)
 		AND ci.custid <> 72
@@ -161,7 +161,7 @@ SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @max_custid
+		--AND ci.custid <= @max_custid
 		-- Production
 		AND (ci.site IN ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666') OR ci.currency = 20)
 		AND ci.custid <> 72
