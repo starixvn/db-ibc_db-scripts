@@ -65,32 +65,32 @@ BEGIN
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 	
-	UNION ALL
+	UNION 
 	
 	SELECT CI.CustID,CI.roleid -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.recommend = D.CustID 
-	UNION ALL	
+	UNION 	
 	
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 	FROM Customer CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 	WHERE CI.roleid = 3 and ci.custid NOT IN (4174,4178,4300,8619,4177) -- under this master having direct agent of 7555555
 	
-	UNION ALL
+	UNION 
 
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 	WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 
-	UNION ALL
+	UNION 
 	SELECT DISTINCT CI.CustID,CI.roleid -- agent of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 	WHERE  ci.Enabled = 1 
 
-	UNION ALL
+	UNION 
 	
 	SELECT CustID,roleid -- DIRECT MEMBER
 	FROM #DirectMember

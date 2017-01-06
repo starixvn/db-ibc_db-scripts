@@ -61,23 +61,37 @@ BEGIN
 	SELECT CI.CustID,CI.SyncLiveCasino -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-	UNION ALL
+	UNION 
 	SELECT DISTINCT CI.CustID,CI.SyncLiveCasino -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 	WHERE CI.custid NOT IN (4174,4178,4300,8619,4177) -- under this master having direct agent of 7555555			
 	
-	UNION ALL
+	UNION 
 
 	SELECT CI.CustID,CI.SyncLiveCasino -- Agent of direct master
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 	WHERE CI.roleid = 2 
 				
-	UNION ALL
+	UNION 
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
+	
+	UNION 
+
+	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
+	WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177)
+
+	UNION 
+	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
+	WHERE  ci.Enabled = 1 
+		
 	---------- For members ---------
 	INSERT INTO #CustListTemp (CustID, SyncLiveCasino)
 	SELECT CI.custid, SyncLiveCasino
@@ -85,25 +99,13 @@ BEGIN
 		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
 	WHERE CI.roleid = 1	
 
-	UNION ALL
+	UNION 
 	SELECT CI.custid, SyncLiveCasino
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 
 	-- Direct member
-	UNION ALL
-
-	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
-	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
-	WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177)
-
-	UNION ALL
-	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
-	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
-	WHERE  ci.Enabled = 1 
-	
+		
 	UNION ALL
 	
 	SELECT CI.custid, SyncLiveCasino

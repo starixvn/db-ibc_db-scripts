@@ -74,34 +74,34 @@ FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 WHERE ci.custid > @maxcustid 
 
-UNION ALL
+UNION 
 
 SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 WHERE ci.custid > @maxcustid AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 	
-UNION ALL
+UNION 
 
 SELECT CI.CustID,CI.roleid -- Agent of direct master
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 WHERE CI.roleid = 2
 	AND ci.custid > @maxcustid 
-UNION ALL
+UNION 
 SELECT CI.CustID,CI.roleid -- Direct Agent
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 WHERE ci.custid > @maxcustid 
 
-UNION ALL
+UNION 
 
 SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 WHERE  ci.Enabled = 1 AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 
-UNION ALL
+UNION 
 SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember D ON CI.custid = D.recommend 

@@ -76,39 +76,39 @@ BEGIN
 	SELECT CustID,roleid,SyncLiveCasino
 	FROM custInfo CI WITH (NOLOCK)
 	WHERE CI.custid = @srecommend  AND ci.Enabled = 1 AND ci.custid <= @maxcustid -- SUPER
-	UNION ALL
+	UNION 
 
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 	WHERE  ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 			
-	UNION ALL
+	UNION 
 	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 	WHERE  ci.Enabled = 1 AND ci.custid <= @maxcustid 	AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 		
-	UNION ALL
+	UNION 
 
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Agent of direct master
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 	WHERE CI.roleid = 2 AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
-	UNION ALL
+	UNION 
 	
 	SELECT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 	WHERE ci.Enabled = 1 AND ci.custid <= @maxcustid 		
-	UNION ALL
+	UNION 
 	
 	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- Master of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 	WHERE  ci.Enabled = 1 AND ci.custid <= @maxcustid 	AND CI.custid NOT IN (4174,4178,4300,8619,4177)
 	
-	UNION ALL
+	UNION 
 	
 	SELECT DISTINCT CI.CustID,CI.roleid,CI.SyncLiveCasino -- agent of direct member
 	FROM custInfo CI WITH (NOLOCK)
@@ -122,13 +122,13 @@ BEGIN
 		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
 	WHERE CI.roleid = 1	AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 
-	UNION ALL
+	UNION 
 	SELECT CI.custid, SyncLiveCasino
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 AND ci.Enabled = 1 AND ci.custid <= @maxcustid 	
 	-- Direct member
-	UNION ALL
+	UNION 
 	SELECT CI.custid, CI.SyncLiveCasino
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND ci.custid <= @maxcustid 	
