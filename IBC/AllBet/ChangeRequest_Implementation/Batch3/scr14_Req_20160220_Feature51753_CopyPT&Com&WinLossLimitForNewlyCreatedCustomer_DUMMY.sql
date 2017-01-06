@@ -114,13 +114,13 @@ FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
 WHERE CI.roleid = 1	AND ci.custid > @maxcustid 
 	
-UNION ALL
+UNION 
 SELECT CI.custid, ci.SyncLiveCasino
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 WHERE CI.roleid = 1 AND ci.custid > @maxcustid 
 
-UNION ALL
+UNION 
 SELECT CI.custid, ci.SyncLiveCasino
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMember M ON CI.custid = M.CustID
