@@ -61,7 +61,7 @@ BEGIN
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
 		AND custid <= @max_custid
 							   
-	SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
+	--SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
 
 	-- Licensee profile list
 	IF NOT EXISTS (SELECT 1 
@@ -225,7 +225,15 @@ SELECT   @site='12Bet',
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-where site=@site and currency <> 20
+where site=@site 
+	AND currency in (
+	--Sheet 1
+	3,13,2
+	--,71,70
+	,51,15,4,61,45
+	-- Sheet 2
+	,12,6,9
+	)
 	AND custid <= @max_custid
 
 
@@ -262,7 +270,15 @@ SELECT   @site='12Bet',
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site and currency <> 20 
+where site=@site 
+	AND currency in (
+	--Sheet 1
+	3,13,2
+	--,71,70
+	,51,15,4,61,45
+	-- Sheet 2
+	,12,6,9
+	)
 	AND custid <= @max_custid
 
 
