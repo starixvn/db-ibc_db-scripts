@@ -22,7 +22,16 @@ FROM custInfo CI WITH(NOLOCK)
 WHERE ci.mrecommend NOT IN (SELECT custid FROM custinfo cs1 WITH(NOLOCK)
 						   WHERE cs1.srecommend=ci.srecommend and cs1.username like '%Acc%' and cs1.roleid=3 )
 	AND ci.custid > @max_custid
-	AND cs.site=@site and CI.currency <> 20 
+	AND cs.site=@site 
+	AND cs.currency in (
+	--Sheet 1
+	3,13,2
+	--,71,70
+	,51,15,4,61,45
+	-- Sheet 2
+	,12,6,9
+	)
+	
 	AND ci.roleid = 1
 						   
 -- PT processing
