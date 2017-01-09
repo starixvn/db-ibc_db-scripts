@@ -127,15 +127,13 @@ GO
 --------------------------------------------------------------------------------------
 /* LevelApplied: 
 (1,'Super Only'),
-(2,'Master Only'),
-(4, 'Super,master,Agent,Member'),
-(5,'Super,Master only'),
-(6,'Agent only')
+(0,'touch downline'),
 */
 
 CREATE TABLE #cust_tmp (username VARCHAR(100),IsFollowLC BIT, LevelApplied SMALLINT)
 INSERT INTO #cust_tmp (username,IsFollowLC,LevelApplied)
 VALUES
+
 ('BV1',0,1),
 ('BV10',0,1),
 ('BV11',0,1),
@@ -784,16 +782,16 @@ VALUES
 ('ZA88',0,1),
 ('ZA89',0,1),
 ('ZA90',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
 ('KP1',0,1),
 ('KP2',0,1),
 ('KP21',0,1),
@@ -1117,7 +1115,10 @@ VALUES
 ('DX47',1,0),
 ('DX48',1,0),
 ('DX49',1,0),
-('DX52',1,0),
+('DX52',1,0)
+
+INSERT INTO #cust_tmp (username,IsFollowLC,LevelApplied)
+VALUES
 ('DX53',1,0),
 ('DX54',1,0),
 ('DX57',1,0),
@@ -1617,7 +1618,6 @@ VALUES
 ('DTB91',1,0)
 
 
-
 CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) 
 DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
 
@@ -1625,7 +1625,7 @@ INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 4)
+	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 0)
 
 WHILE (1 = 1)
 BEGIN
@@ -1654,15 +1654,13 @@ END
 --------------------------------------------------------------------------------------
 /* LevelApplied: 
 (1,'Super Only'),
-(2,'Master Only'),
-(4, 'Super,master,Agent,Member'),
-(5,'Super,Master only'),
-(6,'Agent only')
-*/
+(0,'touch downline')
 
+*/
 CREATE TABLE #cust_tmp (username VARCHAR(100),IsFollowLC BIT, LevelApplied SMALLINT)
 INSERT INTO #cust_tmp (username,IsFollowLC,LevelApplied)
 VALUES
+
 ('BV1',0,1),
 ('BV10',0,1),
 ('BV11',0,1),
@@ -2311,16 +2309,16 @@ VALUES
 ('ZA88',0,1),
 ('ZA89',0,1),
 ('ZA90',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
 ('KP1',0,1),
 ('KP2',0,1),
 ('KP21',0,1),
@@ -2644,7 +2642,10 @@ VALUES
 ('DX47',1,0),
 ('DX48',1,0),
 ('DX49',1,0),
-('DX52',1,0),
+('DX52',1,0)
+
+INSERT INTO #cust_tmp (username,IsFollowLC,LevelApplied)
+VALUES
 ('DX53',1,0),
 ('DX54',1,0),
 ('DX57',1,0),
@@ -3153,7 +3154,7 @@ INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
 SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 4)
+	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 0)
 
 WHILE (1 = 1)
 BEGIN

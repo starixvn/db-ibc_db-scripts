@@ -5,8 +5,7 @@
 	Date: 20160820
 */
 
-CREATE TABLE #Cust_SMA_processing_1 (CustID INT PRIMARY KEY,recommend INT, mrecommend INT,srecommend INT,roleID TINYINT,DisableLiveCasino BIT, SyncLiveCasino BIT, IsFollowLC BIT, LevelApplied SMALLINT)
-CREATE TABLE #Cust_SMA_processing_2 (CustID INT PRIMARY KEY,recommend INT, mrecommend INT,srecommend INT,roleID TINYINT,DisableLiveCasino BIT, SyncLiveCasino BIT, IsFollowLC BIT, LevelApplied SMALLINT)
+CREATE TABLE #Cust_SMA_processing (CustID INT PRIMARY KEY,recommend INT, mrecommend INT,srecommend INT,roleID TINYINT,DisableLiveCasino BIT, SyncLiveCasino BIT, IsFollowLC BIT, LevelApplied SMALLINT)
 
 CREATE TABLE #mapping_checkdata (LevelApplied SMALLINT, Name VARCHAR (200))
 INSERT INTO #mapping_checkdata (LevelApplied,Name)
@@ -664,16 +663,16 @@ VALUES
 ('ZA88',0,1),
 ('ZA89',0,1),
 ('ZA90',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
-('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
+--('',0,1),
 ('KP1',0,1),
 ('KP2',0,1),
 ('KP21',0,1),
@@ -997,7 +996,10 @@ VALUES
 ('DX47',1,0),
 ('DX48',1,0),
 ('DX49',1,0),
-('DX52',1,0),
+('DX52',1,0)
+
+INSERT INTO #cust_tmp (username,IsFollowLC,LevelApplied)
+VALUES
 ('DX53',1,0),
 ('DX54',1,0),
 ('DX57',1,0),
@@ -1498,17 +1500,11 @@ VALUES
 
 
 
-INSERT INTO #Cust_SMA_processing_1(custid,recommend,mrecommend,srecommend,roleID,DisableLiveCasino,SyncLiveCasino,IsFollowLC,LevelApplied)
+INSERT INTO #Cust_SMA_processing(custid,recommend,mrecommend,srecommend,roleID,DisableLiveCasino,SyncLiveCasino,IsFollowLC,LevelApplied)
 SELECT CI.custID,ci.recommend,ci.mrecommend,ci.srecommend,ci.roleid,ci.DisableLiveCasino,SyncLiveCasino,t.IsFollowLC,t.LevelApplied
 FROM #cust_tmp  T  WITH (NOLOCK)
 	INNER JOIN Custinfo ci WITH (NOLOCK) ON T.username = ci.username AND ci.SyncLiveCasino = 1
-WHERE T.LevelApplied = 1 and t.id <= 999
-
-INSERT INTO #Cust_SMA_processing_2(custid,recommend,mrecommend,srecommend,roleID,DisableLiveCasino,SyncLiveCasino,IsFollowLC,LevelApplied)
-SELECT CI.custID,ci.recommend,ci.mrecommend,ci.srecommend,ci.roleid,ci.DisableLiveCasino,SyncLiveCasino,t.IsFollowLC,t.LevelApplied
-FROM #cust_tmp  T  WITH (NOLOCK)
-	INNER JOIN Custinfo ci WITH (NOLOCK) ON T.username = ci.username AND ci.SyncLiveCasino = 1
-WHERE T.LevelApplied = 1 and t.id > 999
+WHERE T.LevelApplied = 1 
 
 
 DECLARE @xmlDisable_0 XML
@@ -1534,18 +1530,8 @@ UPDATE cs
 								ELSE bitmapIsDisabled END
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-	INNER JOIN #Cust_SMA_processing_1 cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
-
-UPDATE cs
-	SET bitmapIsDisabled = CASE WHEN cp.IsFollowLC = 1 AND ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
-								WHEN cp.IsFollowLC = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
-								ELSE bitmapIsDisabled END
-FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-	INNER JOIN #Cust_SMA_processing_2 cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
+	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
 --------------------------------------------- DONE for 789Y special not for SMA & Member --------------------------------
-
-drop table #Cust_SMA_processing_1
-drop table #Cust_SMA_processing_2
+drop table #Cust_SMA_processing
 drop table #cust_tmp
 drop table #mapping_checkdata
