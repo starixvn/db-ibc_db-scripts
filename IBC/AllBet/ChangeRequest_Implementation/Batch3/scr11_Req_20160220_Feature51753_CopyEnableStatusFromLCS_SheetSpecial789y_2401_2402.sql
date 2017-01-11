@@ -1498,13 +1498,12 @@ VALUES
 ('DTB90',1,0),
 ('DTB91',1,0)
 
-
-
+-- NOT FOLLOW LC: excel file
 INSERT INTO #Cust_SMA_processing(custid,recommend,mrecommend,srecommend,roleID,DisableLiveCasino,SyncLiveCasino,IsFollowLC,LevelApplied)
 SELECT CI.custID,ci.recommend,ci.mrecommend,ci.srecommend,ci.roleid,ci.DisableLiveCasino,SyncLiveCasino,t.IsFollowLC,t.LevelApplied
 FROM #cust_tmp  T  WITH (NOLOCK)
 	INNER JOIN Custinfo ci WITH (NOLOCK) ON T.username = ci.username AND ci.SyncLiveCasino = 1
-WHERE T.LevelApplied = 1 
+WHERE T.LevelApplied = 1 AND T.IsFollowLC = 0
 
 
 DECLARE @xmlDisable_0 XML
@@ -1523,14 +1522,13 @@ SET @xmlDisable_0 =(
 		)
 
 --------------------------------------------- 789y special --------------------------------
---- Super only
+--- Super only, NOT FOLLOW LC
 UPDATE cs
-	SET bitmapIsDisabled = CASE WHEN cp.IsFollowLC = 1 AND ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
-								WHEN cp.IsFollowLC = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
-								ELSE bitmapIsDisabled END
+	SET bitmapIsDisabled = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
 	INNER JOIN #Cust_SMA_processing cp WITH(NOLOCK) ON cp.srecommend = ci.custid -- only update Super
+	
 --------------------------------------------- DONE for 789Y special not for SMA & Member --------------------------------
 drop table #Cust_SMA_processing
 drop table #cust_tmp

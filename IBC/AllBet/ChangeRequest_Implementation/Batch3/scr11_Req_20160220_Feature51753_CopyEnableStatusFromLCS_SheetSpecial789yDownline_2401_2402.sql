@@ -8,7 +8,8 @@ ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@Custid INT
 	,@roleid TINYINT
 	,@srecommend INT
-	,@mrecommend INT	
+	,@mrecommend INT
+	,@recommend INT	
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -64,7 +65,7 @@ BEGIN
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-		WHERE cs.CustID = @srecommend	
+		WHERE cs.CustID = @srecommend AND CI.SyncLiveCasino = 1	
 			
 		
 	END
@@ -89,7 +90,7 @@ BEGIN
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-		WHERE cs.CustID = @srecommend		
+		WHERE cs.CustID = @srecommend AND CI.SyncLiveCasino = 1		
 
 	END
 	ELSE IF @roleid = 2
@@ -113,7 +114,27 @@ BEGIN
 									END
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
-		WHERE cs.CustID = @srecommend		
+		WHERE cs.CustID = @srecommend AND CI.SyncLiveCasino = 1		
+	END
+	
+	ELSE IF @roleid = 1 -- direct member from excel file
+	BEGIN
+		UPDATE cs
+		SET bitmapIsDisabled =CASE WHEN ci.DisableLiveCasino = 0 THEN dbo.f_GenerateProductStatus(bitmapIsDisabled, 6, 0)
+										 ELSE bitmapIsDisabled 
+									END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN custInfo ci WITH (NOLOCK) ON cs.CustID = ci.custid
+		WHERE cs.CustID IN (@Custid,@mrecommend,@recommend)	AND CI.SyncLiveCasino = 1
+		
+		-- Supper
+		UPDATE cs
+			SET bitmapIsDisabled =  CASE WHEN ci.DisableLiveCasino = 0 THEN (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, CONVERT(VARCHAR(MAX),@xmlDisable_0)))
+										 ELSE bitmapIsDisabled 
+									END
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+			INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.custid
+		WHERE cs.CustID = @srecommend  AND CI.SyncLiveCasino = 1	
 	END
 	
 	DROP TABLE #cust_tmp_result
@@ -1618,11 +1639,11 @@ VALUES
 ('DTB91',1,0)
 
 
-CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) 
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT,recommend INT,roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) 
+DECLARE @custid int, @srecommend INT, @mrecommend INT,@recommend INT, @roleid TINYINT, @IsDownLine BIT = 0
 
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
+INSERT INTO #Cust(custid, srecommend, mrecommend,recommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend,recommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 0)
@@ -1634,6 +1655,7 @@ BEGIN
 		,@custid = custid	
 		,@srecommend = srecommend	
 		,@mrecommend = mrecommend
+		,@recommend = recommend
 		,@roleid = roleid
 	WHERE isfinished = 0
 	
@@ -1643,6 +1665,7 @@ BEGIN
 			@custid = @custid			
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
+			,@recommend = @recommend
 			,@roleid = @roleid
 			,@target = 'REPLICATED'
 			
@@ -3146,12 +3169,12 @@ VALUES
 
 
 
-CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) 
+CREATE TABLE #Cust (custid int, srecommend INT, mrecommend INT, recommend INT,roleid TINYINT, IsDownLine BIT, isfinished bit default(0)) 
 
-DECLARE @custid int, @srecommend INT, @mrecommend INT, @roleid TINYINT, @IsDownLine BIT = 0
+DECLARE @custid int, @srecommend INT, @mrecommend INT,@recommend INT, @roleid TINYINT, @IsDownLine BIT = 0
 
-INSERT INTO #Cust(custid, srecommend, mrecommend, roleid)
-SELECT ci.custid, ci.srecommend, ci.mrecommend, ci.roleid
+INSERT INTO #Cust(custid, srecommend, mrecommend,recommend, roleid)
+SELECT ci.custid, ci.srecommend, ci.mrecommend,ci.recommend, ci.roleid
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 	AND CI.username IN (SELECT username FROM #cust_tmp T WHERE T.LevelApplied = 0)
@@ -3163,6 +3186,7 @@ BEGIN
 		,@custid = custid	
 		,@srecommend = srecommend	
 		,@mrecommend = mrecommend
+		,@recommend = recommend
 		,@roleid = roleid
 	WHERE isfinished = 0
 	
@@ -3172,6 +3196,7 @@ BEGIN
 			@custid = @custid			
 			,@srecommend = @srecommend
 			,@mrecommend = @mrecommend
+			,@recommend = @recommend
 			,@roleid = @roleid
 			,@target = 'DBCUST'
 			
