@@ -29,7 +29,7 @@ BEGIN
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		-- Production
 		AND (ci.site IN ('733333','222223', '222225', '222227', '222229'))
-		AND ci.custid IN (2,5,13)-- dummy account
+		--AND ci.custid IN (2,5,13)-- dummy account
 		)	
 		-- CROSS-SITE
 		--OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)
