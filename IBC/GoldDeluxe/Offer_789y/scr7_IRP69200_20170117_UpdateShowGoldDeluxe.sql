@@ -18,9 +18,10 @@ BEGIN
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 
 	UPDATE custinfo WITH(UPDLOCK,ROWLOCK)
-	SET HideGoldDeluxe = 0,
+	SET HideGoldDeluxe = CASE WHEN syncLiveCasino = 1 THEN 0 ELSE 1 END,
 		DisableGoldDeluxe = CASE WHEN syncLiveCasino = 1 AND roleid IN (2,3,4) THEN @DisableGoldDeluxe ELSE 1 END
-	WHERE srecommend = @srecommend		
+	WHERE srecommend = @srecommend	
+		AND enabled = 1
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------

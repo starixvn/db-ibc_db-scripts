@@ -46,8 +46,7 @@ GO
 
 ---------------------------------------------------------------------------------------------
 --if missing winlimit
-DECLARE @max_custid INT = xx
-		,@max_custid2 INT = yy	
+DECLARE @max_custid INT = xx			
 		
 CREATE TABLE #SMATemp
 	(
@@ -79,8 +78,7 @@ SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255
 WHERE ci.custid IN (SELECT custid FROM #supers)
-	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
+	AND ci.custid >  @max_custid	
 	AND ci.Enabled = 1
 	AND cs.custid IS NULL
 	
@@ -104,8 +102,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255 
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 3
-	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
+	AND ci.custid >  @max_custid	
 	AND ci.Enabled = 1
 	AND cs.custid IS NULL
 	
@@ -132,8 +129,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255 
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 2
-	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
+	AND ci.custid >  @max_custid	
 	AND ci.Enabled = 1
 	AND cs.custid IS NULL
 	
@@ -164,7 +160,6 @@ FROM CustInfo ci WITH(NOLOCK)
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 1
 	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
 	AND ci.Enabled = 1
 	AND cs.custid IS NULL	
 GO
@@ -174,8 +169,7 @@ GO
 --super/master/agent level
 
 DECLARE @max_custid INT = xx
-		,@max_custid2 INT = yy	
-		
+
 INSERT INTO [dbo].[CustSettingGame]
 	   ([CustID]
 	   ,[Bettype]
@@ -210,7 +204,6 @@ FROM  CustSettingGame cs WITH(NOLOCK)
 	LEFT JOIN CustSettingGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2	
 	AND ci.roleid IN (2,3,4)
 	AND cs.sporttype = 162
 	AND cs.bettype = 1101  
@@ -261,7 +254,6 @@ FROM  CustSettingGame cs WITH(NOLOCK)
 	LEFT JOIN CustSettingGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255												
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
 	AND ci.roleid = 1
 	AND cs.sporttype = 162
 	AND cs.bettype = 1101  
@@ -273,7 +265,6 @@ GO
 --if mising custoverridegame	
 	
 DECLARE @max_custid INT = xx
-		,@max_custid2 INT = yy	
 			
 INSERT INTO [dbo].[CustOverrideGame]
 			   ([CustID]
@@ -289,7 +280,6 @@ FROM  CustOverrideGame cs WITH(NOLOCK)
 	LEFT JOIN CustOverrideGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255
 WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
-	AND ci.custid <=  @max_custid2
 	AND ci.roleid IN (2,3,4)
 	AND cs.sporttype = 162
 	AND cs.bettype = 1101

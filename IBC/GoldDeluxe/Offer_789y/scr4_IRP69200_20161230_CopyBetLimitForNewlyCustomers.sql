@@ -42,8 +42,7 @@ CREATE TABLE #tmpCustGameType (
  
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT, currency INT)
 
-DECLARE @max_custid INT = xx
-		,@max_custid2 INT = yy	
+DECLARE @max_custid INT = xx	
 		
 INSERT INTO #tmpCust(custid, roleid, syncLiveCasino, uplineID,currency)
 SELECT DISTINCT ci.custid, roleid, syncLiveCasino,
@@ -56,7 +55,6 @@ FROM custinfo ci WITH(NOLOCK)
 											AND cg.GameTypeID IN (1701,1702)
 WHERE srecommend IN (select custid FROM #Supers)
 	AND ci.custid > @max_custid
-	AND ci.custid <= @max_custid2
 	AND cg.custid IS NULL
 	
 INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID],GameTypeID,roleID)
