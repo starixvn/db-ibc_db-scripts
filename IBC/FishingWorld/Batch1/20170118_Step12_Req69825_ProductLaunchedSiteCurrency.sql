@@ -5,6 +5,7 @@
 	DB: DBCUST/CustDB
 	Date: 20170118
 */ 
+DELETE FROM ProductLaunchedSiteCurrency WHERE SportType=219
 
 INSERT INTO ProductLaunchedSiteCurrency (SportType, Currency, SiteID, IsLaunched, IsTest)
 SELECT 219 AS SportType, 20 AS Currency, 0 AS SiteID, 1 AS IsLaunched, 0 AS IsTest
