@@ -2,7 +2,7 @@
 
 /*
 	Created: Winnie	
-	Task: Initialize Hide/Sync of Fishing World for Credit customers
+	Task: UnHide Fishing World for Credit customers
 	DB: DBCUST/CustDB
 	Date: 20170117
 */ 

@@ -107,7 +107,7 @@ BEGIN
 	WHERE CI.roleid = 1	AND CI.custid <= @maxcustid 			
 
 	UNION 
-	SELECT CI.custid, SyncLiveCasino
+	SELECT CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
@@ -115,7 +115,7 @@ BEGIN
 	-- Direct member
 		
 	UNION 
-	SELECT CI.custid, CI.SyncLiveCasino
+	SELECT CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 	
 		
