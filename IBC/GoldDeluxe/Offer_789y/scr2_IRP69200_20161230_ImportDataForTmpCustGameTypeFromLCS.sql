@@ -13,9 +13,9 @@ CREATE TABLE [dbo].[tmpCustGameType](
 	[roleID] [int] ,
 	[DirectUplineID] [int],
 	[ExchangeID] [int] NOT NULL, 
+	[GameTypeID] [int],
 	[StakeLevelList_LC] [varchar](100) NULL,
-	[StakeLevelList_GD] [varchar](100) NULL,
-	[StakeLevelListUpline_GD] [varchar](100) NULL
+	[StakeLevelList_GD] [varchar](100) NULL
  CONSTRAINT [PK_tmpCustGameType] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
@@ -105,10 +105,10 @@ FROM tmpCustGameType T1
 	INNER JOIN custInfo ci (NOLOCK) ON T1.CustID = CI.custid
 	
 -- Process roleid = 4
-WITH temp AS(
+;WITH temp AS(
 	SELECT StakeLevelID, GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.GameTypeID ORDER BY MaxStake, MinStake) rn
 	FROM dbo.StakeLevel SL WITH(NOLOCK) 
-	WHERE SL.ExchangeId IN (3,6,12,16,17,20,35,40,64) AND GameTypeID IN (1701,1702)
+	WHERE SL.ExchangeId IN (3,16,17,20,35,40,64) AND GameTypeID IN (1701,1702)
 )
 UPDATE T1
 	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp.StakeLevelID)
@@ -118,50 +118,95 @@ FROM tmpCustGameType T1
 WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND CI.roleid = 4	
 
 -- Process RoleID = 3
-UPDATE T1
-	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp.StakeLevelID)
-FROM tmpCustGameType T1
-	INNER JOIN (SELECT StakeLevelID, GameTypeID
-				FROM(
-					SELECT SL.StakeLevelID, GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
-					FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_GD,-1)  
-									FROM tmpCustGameType T2 WITH (NOLOCK) 
-									WHERE T2.custid = t1.DirectUplineID),',') tmp 
-						INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID					
-					)
-				WHERE rn = 1
-				) AS temp ON t1.GameTypeID = temp.GameTypeID
-WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 3 AND T1.DirectUplineID <> 0  
+;WITH temp AS (
+	SELECT t1.custid, t1.GameTypeID, t2.StakeLevelList_GD
+	FROM tmpCustGameType T1 WITH (NOLOCK) 
+		INNER JOIN tmpCustGameType T2 WITH (NOLOCK) ON t2.custid = t1.DirectUplineID
+													AND t2.GameTypeID = t1.GameTypeID
+	WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 3 AND T1.DirectUplineID <> 0 
+)
+,temp2 AS (
+	SELECT t1.custid,t1.gametypeid,val as stakelevelID from temp t1 
+			CROSS APPLY strSplit(
+							(SELECT ISNULL(t2.StakeLevelList_GD,-1) 
+							FROM temp t2
+							WHERE t1.custid = t2.custid AND t1.gameTypeID = t2.gameTypeID
+							),
+						',')
+		)
+,temp3 as (
+	SELECT custid, sl.GameTypeID, sl.StakeLevelID, ROW_NUMBER() OVER(PARTITION by custid,SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
+	from temp2 t INNER JOIN StakeLevel sl ON t.stakelevelID = sl.StakeLevelID
+	
+)		
 
--- Process RoleID = 2
 UPDATE T1
-	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp.StakeLevelID)
+	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp3.StakeLevelID)
 FROM tmpCustGameType T1
-	INNER JOIN (SELECT StakeLevelID, GameTypeID
-				FROM(
-					SELECT SL.StakeLevelID, GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
-					FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_GD,-1)  
-									FROM tmpCustGameType T2 WITH (NOLOCK) 
-									WHERE T2.custid = t1.DirectUplineID),',') tmp 
-						INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID					
-					)
-				WHERE rn = 1
-				) AS temp ON t1.GameTypeID = temp.GameTypeID
-WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 2 AND T1.DirectUplineID <> 0 	
+	INNER JOIN temp3 ON t1.custid = temp3.custid 
+						AND t1.GameTypeID = temp3.GameTypeID
+WHERE temp3.rn = 1						
+	
+-- Process RoleID = 2
+;WITH temp AS (
+	SELECT t1.custid, t1.GameTypeID, t2.StakeLevelList_GD
+	FROM tmpCustGameType T1 WITH (NOLOCK) 
+		INNER JOIN tmpCustGameType T2 WITH (NOLOCK) ON t2.custid = t1.DirectUplineID
+													AND t2.GameTypeID = t1.GameTypeID
+	WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 2 AND T1.DirectUplineID <> 0 
+)
+,temp2 AS (
+	SELECT t1.custid,t1.gametypeid,val as stakelevelID from temp t1 
+			CROSS APPLY strSplit(
+							(SELECT ISNULL(t2.StakeLevelList_GD,-1) 
+							FROM temp t2
+							WHERE t1.custid = t2.custid AND t1.gameTypeID = t2.gameTypeID
+							),
+						',')
+		)
+,temp3 as (
+	SELECT custid, sl.GameTypeID, sl.StakeLevelID, ROW_NUMBER() OVER(PARTITION by custid,SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
+	from temp2 t INNER JOIN StakeLevel sl ON t.stakelevelID = sl.StakeLevelID
+	
+)		
+
+UPDATE T1
+	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp3.StakeLevelID)
+FROM tmpCustGameType T1
+	INNER JOIN temp3 ON t1.custid = temp3.custid 
+						AND t1.GameTypeID = temp3.GameTypeID
+WHERE temp3.rn = 1	
 
 -- Process RoleID = 1
+
+;WITH temp AS (
+	SELECT t1.custid, t1.GameTypeID, t2.StakeLevelList_GD
+	FROM tmpCustGameType T1 WITH (NOLOCK) 
+		INNER JOIN tmpCustGameType T2 WITH (NOLOCK) ON t2.custid = t1.DirectUplineID
+													AND t2.GameTypeID = t1.GameTypeID
+	WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 1 AND T1.DirectUplineID <> 0 
+)
+,temp2 AS (
+	SELECT t1.custid,t1.gametypeid,val as stakelevelID from temp t1 
+			CROSS APPLY strSplit(
+							(SELECT ISNULL(t2.StakeLevelList_GD,-1) 
+							FROM temp t2
+							WHERE t1.custid = t2.custid AND t1.gameTypeID = t2.gameTypeID
+							),
+						',')
+		)
+,temp3 as (
+	SELECT custid, sl.GameTypeID, sl.StakeLevelID, ROW_NUMBER() OVER(PARTITION by custid,SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
+	from temp2 t INNER JOIN StakeLevel sl ON t.stakelevelID = sl.StakeLevelID
+	
+)		
+
 UPDATE T1
-	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp.StakeLevelID)
+	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp3.StakeLevelID)
 FROM tmpCustGameType T1
-	INNER JOIN (SELECT StakeLevelID, GameTypeID
-				FROM(
-					SELECT SL.StakeLevelID, GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.GameTypeID ORDER BY MaxStake, MinStake) rn 
-					FROM strSplit ((SELECT ISNULL(T2.StakeLevelList_GD,-1)  
-									FROM tmpCustGameType T2 WITH (NOLOCK) 
-									WHERE T2.custid = t1.DirectUplineID),',') tmp 
-						INNER JOIN StakeLevel SL WITH(NOLOCK) ON tmp.val = SL.StakeLevelID					
-					)
-				WHERE rn = 1
-				) AS temp ON t1.GameTypeID = temp.GameTypeID
-WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND T1.roleID = 1 AND T1.DirectUplineID <> 0 	
+	INNER JOIN temp3 ON t1.custid = temp3.custid 
+						AND t1.GameTypeID = temp3.GameTypeID
+WHERE temp3.rn = 1	
+
+	
 

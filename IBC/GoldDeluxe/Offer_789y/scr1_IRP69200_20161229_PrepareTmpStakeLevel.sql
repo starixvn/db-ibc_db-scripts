@@ -4,6 +4,9 @@
 	DB: DBCUST/CustDB
 	--step 0: prepare structure for tmpStakeLevelMapping on DBTP
 */ 
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'tmpStakeLevelMapping' and TYPE = 'u')
+    DROP TABLE tmpStakeLevelMapping
+GO  
 
 CREATE TABLE [dbo].[tmpStakeLevelMapping](
 	[ExchangeId] [int] NULL,

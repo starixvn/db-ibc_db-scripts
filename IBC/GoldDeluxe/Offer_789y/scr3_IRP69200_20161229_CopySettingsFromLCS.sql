@@ -38,8 +38,8 @@ BEGIN
 		AND Enabled = 1
 	
 	UPDATE custinfo WITH(UPDLOCK,ROWLOCK)
-	SET HideGoldDeluxe = CASE WHEN @DisableGoldDeluxe = 1 THEN 1 ELSE 0 END,
-		DisableGoldDeluxe = @DisableGoldDeluxe
+	SET HideGoldDeluxe = 1,
+		DisableGoldDeluxe = CASE WHEN syncLiveCasino = 1 THEN @DisableGoldDeluxe ELSE 1 END
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
 	
@@ -196,17 +196,17 @@ BEGIN
 		SELECT cs.[CustID]
 			   ,1701 as [Bettype]
 			   ,255 as [Sporttype]
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [apositiontaking] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [mpositiontaking] ELSE 0 END 
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [spositiontaking] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [playerdiscount] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [discount] ELSE acs.discount END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [adiscount] ELSE mcs.adiscount END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [sdiscount] ELSE scs.sdiscount END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [autopositiontaking] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [isautopositiontaking] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [autompositiontaking] ELSE 0 END
-			   ,CASE WHEN SyncLiveCasino = 1 THEN [isautompositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[apositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[mpositiontaking] ELSE 0 END 
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[spositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[playerdiscount] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[discount] ELSE acs.discount END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[adiscount] ELSE mcs.adiscount END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[sdiscount] ELSE scs.sdiscount END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autopositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautopositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autompositiontaking] ELSE 0 END
+			   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautompositiontaking] ELSE 0 END
 		FROM  CustSettingGame cs WITH(NOLOCK) 
 			INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 			INNER JOIN CustSettingGame acs WITH(NOLOCK) ON acs.custid = ci.recommend
@@ -260,13 +260,14 @@ BEGIN
 		FROM tmpCustGameType t WITH(NOLOCK)
 			INNER JOIN custinfo ci WITH(NOLOCK) ON t.custid = ci.custid
 		WHERE srecommend = @srecommend
-		AND custid <= @maxcustid
+		AND ci.custid <= @maxcustid
 	END
 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
 ------------------------------------------------------	
+
 
 
 
@@ -285,7 +286,7 @@ SELECT ci.custid, 0
 FROM Customer ci WITH(NOLOCK)
 WHERE site = '789y'
 	AND roleid =4 
-	AND custid <= @maxcustid
+	AND custid <= @max_custid
 	
 WHILE (1 = 1)
 BEGIN
@@ -326,7 +327,7 @@ SELECT ci.custid, 0
 FROM Customer ci WITH(NOLOCK)
 WHERE site = '789y'
 	AND roleid =4 
-	AND custid <= @maxcustid
+	AND custid <= @max_custid
 	
 WHILE (1 = 1)
 BEGIN

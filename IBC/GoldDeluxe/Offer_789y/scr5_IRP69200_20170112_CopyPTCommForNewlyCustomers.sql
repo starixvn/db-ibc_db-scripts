@@ -71,14 +71,14 @@ INSERT INTO CustWinLimit(CustId
 						,BetType
 						,MaxWinLimit
 						,IsAutoReset)
-SELECT custid
+SELECT ci.custid
 	,255
 	,1701
 	,CASE WHEN SyncLiveCasino = 0 THEN 0 ELSE MaxWinLiveCasino END 
 	,CASE WHEN SyncLiveCasino = 0 THEN 1 ELSE isAutoResetLiveCasino END
 FROM CustInfo ci WITH(NOLOCK)
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255
-WHERE ci.custid IN (SELECT custid FROM #super)
+WHERE ci.custid IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
 	AND ci.Enabled = 1
@@ -102,7 +102,7 @@ SELECT ci.custid
 FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp s ON ci.srecommend = s.custid
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255 
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 3
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
@@ -130,7 +130,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp s ON ci.srecommend = s.custid
 	INNER JOIN #SMATemp m ON ci.mrecommend = m.custid
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255 
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 2
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
@@ -161,7 +161,7 @@ FROM CustInfo ci WITH(NOLOCK)
 	INNER JOIN #SMATemp m ON ci.mrecommend = m.custid
 	INNER JOIN #SMATemp a ON ci.recommend = a.custid
 	LEFT JOIN CustWinLimit cs WITH (NOLOCK) ON ci.custid = cs.custid AND cs.sporttype = 255 
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.roleid = 1
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
@@ -194,21 +194,21 @@ INSERT INTO [dbo].[CustSettingGame]
 SELECT cs.[CustID]
 	   ,1701 as [Bettype]
 	   ,255 as [Sporttype]
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [apositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [mpositiontaking] ELSE 0 END 
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [spositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [playerdiscount] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [discount] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [adiscount] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [sdiscount] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [autopositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [isautopositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [autompositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [isautompositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[apositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[mpositiontaking] ELSE 0 END 
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[spositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[playerdiscount] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[discount] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[adiscount] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[sdiscount] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autopositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautopositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autompositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautompositiontaking] ELSE 0 END
 FROM  CustSettingGame cs WITH(NOLOCK) 
 	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 	LEFT JOIN CustSettingGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2	
 	AND ci.roleid IN (2,3,4)
@@ -236,17 +236,17 @@ INSERT INTO [dbo].[CustSettingGame]
 SELECT cs.[CustID]
 	   ,1701 as [Bettype]
 	   ,255 as [Sporttype]
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [apositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [mpositiontaking] ELSE 0 END 
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [spositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [playerdiscount] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [discount] ELSE acs.discount END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [adiscount] ELSE mcs.adiscount END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [sdiscount] ELSE scs.sdiscount END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [autopositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [isautopositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [autompositiontaking] ELSE 0 END
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [isautompositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[apositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[mpositiontaking] ELSE 0 END 
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[spositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[playerdiscount] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[discount] ELSE acs.discount END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[adiscount] ELSE mcs.adiscount END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[sdiscount] ELSE scs.sdiscount END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autopositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautopositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[autompositiontaking] ELSE 0 END
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[isautompositiontaking] ELSE 0 END
 FROM  CustSettingGame cs WITH(NOLOCK) 
 	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 	INNER JOIN CustSettingGame acs WITH(NOLOCK) ON acs.custid = ci.recommend
@@ -259,7 +259,7 @@ FROM  CustSettingGame cs WITH(NOLOCK)
 												AND scs.sporttype = 255
 												AND scs.bettype = 1701	
 	LEFT JOIN CustSettingGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255												
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
 	AND ci.roleid = 1
@@ -283,11 +283,11 @@ INSERT INTO [dbo].[CustOverrideGame]
 SELECT cs.[CustID]
 	   ,1701 as [Bettype]
 	   ,255 as [Sporttype]
-	   ,CASE WHEN SyncLiveCasino = 1 THEN [minpositiontaking] ELSE 0 END          
+	   ,CASE WHEN SyncLiveCasino = 1 THEN cs.[minpositiontaking] ELSE 0 END          
 FROM  CustOverrideGame cs WITH(NOLOCK) 
 	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
 	LEFT JOIN CustOverrideGame cs2 WITH(NOLOCK)  ON ci.custid = cs2.custid AND cs2.sporttype = 255
-WHERE ci.srecommend IN (SELECT custid FROM #super)
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
 	AND ci.custid >  @max_custid
 	AND ci.custid <=  @max_custid2
 	AND ci.roleid IN (2,3,4)
