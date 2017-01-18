@@ -143,7 +143,7 @@ BEGIN
 		  ,	[IsAutoSuperPT]
 		  ,	[AutoSuperPT])
 	SELECT 
-		cs.custid, 219, 1011, 0
+		ci.custid, 219, 1011, 0
 		,0
 		,0
 		,0
@@ -151,11 +151,7 @@ BEGIN
 		,0
 		,0
 		,0
-	FROM dbo.CustSetting3rd cs WITH(NOLOCK)
-		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
-	WHERE cs.sporttype=161 AND	 cs.bettype=85 	
-		
-		
+	FROM 	#MemberTemp ci WITH(NOLOCK) 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------

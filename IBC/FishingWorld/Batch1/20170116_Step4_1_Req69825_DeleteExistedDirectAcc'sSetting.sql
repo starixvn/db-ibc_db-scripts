@@ -49,12 +49,13 @@ BEGIN
 		and roleid=2 AND srecommend IN (2,3,4,5,12,13,15) 
 	
 	INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
-	SELECT custid, recommend,mrecommend,roleid
+	SELECT c.custid, c.recommend,c.mrecommend,c.roleid
 	FROM Customer c WITH(NOLOCK)
-	WHERE custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND roleid=1 AND srecommend IN (2,3,4,5,12,13,15) 
-
+	INNER JOIN Customer ca (nolock) on c.recommend=ca.custid 
+	WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND c.roleid=1 AND c.srecommend IN (2,3,4,5,12,13,15) 
+		AND  ca.site in ('733333','222223', '222225', '222227', '222229')
 	
 	INSERT INTO #Cust_tmp (CustID,roleid)
 	
