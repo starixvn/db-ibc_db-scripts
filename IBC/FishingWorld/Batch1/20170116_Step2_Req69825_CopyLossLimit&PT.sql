@@ -20,6 +20,8 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Agent') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Member') = 0 RETURN		
+	IF dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 0 RETURN	
 	
 	CREATE TABLE #MemberTemp
 	(

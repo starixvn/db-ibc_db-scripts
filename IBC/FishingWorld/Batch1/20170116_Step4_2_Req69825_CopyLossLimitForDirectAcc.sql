@@ -16,12 +16,15 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DB233') RETURN	-- run at all replicated servers
-	IF (@target = 'DB233' AND @@SERVERNAME <> 'DB233') RETURN -- run at dbtrans only
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('CustWinLossLimit_Agent') = 0 RETURN
-	IF dbo.f_CheckRepTable('CustWinLossLimit_Member') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustWinLossLimit_Member') = 0 RETURN		
+	IF dbo.f_CheckRepTable('CustPTSetting3rd_Agent') = 0 RETURN
+	IF dbo.f_CheckRepTable('CustPTSetting3rd_Member') = 0 RETURN	
+	
 
 	CREATE TABLE #MemberTemp
 	(
