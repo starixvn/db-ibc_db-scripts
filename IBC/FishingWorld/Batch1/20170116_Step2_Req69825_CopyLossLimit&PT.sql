@@ -83,14 +83,24 @@ BEGIN
 		   ,[MaxPT])
 	SELECT 
 		cs.custid, 219, 1011, 0
-		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 0.7
-				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (70,80)THEN spositiontaking
-				WHEN @ExchangeID IN (1,2) AND spositiontaking = 85 THEN 90
-				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 85 THEN 90
-				ELSE spositiontaking 
+		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND spositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
+				ELSE spositiontaking*100 
 				END
-		,0
-		,0
+		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (0.7,0.8) THEN spositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND spositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
+				ELSE spositiontaking*100 
+				END
+		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND spositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
+				ELSE spositiontaking*100 
+				END
 		,0
 		,0
 		,0
