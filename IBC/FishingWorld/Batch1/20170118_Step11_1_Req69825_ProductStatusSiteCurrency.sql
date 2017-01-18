@@ -5,6 +5,8 @@
 	Date: 20170118
 */ 
 
+DELETE FROM ProductStatusSiteCurrency WHERE SportType=219
+
 INSERT INTO ProductStatusSiteCurrency (SportType,BetType,SiteID, Currency, IsHidden,IsDisabled)
 SELECT 219,1011,siteid,e.exchangeid,1,1
 FROM Site (NOLOCK)
