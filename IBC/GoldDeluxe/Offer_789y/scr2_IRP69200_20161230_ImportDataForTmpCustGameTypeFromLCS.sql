@@ -78,18 +78,14 @@ BEGIN
 	SET @Index_Start =  @Index_Start + 1
 END	
 
-
--- Update StakelevelistUpline in case of not having stakelavel
-
+-- Update mapping	
 UPDATE T1
 	SET StakeLevelList_GD = T2.StakeLevelList_GD
 FROM tmpCustGameType T1
 	INNER JOIN #StakeLevel_PreMapping T2 ON T1.ExchangeID = T2.ExchangeID AND T1.StakeLevelList_LC = T2.StakeLevelList_LC
 
-
+-- Update StakelevelistUpline in case of not having stakelavel
 -- use this table to trace problem #CustList_ResetLowest
-
--- Update mapping	
 SELECT T1.CustID,T1.roleID
 INTO #CustList_ResetLowest
 FROM tmpCustGameType T1 (NOLOCK)
