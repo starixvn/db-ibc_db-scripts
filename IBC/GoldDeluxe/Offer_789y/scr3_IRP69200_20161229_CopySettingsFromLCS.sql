@@ -39,7 +39,7 @@ BEGIN
 	
 	UPDATE custinfo WITH(UPDLOCK,ROWLOCK)
 	SET HideGoldDeluxe = 1,
-		DisableGoldDeluxe = CASE WHEN syncLiveCasino = 1 THEN @DisableGoldDeluxe ELSE 1 END
+		DisableGoldDeluxe = CASE WHEN syncLiveCasino = 1 AND roleid IN (2,3,4) THEN @DisableGoldDeluxe ELSE 1 END
 	WHERE srecommend = @srecommend
 		AND custid <= @maxcustid
 	

@@ -18,8 +18,7 @@ BEGIN
 
 	UPDATE custinfo WITH(UPDLOCK,ROWLOCK)
 	SET HideGoldDeluxe = 0
-	WHERE srecommend = @srecommend	
-		AND syncLiveCasino = 1
+	WHERE srecommend = @srecommend		
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------

@@ -13,12 +13,13 @@ CREATE TABLE [dbo].[tmpCustGameType](
 	[roleID] [int] ,
 	[DirectUplineID] [int],
 	[ExchangeID] [int] NOT NULL, 
-	[GameTypeID] [int],
+	[GameTypeID] [int] NOT NULL,
 	[StakeLevelList_LC] [varchar](100) NULL,
 	[StakeLevelList_GD] [varchar](100) NULL
  CONSTRAINT [PK_tmpCustGameType] PRIMARY KEY CLUSTERED 
 (
-	[CustID] ASC
+	[CustID] ASC,
+	GameTypeID 
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [CustGameType_table]
 ) ON [CustGameType_table]
 
@@ -34,11 +35,11 @@ WHERE site = '789y'
 INSERT INTO [dbo].[tmpCustGameType]
            ([CustID]
 		   ,[roleID]
-		   ,[exchangeID]
-           ,[GameTypeID]
+		   ,[GameTypeID]
+		   ,[exchangeID]           
            ,[StakeLevelList_LC]
           )
-SELECT cs.custid
+SELECT ci.custid
 	,roleID
 	,CASE WHEN a.GameTypeID = 108 THEN 1701 
 		WHEN a.GameTypeID = 109 THEN 1702 END	

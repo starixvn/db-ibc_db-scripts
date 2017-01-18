@@ -58,7 +58,7 @@ BEGIN
 	
 	DELETE cw
 	FROM custWinLimit cw WITH(UPDLOCK,ROWLOCK)
-		INNER JOIN custinfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+		INNER JOIN custinfo ci WITH(NOLOCK) ON cw.custid = ci.custid
 	WHERE cw.sporttype = 255
 		AND cw.bettype = 1701
 		AND ci.srecommend IN (SELECT custid FROM #supers)

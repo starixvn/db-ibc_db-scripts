@@ -31,7 +31,7 @@ WHERE site = '789y'
 	AND roleID = 4
 GO	
 
-SELECT CustID,GameTypeID,StakeLevelList
+SELECT cg.CustID,GameTypeID,StakeLevelList
 FROM CustGameType cg WITH (NOLOCK)
 	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cg.custid 
 WHERE GameTypeID IN (108,109)
