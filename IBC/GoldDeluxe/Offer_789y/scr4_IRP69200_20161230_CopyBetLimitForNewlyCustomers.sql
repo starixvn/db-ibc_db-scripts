@@ -5,13 +5,6 @@
 	DB: DBCUST/CustDB
 */
 
-/*
-	Created: Johnson
-	Date: 2017-01-11
-	Task: copy stake level from LCS for GD for newly created customers
-	DB: DBCUST/CustDB
-*/
-
 
 CREATE TABLE #supers (custid int)
 
@@ -68,12 +61,13 @@ WHERE srecommend IN (select custid FROM #Supers)
 	
 INSERT INTO #tmpCustGameType ([CustID], [StakeLevelList_LC],[ExchangeID],GameTypeID,roleID)
 SELECT ci.custid, ISNULL (cs.StakeLevelList,'') AS StakeLevelList,ci.currency,
-	CASE WHEN GameTypeID = 108 THEN 1701 
-		WHEN GameTypeID = 109 THEN 1702 END	,
+	CASE WHEN a.GameTypeID = 108 THEN 1701 
+		WHEN a.GameTypeID = 109 THEN 1702 END,
 		CI.roleid	
 FROM #tmpCust ci WITH(NOLOCK)
+	CROSS APPLY (VALUES(108),(109)) a(GameTypeID)
 	LEFT JOIN DBBINGOADMIN.LiveCasinoAdmin.dbo.CustGameType cs WITH (NOLOCK) ON cs.custid = ci.custid 																			
-																			AND CS.GameTypeID IN (108,109)
+																			AND CS.GameTypeID = a.GameTypeID
 
 CREATE TABLE #StakeLevel_PreMapping (ID INT IDENTITY (1,1),ExchangeID INT, StakeLevelList_LC VARCHAR(1000),StakeLevelList_GD VARCHAR (1000))
 

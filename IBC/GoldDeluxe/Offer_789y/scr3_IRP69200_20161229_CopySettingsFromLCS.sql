@@ -255,7 +255,7 @@ BEGIN
 		SELECT 
 			ci.[CustID]
            ,[GameTypeID]
-           ,[StakeLevelList_GD]           
+           ,ISNULL([StakeLevelList_GD],'')
            ,0 as [IsDisabled]
 		FROM tmpCustGameType t WITH(NOLOCK)
 			INNER JOIN custinfo ci WITH(NOLOCK) ON t.custid = ci.custid

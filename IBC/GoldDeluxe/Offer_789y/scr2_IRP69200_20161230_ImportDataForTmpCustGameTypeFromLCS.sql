@@ -40,14 +40,15 @@ INSERT INTO [dbo].[tmpCustGameType]
           )
 SELECT cs.custid
 	,roleID
-	,CASE WHEN GameTypeID = 108 THEN 1701 
-		WHEN GameTypeID = 109 THEN 1702 END	
+	,CASE WHEN a.GameTypeID = 108 THEN 1701 
+		WHEN a.GameTypeID = 109 THEN 1702 END	
 	,ci.currency
-	,StakeLevelList	
-FROM CustGameType_LCS cs WITH(NOLOCK)
-	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cs.custid
-WHERE GameTypeID IN (108,109)
-	AND ci.srecommend IN (SELECT custid FROM #supers)
+	,ISNULL(StakeLevelList,'')	
+FROM custinfo ci WITH(NOLOCK) 
+	CROSS APPLY (VALUES(108),(109)) a(GameTypeID)
+	LEFT JOIN CustGameType_LCS cs WITH(NOLOCK) ON ci.custid = cs.custid AND cs.GameTypeID = a.GameTypeID
+WHERE ci.srecommend IN (SELECT custid FROM #supers)
+	AND ci.enabled = 1
 GO
 
 
