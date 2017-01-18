@@ -25,14 +25,15 @@ BEGIN
 	INSERT INTO #supers(custid,currency)
 	SELECT custid, currency
 	FROM Customer ci WITH(NOLOCK)
-	WHERE (ci.roleid = 4 	
-		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		-- Production
-		AND (ci.site IN ('733333','222223', '222225', '222227', '222229'))
-		--AND ci.custid IN (2,5,13)-- dummy account
-		)	
+	WHERE ci.roleid = 4 	AND  ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))		
+		AND 
+	(((ci.site IN ('733333','222223', '222225', '222227', '222229'))
 		-- CROSS-SITE
-		--OR ci.custid IN (1266057,913628,877004,900371,4204225,6032879,896708,796555,5005322)
+		AND ci.custid NOT IN (674248,395075,1164457,1016771,993226,2453866,1156957,1156957,17721601,1156957,1036451,993226,1016771,324561,506057,2453866,1127269,1036451,1036451,2042873
+		,2042873,1036451,796555,5005322)
+		)			
+		OR currency=20
+		)
 		
 				
 	DELETE cg

@@ -31,9 +31,7 @@ BEGIN
 		CustID INT PRIMARY KEY CLUSTERED,
 		roleid TINYINT
 	)
-	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
-	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)		
-	
+
 	INSERT INTO #MemberTemp (CustID)
 	SELECT custid
 	FROM Custinfo WITH (NOLOCK)
@@ -67,6 +65,96 @@ BEGIN
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
+	--------------------------------------PT-------------------------------------------------
+	--Super LEVEL
+	INSERT INTO dbo.CustPTSetting3rd_Agent
+		(	[CustID]
+		   ,[SportType]
+		   ,[BetType]
+		   ,[IsLive]
+		   ,[SuperPT]
+		   ,[MasterPT]
+		   ,[AgentPT]
+		   ,[IsAutoMasterPT]
+		   ,[AutoMasterPT]
+		   ,[IsAutoSuperPT]
+		   ,[AutoSuperPT]
+		   ,[MinPT]
+		   ,[MaxPT])
+	SELECT 
+		cs.custid, 219, 1011, 0
+		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 0.7
+				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (70,80)THEN spositiontaking
+				WHEN @ExchangeID IN (1,2) AND spositiontaking = 85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 85 THEN 90
+				ELSE spositiontaking 
+				END
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,90
+	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
+	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85
+	
+	--Master AGENT LEVEL
+	INSERT INTO dbo.CustPTSetting3rd_Agent
+		(	[CustID]
+		   ,[SportType]
+		   ,[BetType]
+		   ,[IsLive]
+		   ,[SuperPT]
+		   ,[MasterPT]
+		   ,[AgentPT]
+		   ,[IsAutoMasterPT]
+		   ,[AutoMasterPT]
+		   ,[IsAutoSuperPT]
+		   ,[AutoSuperPT]
+		   ,[MinPT]
+		   ,[MaxPT])
+	SELECT 
+		ci.custid, 219, 1011, 0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,90
+	FROM #SMATemp ci 
+	WHERE  ci.roleid IN(2,3)
+	
+	--MEMBER LEVEL
+	INSERT INTO dbo.CustPTSetting3rd_Member
+		(	[custid]
+		  ,	[sporttype]
+		  ,	[bettype]
+		  ,	[islive]
+		  ,	[superPT]
+		  ,	[masterPT]
+		  ,	[agentPT]
+		  ,	[IsAutoMasterPT]
+		  ,	[AutoMasterPT]
+		  ,	[IsAutoSuperPT]
+		  ,	[AutoSuperPT])
+	SELECT 
+		cs.custid, 219, 1011, 0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+	FROM dbo.CustSetting3rd cs WITH(NOLOCK)
+		INNER JOIN #MemberTemp ci WITH(NOLOCK) ON cs.CustID = ci.custid
+	WHERE cs.sporttype=161 AND	 cs.bettype=85 	
+		
 		
 END
 GO
@@ -87,11 +175,12 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid
-		-- Production
-		AND ci.site in ('733333','222223', '222225', '222227', '222229')
+	
+		AND ((ci.site in ('733333','222223', '222225', '222227', '222229')
 		-- cross site
 		AND ci.custid NOT IN (674248,395075,1164457,1016771,993226,2453866,1156957,1156957,17721601,1156957,1036451,993226,1016771,324561,506057,2453866,1127269,1036451,1036451,2042873
-		,2042873,1036451,796555,5005322)
+		,2042873,1036451,796555,5005322))
+		OR currency=20)
 	)
 
 WHILE (1 = 1)
@@ -126,11 +215,12 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid 
-		-- Production
-		AND ci.site in ('733333','222223', '222225', '222227', '222229')	
+		
+		AND ((ci.site in ('733333','222223', '222225', '222227', '222229')	
 		-- cross site
 		AND ci.custid NOT IN (674248,395075,1164457,1016771,993226,2453866,1156957,1156957,17721601,1156957,1036451,993226,1016771,324561,506057,2453866,1127269,1036451,1036451,2042873
-		,2042873,1036451,796555,5005322)
+		,2042873,1036451,796555,5005322))
+		OR currency=20)
 		)
 	
 
@@ -150,3 +240,4 @@ BEGIN
 						
 	waitfor delay '00:00:0.280'
 END
+

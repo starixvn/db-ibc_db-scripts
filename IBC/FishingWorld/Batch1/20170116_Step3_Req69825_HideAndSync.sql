@@ -21,53 +21,11 @@ BEGIN
 	   AND dbo.f_CheckRepTable('CustProductStatus') = 1
 	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
 	   )
-		RETURN
-	
-	CREATE TABLE #MemberTemp
-	(
-		CustID INT PRIMARY KEY CLUSTERED
-	)
-
-	CREATE TABLE #SMATemp
-	(
-		CustID INT PRIMARY KEY CLUSTERED	
-	)
-	
-	DECLARE @xmlStrHidden_0 XML
-	DECLARE @xmlStrSync_1 XML	
-
-	SET @xmlStrSync_1 =(
-			SELECT (
-					SELECT psp.bitmapOrder	AS '@b'
-						, 1	AS '@s'
-					FROM ProductStatusProfile psp WITH (NOLOCK)
-					WHERE psp.Sporttype = 219 
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-			)
-							
-	SET @xmlStrHidden_0 =(
-			SELECT (
-					SELECT psp.bitmapOrder	AS '@b'
-						, 0	AS '@s'
-					FROM ProductStatusProfile psp WITH (NOLOCK)
-					WHERE psp.Sporttype = 219 
-	
-					FOR XML PATH('r')
-						, TYPE
-					)
-			FOR XML PATH('root')
-				, TYPE
-	
-			)	
+		RETURN	
 
 	UPDATE cs
-	SET 	
-		  bitmapHasSynced = (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapHasSynced, CONVERT(VARCHAR(MAX),@xmlStrSync_1)))								
-		, bitmapIsHidden =  (SELECT bitmap FROM dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, CONVERT(VARCHAR(MAX),@xmlStrHidden_0)))
+	SET								
+		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden, 8,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend 
@@ -86,14 +44,14 @@ SELECT @max_custid=xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE (ci.roleid = 4 	
+WHERE ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-		AND ci.custid <= @max_custid
-		-- Production
-		AND ci.site in ('733333','222223', '222225', '222227', '222229')	
+		AND ci.custid <= @max_custid		
+		AND ((ci.site in ('733333','222223', '222225', '222227', '222229')	
 		-- CROSS-SITE
 		AND ci.custid NOT IN (674248,395075,1164457,1016771,993226,2453866,1156957,1156957,17721601,1156957,1036451,993226,1016771,324561,506057,2453866,1127269,1036451,1036451,2042873
-		,2042873,1036451,796555,5005322))	
+		,2042873,1036451,796555,5005322))
+		OR ci.currency=20)	
 		
 	
 		
@@ -127,10 +85,12 @@ FROM dbo.Customer ci WITH(NOLOCK)
 WHERE (ci.roleid = 4 	
 		AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 		AND ci.custid <= @max_custid
-		AND ci.site in ('733333','222223', '222225', '222227', '222229')	
+		AND(( ci.site in ('733333','222223', '222225', '222227', '222229')	
 		-- CROSS-SITE
 		AND ci.custid NOT IN (674248,395075,1164457,1016771,993226,2453866,1156957,1156957,17721601,1156957,1036451,993226,1016771,324561,506057,2453866,1127269,1036451,1036451,2042873
-		,2042873,1036451,796555,5005322))	
+		,2042873,1036451,796555,5005322))
+		OR ci.currency=20)	
+		)	
 
 WHILE (1 = 1)
 BEGIN
