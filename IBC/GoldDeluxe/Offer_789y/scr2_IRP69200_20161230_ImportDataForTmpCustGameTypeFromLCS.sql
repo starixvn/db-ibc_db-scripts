@@ -116,7 +116,8 @@ FROM tmpCustGameType T1
 	INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.Enabled = 1 AND CI.SyncLiveCasino = 1
 	INNER JOIN temp ON t1.gameTypeID = temp.GameTypeID
 WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND CI.roleid = 4	
-
+	AND rn = 1
+	
 -- Process RoleID = 3
 ;WITH temp AS (
 	SELECT t1.custid, t1.GameTypeID, t2.StakeLevelList_GD
