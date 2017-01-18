@@ -6,7 +6,7 @@
 */
 --4 rows affected
 --direct masters
-select * 
+select c.* 
 into #masters
 from custinfo c with(nolock)
 inner join customer ci with(nolock) on ci.custid=c.custid
@@ -15,6 +15,7 @@ and c.Enabled=1
 and c.roleid=3
 and c.srecommend in (select custid from  Acc_CustDirect with(nolock))
 and c.custid not in (select custid from Acc_CustDirect with(nolock))
+and c.srecommend <> 21278849 --SA-US$789y
 
 --4 rows affected
 --direct agents
@@ -27,6 +28,7 @@ and c.Enabled=1
 and c.roleid=2
 and c.mrecommend in (select custid from  Acc_CustDirect with(nolock))
 and c.custid not in (select custid from Acc_CustDirect with(nolock))
+and c.srecommend <> 21278849 --SA-US$789y
 
 --25 rows
 UPDATE custinfo WITH(UPDLOCK,ROWLOCK)

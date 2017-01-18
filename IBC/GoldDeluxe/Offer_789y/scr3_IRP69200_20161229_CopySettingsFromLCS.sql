@@ -16,9 +16,9 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Custinfo')) <> 1
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 )
 		RETURN
-	
+		
 	CREATE TABLE #SMATemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED,
@@ -36,7 +36,7 @@ BEGIN
 		AND roleid IN (2,3,4)
 		AND Enabled = 1
 		
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustWinlimit')) = 1	 		
+	IF ( dbo.f_CheckRepTable('CustWinLimit') = 1 	)	 		
 	BEGIN
 		--super level		
 		INSERT INTO CustWinLimit(CustId
@@ -129,7 +129,9 @@ BEGIN
 	END
 	
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustSettingGame','CustOverrideGame')) = 2
+	IF ( dbo.f_CheckRepTable('CustSettingGame') = 1
+		AND dbo.f_CheckRepTable('CustOverrideGame') = 1
+	)
 	BEGIN
 		--super/master/agent level
 		INSERT INTO [dbo].[CustSettingGame]
@@ -237,7 +239,8 @@ BEGIN
 			and enabled = 1  
 	END	
 
-	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('tmpCustGameType','CustGameType')) = 2
+	IF (SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('tmpCustGameType')) = 1
+		AND dbo.f_CheckRepTable('CustGameType') = 1
 	BEGIN
 		INSERT INTO [dbo].[CustGameType]
            ([CustID]

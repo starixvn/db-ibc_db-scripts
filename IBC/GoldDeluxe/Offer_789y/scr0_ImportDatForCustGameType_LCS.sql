@@ -24,15 +24,14 @@ Destination: DBCUST.custDB.CustGameType_LCS
 
 
 */   
+with supers AS(
 SELECT custid
-INTO #supers
 FROM customer c WITH(NOLOCK)
 WHERE site = '789y'
-	AND roleID = 4
-GO	
+	AND roleID = 4)
 
 SELECT cg.CustID,GameTypeID,StakeLevelList
 FROM CustGameType cg WITH (NOLOCK)
 	INNER JOIN custinfo ci WITH(NOLOCK) ON ci.custid = cg.custid 
 WHERE GameTypeID IN (108,109)
-	AND ci.srecommend IN (select custid FROM #supers)
+	AND ci.srecommend IN (select custid FROM supers)

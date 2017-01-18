@@ -18,7 +18,8 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbcust only
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('Customer','CustInfo')) <> 2
+	IF NOT ( dbo.f_CheckRepTable('Customer') = 1 
+		AND dbo.f_CheckRepTable('CustInfo') = 1 )
 		RETURN
 	
 	SELECT custid
@@ -27,7 +28,9 @@ BEGIN
 	WHERE site = '789y'
 		AND roleid = 4
 		
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('CustOverrideGame','CustSettingGame')) =2	
+	IF ( dbo.f_CheckRepTable('CustOverrideGame') = 1 
+		AND dbo.f_CheckRepTable('CustSettingGame') = 1
+		)
 	BEGIN			
 		DELETE cs
 		FROM custSettingGame cs WITH(UPDLOCK,ROWLOCK)	
@@ -44,7 +47,7 @@ BEGIN
 			AND ci.srecommend IN (SELECT custid FROM #supers)
 	END
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('custGameType')) = 1
+	IF (  dbo.f_CheckRepTable('custGameType') = 1 )
 	BEGIN
 		DELETE cs
 		FROM CustGameType cs WITH(UPDLOCK,ROWLOCK)	
@@ -53,7 +56,7 @@ BEGIN
 			AND ci.srecommend IN (SELECT custid FROM #supers)
 	END
 	
-	IF ( SELECT COUNT(1) FROM sys.objects WHERE NAME IN ('custWinLimit')) <> 1
+	IF NOT(  dbo.f_CheckRepTable('custWinLimit') = 1 ) 
 		RETURN
 	
 	DELETE cw

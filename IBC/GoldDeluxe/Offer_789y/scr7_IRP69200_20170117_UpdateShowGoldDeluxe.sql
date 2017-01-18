@@ -16,7 +16,10 @@ BEGIN
 	
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
-
+	
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 )
+		RETURN
+		
 	UPDATE custinfo WITH(UPDLOCK,ROWLOCK)
 	SET HideGoldDeluxe = CASE WHEN syncLiveCasino = 1 THEN 0 ELSE 1 END,
 		DisableGoldDeluxe = CASE WHEN syncLiveCasino = 1 AND roleid IN (2,3,4) THEN @DisableGoldDeluxe ELSE 1 END
