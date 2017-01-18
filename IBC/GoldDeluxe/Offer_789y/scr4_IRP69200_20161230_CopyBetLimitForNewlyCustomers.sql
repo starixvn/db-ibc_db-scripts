@@ -121,7 +121,7 @@ FROM #tmpCustGameType T1
 	
 -- Process roleid = 4
 ;WITH temp AS(
-	SELECT StakeLevelID, GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.GameTypeID ORDER BY MaxStake, MinStake) rn
+	SELECT StakeLevelID, SL.ExchangeId ,GameTypeID, ROW_NUMBER() OVER(PARTITION by SL.ExchangeId ,SL.GameTypeID ORDER BY MaxStake, MinStake) rn
 	FROM dbo.StakeLevel SL WITH(NOLOCK) 
 	WHERE SL.ExchangeId IN (3,16,17,20,35,40,64) AND GameTypeID IN (1701,1702)
 )
@@ -129,7 +129,7 @@ UPDATE T1
 	SET StakeLevelList_GD = CONVERT(VARCHAR(100),temp.StakeLevelID)
 FROM #tmpCustGameType T1
 	INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.Enabled = 1 AND CI.SyncLiveCasino = 1
-	INNER JOIN temp ON t1.gameTypeID = temp.GameTypeID
+	INNER JOIN temp ON t1.gameTypeID = temp.GameTypeID AND t1.exchangeid = temp.exchangeid
 WHERE (T1.StakeLevelList_LC = '' OR T1.StakeLevelList_LC IS NULL ) AND CI.roleid = 4	
 	AND rn = 1
 

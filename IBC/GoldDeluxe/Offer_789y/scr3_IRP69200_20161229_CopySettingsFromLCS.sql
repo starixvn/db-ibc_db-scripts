@@ -275,7 +275,7 @@ SELECT @max_custid = xx
 
 --disable supers list
 INSERT INTO #supers(custid)
-SELECT ci.custid, 0
+SELECT ci.custid
 FROM Customer ci WITH(NOLOCK)
 WHERE site = '789y'
 	AND roleid =4 
@@ -314,7 +314,7 @@ SELECT @max_custid = xx
 
 --disable supers list
 INSERT INTO #supers(custid)
-SELECT ci.custid, 0
+SELECT ci.custid
 FROM Customer ci WITH(NOLOCK)
 WHERE site = '789y'
 	AND roleid =4 
