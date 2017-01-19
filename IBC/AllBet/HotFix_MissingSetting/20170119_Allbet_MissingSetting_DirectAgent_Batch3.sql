@@ -31,14 +31,18 @@ WHERE custid IN (2,4,5,15,2,2 -- super
 INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 SELECT CI.custid, CI.roleid, CI.SyncLiveCasino, CI.MaxWinLiveCasino, CI.isAutoResetLiveCasino
 FROM Custinfo CI WITH (NOLOCK)
+	INNER JOIN Customer C (NOLOCK) ON C.custid = CI.custid
 	INNER JOIN #SMATemp T ON CI.mrecommend = t.CustID AND T.roleid = 3
 WHERE ci.RoleID = 2
-				
+	AND C.site IN  ('BEST-ODDS' ,'789y' ,'XYZBET' ,'611111' ,'722222' ,'222225' ,'222227' ,'033333' ,'ispo' ,'766666' ,'7aa666')
+	AND CI.currency <> 20
+	AND CI.Enabled = 1
+	
 INSERT INTO #MemberTemp (CustID, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 SELECT CI.custid, CI.SyncLiveCasino, CI.MaxWinLiveCasino, CI.isAutoResetLiveCasino
 FROM Custinfo CI WITH (NOLOCK)
-	INNER JOIN #SMATemp T ON CI.mrecommend = t.CustID AND T.roleid = 3
-WHERE CI.roleid = 1  AND Enabled = 1 
+	INNER JOIN #SMATemp T ON CI.recommend = t.CustID AND T.roleid = 2
+WHERE CI.roleid = 1  AND Enabled = 1 AND CI.currency <> 20
 		
 --Agent Level
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
