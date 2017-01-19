@@ -57,11 +57,21 @@ BEGIN
 		AND  ca.site in ('733333','222223', '222225', '222227', '222229')
 	----------- For SMA  -----------
 	INSERT INTO #CustTemp (CustID)
-	SELECT @srecommend -- Super
-	UNION ALL
+	--SELECT @srecommend -- Super
+	--UNION ALL
+	 
+	SELECT ci.srecommend,4 -- super of Direct Master 
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+	UNION	
 	SELECT CI.CustID -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+	UNION 
+	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
+	
 	UNION 
 	SELECT DISTINCT CI.CustID -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
@@ -79,6 +89,11 @@ BEGIN
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 	
+	UNION 
+	SELECT DISTINCT CI.srecommend,4 -- super of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.CustID 
+	WHERE  ci.Enabled = 1
 	UNION 
 
 	SELECT DISTINCT CI.CustID -- Master of direct member
