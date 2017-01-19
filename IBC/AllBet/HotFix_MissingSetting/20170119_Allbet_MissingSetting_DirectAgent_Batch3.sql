@@ -24,7 +24,7 @@ CREATE TABLE #SMATemp
 INSERT INTO #SMATemp (CustID, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino)
 SELECT custid, roleid, SyncLiveCasino, MaxWinLiveCasino, isAutoResetLiveCasino
 FROM Custinfo WITH (NOLOCK)
-WHERE custid IN (2,4,5,15,2,2 -- super
+WHERE custid IN (2,4,5,15 -- super
 				,4174,4178,4300,8619,4177,4183 -- direct master
 				) 
 
