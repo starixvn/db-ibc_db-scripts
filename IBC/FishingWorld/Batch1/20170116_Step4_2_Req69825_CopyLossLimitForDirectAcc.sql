@@ -147,10 +147,10 @@ BEGIN
 	DECLARE @SuperPT TINYINT
 	--Super LEVEL
 	SELECT @SuperPT=CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
-				WHEN @ExchangeID IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
-				WHEN @ExchangeID IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
 	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85

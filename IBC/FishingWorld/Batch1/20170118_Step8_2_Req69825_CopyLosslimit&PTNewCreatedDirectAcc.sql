@@ -158,10 +158,10 @@ WHERE ci.custid > @maxcustid
 		ci.custid, 219, 1011, 0
 		,0
 		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
-				WHEN ci.currency IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
-				WHEN ci.currency IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN ci.currency NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
 			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		
@@ -197,10 +197,10 @@ WHERE ci.custid > @maxcustid
 		,0
 		,0
 		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
-				WHEN ci.currency IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
-				WHEN ci.currency IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN ci.currency NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
 			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		

@@ -67,6 +67,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
 	--------------------------------------PT-------------------------------------------------
+	
 	--Super LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -85,22 +86,22 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 	SELECT 
 		cs.custid, 219, 1011, 0
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
-				WHEN c.currency IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
-				WHEN c.currency IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN c.currency NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
-				WHEN c.currency IN (1,2) AND spositiontaking IN (0.7,0.8) THEN spositiontaking*100
-				WHEN c.currency IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN c.currency NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8) THEN slivepositiontaking*100
+				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
-				WHEN c.currency IN (1,2) AND spositiontaking IN (0.7,0.8)THEN spositiontaking*100
-				WHEN c.currency IN (1,2) AND spositiontaking = 0.85 THEN 90
-				WHEN c.currency NOT IN (5,13,67,1,2) AND spositiontaking = 0.85 THEN 90
-				ELSE spositiontaking*100 
+				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
 				END
 		,0
 		,0
