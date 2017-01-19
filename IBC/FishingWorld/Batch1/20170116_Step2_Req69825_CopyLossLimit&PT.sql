@@ -135,7 +135,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM #SMATemp ci 
 	WHERE  ci.roleid IN(2,3)
 	
