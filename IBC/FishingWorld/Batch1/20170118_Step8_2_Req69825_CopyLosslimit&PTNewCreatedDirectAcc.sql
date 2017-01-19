@@ -62,7 +62,7 @@ WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	AND  ca.site in ('733333','222223', '222225', '222227', '222229')
 			
 ----------- For SMA  -----------
-INSERT INTO #SMATemp (CustID,roleid)
+INSERT INTO #SMATemp (CustID,roleid,exchangeid)
 
 SELECT CI.CustID,CI.roleid,ci.currency -- Direct Master 
 FROM custInfo CI WITH (NOLOCK)
@@ -269,3 +269,7 @@ WHERE ci.custid > @maxcustid
 	
 	DROP TABLE #SMATemp
 	DROP TABLE #MemberTemp		
+	DROP TABLE #supers
+	DROP TABLE #DirectAgent
+	DROP TABLE #DirectMaster
+	DROP TABLE #DirectMember
