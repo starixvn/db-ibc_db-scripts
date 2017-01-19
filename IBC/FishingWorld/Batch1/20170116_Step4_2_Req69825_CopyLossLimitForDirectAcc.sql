@@ -67,15 +67,25 @@ BEGIN
 		AND  ca.site in ('733333','222223', '222225', '222227', '222229')
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,RoleID)
-	SELECT @srecommend,4 -- Super
-	UNION ALL
+	--SELECT @srecommend,4 -- Super
+	--UNION ALL
 	SELECT CI.CustID,3 -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 	UNION 
+	SELECT ci.srecommend,4 -- super of Direct Master 
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+	
+	UNION 
 	SELECT DISTINCT CI.CustID,3 -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+	WHERE CI.custid <= @maxcustid 	
+	UNION 
+	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
 	WHERE CI.custid <= @maxcustid 	
 	
 	UNION 
@@ -89,7 +99,12 @@ BEGIN
 	SELECT CI.CustID,CI.roleid -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
-	
+	UNION 
+
+	SELECT DISTINCT CI.srecommend,4 -- super of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.CustID 
+	WHERE  ci.Enabled = 1
 	UNION 
 
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct member
@@ -153,8 +168,9 @@ BEGIN
 				ELSE slivepositiontaking*100 
 				END
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85
-				
+	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85 
+	
+	IF EXISTS(SELECT TOP 1 1 FROM #SMATemp WHERE CustID=@srecommend)	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
 		   ,[SportType]
@@ -365,4 +381,3 @@ BEGIN
 						
 	waitfor delay '00:00:0.280'
 END
-

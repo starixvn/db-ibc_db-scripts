@@ -59,6 +59,12 @@ BEGIN
 	
 	INSERT INTO #Cust_tmp (CustID,roleid)
 	
+	SELECT ci.srecommend,4 -- super of Direct Master 
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+	
+	UNION 
+	
 	SELECT CI.CustID,CI.roleid -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
@@ -68,12 +74,23 @@ BEGIN
 	SELECT CI.CustID,CI.roleid -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.recommend = D.CustID 
+	UNION 
+	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
+	
 	UNION 	
 	
 	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct agent
 	FROM Customer CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
 	WHERE CI.roleid = 3 
+	UNION 
+
+	SELECT DISTINCT CI.srecommend,4 -- super of direct member
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember D ON CI.custid = D.CustID 
+	WHERE  ci.Enabled = 1
 	
 	UNION 
 
