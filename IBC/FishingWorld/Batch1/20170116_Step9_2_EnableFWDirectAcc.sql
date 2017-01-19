@@ -60,7 +60,7 @@ BEGIN
 	--SELECT @srecommend -- Super
 	--UNION ALL
 	 
-	SELECT ci.srecommend,4 -- super of Direct Master 
+	SELECT ci.srecommend -- super of Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 	UNION	
@@ -68,7 +68,7 @@ BEGIN
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
 	UNION 
-	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
+	SELECT DISTINCT CI.srecommend -- super of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
 	
@@ -90,7 +90,7 @@ BEGIN
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
 	
 	UNION 
-	SELECT DISTINCT CI.srecommend,4 -- super of direct member
+	SELECT DISTINCT CI.srecommend -- super of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.CustID 
 	WHERE  ci.Enabled = 1
