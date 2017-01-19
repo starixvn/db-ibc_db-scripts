@@ -197,7 +197,7 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	-- Production
-	AND ci.site in ('733333','222223', '222225', '222227', '222229')	
+	AND (ci.site in ('733333','222223', '222225', '222227', '222229')	OR ci.currency=20)
 
 	
 WHILE (1 = 1)
@@ -245,7 +245,7 @@ WHERE ci.custid IN (
 		,18289591
 	)
 	
-	AND ci.site in ('733333','222223', '222225', '222227', '222229')	
+		AND (ci.site in ('733333','222223', '222225', '222227', '222229')	OR ci.currency=20)
 	
 WHILE (1 = 1)
 BEGIN
