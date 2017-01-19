@@ -30,7 +30,9 @@ BEGIN
 	
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
-	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)			
+	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)		
+	DECLARE @Sporttype INT
+	SELECT @Sporttype=219	
 	--- get direct master
 	INSERT INTO #DirectMaster (CustID,roleid)
 	SELECT custid, roleid
@@ -112,9 +114,12 @@ BEGIN
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 	
 	
+	DECLARE @BitOrder INT
+	SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
+	
 	UPDATE cs
 	SET								
-		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden, 8,0)
+		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden, @BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN #CustTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
 

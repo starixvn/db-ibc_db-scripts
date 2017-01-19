@@ -37,38 +37,39 @@ BEGIN
 											,21005685,21005748,21005851,21005868,21005888,21305783,21984259,23715203,24338704,1176070))
 		)
 		
-				
+	DECLARE @sporttype INT
+	SELECT @sporttype=219			
 	DELETE cg
 	FROM CustPTSetting3rd_Agent cg 
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID 
 		INNER JOIN #supers S ON S.custid = C.srecommend
-	WHERE SportType = 219 
+	WHERE SportType = @sporttype 
 						
 	DELETE cg
 	FROM CustPTSetting3rd_Member cg 
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID 
 		INNER JOIN #supers S ON S.custid = C.srecommend
-	WHERE CG.SportType = 219 
+	WHERE CG.SportType = @sporttype 
 	
 		
 	DELETE cg
 	FROM CustPTGroupSetting3rd_Member cg
 		INNER JOIN Customer CI (NOLOCK) ON CI.custid = CG.AgentID 
 		INNER JOIN #supers S ON S.custid = CI.srecommend
-	WHERE CG.SportType = 219 	
+	WHERE CG.SportType = @sporttype 	
 
 	
 	DELETE cg
 	FROM CustWinLossLimit_Agent cg 		
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID 
 		INNER JOIN #supers S ON S.custid = C.srecommend
-	WHERE SportType = 219 
+	WHERE SportType = @sporttype 
 
 	DELETE cg
 	FROM CustWinLossLimit_Member cg 		
 		INNER JOIN Customer C (NOLOCK) ON C.custid = CG.CustID 
 		INNER JOIN #supers S ON S.custid = C.srecommend
-	WHERE CG.SportType = 219 	
+	WHERE CG.SportType = @sporttype 	
 END	
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------

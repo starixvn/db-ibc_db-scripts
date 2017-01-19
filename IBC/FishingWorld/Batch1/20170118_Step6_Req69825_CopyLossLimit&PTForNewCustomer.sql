@@ -49,13 +49,17 @@ INSERT INTO #SMATemp (CustID, roleid,exchangeid)
 SELECT custid, roleid,currency
 FROM Custinfo WITH (NOLOCK)
 WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabled = 1 AND custid > @maxcustid 
+DECLARE @Sporttype INT, @Bettype INT, @SporttypeRef INT, @BettypeRef INT,@MaxPT TINYINT,@ProductID INT
+
+SELECT @Sporttype = 219, @Bettype = 1011, @SporttypeRef = 161,@BettypeRef=85,@ProductID=24
+SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Sporttype and BetType=@Bettype and SettingType=1
 
 --------------------------------------WinLossLimit-------------------------------------------------
 	--SuperLevel
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, 219, 1011
 		, 0 AS MaxWinLimit	
-		,(SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = si.exchangeid)AS MaxLossLimit 
+		,(SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 		
 	
@@ -63,7 +67,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, 219, 1011
 		, 0 AS MaxWinLimit	
-		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = si.exchangeid)AS MaxLossLimit 
+		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
 	--------------------------------------PT-------------------------------------------------
@@ -84,7 +88,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		cs.custid, 219, 1011, 0
+		cs.custid, @Sporttype, @Bettype, 0
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
 				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
@@ -108,11 +112,11 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
 	INNER JOIN custInfo c WITH(NOLOCK) ON cs.custid=c.custid	
 	INNER JOIN #SMATemp s ON cs.custid=s.CustID	
-	WHERE s.roleid=4 AND cs.sporttype=161 AND	 cs.bettype=85
+	WHERE s.roleid=4 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	
 	--Master AGENT LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -130,7 +134,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0
@@ -139,7 +143,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM #SMATemp ci 
 	WHERE  ci.roleid IN(2,3)
 	
@@ -157,7 +161,7 @@ WHERE srecommend IN (SELECT custid FROM #supers) AND roleid IN (2,3,4) AND Enabl
 		  ,	[IsAutoSuperPT]
 		  ,	[AutoSuperPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0

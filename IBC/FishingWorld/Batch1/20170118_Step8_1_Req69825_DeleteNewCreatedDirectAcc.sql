@@ -69,31 +69,32 @@ WHERE  ci.Enabled = 1
 UNION 
 SELECT CustID, roleid
 FROM #DirectMember	
-
+DECLARE @Sporttype INT
+SELECT @Sporttype = 219
 --- PT
 DELETE cg
 FROM CustPTSetting3rd_Agent cg 
 	INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-WHERE SportType = 219 AND cg.CustID > @maxcustID
+WHERE SportType = @Sporttype AND cg.CustID > @maxcustID
 						
 DELETE cg
 FROM CustPTSetting3rd_Member cg 
 	INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-WHERE CG.SportType = 219 AND cg.CustID > @maxcustID
+WHERE CG.SportType = @Sporttype AND cg.CustID > @maxcustID
 
 DELETE cg
 FROM CustPTGroupSetting3rd_Member cg
 	INNER JOIN #Cust_tmp CI (NOLOCK) ON CI.custid = CG.AgentID 
-WHERE CG.SportType = 219 AND cg.AgentID > @maxcustID
+WHERE CG.SportType = @Sporttype AND cg.AgentID > @maxcustID
 
 -- Winloss - limit
 DELETE cg
 FROM CustWinLossLimit_Agent cg 		
 	INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-WHERE SportType = 219 AND cg.CustID > @maxcustID
+WHERE SportType = @Sporttype AND cg.CustID > @maxcustID
 
 DELETE cg
 FROM CustWinLossLimit_Member cg 		
 	INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-WHERE CG.SportType = 219 AND cg.CustID > @maxcustID
+WHERE CG.SportType = @Sporttype AND cg.CustID > @maxcustID
 

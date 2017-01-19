@@ -137,14 +137,19 @@ BEGIN
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 	
 		
-	DECLARE @DefaultLossLimit MONEY	
+	DECLARE @DefaultLossLimit MONEY	,@Sporttype INT,@Bettype INT,@MaxPT TINYINT,@SporttypeRef INT,@BettypeRef INT
 	SELECT @DefaultLossLimit = ISNULL(DefaultLossLimit,0)
 	FROM LossLimit_GlobalSetting WITH (NOLOCK)
 	WHERE ProductId = 24 AND ExchangeId = @ExchangeID
+	SELECT @Sporttype=219
+	SELECT @Bettype=1011
+	SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Sporttype and BetType=@Bettype and SettingType=1
+	SELECT @SporttypeRef=161
+	SELECT @BettypeRef=85
 	--------------------------------------WinLossLimit-------------------------------------------------
 	--SuperLevel
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
-	SELECT si.custid, 219, 1011
+	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
@@ -152,7 +157,7 @@ BEGIN
 	
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
-	SELECT si.custid, 219, 1011
+	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
@@ -160,6 +165,7 @@ BEGIN
 	
 	--------------------------------------PT Setting-------------------------------------------------	
 	DECLARE @SuperPT TINYINT
+	
 	--Super LEVEL
 	SELECT @SuperPT=CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
@@ -168,7 +174,9 @@ BEGIN
 				ELSE slivepositiontaking*100 
 				END
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85 
+	WHERE Custid=@srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef 
+	
+	
 	
 	IF EXISTS(SELECT TOP 1 1 FROM #SMATemp WHERE CustID=@srecommend)	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -186,7 +194,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		@srecommend, 219, 1011, 0		
+		@srecommend, @Sporttype, @Bettype, 0		
 		,@SuperPT
 		,@SuperPT
 		,@SuperPT
@@ -195,7 +203,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	
 	--Master LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -213,7 +221,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,@SuperPT
 		,0
@@ -222,7 +230,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM #SMATemp ci WITH(NOLOCK) 	
 	WHERE RoleID=3
 	
@@ -242,7 +250,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,@SuperPT
@@ -251,7 +259,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM #DirectAgent ci WITH(NOLOCK) 	
 	WHERE RoleID=2	
 	
@@ -270,7 +278,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid,  @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0
@@ -279,7 +287,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	FROM #SMATemp ci WITH(NOLOCK) 
 	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)	
 
@@ -297,7 +305,7 @@ BEGIN
 		  ,	[IsAutoSuperPT]
 		  ,	[AutoSuperPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0

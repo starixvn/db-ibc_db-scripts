@@ -45,16 +45,21 @@ BEGIN
 	FROM Custinfo WITH (NOLOCK)
 	WHERE srecommend = @srecommend AND roleid IN (2,3,4) AND Enabled = 1 AND custid <= @maxcustid 		
 
-	DECLARE @DefaultLossLimit MONEY
+	DECLARE @DefaultLossLimit MONEY,@Sporttype INT,@Bettype INT,@MaxPT TINYINT,@SporttypeRef INT,@BettypeRef INT
 	DECLARE @ProductID INT
 	SELECT @ProductID=24
 	SELECT @DefaultLossLimit = ISNULL(DefaultLossLimit,0)
 	FROM LossLimit_GlobalSetting WITH (NOLOCK)
 	WHERE ProductId = @ProductID AND ExchangeId = @ExchangeID
+	SELECT @Sporttype=219
+	SELECT @Bettype=1011
+	SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Sporttype and BetType=@Bettype and SettingType=1
+	SELECT @SporttypeRef=161
+	SELECT @BettypeRef=85
 	--------------------------------------WinLossLimit-------------------------------------------------
 	--SuperLevel
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
-	SELECT si.custid, 219, 1011
+	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
@@ -62,7 +67,7 @@ BEGIN
 	
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
-	SELECT si.custid, 219, 1011
+	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
@@ -76,7 +81,7 @@ BEGIN
 				ELSE slivepositiontaking*100 
 				END
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85
+	WHERE Custid=@srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	--Super LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -93,7 +98,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		@srecommend, 219, 1011, 0
+		@srecommend, @Sporttype, @Bettype, 0
 		,@SuperPT
 		,@SuperPT
 		,@SuperPT
@@ -102,7 +107,7 @@ BEGIN
 		,0
 		,0
 		,0
-		,90
+		,@MaxPT
 	
 	
 	--Master AGENT LEVEL
@@ -121,7 +126,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0
@@ -148,7 +153,7 @@ BEGIN
 		  ,	[IsAutoSuperPT]
 		  ,	[AutoSuperPT])
 	SELECT 
-		ci.custid, 219, 1011, 0
+		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,0

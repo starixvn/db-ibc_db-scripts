@@ -21,10 +21,15 @@ BEGIN
 	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
 	   )
 		RETURN	
-
+		
+	DECLARE @Sporttype INT
+	SELECT @Sporttype=219
+	DECLARE @BitOrder INT
+	SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
+	
 	UPDATE cs
 	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, 8,0)
+		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND roleid IN(2,3,4)

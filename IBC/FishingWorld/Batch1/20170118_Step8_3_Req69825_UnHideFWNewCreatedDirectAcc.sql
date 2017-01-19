@@ -70,9 +70,14 @@ UNION
 SELECT CustID, roleid
 FROM #DirectMember	
 
+DECLARE @Sporttype INT
+SELECT @Sporttype=219
+DECLARE @BitOrder INT
+SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
+
 UPDATE cs
 SET								
-	 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden, 8,0)
+	 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden, @BitOrder,0)
 FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN #Cust_tmp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
 WHERE ci.CustID > @maxcustID

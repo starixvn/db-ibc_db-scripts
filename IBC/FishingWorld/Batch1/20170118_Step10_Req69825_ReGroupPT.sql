@@ -45,7 +45,8 @@ BEGIN
 
 	CREATE TABLE #tempData (recommend int, custid int, cs1 bigint, cs2 int)
 	CREATE TABLE #tempGroup(recommend int, cs1 bigint, cs2 int, memberCNT int, repCustID int)
-
+	DECLARE @Sporttype INT, @Bettype INT
+	SELECT @Sporttype = 219, @Bettype = 1011
 	--Get a list of customers that are using PT Group
 	INSERT #CustomerTemp(CustID,Recommend)
 	SELECT ci.CustID,ci.recommend
@@ -60,7 +61,7 @@ BEGIN
 			,rdSetting = CAST(DENSE_RANK() OVER(ORDER BY sporttype, bettype, islive, superPT, masterPT, agentPT, isAutoMasterPT, AutoMasterPT, isAutoSuperPT, AutoSuperPT) as INT)
 			,rdProduct = CAST(DENSE_RANK() OVER(ORDER BY sporttype, bettype, islive) as INT)
 		FROM #CustomerTemp c WITH(NOLOCK)
-			INNER JOIN dbo.CustPTSetting3rd_Member pt WITH(NOLOCK) ON c.custid = pt.custid AND pt.SportType = 219 AND pt.BetType = 1011
+			INNER JOIN dbo.CustPTSetting3rd_Member pt WITH(NOLOCK) ON c.custid = pt.custid AND pt.SportType = @Sporttype AND pt.BetType = @Bettype
 	)
 	INSERT INTO #tempdata (recommend, custid, cs1, cs2)
 	SELECT recommend, custid, SUM(CONVERT(bigint,rdSetting) + POWER(2, rdProduct%10+1)), CHECKSUM_AGG(CHECKSUM(HASHBYTES('SHA1', CONVERT(nvarchar(max), rdSetting))))
@@ -157,15 +158,15 @@ BEGIN
 		FROM [dbo].[CustPTSetting3rd_Member] mb WITH(NOLOCK)
 			INNER JOIN #tempGroup tmp 
 				ON mb.CustID = tmp.repCustID
-					AND mb.SportType = 219
-					AND mb.BetType = 1011
+					AND mb.SportType = @Sporttype
+					AND mb.BetType = @Bettype
 
 	--Delete redundant individual setting				
 	DELETE cs
 	FROM [dbo].[CustPTSetting3rd_Member] cs WITH(NOLOCK)
 		INNER JOIN #GroupedCustomer temp1 WITH(NOLOCK)
 			ON cs.CustID = temp1.CustID
-	WHERE cs.SportType = 219 AND cs.BetType = 1011
+	WHERE cs.SportType = @Sporttype AND cs.BetType = @Bettype
 END
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----

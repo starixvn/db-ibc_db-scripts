@@ -30,6 +30,8 @@ BEGIN
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)	
 	
 	CREATE TABLE #Cust_tmp(CustID INT PRIMARY KEY CLUSTERED,	roleid TINYINT	)
+	DECLARE @sporttype INT
+	SELECT @sporttype=219	
 
 	INSERT INTO #DirectMaster (CustID,roleid)
 	SELECT custid, roleid
@@ -114,28 +116,28 @@ BEGIN
 	DELETE cg
 	FROM CustPTSetting3rd_Agent cg 
 		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE SportType = 219 
+	WHERE SportType = @sporttype 
 							
 	DELETE cg
 	FROM CustPTSetting3rd_Member cg 
 		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE CG.SportType = 219 
+	WHERE CG.SportType = @sporttype 
 	
 	DELETE cg
 	FROM CustPTGroupSetting3rd_Member cg
 		INNER JOIN #Cust_tmp CI (NOLOCK) ON CI.custid = CG.AgentID 
-	WHERE CG.SportType = 219 
+	WHERE CG.SportType = @sporttype 
 
 	-- Winloss - limit
 	DELETE cg
 	FROM CustWinLossLimit_Agent cg 		
 		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE SportType = 219 
+	WHERE SportType = @sporttype 
 
 	DELETE cg
 	FROM CustWinLossLimit_Member cg 		
 		INNER JOIN #Cust_tmp tmp (NOLOCK) ON tmp.custid = cg.custid
-	WHERE CG.SportType = 219 	
+	WHERE CG.SportType = @sporttype 	
 	
 END	
 GO

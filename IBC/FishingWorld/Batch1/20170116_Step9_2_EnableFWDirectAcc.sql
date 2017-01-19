@@ -107,10 +107,14 @@ BEGIN
 		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 	WHERE  ci.Enabled = 1 	
 	
+	DECLARE @Sporttype INT
+	SELECT @Sporttype=219
+	DECLARE @BitOrder INT
+	SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
 	
 	UPDATE cs
 	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, 8,0)
+		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, @BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN #CustTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
 
