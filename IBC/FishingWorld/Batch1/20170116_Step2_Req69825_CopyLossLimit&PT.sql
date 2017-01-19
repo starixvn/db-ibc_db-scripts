@@ -93,7 +93,7 @@ BEGIN
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		cs.custid, 219, 1011, 0
+		@srecommend, 219, 1011, 0
 		,@SuperPT
 		,@SuperPT
 		,@SuperPT
@@ -103,8 +103,7 @@ BEGIN
 		,0
 		,0
 		,90
-	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-	WHERE Custid=@srecommend AND cs.sporttype=161 AND	 cs.bettype=85
+	
 	
 	--Master AGENT LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
