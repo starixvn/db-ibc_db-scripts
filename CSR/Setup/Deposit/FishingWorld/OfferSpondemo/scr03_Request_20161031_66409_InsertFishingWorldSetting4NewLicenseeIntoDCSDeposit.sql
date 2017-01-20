@@ -57,8 +57,6 @@ BEGIN
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
 		AND custid <= @max_custid
 							   
-	--SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
-
 	-- Licensee profile list
 	IF NOT EXISTS (SELECT 1 
 				   FROM Dep_LicenseeProductSetting lps WITH (NOLOCK)
@@ -171,7 +169,7 @@ SELECT   @site='spondemo',
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-where site=@site 									
+where site=@site and currency = 20									
 	AND custid <= @max_custid
 
 
@@ -208,7 +206,7 @@ SELECT   @site='spondemo',
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site 
+where site=@site and currency = 20
 	AND custid <= @max_custid
 
 
