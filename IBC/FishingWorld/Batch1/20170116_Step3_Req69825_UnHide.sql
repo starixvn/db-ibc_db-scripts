@@ -32,7 +32,7 @@ BEGIN
 		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend AND ci.custid<@maxcustid AND ci.Enabled=1
+	WHERE ci.srecommend = @srecommend AND ci.custid<=@maxcustid AND ci.Enabled=1
 
 END
 GO
