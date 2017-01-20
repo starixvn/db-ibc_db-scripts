@@ -201,9 +201,9 @@ BEGIN
 		   ,[MaxPT])
 	SELECT 
 		@srecommend, @Sporttype, @Bettype, 0		
-		,@SuperPT
-		,@SuperPT
-		,@SuperPT
+		,@MaxPT
+		,@MaxPT
+		,@MaxPT
 		,0
 		,0
 		,0
@@ -237,8 +237,36 @@ BEGIN
 		,0
 		,0
 		,@MaxPT
-	FROM #SMATemp ci WITH(NOLOCK) 	
+	FROM #DirectMaster ci WITH(NOLOCK) 	
 	WHERE RoleID=3
+	
+	INSERT INTO dbo.CustPTSetting3rd_Agent
+		(	[CustID]
+		   ,[SportType]
+		   ,[BetType]
+		   ,[IsLive]
+		   ,[SuperPT]
+		   ,[MasterPT]
+		   ,[AgentPT]
+		   ,[IsAutoMasterPT]
+		   ,[AutoMasterPT]
+		   ,[IsAutoSuperPT]
+		   ,[AutoSuperPT]
+		   ,[MinPT]
+		   ,[MaxPT])
+	SELECT 
+		ci.custid, @Sporttype, @Bettype, 0
+		,0
+		,@MaxPT
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,@MaxPT
+	FROM #SMATemp ci WITH(NOLOCK) 	
+	WHERE RoleID=3 AND ci.CustID NOT IN(SELECT CustID FROM #DirectMaster)
 	
 	--Agent LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent

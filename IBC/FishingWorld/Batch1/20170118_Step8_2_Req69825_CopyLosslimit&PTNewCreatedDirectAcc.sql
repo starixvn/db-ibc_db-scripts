@@ -10,13 +10,6 @@
 DECLARE @maxcustid INT
 SELECT @maxcustid = xxx
 	
-CREATE TABLE #supers (custid int,exchangeid INT)
-	
-INSERT INTO #supers(custid,exchangeid)
-SELECT ci.custid,ci.currency
-FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid IN (2,3,4,5,12,13,15)
-
 
 CREATE TABLE #MemberTemp
 (
@@ -182,9 +175,37 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,@MaxPT
-	FROM #SMATemp ci WITH(NOLOCK) 	
+	FROM #DirectMaster ci WITH(NOLOCK) 	
 	INNER JOIN custInfo c WITH (NOLOCK) ON ci.CustID=c.custid
 	WHERE ci.RoleID=3
+	
+	INSERT INTO dbo.CustPTSetting3rd_Agent
+		(	[CustID]
+		   ,[SportType]
+		   ,[BetType]
+		   ,[IsLive]
+		   ,[SuperPT]
+		   ,[MasterPT]
+		   ,[AgentPT]
+		   ,[IsAutoMasterPT]
+		   ,[AutoMasterPT]
+		   ,[IsAutoSuperPT]
+		   ,[AutoSuperPT]
+		   ,[MinPT]
+		   ,[MaxPT])
+	SELECT 
+		ci.custid,  @Sporttype, @Bettype, 0
+		,0
+		,@MaxPT
+		,0
+		,0
+		,0
+		,0
+		,0
+		,0
+		,@MaxPT
+	FROM #SMATemp ci WITH(NOLOCK) 		
+	WHERE ci.RoleID=3 AND ci.CustID NOT IN(SELECT CustID FROM #DirectMaster)	
 	
 	--Agent LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -277,8 +298,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	FROM 	#MemberTemp ci WITH(NOLOCK) 	
 	
 	DROP TABLE #SMATemp
-	DROP TABLE #MemberTemp		
-	DROP TABLE #supers
+	DROP TABLE #MemberTemp	
 	DROP TABLE #DirectAgent
 	DROP TABLE #DirectMaster
 	DROP TABLE #DirectMember
