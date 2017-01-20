@@ -34,48 +34,55 @@ BEGIN
 	SELECT @sporttype=219	
 
 	INSERT INTO #DirectMaster (CustID,roleid)
-	SELECT custid, roleid
-	FROM Customer with(nolock)
+	SELECT ci.custid, ci.roleid
+	FROM Customer ci with(nolock)
+	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE site in ('733333','222223', '222225', '222227', '222229')
-		AND custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND roleid=3 AND srecommend IN (2,3,4,5,12,13,15) 
+		AND ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		AND ci.roleid=3 AND ci.srecommend IN (2,5,13) 
+		AND c.Enabled=1
 	
 	--- get direct agent
 	INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
-	SELECT custid, mrecommend,roleid
-	FROM Customer WITH(NOLOCK)
+	SELECT ci.custid, ci.mrecommend,ci.roleid
+	FROM Customer ci WITH(NOLOCK)
+	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE site in  ('733333','222223', '222225', '222227', '222229')
-		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and roleid=2 AND srecommend IN (2,3,4,5,12,13,15) 
+		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.roleid=2 AND ci.srecommend IN (2,5,13)
+		AND c.Enabled=1
 	
 	INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
 	SELECT c.custid, c.recommend,c.mrecommend,c.roleid
 	FROM Customer c WITH(NOLOCK)
 	INNER JOIN Customer ca (nolock) on c.recommend=ca.custid 
+	INNER JOIN custInfo ci WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		AND c.roleid=1 AND c.srecommend IN (2,3,4,5,12,13,15) 
+		AND c.roleid=1 AND c.srecommend IN (2,5,13)
 		AND  ca.site in ('733333','222223', '222225', '222227', '222229')
-	
+		AND ci.Enabled=1
+		
 	INSERT INTO #Cust_tmp (CustID,roleid)
 	
 	SELECT ci.srecommend,4 -- super of Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-	
+		
 	UNION 
 	
-	SELECT CI.CustID,CI.roleid -- Direct Master 
+	SELECT CI.CustID,CI.roleid -- Direct Master & downline
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-	
+		WHERE ci.Enabled=1
 	UNION 
 	
-	SELECT CI.CustID,CI.roleid -- Direct Agent
+	SELECT CI.CustID,CI.roleid -- Direct Agent & downline
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.recommend = D.CustID 
+		WHERE ci.Enabled=1
 	UNION 
 	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
 	FROM custInfo CI WITH (NOLOCK)
@@ -106,6 +113,8 @@ BEGIN
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 	WHERE  ci.Enabled = 1 
+	
+	---------- For members ---------
 
 	UNION 
 	

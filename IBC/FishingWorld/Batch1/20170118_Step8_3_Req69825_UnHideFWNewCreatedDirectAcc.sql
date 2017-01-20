@@ -12,40 +12,46 @@ CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,
 CREATE TABLE #Cust_tmp(CustID INT PRIMARY KEY CLUSTERED,	roleid TINYINT	)
 
 INSERT INTO #DirectMaster (CustID,roleid)
-SELECT custid, roleid
-FROM Customer with(nolock)
+SELECT c.custid, c.roleid
+FROM Customer c WITH(NOLOCK)
+INNER JOIN custInfo ci WITH(NOLOCK) ON c.custid=ci.custid
 WHERE SITE IN  ('733333','222223', '222225', '222227', '222229')	
-	AND custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	AND srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	AND roleid=3 AND srecommend IN (2,3,4,5,12,13,15)
+	AND c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND c.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND c.roleid=3 AND c.srecommend IN (2,5,13) AND ci.Enabled=1
 
 --- get direct agent
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
-SELECT custid, mrecommend,roleid
-FROM Customer WITH(NOLOCK)
+SELECT c.custid, c.mrecommend,c.roleid
+FROM Customer c WITH(NOLOCK)
+INNER JOIN custInfo ci WITH(NOLOCK) ON c.custid=ci.custid
 WHERE site in ('733333','222223', '222225', '222227', '222229')	
-	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend IN (2,3,4,5,12,13,15)
+	and c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.roleid=2 AND c.srecommend IN (2,5,13) AND ci.Enabled=1
 	
 INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
 SELECT c.custid, c.recommend,c.mrecommend,c.roleid
 FROM Customer c WITH(NOLOCK)
 INNER JOIN Customer ca (nolock) on c.recommend=ca.custid 
+INNER JOIN custInfo ci WITH(NOLOCK) ON c.custid=ci.custid
 WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	AND c.roleid=1 AND c.srecommend IN (2,3,4,5,12,13,15)  
+	AND c.roleid=1 AND c.srecommend IN (2,5,13)
 	AND  ca.site in ('733333','222223', '222225', '222227', '222229')
+	AND ci.Enabled=1
 			
 INSERT INTO #Cust_tmp (CustID,roleid)
-SELECT CI.CustID,CI.roleid -- Direct Master 
+SELECT CI.CustID,CI.roleid -- Direct Master & downline
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+	WHERE ci.Enabled=1
 UNION 
 
-SELECT CI.CustID,CI.roleid -- Direct Agent
+SELECT CI.CustID,CI.roleid -- Direct Agent & downline
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent D ON CI.recommend = D.CustID 
+	WHERE ci.Enabled=1
 
 UNION 	
 

@@ -34,33 +34,38 @@ CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)			
 --- get direct master
 INSERT INTO #DirectMaster (CustID,roleid)
-SELECT custid, roleid
-FROM Customer with(nolock)
+SELECT c.custid, c.roleid
+FROM Customer c with(nolock)
+INNER JOIN custInfo ci WITH(NOLOCK) ON ci.custid=c.custid
 WHERE SITE in  ('733333','222223', '222225', '222227', '222229')	
 
-	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=3 AND srecommend IN (2,3,4,5,12,13,15)
+	and c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.roleid=3 AND c.srecommend IN (2,5,13)
+	AND ci.Enabled=1
 
 --- get direct agent
 INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
-SELECT custid, mrecommend,roleid
-FROM Customer WITH(NOLOCK)
+SELECT c.custid, c.mrecommend,c.roleid
+FROM Customer c WITH(NOLOCK)
+INNER JOIN custInfo ci WITH(NOLOCK) ON ci.custid=c.custid
 WHERE site in  ('733333','222223', '222225', '222227', '222229')	
 
-	and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2 AND srecommend IN (2,3,4,5,12,13,15)
+	and c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	and c.roleid=2 AND c.srecommend IN (2,5,13)
+	AND ci.Enabled=1
 	
 INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
 SELECT c.custid, c.recommend,c.mrecommend,c.roleid
 FROM Customer c WITH(NOLOCK)
 INNER JOIN Customer ca (nolock) on c.recommend=ca.custid 
+INNER JOIN custInfo ci WITH(NOLOCK) ON ci.custid=c.custid
 WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 	AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	AND c.roleid=1 AND c.srecommend IN (2,3,4,5,12,13,15)  
+	AND c.roleid=1 AND c.srecommend IN (2,5,13) 
 	AND  ca.site in ('733333','222223', '222225', '222227', '222229')
-			
+	AND ci.Enabled=1
 ----------- For SMA  -----------
 INSERT INTO #SMATemp (CustID,roleid,exchangeid)
 
@@ -82,7 +87,7 @@ SELECT CI.CustID,CI.roleid ,ci.currency-- Agent of direct master
 FROM custInfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 WHERE CI.roleid = 2
-	AND ci.custid > @maxcustid 
+	AND ci.custid > @maxcustid AND ci.Enabled=1
 UNION 
 SELECT CI.CustID,CI.roleid,ci.currency -- Direct Agent
 FROM custInfo CI WITH (NOLOCK)
@@ -107,13 +112,13 @@ INSERT INTO #MemberTemp (CustID,exchangeid)
 SELECT CI.custid,ci.currency
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-WHERE CI.roleid = 1	AND ci.custid > @maxcustid 
+WHERE CI.roleid = 1	AND ci.custid > @maxcustid AND ci.Enabled=1
 	
 UNION 
 SELECT CI.custid,ci.currency
 FROM Custinfo CI WITH (NOLOCK)
 	INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-WHERE CI.roleid = 1 AND ci.custid > @maxcustid 
+WHERE CI.roleid = 1 AND ci.custid > @maxcustid AND ci.Enabled=1
 
 UNION 
 SELECT CI.custid,ci.currency

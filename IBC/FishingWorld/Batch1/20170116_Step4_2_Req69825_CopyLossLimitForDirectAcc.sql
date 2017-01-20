@@ -41,30 +41,36 @@ BEGIN
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)			
 	--- get direct master
 	INSERT INTO #DirectMaster (CustID,roleid)
-	SELECT custid, roleid
-	FROM Customer with(nolock)
+	SELECT ci.custid, ci.roleid
+	FROM Customer ci with(nolock)
+	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE  site in ('733333','222223', '222225', '222227', '222229')
-		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and roleid=3 AND srecommend = @srecommend AND custid <= @maxcustid 
+		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.roleid=3 AND ci.srecommend = @srecommend AND ci.custid <= @maxcustid 
+		AND c.Enabled=1
 		
 	--- get direct agent
 	INSERT INTO #DirectAgent (CustID,mrecommend,roleid)
-	SELECT custid, mrecommend,roleid
-	FROM Customer WITH(NOLOCK)
+	SELECT ci.custid, ci.mrecommend,ci.roleid
+	FROM Customer ci WITH(NOLOCK)
+	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE site in ('733333','222223', '222225', '222227', '222229')
-		and custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-		and roleid=2 AND srecommend = @srecommend AND custid <= @maxcustid
+		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+		and ci.roleid=2 AND ci.srecommend = @srecommend AND ci.custid <= @maxcustid
+		AND c.Enabled=1
 
 	INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
 	SELECT c.custid, c.recommend,c.mrecommend,c.roleid
 	FROM Customer c WITH(NOLOCK)
 	INNER JOIN Customer ca (nolock) on c.recommend=ca.custid 
+	INNER JOIN custInfo ci WITH(NOLOCK) ON ci.custid=c.custid
 	WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.roleid=1 AND c.srecommend = @srecommend AND C.custid <= @maxcustid 
 		AND  ca.site in ('733333','222223', '222225', '222227', '222229')
+		AND ci.Enabled=1
 	----------- For SMA  -----------
 	INSERT INTO #SMATemp (CustID,RoleID)
 	--SELECT @srecommend,4 -- Super
@@ -122,13 +128,13 @@ BEGIN
 	SELECT CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
-	WHERE CI.roleid = 1	AND CI.custid <= @maxcustid 			
+	WHERE CI.roleid = 1	AND CI.custid <= @maxcustid AND ci.Enabled=1 			
 
 	UNION 
 	SELECT CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
-	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid 			
+	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid AND ci.Enabled=1 			
 
 	-- Direct member
 		
@@ -335,7 +341,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,3,4,5,12,13,15
+			2,5,13
 		)
 
 WHILE (1 = 1)
@@ -369,7 +375,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,3,4,5,12,13,15
+			2,5,13
 		)
 
 
