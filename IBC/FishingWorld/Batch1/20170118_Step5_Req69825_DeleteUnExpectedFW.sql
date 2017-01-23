@@ -53,7 +53,8 @@ DELETE cs
 FROM [dbo].CustPTGroupSetting3rd_Member cs WITH(UPDLOCK,ROWLOCK)
 	INNER JOIN Customer c WITH (NOLOCK) ON cs.AgentID = c.custid
 	INNER JOIN #supers s ON c.srecommend = s.custid
-WHERE cs.Sporttype = @Sporttype
+WHERE c.custid > @maxcustID AND
+	cs.Sporttype = @Sporttype
 	AND cs.Bettype = @Bettype
 	AND cs.IsLive = @IsLive
 
