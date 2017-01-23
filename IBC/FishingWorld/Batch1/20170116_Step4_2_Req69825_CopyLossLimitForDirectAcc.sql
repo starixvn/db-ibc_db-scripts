@@ -170,19 +170,9 @@ BEGIN
 	FROM #MemberTemp si WITH (NOLOCK) 
 	
 	--------------------------------------PT Setting-------------------------------------------------	
-	DECLARE @SuperPT TINYINT
+
 	
-	--Super LEVEL
-	SELECT @SuperPT=CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
-				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
-				END
-	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-	WHERE Custid=@srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef 
-	
-	
+	--Super LEVEL	
 	
 	IF EXISTS(SELECT TOP 1 1 FROM #SMATemp WHERE CustID=@srecommend)	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -229,7 +219,14 @@ BEGIN
 	SELECT 
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
-		,@SuperPT
+		,(SELECT CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
+				END
+		FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
+		WHERE Custid=ci.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
 		,0
 		,0
 		,0
@@ -287,7 +284,14 @@ BEGIN
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,@SuperPT
+		,(SELECT CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
+				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
+				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
+				ELSE slivepositiontaking*100 
+				END
+		FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
+		WHERE Custid=ci.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
 		,0
 		,0
 		,0

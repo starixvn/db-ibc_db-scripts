@@ -157,7 +157,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid,  @Sporttype, @Bettype, 0
+		dm.custid,  @Sporttype, @Bettype, 0
 		,0
 		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
 				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
@@ -167,7 +167,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				END
 			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
 			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		
-			WHERE cs.Custid=c.srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+			WHERE cs.Custid=dm.custid AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
 		,0
 		,0
 		,0
@@ -175,9 +175,8 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,@MaxPT
-	FROM #DirectMaster ci WITH(NOLOCK) 	
-	INNER JOIN custInfo c WITH (NOLOCK) ON ci.CustID=c.custid
-	WHERE ci.RoleID=3
+	FROM #DirectMaster dm WITH(NOLOCK) 		
+	WHERE dm.RoleID=3
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -223,7 +222,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		   ,[MinPT]
 		   ,[MaxPT])
 	SELECT 
-		ci.custid, @Sporttype, @Bettype, 0
+		da.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
 		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
@@ -234,16 +233,15 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				END
 			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
 			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		
-			WHERE cs.Custid=c.srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+			WHERE cs.Custid=da.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
 		,0
 		,0
 		,0
 		,0
 		,0
 		,@MaxPT
-	FROM #DirectAgent ci WITH(NOLOCK) 	
-	INNER JOIN custInfo c WITH (NOLOCK) ON ci.CustID=c.custid
-	WHERE ci.RoleID=2 AND ci.custid > @maxcustid
+	FROM #DirectAgent da WITH(NOLOCK) 	
+	WHERE da.RoleID=2 AND da.custid > @maxcustid
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
