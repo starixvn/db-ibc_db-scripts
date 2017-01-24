@@ -6,11 +6,12 @@
 
 ---------- Step 0: PREPARATION ------------------------------
 -- Truncate data phase 2
+IF NOT EXISTS (SELECT 1 FROM PRO_WinLimit_CustGameMonitoring WITH (NOLOCK))
+	RETURN
+	
 TRUNCATE TABLE WinLimit_CustGameMonitoring
 --- Create temporarily tables
 CREATE TABLE #WinLimit_CustGameMonitoring_Result([CustID] [int],[ProductID] [tinyint],[BettypeID] [smallint],[WinlostDate] [smalldatetime],[LevelID] [tinyint],[MaxWinLimit] [money],[TotalWinAmt] [money],[WinAmt] [money],[ModifiedDate] [datetime],[IsNotified] [bit],[ModifiedBy] [int] ,[CreatedBy] [int] ,[MaxWinLimitSetting] [xml] ,[TotalWinAmt_RM] [money] ) 
-
-DECLARE @Fromdate DATE= GETDATE(), @Todate DATE= GETDATE()  
 
 ---------- End of Step 0: PREPARATION --------------------------
 -----------STEP 2: WIN LIMIT MONITOR MIGRATE -----------------------
@@ -19,9 +20,10 @@ INSERT INTO #WinLimit_CustGameMonitoring_Result (CustID, ProductID, BettypeID, W
 SELECT  T.CustID,T.ProductID,T.BettypeID,T.WinlostDate,T.LevelID,T.MaxWinLimit,T.TotalWinAmt,T.WinAmt,T.ModifiedDate,T.IsNotified,T.ModifiedBy,T.CreatedBy
 		,tmp.MaxWinLimitSetting AS MaxWinLimitSetting
 		,CASE WHEN ci.currency = 20 THEN t.TotalWinAmt ELSE ROUND(FEX.MYR * t.TotalWinAmt,2) END AS TotalWinAmt_RM
-FROM PRO_WinLimit_CustGameMonitoring T
-	INNER JOIN custInfo CI WITH (NOLOCK) ON T.CustID = CI.custid AND CI.currency NOT IN (20,72)
-	LEFT JOIN Lrf_f_GetExchangeDaily(@Fromdate, @Todate) fEx  ON fEx.ExchangeId = ci.currency
+FROM PRO_WinLimit_CustGameMonitoring T WITH (NOLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON T.CustID = CI.custid AND CI.currency NOT IN (20,72) 
+	CROSS APPLY (SELECT MYR FROM Lrf_f_GetExchangeDaily (T.WinlostDate, T.WinlostDate)
+				 WHERE ExchangeId = ci.currency ) AS fEx  
 	CROSS APPLY (SELECT '<MaxWinLimitSetting' + x.str + '/>' 
 					FROM (SELECT ' Level' + CAST(T1.LevelID AS VARCHAR) + '="' + CAST(T1.MaxWinLimit_RM AS VARCHAR) + '"'
 						  FROM (SELECT TOP 10 TMP.LevelID,TMP.MaxWinLimit_RM
@@ -49,7 +51,8 @@ FROM PRO_WinLimit_CustGameMonitoring T WITH (NOLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = T.CustID AND CI.currency NOT IN (20,72)
 	INNER JOIN Customer C WITH (NOLOCK) ON C.CustID = CI.recommend
 	INNER JOIN Site SI WITH (NOLOCK) ON SI.site = C.site
-	LEFT JOIN Lrf_f_GetExchangeDaily(@Fromdate, @Todate) fEx  ON fEx.ExchangeId = ci.currency
+	OUTER APPLY (SELECT MYR FROM Lrf_f_GetExchangeDaily (T.WinlostDate, T.WinlostDate)
+				 WHERE ExchangeId = ci.currency ) AS fEx  
 	CROSS APPLY (SELECT '<MaxWinLimitSetting' + x.str + '/>' 
 					FROM (SELECT ' Level' + CAST(T1.LevelID AS VARCHAR) + '="' + CAST(T1.MaxWinLimit_RM AS VARCHAR) + '"'
 						  FROM ( 
@@ -81,6 +84,7 @@ SELECT 'WINLIMIT MONITORING MIGRATE CHECKING '
 DECLARE @WinlimitMonitoringCnt INT = 0
 SET  @WinlimitMonitoringCnt = (SELECT COUNT(1) 
 								FROM PRO_WinLimit_CustGameMonitoring T1 WITH (NOLOCK)
+									INNER JOIN custInfo CI WITH (NOLOCK) ON T1.CustID = CI.custid AND CI.currency NOT IN (20,72)
 								WHERE NOT EXISTS (SELECT 1 FROM #WinLimit_CustGameMonitoring_Result T2 WHERE T1.CustID = T2.CustID AND T1.ProductID=T2.ProductID )
 								)
 IF @WinlimitMonitoringCnt = 0 
@@ -95,7 +99,7 @@ BEGIN
 	
 END	
 -------------END OF STEP 2: WIN LIMIT MONITOR MIGRATE -----------------------
-SELECT * FROM WinLimit_CustGameMonitoring WITH (NOLOCK)
+--SELECT * FROM WinLimit_CustGameMonitoring WITH (NOLOCK)
 /*
 DROP TABLE #WinLimit_CustGameMonitoring_Result
 
