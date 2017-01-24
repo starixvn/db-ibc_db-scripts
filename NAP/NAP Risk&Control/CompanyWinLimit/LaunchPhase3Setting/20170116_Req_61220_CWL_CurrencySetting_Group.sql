@@ -258,7 +258,7 @@ GROUP BY ProductID,T.LevelID
 DROP TABLE #Temp
 DROP TABLE #Currency_Deposit
 
-SELECT count(*) FROM WinLimit_ProductSettingDetail(NOLOCK)
+SELECT * FROM WinLimit_ProductSettingDetail(NOLOCK)
 
 */
 
