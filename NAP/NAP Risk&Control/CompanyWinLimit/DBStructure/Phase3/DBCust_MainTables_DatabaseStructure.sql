@@ -26,8 +26,6 @@ ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGam
 go
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD MaxWinLimitSetting XML
 go
-ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD MaxWinLimitSetting XML
-GO
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD TotalWinAmt_RM MONEY
 GO
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring_History ADD MaxWinLimitSetting XML
