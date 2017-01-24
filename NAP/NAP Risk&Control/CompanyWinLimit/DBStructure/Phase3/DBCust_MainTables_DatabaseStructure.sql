@@ -25,18 +25,15 @@ go
 ALTER TABLE [dbo].[WinLimit_CustGameSetting] ADD CONSTRAINT [DF_WinLimit_CustGameSetting_MaxWinLimit_RM] DEFAULT ((0)) FOR [MaxWinLimit_RM]
 go
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD MaxWinLimitSetting XML
-
 go
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD MaxWinLimitSetting XML
 GO
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring ADD TotalWinAmt_RM MONEY
 GO
-
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring_History ADD MaxWinLimitSetting XML
 go
 ALTER TABLE [dbo].WinLimit_CustGameMonitoring_History ADD TotalWinAmt_RM MONEY
 GO
-
 
 CREATE TABLE [dbo].[Winlimit_Group](
 	[GroupID] [int] NOT NULL,
@@ -49,6 +46,10 @@ CREATE TABLE [dbo].[Winlimit_Group](
 ) ON [WinlimitSetting_Tables]
 
 GO
+ALTER TABLE Winlimit_GameGroupSetting DROP COLUMN BetTypeRefID
+
+GO
+/*
 CREATE TABLE [dbo].[Winlimit_GameGroupSetting](
 	[ProductID] [tinyint] NOT NULL,
 	[BetTypeID] [smallint] NOT NULL,
@@ -62,6 +63,7 @@ CREATE TABLE [dbo].[Winlimit_GameGroupSetting](
 ) ON [WinlimitSetting_Tables]
 
 GO
+*/
 /* DBTXN/bodb02
 ALTER TABLE dbo.BalancePendingDebitGame ADD GameTypeID smallint
 ALTER TABLE dbo.BalancePendingCreditGame ADD GameTypeID smallint

@@ -1,8 +1,7 @@
 --truncate table #Temp
 /*
-TRUNCATE TABLE WinLimit_ProductSettingDetail
 
-TRUNCATE TABLE WinLimit_ProductSetting
+TRUNCATE TABLE WinLimit_ProductSettingDetail
 
 TRUNCATE TABLE WinLimit_CustGameSetting
 
@@ -10,9 +9,6 @@ TRUNCATE TABLE Winlimit_GameGroupSetting
 
 TRUNCATE TABLE Winlimit_Group
 
-TRUNCATE TABLE Winlimit_LevelSetting
-
-TRUNCATE TABLE Winlimit_ActionSetting
 */
 CREATE TABLE #Temp (ProductID INT, BetTypeID INT,GroupID INT,GroupName VARCHAR(200),Level1 MONEY, Level2 MONEY,Level3 MONEY,BetTypeRefID INT)
 
@@ -202,8 +198,8 @@ INSERT INTO Winlimit_Group(GroupID, GroupName)
 SELECT DISTINCT GroupID,GroupName
 FROM #Temp
 
-INSERT INTO dbo.Winlimit_GameGroupSetting (ProductID, BetTypeID, GroupID,BetTypeRefID)
-SELECT DISTINCT ProductID, BetTypeID, GroupID,BetTypeRefID
+INSERT INTO dbo.Winlimit_GameGroupSetting (ProductID, BetTypeID, GroupID)
+SELECT DISTINCT ProductID, BetTypeID, GroupID
 FROM #Temp
 
 INSERT INTO WinLimit_ProductSettingDetail (ProductID, GroupID, ExchangeID, SiteID, LevelID,  IsBlockedPlaceBet, IsBlockedTransfer, MaxWinLimit_RM)
@@ -240,6 +236,5 @@ FROM #Temp t1
 	CROSS JOIN (SELECT LEVELID FROM winlimit_levelSetting WITH (NOLOCK)) AS T
 WHERE NOT EXISTS (SELECT 1 FROM winlimit_productsetting t2 WITH (NOLOCK) WHERE T1.ProductID = T2.ProductID)
 GROUP BY ProductID,T.LevelID
-
 
 DROP TABLE #Temp
