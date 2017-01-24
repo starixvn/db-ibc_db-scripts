@@ -132,21 +132,21 @@ GO
 ALTER TABLE [dbo].[PRO_WinLimit_ProductSettingDetail] ADD  CONSTRAINT [DF_PRO_WinLimit_ProductSettingDetail_IsBlockedTransfer]  DEFAULT ((0)) FOR [IsBlockedTransfer]
 GO
 
-INSERT INTO PRO_WinLimit_CustGameSetting
-SELECT *
+INSERT INTO PRO_WinLimit_CustGameSetting (CustID, ProductID, BettypeID, LevelID, MaxWinLimit)
+SELECT CustID, ProductID, BettypeID, LevelID, MaxWinLimit
 FROM WinLimit_CustGameSetting WITH (NOLOCK)
 
 GO
-INSERT INTO PRO_WinLimit_ProductSettingDetail
-SELECT *
+INSERT INTO PRO_WinLimit_ProductSettingDetail(ProductID, BettypeID, ExchangeID, SiteID, LevelID, MaxWinLimit, IsBlockedPlaceBet, IsBlockedTransfer)
+SELECT ProductID, BettypeID, ExchangeID, SiteID, LevelID, MaxWinLimit, IsBlockedPlaceBet, IsBlockedTransfer
 FROM WinLimit_ProductSettingDetail WITH (NOLOCK)
 GO
 
-INSERT INTO PRO_WinLimit_CustGameMonitoring
-SELECT * 
+INSERT INTO PRO_WinLimit_CustGameMonitoring(CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ModifiedDate, IsNotified, ModifiedBy, CreatedBy)
+SELECT CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ModifiedDate, IsNotified, ModifiedBy, CreatedBy 
 FROM WinLimit_CustGameMonitoring WITH (NOLOCK)
 
 GO
-INSERT INTO PRO_WinLimit_CustGameMonitoring_History
-SELECT * 
+INSERT INTO PRO_WinLimit_CustGameMonitoring_History (LogID, CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy)
+SELECT  LogID, CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy
 FROM WinLimit_CustGameMonitoring_History WITH (NOLOCK)
