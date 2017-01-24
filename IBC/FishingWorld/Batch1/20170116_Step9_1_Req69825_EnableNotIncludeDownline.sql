@@ -14,23 +14,16 @@
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN('S999RM','SHK','SPHM','SPK','SPKM','SPKR','SQK')	
 	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKKM')
-	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('MAMRM','SMAMRMB','SAMR')
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('M25RM','M25ARMB','M25BRMB','S25R','M25HK','S25RM','L25RM')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S09H','S09M')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('S33M','S33MR','S33A')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('PTM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('SCHK','SCM','SCAI','SCI','SCDH','SCDK')
@@ -49,30 +42,21 @@
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('WC','WD7','WD8','WD9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S47R','S47M','S49RM','S49H','SSTMR','SSTMH','SSTMJ','SSTMM','SSTMK','SSTMI','S3ARM','S3AR','S3AH','S3AAH','S3EH','S3BH','S3AB','RM8','MJRMB'
-	,'SJM','SJJM','SJHK')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('S305CRMB','S305RM','S31RM','S31RMB','S305R','S31ARMB','SSFH','SSF1H','S3H','SSF2H','SSF3H','S3HH','SSF5H','S3HK','S305M','S3HG','S3HJ','S3HP'
 	,'SSF6H','SSF7H')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SHKK','SHHK2','SHHK7','hhma','HHN','HHK4')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('S222R','S222HK','S222AH','S222BH','S222CH','S222DH','2EH','S222FH','S222GH','2KH','S222MH','2AH','2BH','2CH','2DH','2LH','2MH','2NH','2PH'
 	,'2MM','2YH','2FH','2GH','2MN','2WH','S222JH','2HH','2RM','2NN','2HK','2RR','2JH','S222N','S222ZH','2XX','2WW','2RH','2IH','2QH','2OH','2SH','2AA','2AB','2MP','2HA','2MY','2MQ','2UH','2HB')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S688R','S788H','S688AH','S688M','LP','LLP','SAKM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('HJ','HM')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('KYH','KYM')
+	
 	UNION
 	SELECT custid,roleid,0,1
 	FROM Customer WITH(NOLOCK) WHERE username IN ('SWM')
@@ -82,74 +66,50 @@
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('MKWRM','SRRMB','SKWRMB','SRARMB','SRH','SRHK','SRMA','SRHKA','SRJ','SRKH','SRHH','SRK','SRHD','SRMC','SRQ','SRHC','JAM','JAHP','JAHB')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SMQARMB')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('S120M','S99H','S99M','S99ah','S99HK','S99HKK','S99BH','S99MHK','S99HA')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S45H','S45BH','S45HK','S45BM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('KJH','KJHB','KJM','KJD','KJMB','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','CYKM','YKM'
 	,'M822M','S822R','GEH','GFH','S822M','S822MA','GFJ','D5M')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('HPP','HPO','HPM','HPU','HPV','HPW','HPQ','HPK','HPN','HPX','HPY','HPMM','HPZ','HPR','SX3','SX1','SX2','SZZ','SMY','HPC','HPD','HPB','HPF','SX5'
-	,'SX6','HP2','SX7','SX8','HPS','HPM2','HP1','HPT','HP3','SX9','HMN','HSS','SX10','SX11')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('SLH','SLK','SLJ','SLM')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SLLM','SATM','JM','JS5','JS6','JS7','JS8','JSB','SYSM','SYSHK','JSR','JMA','JSE','JSQ','JSF','JSG','JST','JSL','JSM','JSZ','SHG','JSN','JSP'
-	,'JSU','JSV','JSW','JSX','JSY','JSO','JSI','JMJ','JHA','JHB','JMK','JML','JHC','JHD','SYLHK','SYLM','SYLH','SYLHZ','SYLK','SYCN','SYLL')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('M71RMB','M71ARMB','M71BRMB','M71CRMB','S71RM','M71DRMB','S71H','S71AH','S71M','S71BH','S71MA','S71CH','S71DH','S71MB')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SSK','SSM','SSMA','SSKA','SSKB','SSKC')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('S62H','KM6','KH6','SKHH','SKMM')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKPRMB','KPM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('LHH','LHM','LHM1','LHM2','LHH1','LHH2','LHH3','LHH4','LHH5','LHH6','LHR','LHH7','LHH8','LHH9','LHH10','LHH11','LHH12','LHA','LHM3','LHM5'
 	,'LHM6','LHM7','LHM8','S9M','S9H','XKS','S555','S666','S777')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JJB','JJM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('TP','TH','TC','TF','KKM','KKH','KKMA','KKC','KKD','KKE','KKJ','KKN','KKY','KKF','KKG','KKK','KKL','KKI','KKR','KAB','KGK','KGL'
 	,'KGM','KGN','SRS','KAD','KGA','KGB','KBA','KBB','KBC','KGE','KBD','KBE','KAG','KAH','KAJ','KAK','KBG','KBH','KBJ','KBK','KBU','KBL','KBV','KBW','KAI')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('XKM','XKH','VKH','AHMA','YUM','YUH','FJM','SAZM','21A','BPM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('EEM','EEH','EEK','HG9','HGG','HG8','HG7','HG6','HG88','HG101','HG102','HG71','HG81','HG29','HA8','H39','HGA','H7','HG3','HGB','HG5')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9','VVY','VCY','VBY','VDY','VEY','VFY','VVM')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('RG1','RG2','RG3','RG5','RG6','RG7','RG9','RG10','RG11','RG12','RG13','RG8','PPS','PPJ','PPN','PPQ','PPZ','PPP','PPT','PPA')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('TS1','TS2','TS3','TS4','TS5','TS6')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('RC')
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JYT','JYG','JYU','JYY','YSM','LWW')
+	
 	UNION
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('MEA','MEB','DK','DM','JBK','JBM','JBJ','FNM','WKH')
