@@ -139,6 +139,10 @@ GO
 	SELECT custid,roleid,1,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('JYT','JYG','JYU','JYY','YSM','LWW')
 	
+	DELETE t
+	FROM #tempcusts t
+	INNER JOIN Customer  c WITH(NOLOCK) ON t.custid=c.custid
+	WHERE username IN('S42AH','S42AH','S42AH','S42AH','S71H','S71H','S822M','S822M','SKHH','SKHH','SKHH','SKPRMB','SYLM','SYLM','S09M','SPHM')
 		
 	WHILE (1 = 1)
 BEGIN
@@ -234,6 +238,11 @@ END
 	UNION
 	SELECT custid,roleid,1,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('JYT','JYG','JYU','JYY','YSM','LWW')
+	
+	DELETE t
+	FROM #tempcusts t
+	INNER JOIN Customer  c WITH(NOLOCK) ON t.custid=c.custid
+	WHERE username IN('S42AH','S42AH','S42AH','S42AH','S71H','S71H','S822M','S822M','SKHH','SKHH','SKHH','SKPRMB','SYLM','SYLM','S09M','SPHM')
 	
 		
 	WHILE (1 = 1)

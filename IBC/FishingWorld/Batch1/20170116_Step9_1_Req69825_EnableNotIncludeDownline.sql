@@ -114,6 +114,12 @@
 	SELECT custid,roleid,0,0
 	FROM Customer WITH(NOLOCK) WHERE username IN ('MEA','MEB','DK','DM','JBK','JBM','JBJ','FNM','WKH')
 	
+	DELETE t
+	FROM #tempcusts t
+	INNER JOIN Customer  c WITH(NOLOCK) ON t.custid=c.custid
+	WHERE username IN('S42AH','S42AH','S42AH','S42AH','S71H','S71H','S822M','S822M','SKHH','SKHH','SKHH','SKPRMB','SYLM','SYLM','S09M','SPHM')
+
+	
 	DECLARE @Sporttype INT
 	SELECT @Sporttype=219
 	DECLARE @BitOrder INT

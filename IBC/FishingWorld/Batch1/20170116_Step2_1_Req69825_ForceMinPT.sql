@@ -29,16 +29,18 @@ BEGIN
 
 	SELECT @MinPT= SuperPT
 	FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
-	WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
+	WHERE cs.custid=@CustId	AND SportType=@Sporttype
 	
-	UPDATE CustPTSetting3rd_Agent WITH(ROWLOCK,UPDLOCK)
-	SET MinPT=@MinPT
+	UPDATE cs
+	SET cs.MinPT=@MinPT
+	FROM CustPTSetting3rd_Agent cs WITH(ROWLOCK,UPDLOCK)
+	WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
 	
 	UPDATE m
 	SET SuperPT=@MinPT
 	FROM CustPTSetting3rd_Member m WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
-	WHERE c.srecommend=@CustId	AND  CustID<=@maxcustid
+	WHERE c.srecommend=@CustId	AND m. CustID<=@maxcustid
 	
 	END
 	
