@@ -147,6 +147,6 @@ SELECT CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWin
 FROM WinLimit_CustGameMonitoring WITH (NOLOCK)
 
 GO
-INSERT INTO PRO_WinLimit_CustGameMonitoring_History (LogID, CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy)
-SELECT  LogID, CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy
+INSERT INTO PRO_WinLimit_CustGameMonitoring_History (CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy)
+SELECT  CustID, ProductID, BettypeID, WinlostDate, LevelID, MaxWinLimit, TotalWinAmt, WinAmt, ActionID, ModifiedDate, IsNotified, ModifiedBy, CreatedBy
 FROM WinLimit_CustGameMonitoring_History WITH (NOLOCK)
