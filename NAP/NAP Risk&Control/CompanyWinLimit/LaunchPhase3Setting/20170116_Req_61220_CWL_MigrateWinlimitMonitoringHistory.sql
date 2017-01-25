@@ -7,7 +7,9 @@
 ---------- Step 0: PREPARATION ------------------------------
 -- Truncate data phase 2
 IF NOT EXISTS (SELECT 1 FROM PRO_WinLimit_CustGameMonitoring_History WITH (NOLOCK))
-	TRUNCATE TABLE WinLimit_CustGameMonitoring_History
+	RETURN
+	
+TRUNCATE TABLE WinLimit_CustGameMonitoring_History
 --- Create temporarily tables
 CREATE TABLE #WinLimit_CustGameMonitoring_History_Result([CustID] [int],[ProductID] [tinyint],[BettypeID] [smallint],[WinlostDate] [smalldatetime],[LevelID] [tinyint],[MaxWinLimit] [money],[TotalWinAmt] [money],[WinAmt] [money],[ActionID] [tinyint],[ModifiedDate] [datetime],[IsNotified] [bit],[ModifiedBy] [int] ,[CreatedBy] [int] ,[MaxWinLimitSetting] [xml] ,[TotalWinAmt_RM] [money] )
 
