@@ -50,7 +50,7 @@ FROM dbo.custInfo ci WITH(NOLOCK)
 WHERE ci.roleid = 3 AND cs.SportType = 211 AND cs.BetType = 2401
 	AND (cs.MaxWinLimit IS NULL OR cs.IsAutoReset IS NULL)
 
---Agent Level: 20 affected rows 
+--Agent Level: 5 affected rows 
 UPDATE cs
 SET cs.MaxWinLimit =  CASE	WHEN ci.SyncLiveCasino  = 1 THEN ci.MaxWinLiveCasino
 							WHEN mi.SyncLiveCasino = 1 THEN mi.MaxWinLiveCasino 
