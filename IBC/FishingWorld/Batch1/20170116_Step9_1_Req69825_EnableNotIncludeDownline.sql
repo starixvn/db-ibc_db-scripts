@@ -41,7 +41,8 @@
 	,'EEM','EEH','EEK','HG9','HGG','HG8','HG7','HG6','HG88','HG101','HG102','HG71','HG81','HG29','HA8','H39','HGA','H7','HG3','HGB','HG5'
 	,'RG1','RG2','RG3','RG5','RG6','RG7','RG9','RG10','RG11','RG12','RG13','RG8','PPS','PPJ','PPN','PPQ','PPZ','PPP','PPT','PPA'	
 	,'RC'	
-	,'MEA','MEB','DK','DM','JBK','JBM','JBJ','FNM','WKH')
+	,'MEA','MEB','DK','DM','JBK','JBM','JBJ','FNM','WKH'
+	,'RM8','VKH','AHMA','SAZM')
 	UNION
 	SELECT custid,roleid,1
 	FROM Customer WITH(NOLOCK) WHERE username IN ('SWM')
