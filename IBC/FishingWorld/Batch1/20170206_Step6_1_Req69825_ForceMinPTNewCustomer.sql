@@ -21,7 +21,7 @@ FROM Customer WITH(NOLOCK) WHERE username IN ('S222R','S222HK','S222AH','S222BH'
 ,'SRS','KAD','KGA','KGB','KBA','KBB','KBC','KGE','KBD','KBE','KAG','KAH','KAJ','KAK','KBG','KBH','KBJ','KBK','KBU','KBL','KBV','KBW','KAI'	
 ,'HG9','HGG','HG8','HG7','HG6','HG88','HG101','HG102','HG71','HG81','HG29','HA8','H39','HGA','H7','HG3','HGB','HG5'	
 ,'D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9'
-,'TS1','TS2','TS3','TS4','TS5','TS6'
+,'TS1','TS2','TS3','TS4','TS5','TS6','D99','DRM'
 ,'JBK','JBM','JBJ')
 
 UPDATE  t
