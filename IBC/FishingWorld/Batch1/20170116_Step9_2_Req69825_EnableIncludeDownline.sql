@@ -31,29 +31,31 @@ BEGIN
 	SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
 	
 	IF(@RoleID=4)
-	UPDATE cs
-	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN CustInfo c WITH(NOLOCK) ON c.custid=cs.custid
-	WHERE c.srecommend=@CustId	
+	BEGIN
+		UPDATE cs
+		SET								
+			 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN CustInfo c WITH(NOLOCK) ON c.custid=cs.custid
+		WHERE c.srecommend=@CustId	
+	END
 	ELSE IF(@RoleID=3)	
 	BEGIN
-	UPDATE cs
-	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN CustInfo c WITH(NOLOCK) ON c.custid=cs.custid
-	WHERE c.mrecommend=@CustId
-	
-	UPDATE cs
-	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-	WHERE cs.CustID IN(
-	SELECT c.srecommend FROM 
-	CustInfo c WITH(NOLOCK) 
-	WHERE CustID=@CustId)
+		UPDATE cs
+		SET								
+			 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN CustInfo c WITH(NOLOCK) ON c.custid=cs.custid
+		WHERE c.mrecommend=@CustId
+		
+		UPDATE cs
+		SET								
+			 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.CustID IN(
+		SELECT c.srecommend FROM 
+		CustInfo c WITH(NOLOCK) 
+		WHERE CustID=@CustId)
 	
 	END
 	
@@ -66,78 +68,23 @@ GO
 --------------------------------------------------------------------------------------
 	DECLARE  @RoleID TINYINT,@CustID INT
 	
-	CREATE TABLE #tempcusts (custid INT PRIMARY KEY, roleId INT,AllLine BIT,IsSM BIT,isfinished bit default(0))
-	INSERT INTO #tempcusts(custid,roleId,AllLine,IsSM)
+	CREATE TABLE #tempcusts (custid INT PRIMARY KEY, roleId INT,isfinished bit default(0))
+	INSERT INTO #tempcusts(custid,roleId)
 	
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKKM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S09H','S09M')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('PTM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S47R','S47M','S49RM','S49H','SSTMR','SSTMH','SSTMJ','SSTMM','SSTMK','SSTMI','S3ARM','S3AR','S3AH','S3AAH','S3EH','S3BH','S3AB','RM8','MJRMB'
-	,'SJM','SJJM','SJHK')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SHKK','SHHK2','SHHK7','hhma','HHN','HHK4')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S688R','S788H','S688AH','S688M','LP','LLP','SAKM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('KYH','KYM')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SMQARMB')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S45H','S45BH','S45HK','S45BM')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('HPP','HPO','HPM','HPU','HPV','HPW','HPQ','HPK','HPN','HPX','HPY','HPMM','HPZ','HPR','SX3','SX1','SX2','SZZ','SMY','HPC','HPD','HPB','HPF','SX5'
-	,'SX6','HP2','SX7','SX8','HPS','HPM2','HP1','HPT','HP3','SX9','HMN','HSS','SX10','SX11')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SLLM','SATM','JM','JS5','JS6','JS7','JS8','JSB','SYSM','SYSHK','JSR','JMA','JSE','JSQ','JSF','JSG','JST','JSL','JSM','JSZ','SHG','JSN','JSP'
-	,'JSU','JSV','JSW','JSX','JSY','JSO','JSI','JMJ','JHA','JHB','JMK','JML','JHC','JHD','SYLHK','SYLM','SYLH','SYLHZ','SYLK','SYCN','SYLL')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SSK','SSM','SSMA','SSKA','SSKB','SSKC')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKPRMB','KPM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JJB','JJM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('XKM','XKH','VKH','AHMA','YUM','YUH','FJM','SAZM','21A','BPM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9','VVY','VCY','VBY','VDY','VEY','VFY','VVM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('TS1','TS2','TS3','TS4','TS5','TS6')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JYT','JYG','JYU','JYY','YSM','LWW')
+	SELECT custid,roleid
+	FROM Customer WITH(NOLOCK) WHERE username IN ('SKKM','S09H','S09M','PTM'
+	,'S47R','S47M','S49RM','S49H','SSTMR','SSTMH','SSTMJ','SSTMM','SSTMK','SSTMI','S3ARM','S3AR','S3AH','S3AAH','S3EH','S3BH','S3AB','RM8','MJRMB'
+	,'SJM','SJJM','SJHK'
+	,'SHKK','SHHK2','SHHK7','hhma','HHN','HHK4'
+	,'S688R','S788H','S688AH','S688M','LP','LLP','SAKM','KYH','KYM','SMQARMB','S45H','S45BH','S45HK','S45BM'
+	,'HPP','HPO','HPM','HPU','HPV','HPW','HPQ','HPK','HPN','HPX','HPY','HPMM','HPZ','HPR','SX3','SX1','SX2','SZZ','SMY','HPC','HPD','HPB','HPF','SX5'
+	,'SX6','HP2','SX7','SX8','HPS','HPM2','HP1','HPT','HP3','SX9','HMN','HSS','SX10','SX11'
+	,'SLLM','SATM','JM','JS5','JS6','JS7','JS8','JSB','SYSM','SYSHK','JSR','JMA','JSE','JSQ','JSF','JSG','JST','JSL','JSM','JSZ','SHG','JSN','JSP'
+	,'JSU','JSV','JSW','JSX','JSY','JSO','JSI','JMJ','JHA','JHB','JMK','JML','JHC','JHD','SYLHK','SYLM','SYLH','SYLHZ','SYLK','SYCN','SYLL'
+	,'SSK','SSM','SSMA','SSKA','SSKB','SSKC','SKPRMB','KPM','JJB','JJM'
+	,'XKM','XKH','VKH','AHMA','YUM','YUH','FJM','SAZM','21A','BPM'
+	,'D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9','VVY','VCY','VBY','VDY','VEY','VFY','VVM'
+	,'TS1','TS2','TS3','TS4','TS5','TS6','JYT','JYG','JYU','JYY','YSM','LWW')
 	
 	DELETE t
 	FROM #tempcusts t
@@ -166,84 +113,29 @@ END
 
 	DECLARE  @RoleID TINYINT,@CustID INT
 	
-	CREATE TABLE #tempcusts (custid INT PRIMARY KEY, roleId INT,AllLine BIT,IsSM BIT,isfinished bit default(0))
-	INSERT INTO #tempcusts(custid,roleId,AllLine,IsSM)
+	CREATE TABLE #tempcusts (custid INT PRIMARY KEY, roleId INT,isfinished bit default(0))
+	INSERT INTO #tempcusts(custid,roleId)
 	
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKKM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S09H','S09M')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('PTM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S47R','S47M','S49RM','S49H','SSTMR','SSTMH','SSTMJ','SSTMM','SSTMK','SSTMI','S3ARM','S3AR','S3AH','S3AAH','S3EH','S3BH','S3AB','RM8','MJRMB'
-	,'SJM','SJJM','SJHK')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SHKK','SHHK2','SHHK7','hhma','HHN','HHK4')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S688R','S788H','S688AH','S688M','LP','LLP','SAKM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('KYH','KYM')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SMQARMB')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('S45H','S45BH','S45HK','S45BM')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('HPP','HPO','HPM','HPU','HPV','HPW','HPQ','HPK','HPN','HPX','HPY','HPMM','HPZ','HPR','SX3','SX1','SX2','SZZ','SMY','HPC','HPD','HPB','HPF','SX5'
-	,'SX6','HP2','SX7','SX8','HPS','HPM2','HP1','HPT','HP3','SX9','HMN','HSS','SX10','SX11')	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SLLM','SATM','JM','JS5','JS6','JS7','JS8','JSB','SYSM','SYSHK','JSR','JMA','JSE','JSQ','JSF','JSG','JST','JSL','JSM','JSZ','SHG','JSN','JSP'
-	,'JSU','JSV','JSW','JSX','JSY','JSO','JSI','JMJ','JHA','JHB','JMK','JML','JHC','JHD','SYLHK','SYLM','SYLH','SYLHZ','SYLK','SYCN','SYLL')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SSK','SSM','SSMA','SSKA','SSKB','SSKC')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('SKPRMB','KPM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JJB','JJM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('XKM','XKH','VKH','AHMA','YUM','YUH','FJM','SAZM','21A','BPM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9','VVY','VCY','VBY','VDY','VEY','VFY','VVM')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('TS1','TS2','TS3','TS4','TS5','TS6')
-	
-	UNION
-	SELECT custid,roleid,1,0
-	FROM Customer WITH(NOLOCK) WHERE username IN ('JYT','JYG','JYU','JYY','YSM','LWW')
+	SELECT custid,roleid
+	FROM Customer WITH(NOLOCK) WHERE username IN ('SKKM','S09H','S09M','PTM'
+	,'S47R','S47M','S49RM','S49H','SSTMR','SSTMH','SSTMJ','SSTMM','SSTMK','SSTMI','S3ARM','S3AR','S3AH','S3AAH','S3EH','S3BH','S3AB','RM8','MJRMB'
+	,'SJM','SJJM','SJHK'
+	,'SHKK','SHHK2','SHHK7','hhma','HHN','HHK4'
+	,'S688R','S788H','S688AH','S688M','LP','LLP','SAKM','KYH','KYM','SMQARMB','S45H','S45BH','S45HK','S45BM'
+	,'HPP','HPO','HPM','HPU','HPV','HPW','HPQ','HPK','HPN','HPX','HPY','HPMM','HPZ','HPR','SX3','SX1','SX2','SZZ','SMY','HPC','HPD','HPB','HPF','SX5'
+	,'SX6','HP2','SX7','SX8','HPS','HPM2','HP1','HPT','HP3','SX9','HMN','HSS','SX10','SX11'
+	,'SLLM','SATM','JM','JS5','JS6','JS7','JS8','JSB','SYSM','SYSHK','JSR','JMA','JSE','JSQ','JSF','JSG','JST','JSL','JSM','JSZ','SHG','JSN','JSP'
+	,'JSU','JSV','JSW','JSX','JSY','JSO','JSI','JMJ','JHA','JHB','JMK','JML','JHC','JHD','SYLHK','SYLM','SYLH','SYLHZ','SYLK','SYCN','SYLL'
+	,'SSK','SSM','SSMA','SSKA','SSKB','SSKC','SKPRMB','KPM','JJB','JJM'
+	,'XKM','XKH','VKH','AHMA','YUM','YUH','FJM','SAZM','21A','BPM'
+	,'D77','D78','D79','D80','D81','D82','D83','D85','D66','DRN','DRP','BB1','D96','BB9','VVY','VCY','VBY','VDY','VEY','VFY','VVM'
+	,'TS1','TS2','TS3','TS4','TS5','TS6','JYT','JYG','JYU','JYY','YSM','LWW')
 	
 	DELETE t
 	FROM #tempcusts t
 	INNER JOIN Customer  c WITH(NOLOCK) ON t.custid=c.custid
 	WHERE username IN('S42AH','S42AH','S42AH','S42AH','S71H','S71H','S822M','S822M','SKHH','SKHH','SKHH','SKPRMB','SYLM','SYLM','S09M','SPHM')
-	
+		
 		
 	WHILE (1 = 1)
 BEGIN
