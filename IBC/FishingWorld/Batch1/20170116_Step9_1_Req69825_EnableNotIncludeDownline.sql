@@ -49,7 +49,7 @@
 	DELETE t
 	FROM #tempcusts t
 	INNER JOIN Customer  c WITH(NOLOCK) ON t.custid=c.custid
-	WHERE username IN('S42AH','S42AH','S42AH','S42AH','S71H','S71H','S822M','S822M','SKHH','SKHH','SKHH','SKPRMB','SYLM','SYLM','S09M','SPHM')
+	WHERE username IN('S42AH','S71H','S822M','SKHH','SKPRMB','SYLM','S09M','SPHM')
 
 	
 	DECLARE @Sporttype INT
