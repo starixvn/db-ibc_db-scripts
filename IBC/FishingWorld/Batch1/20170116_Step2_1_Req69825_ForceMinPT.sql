@@ -29,42 +29,38 @@ BEGIN
 	
 	IF(@RoleID=4)
 	BEGIN
-	SELECT @MinPT= SuperPT
-	FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
-	WHERE cs.custid=@CustId	AND SportType=@Sporttype
-	
-	UPDATE cs
-	SET cs.MinPT=@MinPT
-	FROM CustPTSetting3rd_Agent cs WITH(ROWLOCK,UPDLOCK)
-	WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
-	
-	UPDATE m
-	SET SuperPT=@MinPT
-	FROM CustPTSetting3rd_Member m WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
-	WHERE c.srecommend=@CustId	AND m. CustID<=@maxcustid
+		SELECT @MinPT= SuperPT
+		FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
+		WHERE cs.custid=@CustId	AND SportType=@Sporttype
+		
+		UPDATE cs
+		SET cs.MinPT=@MinPT
+		FROM CustPTSetting3rd_Agent cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
+		
+		UPDATE m
+		SET SuperPT=@MinPT
+		FROM CustPTSetting3rd_Member m WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
+		WHERE c.srecommend=@CustId	AND SportType=@Sporttype AND m. CustID<=@maxcustid
 	END
 	ELSE -- dummy account
 	BEGIN
-	SELECT @MinPT= MasterPT
-	FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
-	WHERE cs.custid=@CustId	AND SportType=@Sporttype
-	
-	UPDATE cs
-	SET cs.MinPT=@MinPT
-	FROM CustPTSetting3rd_Agent cs WITH(ROWLOCK,UPDLOCK)
-	WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
-	
-	UPDATE m
-	SET MasterPT=@MinPT
-	FROM CustPTSetting3rd_Member m WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
-	WHERE c.mrecommend=@CustId	AND m. CustID<=@maxcustid
-	
-	END
-	
-	END
-	
+		SELECT @MinPT= MasterPT
+		FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
+		WHERE cs.custid=@CustId	AND SportType=@Sporttype
+		
+		UPDATE cs
+		SET cs.MinPT=@MinPT
+		FROM CustPTSetting3rd_Agent cs WITH(ROWLOCK,UPDLOCK)
+		WHERE cs.custid=@CustId	AND SportType=@Sporttype AND CustID<=@maxcustid
+		
+		UPDATE m
+		SET MasterPT=@MinPT
+		FROM CustPTSetting3rd_Member m WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
+		WHERE c.mrecommend=@CustId	AND SportType=@Sporttype AND m. CustID<=@maxcustid	
+	END	
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
