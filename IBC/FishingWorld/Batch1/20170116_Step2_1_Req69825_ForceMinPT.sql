@@ -1,6 +1,6 @@
 /*
 	Created: Winnie
-	Task: Enable Fishing World  using execrep [RedmineID: 69825]
+	Task: Force MinPT for Fishing World [RedmineID: 69825]
 	DB: DBCUST/CustDB
 	Date: 20170116
 */ 
