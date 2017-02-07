@@ -6,7 +6,6 @@
 	DB: DBCUST/CustDB
 	Date: 20170117
 */ 
-
 ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
 	@srecommend INT	
 	,@ExchangeID INT	
@@ -99,7 +98,7 @@ BEGIN
 	SELECT CI.CustID,2 -- Agent of direct master
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-	WHERE CI.roleid = 2 AND CI.custid <= @maxcustid 
+	WHERE CI.roleid = 2 AND CI.custid <= @maxcustid AND ci.Enabled=1
 				
 	UNION 
 	SELECT CI.CustID,CI.roleid -- Direct Agent
@@ -125,13 +124,13 @@ BEGIN
 	WHERE  ci.Enabled = 1 	
 	---------- For members ---------
 	INSERT INTO #MemberTemp (CustID)
-	SELECT CI.custid
+	SELECT  CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
 	WHERE CI.roleid = 1	AND CI.custid <= @maxcustid AND ci.Enabled=1 			
 
 	UNION 
-	SELECT CI.custid
+	SELECT  CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
 	WHERE CI.roleid = 1 AND CI.custid <= @maxcustid AND ci.Enabled=1 			
@@ -139,7 +138,7 @@ BEGIN
 	-- Direct member
 		
 	UNION 
-	SELECT CI.custid
+	SELECT  CI.custid
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 	
 		
@@ -219,14 +218,12 @@ BEGIN
 	SELECT 
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
-		,(SELECT CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+		,CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
-				END
-		FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-		WHERE Custid=ci.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+				ELSE ISNULL(slivepositiontaking*100,90)
+				END		
 		,0
 		,0
 		,0
@@ -234,8 +231,9 @@ BEGIN
 		,0
 		,0
 		,@MaxPT
-	FROM #DirectMaster ci WITH(NOLOCK) 	
-	WHERE RoleID=3
+	FROM #DirectMaster ci WITH(NOLOCK) 
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK) ON ci.CustID=cs.custid
+	WHERE RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -284,22 +282,21 @@ BEGIN
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,(SELECT CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
+		, CASE	WHEN @ExchangeID IN (5,13,67) THEN 70
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
-				END
-		FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
-		WHERE Custid=ci.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+				ELSE ISNULL(slivepositiontaking*100,90)
+				END		
 		,0
 		,0
 		,0
 		,0
 		,0
 		,@MaxPT
-	FROM #DirectAgent ci WITH(NOLOCK) 	
-	WHERE RoleID=2	
+	FROM #DirectAgent ci WITH(NOLOCK) 
+	LEFT JOIN 	 dbo.CustSetting3rd cs WITH(NOLOCK)	 ON ci.CustID=cs.custid
+	WHERE RoleID=2	AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -357,6 +354,7 @@ BEGIN
 	DROP TABLE #MemberTemp		
 END
 GO
+
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
 ------------------------------------------------------	
 

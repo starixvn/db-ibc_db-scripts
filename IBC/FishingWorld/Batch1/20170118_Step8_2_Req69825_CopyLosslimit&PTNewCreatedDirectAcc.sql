@@ -159,15 +159,12 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	SELECT 
 		dm.custid,  @Sporttype, @Bettype, 0
 		,0
-		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
+		,CASE	WHEN ci.currency IN (5,13,67) THEN 70
 				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
-				END
-			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
-			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		
-			WHERE cs.Custid=dm.custid AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+				ELSE ISNULL(slivepositiontaking*100,90)
+				END			
 		,0
 		,0
 		,0
@@ -175,8 +172,10 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,@MaxPT
-	FROM #DirectMaster dm WITH(NOLOCK) 		
-	WHERE dm.RoleID=3
+	FROM #DirectMaster dm WITH(NOLOCK) 	
+	INNER JOIN custInfo ci WITH(NOLOCK) ON dm.CustID=ci.custid
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON dm.CustID=cs.custid	
+	WHERE dm.RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -225,15 +224,12 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		da.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,(SELECT CASE	WHEN ci.currency IN (5,13,67) THEN 70
+		,CASE	WHEN ci.currency IN (5,13,67) THEN 70
 				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
-				END
-			FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
-			INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid=ci.custid		
-			WHERE cs.Custid=da.CustID AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef)
+				ELSE ISNULL(slivepositiontaking*100,90) 
+				END			
 		,0
 		,0
 		,0
@@ -241,6 +237,8 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,@MaxPT
 	FROM #DirectAgent da WITH(NOLOCK) 	
+	INNER JOIN custInfo ci WITH(NOLOCK) ON da.CustID=ci.custid
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON da.CustID=cs.custid	
 	WHERE da.RoleID=2 AND da.custid > @maxcustid
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
