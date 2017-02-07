@@ -265,9 +265,41 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,0
+		,@MaxPT	
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+	WHERE CI.roleid = 2 AND CI.custid > @maxcustid AND ci.Enabled=1
+	
+	INSERT INTO dbo.CustPTSetting3rd_Agent
+		(	[CustID]
+		   ,[SportType]
+		   ,[BetType]
+		   ,[IsLive]
+		   ,[SuperPT]
+		   ,[MasterPT]
+		   ,[AgentPT]
+		   ,[IsAutoMasterPT]
+		   ,[AutoMasterPT]
+		   ,[IsAutoSuperPT]
+		   ,[AutoSuperPT]
+		   ,[MinPT]
+		   ,[MaxPT])
+	SELECT 
+		ci.custid,  @Sporttype, @Bettype, 0
+		,0
+		,0
 		,@MaxPT
+		,0
+		,0
+		,0
+		,0
+		,0
+		,@MaxPT		
 	FROM #SMATemp ci WITH(NOLOCK) 
-	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)	
+	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)
+	AND ci.CustID NOT IN (SELECT CustID FROM custInfo CI WITH (NOLOCK)
+							INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
+							WHERE CI.roleid = 2 AND CI.custid > @maxcustid AND ci.Enabled=1)	
 
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
