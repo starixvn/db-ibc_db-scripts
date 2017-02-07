@@ -78,10 +78,12 @@ BEGIN
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN @ExchangeID IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN @ExchangeID NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
+				ELSE slivepositiontaking*100
 				END
 	FROM dbo.CustSetting3rd cs WITH(NOLOCK)			
 	WHERE Custid=@srecommend AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	IF @SuperPT IS NULL
+	SELECT @SuperPT=90
 	--Super LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]

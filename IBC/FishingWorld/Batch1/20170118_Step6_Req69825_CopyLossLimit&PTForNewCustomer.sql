@@ -95,19 +95,19 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
+				ELSE ISNULL(slivepositiontaking*100,90)
 				END
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
 				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8) THEN slivepositiontaking*100
 				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
+				ELSE ISNULL(slivepositiontaking*100,90)
 				END
 		,CASE	WHEN c.currency IN (5,13,67) THEN 70
 				WHEN c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
 				WHEN c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
 				WHEN c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE slivepositiontaking*100 
+				ELSE ISNULL(slivepositiontaking*100,90)
 				END
 		,0
 		,0
@@ -115,9 +115,9 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,@MaxPT
-	FROM dbo.CustSetting3rd cs WITH(NOLOCK)	
-	INNER JOIN custInfo c WITH(NOLOCK) ON cs.custid=c.custid	
-	INNER JOIN #SMATemp s ON cs.custid=s.CustID	
+	FROM  #SMATemp s
+	INNER JOIN custInfo c WITH(NOLOCK) ON s.custid=c.custid
+	LEFT JOIN  dbo.CustSetting3rd cs WITH(NOLOCK) ON cs.custid=c.CustID	
 	WHERE s.roleid=4 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	
 	--Master AGENT LEVEL
