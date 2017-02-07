@@ -127,7 +127,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	--Master Agent Level
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
-		, 0 AS MaxWinLimit	
+		, NULL AS MaxWinLimit	
 		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 		
@@ -135,7 +135,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
-		, 0 AS MaxWinLimit	
+		, NULL AS MaxWinLimit	
 		,(SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 

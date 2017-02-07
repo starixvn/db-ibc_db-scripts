@@ -155,7 +155,7 @@ BEGIN
 	--SuperLevel
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
-		, 0 AS MaxWinLimit	
+		, NULL AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 		
@@ -163,7 +163,7 @@ BEGIN
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
-		, 0 AS MaxWinLimit	
+		, NULL AS MaxWinLimit	
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
