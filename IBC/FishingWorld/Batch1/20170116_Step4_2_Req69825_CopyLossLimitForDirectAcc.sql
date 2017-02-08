@@ -76,29 +76,27 @@ BEGIN
 	--UNION ALL
 	SELECT CI.CustID,3 -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 		
 	UNION 
 	SELECT ci.srecommend,4 -- super of Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-	
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID	
 	UNION 
 	SELECT DISTINCT CI.CustID,3 -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
-	WHERE CI.custid <= @maxcustid 	
+
 	UNION 
 	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
-	WHERE CI.custid <= @maxcustid 	
+		INNER JOIN #DirectAgent D ON CI.custid = d.CustID	
 	
 	UNION 
 
 	SELECT CI.CustID,2 -- Agent of direct master
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-	WHERE CI.roleid = 2 AND CI.custid <= @maxcustid AND ci.Enabled=1
+	WHERE CI.roleid = 2 AND ci.Enabled=1
 				
 	UNION 
 	SELECT CI.CustID,CI.roleid -- Direct Agent
@@ -159,7 +157,7 @@ BEGIN
 		, @DefaultLossLimit AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 		
-	
+	WHERE si.custid <= @maxcustid
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
@@ -261,7 +259,7 @@ BEGIN
 		,0
 		,@MaxPT
 	FROM #SMATemp ci WITH(NOLOCK) 	
-	WHERE RoleID=3 AND ci.CustID NOT IN(SELECT CustID FROM #DirectMaster)
+	WHERE RoleID=3 AND ci.CustID NOT IN(SELECT CustID FROM #DirectMaster) AND CI.custid <= @maxcustid
 	
 	--Agent LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -354,9 +352,10 @@ BEGIN
 		,@MaxPT		
 	FROM #SMATemp ci WITH(NOLOCK) 
 	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)
-	AND ci.CustID NOT IN (SELECT CustID FROM custInfo CI WITH (NOLOCK)
-							INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-							WHERE CI.roleid = 2 AND CI.custid <= @maxcustid AND ci.Enabled=1)	
+	AND ci.CustID NOT IN (SELECT cii.CustID FROM custInfo cii WITH (NOLOCK)
+							INNER JOIN #DirectMaster D ON Cii.mrecommend = D.CustID 
+							WHERE Cii.roleid = 2 AND Cii.custid <= @maxcustid AND cii.Enabled=1)
+	AND CI.custid <= @maxcustid	
 
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member

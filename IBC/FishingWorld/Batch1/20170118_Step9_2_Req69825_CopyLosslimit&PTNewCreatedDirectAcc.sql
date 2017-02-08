@@ -8,7 +8,7 @@
 */ 
 		
 DECLARE @maxcustid INT
-SELECT @maxcustid = xxx
+SELECT @maxcustid = 24824476
 	
 
 CREATE TABLE #MemberTemp
@@ -175,7 +175,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	FROM #DirectMaster dm WITH(NOLOCK) 	
 	INNER JOIN custInfo ci WITH(NOLOCK) ON dm.CustID=ci.custid
 	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON dm.CustID=cs.custid	
-	WHERE dm.RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	WHERE dm.RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef AND dm.custid > @maxcustid
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -296,10 +296,10 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,@MaxPT		
 	FROM #SMATemp ci WITH(NOLOCK) 
-	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)
-	AND ci.CustID NOT IN (SELECT CustID FROM custInfo CI WITH (NOLOCK)
-							INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-							WHERE CI.roleid = 2 AND CI.custid > @maxcustid AND ci.Enabled=1)	
+	WHERE RoleID=2 AND ci.CustID NOT IN(SELECT CustID FROM #DirectAgent)	
+	AND ci.CustID NOT IN (SELECT cii.CustID FROM custInfo cii WITH (NOLOCK)
+							INNER JOIN #DirectMaster D ON Cii.mrecommend = D.CustID 
+							WHERE Cii.roleid = 2 AND Cii.custid > @maxcustid AND cii.Enabled=1)	
 
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
@@ -323,8 +323,8 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,0
-	FROM 	#MemberTemp ci WITH(NOLOCK) 	
-	
+	FROM 	#MemberTemp ci WITH(NOLOCK) 
+
 	DROP TABLE #SMATemp
 	DROP TABLE #MemberTemp	
 	DROP TABLE #DirectAgent
