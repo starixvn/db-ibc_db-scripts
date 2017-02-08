@@ -8,7 +8,7 @@
 */ 
 		
 DECLARE @maxcustid INT
-SELECT @maxcustid = 24824476
+SELECT @maxcustid = xxx
 	
 
 CREATE TABLE #MemberTemp
