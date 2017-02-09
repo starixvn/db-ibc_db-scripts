@@ -13,7 +13,7 @@ WHERE CI.custid IN (1)
 
 DECLARE @SportType SMALLINT = 211, @Bettype SMALLINT = 2401
 /********************************************* Commision : SettingType = 3 ****************************************/
---IF @RoleID = 4
+--IF @RoleID = 2,3,4
 INSERT INTO [dbo].[CustDiscount3rd_Agent]
    ([CustID]
    ,[SportType]
@@ -47,5 +47,6 @@ FROM #cust_missingsetting ft
 	INNER JOIN dbo.CustDiscount3rd_Agent acs WITH (NOLOCK) ON acs.SportType = @SportType AND acs.BetType = @Bettype AND acs.custid=ft.recommend
 	INNER JOIN dbo.CustDiscount3rd_Agent mcs WITH (NOLOCK) ON acs.sporttype = mcs.sporttype AND acs.bettype = mcs.bettype AND mcs.custid = ft.mrecommend
 	INNER JOIN dbo.CustDiscount3rd_Agent scs WITH (NOLOCK) ON acs.sporttype = scs.sporttype AND acs.bettype = scs.bettype AND scs.custid = ft.srecommend
+WHERE ft.Roleid = 1
 
 DROP TABLE #cust_missingsetting

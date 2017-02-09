@@ -28,7 +28,7 @@ SELECT custid, @SportType,@Bettype,@IsLive
 	 , 0,0,0,0,0,0,0,0
 	 , @maxPT
 FROM #cust_missingsetting T WITH (NOLOCK)
-WHERE T.Roleid IN (2,3,4) AND NOT EXISTS (SELECT 1 FROM [CustPTSetting3rd_Agent] T1 WITH (NOLOCK) WHERE T1.CustID = T.custid AND T1.SportType = 211)
+WHERE T.Roleid IN (2,3,4) AND NOT EXISTS (SELECT 1 FROM [CustPTSetting3rd_Agent] T1 WITH (NOLOCK) WHERE T1.CustID = T.custid AND T1.SportType = @SportType)
 
 --RoleID = 1
 DECLARE @CustID INT, @MasterID INT, @SuperID INT, @AgentID INT
@@ -71,9 +71,9 @@ SELECT T.custid	, acs.SportType	, acs.BetType	, acs.IsLive	, mcs.superPT	, acs.m
 		,t.recommend,t.mrecommend,t.srecommend
 		, 0
 FROM #cust_missingsetting T 
-	INNER JOIN dbo.CustPTSetting3rd_Agent acs WITH (NOLOCK) ON T.recommend = acs.CustID
+	INNER JOIN dbo.CustPTSetting3rd_Agent acs WITH (NOLOCK) ON T.recommend = acs.CustID AND acs.sporttype = @SportType AND acs.BetType = @Bettype
 	INNER JOIN dbo.CustPTSetting3rd_Agent mcs WITH (NOLOCK) ON acs.sporttype = mcs.sporttype AND acs.bettype = mcs.bettype AND acs.islive = mcs.islive AND mcs.custid = T.mrecommend
-WHERE acs.sporttype = 211 AND acs.BetType = 2401 AND T.Roleid = 1	
+WHERE T.Roleid = 1	
 
 --Correct PT
 UPDATE cs
@@ -189,10 +189,9 @@ SET @a1 = cs.AgentPT
 	,cs.MasterPT = @m1
 	,cs.SuperPT = @s1								       
 FROM @MemberPTTbl cs 
-	INNER JOIN #cust_missingsetting T ON CS.CustID = T.custid
-	INNER JOIN dbo.CustPTSetting3rd_Agent acs WITH(NOLOCK) 	ON T.recommend = acs.custid AND cs.sporttype = acs.sporttype AND cs.bettype = acs.bettype AND cs.IsLive = acs.IsLive
-	INNER JOIN dbo.CustPTSetting3rd_Agent m WITH(NOLOCK) ON T.mrecommend = m.custid AND cs.sporttype = m.sporttype 	AND cs.bettype = m.bettype 	AND cs.IsLive = m.IsLive
-	INNER JOIN dbo.CustPTSetting3rd_Agent s WITH(NOLOCK) ON T.srecommend = s.custid AND cs.sporttype = s.sporttype 	AND cs.bettype = s.bettype 	AND cs.IsLive = s.IsLive
+	INNER JOIN dbo.CustPTSetting3rd_Agent acs WITH(NOLOCK) 	ON cs.recommend = acs.custid AND cs.sporttype = acs.sporttype AND cs.bettype = acs.bettype AND cs.IsLive = acs.IsLive
+	INNER JOIN dbo.CustPTSetting3rd_Agent m WITH(NOLOCK) ON cs.mrecommend = m.custid AND cs.sporttype = m.sporttype 	AND cs.bettype = m.bettype 	AND cs.IsLive = m.IsLive
+	INNER JOIN dbo.CustPTSetting3rd_Agent s WITH(NOLOCK) ON cs.srecommend = s.custid AND cs.sporttype = s.sporttype 	AND cs.bettype = s.bettype 	AND cs.IsLive = s.IsLive
 WHERE cs.sporttype = @SportType AND cs.BetType = @Bettype
 
 -- Process one by one based on rule in Acc_DynamicCustomerInfo_00
