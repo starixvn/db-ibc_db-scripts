@@ -230,7 +230,7 @@ FROM  Dep_CustSuper with(nolock)
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
-
+	AND currency NOT IN ('H')
 
 WHILE (1 = 1)
 BEGIN
@@ -280,6 +280,7 @@ FROM  Dep_CustSuper with(nolock)
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
+	AND currency NOT IN ('H')
 
 WHILE (1 = 1)
 BEGIN
