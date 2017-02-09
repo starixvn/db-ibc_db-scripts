@@ -1,7 +1,7 @@
 /*
 	Created: 20160405@Helen
 	Task: insert the Setting of Voidbridge of new licensees into the DCS database.
-	Redmine: https://redmine.nexcel.vn/issues/31752
+	Redmine: https://redmine.nexcel.vn/issues/71312
 */ 
 -- BEGIN STEP 1: Deploy this SP at DBCUST.CustDB, Run only in the FIRST running
 ------------------------------------------------------
@@ -63,8 +63,6 @@ BEGIN
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
 		AND custid <= @max_custid
 							   
-	SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
-
 	-- Licensee profile list
 	IF NOT EXISTS (SELECT 1 
 				   FROM Dep_LicenseeProductSetting lps WITH (NOLOCK)
@@ -208,14 +206,16 @@ GO
 ------------------------------------------------------	
 -- BEGIN STEP 2: Run this SP at replicated DB -----
 --------------------------------------------------------------------------------------
+DECLARE @ProductID INT = 22, @SportType INT = 212
+
 CREATE TABLE #Supers_Offered (custid int)
 INSERT INTO #Supers_Offered (custid)
 SELECT lds.CustID
 FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
-	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= 22
+	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-WHERE PSD.SportType = 212
+WHERE PSD.SportType = @SportType
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -228,6 +228,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
 
 
@@ -254,15 +255,17 @@ GO
 ---
 -- BEGIN STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
+DECLARE @ProductID INT = 22, @SportType INT = 212
+
 CREATE TABLE #Supers_Offered (custid int)
 
 INSERT INTO #Supers_Offered (custid)
 SELECT lds.CustID
 FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
-	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= 22
+	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-WHERE PSD.SportType = 212
+WHERE PSD.SportType = @SportType
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -275,6 +278,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
 
 WHILE (1 = 1)
