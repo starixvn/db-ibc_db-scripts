@@ -44,7 +44,7 @@ BEGIN
 		INNER JOIN custInfo c WITH(NOLOCK) ON m.CustID=c.custid 
 		WHERE c.srecommend=@CustId	AND SportType=@Sporttype AND m. CustID<=@maxcustid
 	END
-	ELSE -- dummy account
+	ELSE IF (@RoleID=3)-- direct master
 	BEGIN
 		SELECT @MinPT= MasterPT
 		FROM [dbo].CustPTSetting3rd_Agent cs WITH(NOLOCK)
