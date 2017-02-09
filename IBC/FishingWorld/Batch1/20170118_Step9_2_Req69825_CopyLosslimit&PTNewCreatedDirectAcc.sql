@@ -160,10 +160,10 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		dm.custid,  @Sporttype, @Bettype, 0
 		,0
 		,CASE	WHEN ci.currency IN (5,13,67) THEN 70
-				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
+				WHEN ci.currency IN (1,2) AND mlivepositiontaking IN (0.7,0.8)THEN mlivepositiontaking*100
+				WHEN ci.currency IN (1,2) AND mlivepositiontaking = 0.85 THEN 90
+				WHEN ci.currency NOT IN (5,13,67,1,2) AND mlivepositiontaking = 0.85 THEN 90
+				ELSE ISNULL(mlivepositiontaking*100,90)
 				END			
 		,0
 		,0
@@ -206,6 +206,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	WHERE ci.RoleID=3 AND ci.CustID NOT IN(SELECT CustID FROM #DirectMaster)	
 	
 	--Agent LEVEL
+	--direct agent
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
 		   ,[SportType]
@@ -225,10 +226,10 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 		,CASE	WHEN ci.currency IN (5,13,67) THEN 70
-				WHEN ci.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN ci.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN ci.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90) 
+				WHEN ci.currency IN (1,2) AND alivepositiontaking IN (0.7,0.8)THEN alivepositiontaking*100
+				WHEN ci.currency IN (1,2) AND alivepositiontaking = 0.85 THEN 90
+				WHEN ci.currency NOT IN (5,13,67,1,2) AND alivepositiontaking = 0.85 THEN 90
+				ELSE ISNULL(alivepositiontaking*100,90) 
 				END			
 		,0
 		,0
@@ -241,6 +242,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON da.CustID=cs.custid	
 	WHERE da.RoleID=2 AND da.custid > @maxcustid
 	
+	-- agent of direct master
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
 		   ,[SportType]
@@ -270,6 +272,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
 	WHERE CI.roleid = 2 AND CI.custid > @maxcustid AND ci.Enabled=1
 	
+		-- dummy agent of member	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
 		   ,[SportType]
