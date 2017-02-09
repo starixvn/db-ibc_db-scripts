@@ -6,6 +6,6 @@
 */ 
 DECLARE @Sporttype INT
 SELECT @Sporttype = 219
-UPDATE ProductSettingDetail (UPDLOCK,ROWLOCK)
+UPDATE ProductSettingDetail WITH(UPDLOCK,ROWLOCK)
 SET SettingStatus=0
 WHERE SportType=@Sporttype
