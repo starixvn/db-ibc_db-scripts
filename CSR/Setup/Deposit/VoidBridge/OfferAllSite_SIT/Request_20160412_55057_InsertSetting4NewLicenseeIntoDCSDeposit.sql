@@ -105,7 +105,7 @@ BEGIN
 			,0
 			,CASE WHEN ci.roleid = 4 THEN @SuperPT ELSE 0 END AS SuperPT
 			,CASE WHEN ci.roleid IN (3,4) THEN @SuperPT ELSE 0 END AS MasterPT
-			,CASE WHEN ci.roleid IN (1,2,4) THEN @SuperPT ELSE 0 END AS AgentPT
+			,CASE WHEN ci.roleid IN (2,4) THEN @SuperPT ELSE 0 END AS AgentPT
 		FROM #tblCust ci
 			CROSS JOIN #ProductSettingDetail_tmp psd 
 		WHERE psd.SettingType = 1 
@@ -137,50 +137,21 @@ BEGIN
 	IF EXISTS (SELECT 1 FROM #ProductSettingDetail_tmp WHERE SettingType = 4) AND @IsProductStatus = 1	
 	BEGIN
 		PRINT 'Status'
-		SELECT DISTINCT psd.SportType,psd.Bettype, psd.SettingType,@IsDisable AS IsDisabled,@IsHidden AS IsHidden,pbs.bitmapOrder 
-		INTO #SportBettypeFilter4
-		FROM #ProductSettingDetail_tmp psd WITH(NOLOCK)  
-			INNER JOIN Dep_ProductStatusProfile pbs WITH (NOLOCK) ON pbs.[SportType] = psd.[SportType] AND pbs.[BetType] = psd.[BetType]
-		WHERE psd.SettingType = 4
+		-- Update if exists
+		UPDATE T 
+				SET bitmapIsDisabled = dbo.f_GenerateProductStatus (t.bitmapIsDisabled, 1,0)		
+					, bitmapIsHidden = dbo.f_GenerateProductStatus(t.bitmapIsHidden , 1,0)
+		FROM [dbo].[Dep_CustProductStatus] T (ROWLOCK)
+			INNER JOIN #tblCust C ON C.custid = T.custid
 		
-		IF EXISTS(SELECT TOP 1 1 FROM #SportBettypeFilter4)
-		BEGIN
-							
-			DECLARE @xmlStrDisabled XML
-			DECLARE @xmlStrHidden XML
+		-- Insert new	
+		INSERT INTO [dbo].[Dep_CustProductStatus](CustID,bitmapIsDisabled,bitmapIsHidden)
+		SELECT	c.custid
+				, dbo.f_GenerateProductStatus (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, 1,0) AS bitmapIsDisabled
+				, dbo.f_GenerateProductStatus (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, 1,0)  AS bitmapIsHidden
+		FROM #tblCust C
+		WHERE NOT EXISTS (SELECT 1 FROM [dbo].[Dep_CustProductStatus] T (NOLOCK) WHERE t.custid = c.custid)
 		
-			SET @xmlStrDisabled = (
-					SELECT (
-							SELECT ft.bitmapOrder	AS '@b'
-								, ft.IsDisabled	AS '@s'
-							FROM #SportBettypeFilter4 ft 	
-							FOR XML PATH('r')
-								, TYPE
-							)
-					FOR XML PATH('root')
-						, TYPE
-					)
-				
-			SET @xmlStrHidden = (
-					SELECT (
-							SELECT ft.bitmapOrder	AS '@b'
-								, ft.IsHidden	AS '@s'
-							FROM #SportBettypeFilter4 ft 	
-							FOR XML PATH('r')
-								, TYPE
-							)
-					FOR XML PATH('root')
-						, TYPE
-					)
-					
-			
-			INSERT INTO [dbo].[Dep_CustProductStatus]([CustID],bitmapIsDisabled,bitmapIsHidden)
-			SELECT	c.custid
-					, (select bitmap from dbo.f_GenerateProductStatus_multiple (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, CONVERT(VARCHAR(MAX),@xmlStrDisabled)))	
-					, (select bitmap from dbo.f_GenerateProductStatus_multiple (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, CONVERT(VARCHAR(MAX),@xmlStrHidden)))
-			FROM #tblCust C
-			
-		END	
 	END	
 
 	-- StakeLevelGroup
@@ -227,7 +198,6 @@ BEGIN
 	END
 
 	DROP TABLE #ProductSettingDetail_tmp
-	DROP TABLE #SportBettypeFilter4
 	DROP TABLE #tblCust
 
 END	
@@ -238,18 +208,27 @@ GO
 ------------------------------------------------------	
 -- BEGIN STEP 2: Run this SP at replicated DB -----
 --------------------------------------------------------------------------------------
+CREATE TABLE #Supers_Offered (custid int)
+INSERT INTO #Supers_Offered (custid)
+SELECT lds.CustID
+FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
+	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
+	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= 22
+	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
+WHERE PSD.SportType = 212
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   @site='12bet',
+SELECT   
+		 --@site='12bet',
 	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
-					  where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS									
-AND custid <= @max_custid
+WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+	AND custid <= @max_custid
 
 
 WHILE (1 = 1)
@@ -266,7 +245,6 @@ BEGIN
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
-
 DROP TABLE #supers		
 GO		
 
@@ -276,18 +254,28 @@ GO
 ---
 -- BEGIN STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
+CREATE TABLE #Supers_Offered (custid int)
+
+INSERT INTO #Supers_Offered (custid)
+SELECT lds.CustID
+FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
+	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
+	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= 22
+	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
+WHERE PSD.SportType = 212
+ 
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int
-SELECT   @site='12bet',
-		 @max_custid= xxx ---input maxcustid
+DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
+SELECT   
+		 --@site='12bet',
+	     @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
-FROM  Dep_CustSuper WITH(NOLOCK) 
-where site=@site --and currency  in (20)  -- IN,US$,RMB,TB,RM,UUS			
-AND custid <= @max_custid
-
+FROM  Dep_CustSuper with(nolock) 
+WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+	AND custid <= @max_custid
 
 WHILE (1 = 1)
 BEGIN
@@ -310,3 +298,4 @@ GO
 
 -- END STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
+
