@@ -52,14 +52,12 @@ PRINT 'StakeLevel Group'
 INSERT INTO Dep_CustStakeLevel_Member (CustID,SportType,BetType,StakeLevelList)
 SELECT C.custid,@SportType,@BetType, L.list
 FROM #tblCust_member C
-	INNER JOIN dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) ON C.agentid = csla.CustID
+	INNER JOIN dbo.Dep_CustStakeLevel_Agent AS csla WITH (NOLOCK) ON C.agentid = csla.CustID AND csla.SportType = @SportType AND csla.BetType = @BetType
 	CROSS APPLY(SELECT TOP 1 ss.val list
 				FROM 	dbo.strSplit(csla.StakeLevelList, ',') AS ss
 					INNER JOIN Dep_StakeLevel sl WITH (NOLOCK) ON ss.val = sl.StakeLevelID  
 				ORDER BY sl.MaxStake, sl.MinStake, SL.GameGroupID
 				) AS L					
-
-	
 
 DROP TABLE #tblCust_member
 
