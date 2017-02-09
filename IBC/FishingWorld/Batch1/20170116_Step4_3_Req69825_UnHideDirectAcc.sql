@@ -7,7 +7,7 @@
 	Date: 20170117
 */ 
 
-ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
+ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
 	,@ExchangeID INT	
 	,@maxcustid INT
@@ -160,7 +160,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend , @Exchangeid = @exchangeid
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend , @Exchangeid = @exchangeid
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
@@ -195,7 +195,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend, @Exchangeid = @exchangeid
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend, @Exchangeid = @exchangeid
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 						

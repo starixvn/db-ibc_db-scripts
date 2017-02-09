@@ -5,7 +5,7 @@
 	Date: 20170116
 */ 
 
-ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
+ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@target VARCHAR(20),
 	@CustId INT,	
 	@RoleID TINYINT
@@ -102,7 +102,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @Custid = @Custid , @RoleID = @RoleID		
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @Custid = @Custid , @RoleID = @RoleID		
 			,@target = 'REPLICATED'
 			
 			
@@ -149,7 +149,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @Custid = @Custid , @RoleID = @RoleID		
+	EXEC dbo.Acc_DynamicCustomerInfo_09 @Custid = @Custid , @RoleID = @RoleID		
 			,@target = 'DBCUST'
 			
 			
