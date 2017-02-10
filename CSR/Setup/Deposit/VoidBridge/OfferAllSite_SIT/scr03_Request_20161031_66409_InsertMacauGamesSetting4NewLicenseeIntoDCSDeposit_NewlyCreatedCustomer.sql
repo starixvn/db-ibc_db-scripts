@@ -23,7 +23,7 @@ WHERE ci.mrecommend NOT IN (SELECT custid FROM custinfo cs1 WITH(NOLOCK)
 	AND ci.custid > @max_custid
 	AND cs.site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND ci.roleid = 1
-	AND CS.currency NOT IN ('H')
+	AND CS.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 						   
 -- PT processing
 PRINT 'PT'

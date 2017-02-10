@@ -220,9 +220,7 @@ WHERE PSD.SportType = @SportType
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   
-		 --@site='12bet',
-	     @max_custid= xxx ---input maxcustid
+SELECT  @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
@@ -230,7 +228,7 @@ FROM  Dep_CustSuper with(nolock)
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
-	AND currency NOT IN ('H')
+	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 
 WHILE (1 = 1)
 BEGIN
@@ -246,7 +244,8 @@ BEGIN
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
-DROP TABLE #supers		
+DROP TABLE #supers
+DROP TABLE #Supers_Offered		
 GO		
 
 -- END STEP 2: Run this SP at replicated DB -----
@@ -270,9 +269,7 @@ WHERE PSD.SportType = @SportType
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
-SELECT   
-		 --@site='12bet',
-	     @max_custid= xxx ---input maxcustid
+SELECT  @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid,currency)
 SELECT custid,currency
@@ -280,7 +277,7 @@ FROM  Dep_CustSuper with(nolock)
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Spondemo','Athena000','ITCbet','Aoncash','Macaubet','nineBet','M8bola','Q8bola','BE7','GooBet','NBCbet','Unobet','BE7th','Bolanation','sbcbet','Allbetclub','Aragon88','indowin')
 	AND custid <= @max_custid
-	AND currency NOT IN ('H')
+	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 
 WHILE (1 = 1)
 BEGIN
@@ -291,13 +288,14 @@ BEGIN
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-
+	
 	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	
 
-DROP TABLE #supers		
+DROP TABLE #supers	
+DROP TABLE #Supers_Offered	
 GO		
 
 
