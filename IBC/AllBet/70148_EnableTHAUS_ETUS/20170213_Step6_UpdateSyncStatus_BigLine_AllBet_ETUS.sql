@@ -7,7 +7,7 @@
 USE CustDB
 GO
 
-SELECT custid
+SELECT custid, 0 AS isfinished
 INTO #super
 FROM DBAGE.bodb_age.dbo.Acc_custgroup WITH (NOLOCK)
 WHERE groupname = 'accyen789' -- Super list of admin ET789
