@@ -10,19 +10,12 @@ GO
 --SELECT * from custAccount with (Nolock)
 --where custid = 11746260 -- THAUS
 
-SELECT ca.custid 
+SELECT ca.custid, 0 AS isfinished
 INTO #super
 FROM custAccount ca with (Nolock)
 	INNER JOIN custInfo ci with (Nolock) on ci.custid = ca.custid
 WHERE groupID = 515 AND roleid = 4
-
---640 supers
-SELECT DISTINCT s.custid, 0 AS IsFinished
-INTO #UnSyncSuper
-FROM dbo.CustProductStatus cpsd  WITH (NOLOCK)
-	INNER JOIN custInfo ci WITH (NOLOCK) ON ci.custid = cpsd.CustID
-	INNER JOIN #super s ON ci.srecommend = s.custid
-WHERE dbo.f_GetProductStatus(cpsd.bitmapHasSynced, 5) = 0 
+	AND ca.custid IN (18271733)
 
 --SELECT * FROM #UnSyncSuper
 DECLARE @CustID INT, @S4 TINYINT, @M4 TINYINT, @A4 TINYINT, @N4 TINYINT, @XML XML, @String VARCHAR(MAX)
@@ -41,7 +34,7 @@ FROM	dbo.f_CustSetting_SportBetTypeSettingSelect(@ProductID, 8) AS fcssbtss;
 
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP (1) #UnSyncSuper
+	UPDATE TOP (1) #super
 	SET isfinished = 1
 		,@CustID = custid			
 	WHERE isfinished = 0
