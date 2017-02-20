@@ -58,6 +58,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,(SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 		
+	WHERE NOT EXISTS(SELECT TOP 1 1 FROM CustWinLossLimit_Agent cw WITH(NOLOCK) WHERE cw.Sporttype=@Sporttype AND cw.CustId=si.CustID )
 	
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -66,6 +67,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = @ProductID AND ExchangeId = si.exchangeid)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
+	WHERE NOT EXISTS(SELECT TOP 1 1 FROM CustWinLossLimit_Member cw WITH(NOLOCK) WHERE cw.Sporttype=@Sporttype AND cw.CustId=si.CustID )
 	--------------------------------------PT-------------------------------------------------
 	
 	--Super LEVEL
@@ -113,6 +115,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	INNER JOIN custInfo c WITH(NOLOCK) ON s.custid=c.custid
 	LEFT JOIN  dbo.CustSetting3rd cs WITH(NOLOCK) ON cs.custid=c.CustID	
 	WHERE s.roleid=4 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	AND NOT EXISTS(SELECT TOP 1 1 FROM CustPTSetting3rd_Agent pt WITH(NOLOCK) WHERE pt.Sporttype=@Sporttype AND pt.CustId=s.CustID )
 	
 	--Master AGENT LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -142,6 +145,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,@MaxPT
 	FROM #SMATemp ci 
 	WHERE  ci.roleid IN(2,3)
+	AND NOT EXISTS(SELECT TOP 1 1 FROM CustPTSetting3rd_Agent pt WITH(NOLOCK) WHERE pt.Sporttype=@Sporttype AND pt.CustId=ci.CustID )
 	
 	--MEMBER LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Member
@@ -166,6 +170,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,0
 	FROM 	#MemberTemp ci WITH(NOLOCK) 
+	WHERE NOT EXISTS(SELECT TOP 1 1 FROM CustPTSetting3rd_Member pt WITH(NOLOCK) WHERE pt.Sporttype=@Sporttype AND pt.CustId=ci.CustID )
 		  
 DROP TABLE #SMATemp
 DROP TABLE #MemberTemp
