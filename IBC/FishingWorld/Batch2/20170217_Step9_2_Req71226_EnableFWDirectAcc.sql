@@ -142,7 +142,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,5,13
+			4,15
 		)
 
 WHILE (1 = 1)
@@ -173,7 +173,7 @@ SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
 WHERE ci.custid IN (
 			-- dummy account
-			2,5,13
+			4,15
 		)
 
 
