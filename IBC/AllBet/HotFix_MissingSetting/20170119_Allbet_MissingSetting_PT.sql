@@ -369,8 +369,8 @@ BEGIN
 			FROM @memberPTTbl
 			WHERE CustID = @CustID
 			
-			INSERT INTO dbo.CustSettingMode3rd(CustID,IsGrouped)
-			SELECT @CustID,0
+			--INSERT INTO dbo.CustSettingMode3rd(CustID,IsGrouped)
+			--SELECT @CustID,0
 		END
 		ELSE
 		BEGIN
