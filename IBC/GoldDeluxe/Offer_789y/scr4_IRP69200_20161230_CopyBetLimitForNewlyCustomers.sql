@@ -31,13 +31,18 @@ GO
 --step 1: copy settings for newly created customers
 ---- data preparation ----
 CREATE TABLE #tmpCustGameType (
-	[CustID] [int] NOT NULL PRIMARY KEY,
+	[CustID] [int] NOT NULL,
 	[roleID] [int] ,
 	[DirectUplineID] [int],
 	[ExchangeID] [int] NOT NULL, 
 	GameTypeID INT,
 	[StakeLevelList_LC] [varchar](100) NULL,
 	[StakeLevelList_GD] [varchar](100) NULL
+	CONSTRAINT [PK_tmpCustGameType] PRIMARY KEY CLUSTERED 
+	(
+		[CustID] ASC,
+		GameTypeID 
+	) 
  )
  
 CREATE TABLE #tmpCust (custid INT, roleid INT, syncLiveCasino BIT, uplineID INT, currency INT)
