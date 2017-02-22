@@ -60,6 +60,7 @@ BEGIN
 	WHERE cw.sporttype = 255
 		AND cw.bettype = 1701
 		AND ci.srecommend = @srecommend
+END		
 GO
 -- END STEP 1: DEPLOY THIS SP @DBTRANS.CustDB --------
 ------------------------------------------------------	
