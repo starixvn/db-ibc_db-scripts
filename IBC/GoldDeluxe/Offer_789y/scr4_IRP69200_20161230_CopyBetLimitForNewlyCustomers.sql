@@ -38,7 +38,7 @@ CREATE TABLE #tmpCustGameType (
 	GameTypeID INT,
 	[StakeLevelList_LC] [varchar](100) NULL,
 	[StakeLevelList_GD] [varchar](100) NULL
-	CONSTRAINT [PK_tmpCustGameType] PRIMARY KEY CLUSTERED 
+	PRIMARY KEY CLUSTERED 
 	(
 		[CustID] ASC,
 		GameTypeID 
@@ -236,7 +236,7 @@ INSERT INTO [dbo].[CustGameType]
 SELECT 
 	t.[CustID]
    ,t.[GameTypeID]
-   ,t.[StakeLevelList_GD]           
+   ,ISNULL(t.[StakeLevelList_GD],'')           
    ,0 as [IsDisabled]
 FROM #tmpCustGameType t WITH(NOLOCK)
 	LEFT JOIN CustGameType cs WITH(NOLOCK) ON t.custid = cs.custid AND t.GameTypeID = cs.GameTypeID
