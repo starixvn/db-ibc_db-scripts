@@ -234,7 +234,7 @@ INSERT INTO [dbo].[CustGameType]
            ,[IsDisabled]
            )
 SELECT 
-	cs.[CustID]
+	t.[CustID]
    ,t.[GameTypeID]
    ,t.[StakeLevelList_GD]           
    ,0 as [IsDisabled]
