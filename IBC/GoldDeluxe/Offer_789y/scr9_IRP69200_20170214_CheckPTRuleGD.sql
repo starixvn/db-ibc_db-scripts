@@ -183,7 +183,7 @@ FROM dbo.CustInfo ci WITH (NOLOCK)
 						AND ci.roleid = 3 
 						AND ci.Enabled = 1
 						AND ci.srecommend IN (SELECT custid FROM #Supers)	
-						AND cs.Sporttype = @SportType
+						AND mcs.Sporttype = @SportType
 				) mcs
 		ON	mcs.CustId = ci.mrecommend
 		AND mcs.SportType = cs.SportType
@@ -208,7 +208,7 @@ FROM dbo.CustInfo ci WITH (NOLOCK)
 						AND ci.roleid = 3 
 						AND ci.Enabled = 1 
 						AND ci.srecommend IN (SELECT custid FROM #Supers)	
-						AND cs.Sporttype = @SportType
+						AND mcs.Sporttype = @SportType
 				) mcs
 		ON	mcs.CustId = ci.mrecommend
 		AND mcs.SportType = cs.SportType
@@ -234,7 +234,7 @@ FROM dbo.CustInfo ci WITH (NOLOCK)
 							AND ci.roleid = 3 
 							AND ci.Enabled = 1
 							AND ci.srecommend IN (SELECT custid FROM #Supers)	
-							AND cs.Sporttype = @SportType
+							AND mco.Sporttype = @SportType
 				) mco
 		ON	mco.CustId = ci.mrecommend
 		AND mco.SportType = cs.SportType
@@ -276,7 +276,7 @@ FROM dbo.CustInfo ci WITH (NOLOCK)
 								AND ci.roleid = 2
 								AND ci.Enabled = 1
 								AND ci.srecommend IN (SELECT custid FROM #Supers)	
-								AND cs.Sporttype = @SportType
+								AND co.Sporttype = @SportType
 				) co
 		ON	co.CustId = ci.recommend
 		AND co.SportType = cs.SportType
