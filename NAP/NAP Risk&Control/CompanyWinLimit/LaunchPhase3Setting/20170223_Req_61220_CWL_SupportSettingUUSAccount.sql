@@ -24,7 +24,8 @@ WHERE C.username IN ('twpgmyikhunchiu01',
 'twpgmvincentkuo',
 'twpgmangela.chan',
 'twpgmthomas.chou',
-'twpgmbert.chang'
+'twpgmbert.chang',
+'AoncashUUS01002'
 )
 
 SELECT DISTINCT GGS.ProductID,GGS.GroupID
