@@ -175,7 +175,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site IN ('Spondemo','12bet','ISC888','Brown888') -- API
+	AND C.site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -186,11 +186,21 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site IN ('Spondemo','12bet','ISC888','Brown888') -- API
+	AND site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
+-- For deployer info
+DECLARE @super_cnt INT, @index INT = 0
+
+SET @super_cnt = (SELECT COUNT(*) FROM #supers )
+
+DECLARE @msg nvarchar(200) = 'Currently at order %d, SuperID: %d.'
+
+DECLARE @msg_total nvarchar(200) = 'Total of supers: %d.'
+
+RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
@@ -201,7 +211,11 @@ BEGIN
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-
+	
+	SET @index = @index + 1
+	
+	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
+	
 	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
@@ -224,7 +238,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site IN ('Spondemo','12bet','ISC888','Brown888') -- API
+	AND C.site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -235,10 +249,21 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site IN ('Spondemo','12bet','ISC888','Brown888') -- API
+	AND site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
+
+-- For deployer info
+DECLARE @super_cnt INT, @index INT = 0
+
+SET @super_cnt = (SELECT COUNT(*) FROM #supers )
+
+DECLARE @msg nvarchar(200) = 'Currently at order %d, SuperID: %d.'
+
+DECLARE @msg_total nvarchar(200) = 'Total of supers: %d.'
+
+RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
@@ -249,7 +274,11 @@ BEGIN
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-
+	
+	SET @index = @index + 1
+	
+	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
+	
 	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			

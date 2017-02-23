@@ -173,7 +173,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-WHERE PSD.SportType = @SportType AND C.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
+WHERE PSD.SportType = @SportType AND C.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','ISC888')  -- Athena
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -184,7 +184,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
+	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','ISC888')  -- Athena
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
@@ -201,7 +201,7 @@ RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
-	SET @index = @index + 1
+	
 	
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
@@ -211,6 +211,8 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
+	SET @index = @index + 1
+	
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
 	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
@@ -235,7 +237,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-WHERE PSD.SportType = @SportType AND C.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
+WHERE PSD.SportType = @SportType AND C.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','ISC888')  -- Athena
  
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
 
@@ -246,7 +248,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
+	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','ISC888')  -- Athena
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
@@ -263,8 +265,7 @@ RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
-	SET @index = @index + 1
-	
+		
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
 		,@srecommend = custid
@@ -272,6 +273,8 @@ BEGIN
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
+	
+	SET @index = @index + 1
 	
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
