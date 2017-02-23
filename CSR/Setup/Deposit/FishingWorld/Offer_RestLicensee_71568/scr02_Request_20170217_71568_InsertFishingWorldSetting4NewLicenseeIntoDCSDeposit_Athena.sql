@@ -185,7 +185,6 @@ SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
-	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
@@ -248,7 +247,6 @@ SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin')  -- Athena
-	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
