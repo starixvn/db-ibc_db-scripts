@@ -8,3 +8,5 @@ DECLARE @Sporttype INT
 SELECT @Sporttype = 219
 	
 DELETE FROM ProductStatusSiteCurrency WHERE SportType=@Sporttype AND SiteID IN(22,11,35)
+AND Currency<>72
+

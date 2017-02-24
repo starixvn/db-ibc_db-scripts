@@ -54,6 +54,7 @@ AND c.Enabled=1
 AND ci.site IN ('755555','Indo', 'KORIBC')
 -- CROSS-SITE
 	AND ci.custid NOT IN (938136)		
+	AND ci.currency<>72
 
 WHILE (1 = 1)
 BEGIN
@@ -87,6 +88,7 @@ AND c.Enabled=1
 AND ci.site IN ('755555','Indo', 'KORIBC')
 -- CROSS-SITE
 	AND ci.custid NOT IN (938136)
+	AND ci.currency<>72
 	
 WHILE (1 = 1)
 BEGIN
