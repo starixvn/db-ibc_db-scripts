@@ -30,6 +30,8 @@ BEGIN
 	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 	AND c.Enabled=1	
 	AND ci.site IN ('755555','Indo', 'KORIBC')
+	-- CROSS-SITE
+	AND ci.custid NOT IN (938136)
 			
 	
 		
