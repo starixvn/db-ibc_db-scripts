@@ -1,7 +1,7 @@
 /*
-	Created: 20160801@Helen
+	Created: 20170224@Helen
 	Task: insert the Setting of Allbet of new licensees into the DCS database.
-	Redmine: https://nexdev.net/issues/59624
+	Redmine: https://nexdev.net/issues/71612
 */ 
 -- BEGIN STEP 1: Deploy this SP at DBCUST.CustDB, Run only in the FIRST running
 ------------------------------------------------------
@@ -51,9 +51,6 @@ BEGIN
 	, @SuperPT SMALLINT = 92
 	-- For StakelevelGroup params
 	, @IsStakeLevel BIT = 1
-	
-	IF @SiteID IN ()
-	
 	
 	CREATE TABLE #tblCust (custid int,agentid int, roleid int) 
 
@@ -226,13 +223,9 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
-WHERE PSD.SportType = @SportType AND C.site IN 
-(
-	-- Feature #71612
-	'Aragon88' 
-	--Feature #71614
-	,'Macaubet', '9Bet', 'Allbetclub', 'BE7', 'Bolanation', 'Aoncash', 'NBCbet', 'Q8bola', 'M8bola', 'Goobet', 'ITCbet', 'Unobet', 'BE7TH',  'Indowin', 'Sbcbet', 'ISC888', 'Liga', 'iBET', 'Brown88', 'HL8'
-)
+WHERE PSD.SportType = @SportType 
+	-- API Info
+	AND C.site IN ('ISC888','Liga','Brown88')
 
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
@@ -240,20 +233,28 @@ CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit defaul
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid
 
+-- API Info
+CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
+INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
+VALUES 
+('ISC888',51),
+('ISC888',4),
+('ISC888',32),
+('Liga',15),
+('Brown88',45),
+('Brown88',13),
+('Brown88',3),
+('Brown88',51),
+('Brown88',32)
+
 INSERT INTO #supers(custid,currency,SiteID)
-SELECT custid,currency,SiteID
+SELECT cs.custid,cs.currency,s.SiteID
 FROM  Dep_CustSuper CS with(nolock) 
 	INNER JOIN Site S (NOLOCK) ON S.site = CS.site
+	INNER JOIN #Licensee_Currency LIC ON LIC.LicenseeName = CS.site AND LIC.exchangeID = CS.currency
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND cs.site in (
-	-- Feature #71612
-	'Aragon88' 
-	--Feature #71614
-	,'Macaubet', '9Bet', 'Allbetclub', 'BE7', 'Bolanation', 'Aoncash', 'NBCbet', 'Q8bola', 'M8bola', 'Goobet', 'ITCbet', 'Unobet', 'BE7TH',  'Indowin', 'Sbcbet', 'ISC888', 'Liga', 'iBET', 'Brown88', 'HL8'
-	)	
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
-
 
 DECLARE @super_cnt INT, @index INT = 0
 
@@ -303,32 +304,35 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site in  (
-	-- Feature #71612
-	'Aragon88' 
-	--Feature #71614
-	,'Macaubet', '9Bet', 'Allbetclub', 'BE7', 'Bolanation', 'Aoncash', 'NBCbet', 'Q8bola', 'M8bola', 'Goobet', 'ITCbet', 'Unobet', 'BE7TH',  'Indowin', 'Sbcbet', 'ISC888', 'Liga', 'iBET', 'Brown88', 'HL8'
-	)	
+	AND C.site in  ('ISC888','Liga','Brown88') -- API Info
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid
 
+CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
+-- API Info
+INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
+VALUES 
+('ISC888',51),
+('ISC888',4),
+('ISC888',32),
+('Liga',15),
+('Brown88',45),
+('Brown88',13),
+('Brown88',3),
+('Brown88',51),
+('Brown88',32)
+
 INSERT INTO #supers(custid,currency,SiteID)
-SELECT custid,currency,SiteID
+SELECT cs.custid,cs.currency,s.SiteID
 FROM  Dep_CustSuper CS with(nolock) 
 	INNER JOIN Site S (NOLOCK) ON S.site = CS.site
+	INNER JOIN #Licensee_Currency LIC ON LIC.LicenseeName = CS.site AND LIC.exchangeID = CS.currency
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND cs.site in (
-	-- Feature #71612
-	'Aragon88' 
-	--Feature #71614
-	,'Macaubet', '9Bet', 'Allbetclub', 'BE7', 'Bolanation', 'Aoncash', 'NBCbet', 'Q8bola', 'M8bola', 'Goobet', 'ITCbet', 'Unobet', 'BE7TH',  'Indowin', 'Sbcbet', 'ISC888', 'Liga', 'iBET', 'Brown88', 'HL8'
-	)	
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
-
 
 DECLARE @super_cnt INT, @index INT = 0
 
