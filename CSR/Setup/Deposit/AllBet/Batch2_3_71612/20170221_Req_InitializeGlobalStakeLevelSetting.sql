@@ -179,8 +179,6 @@ VALUES
 ('Brown88',32,'15,000','300,000',15000,300000)
 --,('21Cash',15,'2,000','30,000',2000,30000)
 
-DECLARE @max_StakeLevelID INT = 0
-SET @max_StakeLevelID = (SELECT MAX(StakeLevelID) FROM Dep_StakeLevel WITH (NOLOCK))
 
 CREATE TABLE #Stake_Level_tmp (ID INT IDENTITY (1,1), GameTypeID INT,[MinLabel] VARCHAR(50),[MaxLabel] VARCHAR(50),[MinStake] MONEY,[MaxStake] MONEY,[ExchangeId] INT,SiteID INT, StakeLevelID INT)	
 
@@ -194,14 +192,30 @@ SELECT	2402 GameTypeID,st.[MinLabel],st.[MaxLabel],st.minstake,st.maxstake,st.Ex
 FROM #Stakelevel_2402_tmp ST
 	INNER JOIN Site (NOLOCK) S ON ST.LicenseeName = S.site
 
+-- DELETE IF EXISTS 
+DELETE SL
+FROM Dep_StakeLevel SL 
+	INNER JOIN #Stake_Level_tmp T ON T.ExchangeID = SL.ExchangeID AND SL.GameTypeID = T.GameTypeID AND SL.SiteID = T.SiteID
+	
+DECLARE @max_StakeLevelID INT = 0
+
+SET @max_StakeLevelID = (SELECT MAX(StakeLevelID) FROM Dep_StakeLevel WITH (NOLOCK))
+
 UPDATE 	#Stake_Level_tmp SET StakeLevelID = @max_StakeLevelID + ID
 
+-- INSERT NEW INTO Dep_StakeLevel
 INSERT INTO Dep_StakeLevel (StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID)
 SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID
 FROM #Stake_Level_tmp
 
-
 /*
+-- Checking data inserted into Dep_StakeLevel
+SELECT SL.*
+FROM Dep_StakeLevel SL 
+	INNER JOIN #Stake_Level_tmp T ON T.ExchangeID = SL.ExchangeID AND SL.GameTypeID = T.GameTypeID AND SL.SiteID = T.SiteID
+
+SELECT COUNT(*) FROM #Stake_Level_tmp	
+
 DROP TABLE #Stakelevel_2401_tmp
 DROP TABLE #Stakelevel_2402_tmp
 DROP TABLE #Stake_Level_tmp

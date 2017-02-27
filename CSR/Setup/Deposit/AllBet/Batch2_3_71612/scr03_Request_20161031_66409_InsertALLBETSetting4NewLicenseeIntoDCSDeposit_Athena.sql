@@ -303,7 +303,7 @@ SELECT custid,currency,SiteID
 FROM  Dep_CustSuper CS with(nolock) 
 	INNER JOIN Site S (NOLOCK) ON S.site = CS.site
 	INNER JOIN #Licensee_Currency LIC ON LIC.LicenseeName = CS.site AND LIC.exchangeID = CS.currency
-WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+WHERE CS.custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
 
@@ -434,7 +434,7 @@ SELECT custid,currency,SiteID
 FROM  Dep_CustSuper CS with(nolock) 
 	INNER JOIN Site S (NOLOCK) ON S.site = CS.site
 	INNER JOIN #Licensee_Currency LIC ON LIC.LicenseeName = CS.site AND LIC.exchangeID = CS.currency	
-WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
+WHERE CS.custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
 
