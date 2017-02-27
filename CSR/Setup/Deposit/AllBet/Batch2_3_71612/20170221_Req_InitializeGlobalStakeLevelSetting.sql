@@ -200,9 +200,6 @@ INSERT INTO Dep_StakeLevel (StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinSt
 SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID
 FROM #Stake_Level_tmp
 
-SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID
-FROM #Stake_Level_tmp
-
 
 /*
 DROP TABLE #Stakelevel_2401_tmp
