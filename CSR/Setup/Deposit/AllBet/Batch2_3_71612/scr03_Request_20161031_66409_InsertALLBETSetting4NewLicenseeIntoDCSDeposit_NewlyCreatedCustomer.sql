@@ -8,7 +8,7 @@
 DECLARE @ProductID INT = 21, @SportType SMALLINT = 211, @Bettype_2401 SMALLINT = 2401, @Bettype_2402 SMALLINT = 2402, @BitmapOrder INT = 2  -- Allbet
 
 CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
-CREATE TABLE #tblCust (custid int,agentid int, roleid int,currency INT,srecommend INT) 
+CREATE TABLE #tblCust (custid int,agentid int, roleid int,currency INT,srecommend INT,SiteID INT) 
 CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
 
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
@@ -89,11 +89,12 @@ VALUES ('Macaubet',3),
 ('Brown88',51),
 ('Brown88',32)
 
-INSERT INTO #tblCust (custid,agentid,roleid,currency,srecommend)			
-SELECT ci.custid,ci.recommend,roleid,ci.currency, ci.srecommend
+INSERT INTO #tblCust (custid,agentid,roleid,currency,srecommend,SiteID)			
+SELECT ci.custid,ci.recommend,roleid,ci.currency, ci.srecommend,s.siteid
 FROM custInfo CI WITH(NOLOCK)
 	INNER JOIN Dep_CustSuper CS with(nolock) ON ci.srecommend = cs.custid
 	INNER JOIN #Licensee_Currency LIC ON LIC.LicenseeName = CS.site AND LIC.exchangeID = CS.currency
+	INNER JOIN Site s WITH (NOLOCK)  ON S.site = cs.site
 WHERE ci.mrecommend NOT IN (SELECT custid FROM custinfo cs1 WITH(NOLOCK)
 						   WHERE cs1.srecommend=ci.srecommend and cs1.username like '%Acc%' and cs1.roleid=3 )
 	AND ci.custid > @max_custid
@@ -132,7 +133,7 @@ SELECT C.custid,211,2401, t.StakeLevelID
 FROM #tblCust C
 	CROSS APPLY (SELECT TOP 1 StakeLevelID
 				 FROM Dep_StakeLevel WITH(NOLOCK) 
-				 WHERE ExchangeId = C.currency AND GameTypeID = @Bettype_2401
+				 WHERE ExchangeId = C.currency AND GameTypeID = @Bettype_2401 AND SiteID = c.SiteID 
 				 ORDER BY MaxStake, MinStake
 				) AS T
 WHERE NOT EXISTS (SELECT 1 FROM Dep_CustStakeLevel_Member M WITH (NOLOCK) WHERE M.CustID = C.custid AND M.SportType = @SportType AND M.BetType= @Bettype_2401)
@@ -143,7 +144,7 @@ SELECT D.custid,211,2402, T2.StakeLevelID
 FROM #tblCust D
 	CROSS APPLY (SELECT TOP 1 StakeLevelID
 					 FROM Dep_StakeLevel WITH(NOLOCK) 
-					 WHERE ExchangeId = D.currency AND GameTypeID = @Bettype_2402
+					 WHERE ExchangeId = D.currency AND GameTypeID = @Bettype_2402 AND SiteID = D.SiteID
 					 ORDER BY MaxStake, MinStake
 					) AS T2
 WHERE NOT EXISTS (SELECT 1 FROM Dep_CustStakeLevel_Member M WITH (NOLOCK) WHERE M.CustID = D.custid AND M.SportType = @SportType AND M.BetType= @Bettype_2402)	
