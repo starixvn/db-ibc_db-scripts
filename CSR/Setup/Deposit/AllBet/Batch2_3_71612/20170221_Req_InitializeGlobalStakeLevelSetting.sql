@@ -1,3 +1,7 @@
+/*
+	Created: 20170227@Helen
+	Task: Allbet Licensee - Batch 2,3 launching -[redmine: 71612]
+*/
 CREATE TABLE #Stakelevel_2401_tmp (LicenseeName VARCHAR(200), ExchangeID INT,
 							[MinLabel] [nvarchar](50) NULL,
 							[MaxLabel] [nvarchar](50) NULL,
@@ -30,7 +34,7 @@ VALUES
 ('BE7',3,'5','15,000',5,15000),
 ('Bolanation',15,'100','10,000',100,10000),
 
-('Aoncash',2,'10','1000',10,1000),
+('Aoncash',2,'10','1,000',10,1000),
 ('Aoncash',3,'5','15,000',5,15000),
 ('Aoncash',4,'100','10,000',100,10000),
 ('Aoncash',6,'5','15,000',5,15000),
@@ -81,7 +85,7 @@ VALUES
 ('Aragon88',4,'100','10,000',100,10000),
 ('Indowin',15,'40','4,000',40,4000),
 
-('Sbcbet',15,'40','4000',40,4000),
+('Sbcbet',15,'40','4,000',40,4000),
 
 ('ISC888',51,'70','7,000',70,7000),
 ('ISC888',4,'100','10,000',100,10000),
@@ -194,6 +198,10 @@ UPDATE 	#Stake_Level_tmp SET StakeLevelID = @max_StakeLevelID + ID
 INSERT INTO Dep_StakeLevel (StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID)
 SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID
 FROM #Stake_Level_tmp
+
+SELECT StakeLevelID,GameTypeID,[MinLabel],[MaxLabel],[MinStake],[MaxStake],[ExchangeId],SiteID
+FROM #Stake_Level_tmp
+
 
 /*
 DROP TABLE #Stakelevel_2401_tmp
