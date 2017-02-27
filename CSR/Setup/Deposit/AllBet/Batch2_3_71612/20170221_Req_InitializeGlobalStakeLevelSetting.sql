@@ -1,6 +1,7 @@
 /*
 	Created: 20170227@Helen
 	Task: Allbet Licensee - Batch 2,3 launching -[redmine: 71612]
+	DB: DBCUST/custdb
 */
 CREATE TABLE #Stakelevel_2401_tmp (LicenseeName VARCHAR(200), ExchangeID INT,
 							[MinLabel] [nvarchar](50) NULL,
