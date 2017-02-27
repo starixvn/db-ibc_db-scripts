@@ -162,12 +162,12 @@ BEGIN
 	
 		SELECT TOP 1 @StakeLevelList_2401_lowest =  StakeLevelID 
 		FROM Dep_StakeLevel WITH(NOLOCK) 
-		WHERE ExchangeId = @currency AND GameTypeID = 2401
+		WHERE ExchangeId = @currency AND GameTypeID = 2401 AND SiteID = @SiteID
 		ORDER BY MaxStake, MinStake
 	
 		SELECT TOP 1 @StakeLevelList_2402_lowest =  StakeLevelID 
 		FROM Dep_StakeLevel WITH(NOLOCK) 
-		WHERE ExchangeId = @currency AND GameTypeID = 2402
+		WHERE ExchangeId = @currency AND GameTypeID = 2402 AND SiteID = @SiteID
 		ORDER BY MaxStake, MinStake
 	
 	
@@ -321,7 +321,7 @@ BEGIN
 	SET isfinished = 1
 		,@srecommend = custid
 		,@currency=currency	
-		,@siteid= @SiteID		
+		,@SiteID= SiteID		
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -329,7 +329,7 @@ BEGIN
 	SET @index = @index + 1
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency,@SiteID=@SiteID, @max_custid=@max_custid,@target = 'REPLICATED' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -359,7 +359,8 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 WHERE PSD.SportType = @SportType 
 	AND C.site in  ('Macaubet','9Bet','Allbetclub','BE7','Bolanation','Aoncash','NBCbet','Q8bola','M8bola','Goobet','ITCbet','Unobet','BE7TH','Aragon88','Indowin','Sbcbet') -- Athena Info
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
+DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
+
 SELECT  @max_custid= xxx ---input maxcustid
 -- Athena Info
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
@@ -459,7 +460,7 @@ BEGIN
 	SET @index = @index + 1
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@siteID = @SiteID,@target = 'DBCUST'
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency,@SiteID=@SiteID,@max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	

@@ -162,12 +162,12 @@ BEGIN
 	
 		SELECT TOP 1 @StakeLevelList_2401_lowest =  StakeLevelID 
 		FROM Dep_StakeLevel WITH(NOLOCK) 
-		WHERE ExchangeId = @currency AND GameTypeID = 2401
+		WHERE ExchangeId = @currency AND GameTypeID = 2401 AND SiteID = @SiteID
 		ORDER BY MaxStake, MinStake
 	
 		SELECT TOP 1 @StakeLevelList_2402_lowest =  StakeLevelID 
 		FROM Dep_StakeLevel WITH(NOLOCK) 
-		WHERE ExchangeId = @currency AND GameTypeID = 2402
+		WHERE ExchangeId = @currency AND GameTypeID = 2402 AND SiteID = @SiteID
 		ORDER BY MaxStake, MinStake
 	
 	
@@ -227,10 +227,9 @@ WHERE PSD.SportType = @SportType
 	-- API Info
 	AND C.site IN ('ISC888','Liga','Brown88')
 
- 
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
+DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid
 
 -- API Info
@@ -256,32 +255,29 @@ WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
 
+-- For deployer Info
 DECLARE @super_cnt INT, @index INT = 0
-
 SET @super_cnt = (SELECT COUNT(*) FROM #supers )
-
 DECLARE @msg nvarchar(200) = 'Currently at order %d, SuperID: %d.'
-
 DECLARE @msg_total nvarchar(200) = 'Total of supers: %d.'
-
 RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
-	SET @index = @index + 1
-	
+		
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
 		,@srecommend = custid
 		,@currency=currency	
-		,@siteid= @SiteID		
+		,@SiteID= SiteID		
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 
+	SET @index = @index + 1
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency,@SiteID = @SiteID, @max_custid=@max_custid,@target = 'REPLICATED' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -294,7 +290,6 @@ GO
 -- BEGIN STEP 3: Run this SP at DBCust -----
 -------------------------------------------------
 DECLARE @ProductID INT = 21, @SportType INT = 211
-
 CREATE TABLE #Supers_Offered (custid int)
 
 INSERT INTO #Supers_Offered (custid)
@@ -308,7 +303,7 @@ WHERE PSD.SportType = @SportType
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
+DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid
 
 CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
@@ -334,20 +329,16 @@ WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND cs.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND cs.custid <= @max_custid
 
+-- For Deployer Info
 DECLARE @super_cnt INT, @index INT = 0
-
 SET @super_cnt = (SELECT COUNT(*) FROM #supers )
-
 DECLARE @msg nvarchar(200) = 'Currently at order %d, SuperID: %d.'
-
 DECLARE @msg_total nvarchar(200) = 'Total of supers: %d.'
-
 RAISERROR (@msg_total, 0, 1, @super_cnt) WITH NOWAIT
 
 WHILE (1 = 1)
 BEGIN
-	SET @index = @index + 1
-	
+		
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
 		,@srecommend = custid
@@ -357,9 +348,10 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 	
+	SET @index = @index + 1
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@siteID = @SiteID,@target = 'DBCUST'
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency,@siteID = @SiteID, @max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	
