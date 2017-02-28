@@ -83,11 +83,11 @@ VALUES ('Macaubet',3),
 ('ISC888',4),
 ('ISC888',32),
 ('Liga',15),
-('Brown88',45),
-('Brown88',13),
-('Brown88',3),
-('Brown88',51),
-('Brown88',32)
+('Brown888',45),
+('Brown888',13),
+('Brown888',3),
+('Brown888',51),
+('Brown888',32)
 
 INSERT INTO #tblCust (custid,agentid,roleid,currency,srecommend,SiteID)			
 SELECT ci.custid,ci.recommend,roleid,ci.currency, ci.srecommend,s.siteid
