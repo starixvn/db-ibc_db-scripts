@@ -6,7 +6,7 @@
 
 	SELECT * FROM GAMEGROUP (NOLOCK)
 */
-CREATE TABLE #NewStake (ExchangeID INT, MaxStake_Level1 DECIMAL(9,8), MaxStake_Level2 DECIMAL(9,8))
+CREATE TABLE #NewStake (ExchangeID INT, MaxStake_Level1 DECIMAL(19,8), MaxStake_Level2 DECIMAL(19,8))
 INSERT INTO #NewStake (ExchangeID, MaxStake_Level1, MaxStake_Level2)
 SELECT exchangeid, 200, 400
 FROM exchange WITH (NOLOCK)
