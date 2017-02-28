@@ -225,7 +225,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
 	-- API Info
-	AND C.site IN ('ISC888','Liga','Brown88')
+	AND C.site IN ('ISC888','Liga','Brown888')
 
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
@@ -299,7 +299,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site in  ('ISC888','Liga','Brown88') -- API Info
+	AND C.site in  ('ISC888','Liga','Brown888') -- API Info
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
