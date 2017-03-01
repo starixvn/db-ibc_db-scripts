@@ -15,18 +15,17 @@ WHERE roleid = 4
 	AND site = '789y'
 GO
 
---check settings before copy
+--- delete existing custgametype GD setting for newly customers 789y in UM
 DECLARE @max_custid INT = xx
 
-SELECT COUNT(1)
+DELETE cg
 FROM custinfo ci WITH(NOLOCK)
-	LEFT JOIN custgameType cg WITH(NOLOCK) ON ci.custid = cg.custid
+	INNER JOIN custgameType cg WITH(UPDLOCK,ROWLOCK) ON ci.custid = cg.custid
 											AND cg.GameTypeID IN (1701,1702)
 WHERE srecommend IN (select custid FROM #Supers)
 	AND ci.custid > @max_custid	
-	AND cg.custid IS NULL
-
 GO
+
 
 --step 1: copy settings for newly created customers
 ---- data preparation ----
