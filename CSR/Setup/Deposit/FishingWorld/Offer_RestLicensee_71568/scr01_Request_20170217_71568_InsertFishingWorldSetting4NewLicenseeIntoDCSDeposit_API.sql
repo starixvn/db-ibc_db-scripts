@@ -189,7 +189,7 @@ WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
-	AND custid <= @max_custid
+	
 
 -- For deployer info
 DECLARE @super_cnt INT, @index INT = 0
@@ -252,7 +252,7 @@ WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site IN ('Spondemo','12bet','Indowin','ABB688','Brown888') -- API
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
-	AND custid <= @max_custid
+	
 
 -- For deployer info
 DECLARE @super_cnt INT, @index INT = 0
