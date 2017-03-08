@@ -25,8 +25,8 @@ FROM custInfo CI WITH(NOLOCK)
 WHERE ci.mrecommend NOT IN (SELECT custid FROM custinfo cs1 WITH(NOLOCK)
 						   WHERE cs1.srecommend=ci.srecommend and cs1.username like '%Acc%' and cs1.roleid=3 )
 	AND ci.custid > @max_custid
-	AND cs.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','Indowin'  -- Athena
-					,'Spondemo','12bet','ISC888','Brown888' -- API
+	AND cs.site in ('Athena000','Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','BE7','Goobet','NBCbet','Bolanation','SBCbet','Unobet','BE7TH','Aragon88','May88','ISC888'  -- Athena
+					,'Spondemo','12bet','Indowin','Brown888','ABB688' -- API
 					)
 	AND ci.roleid = 1
 	AND CS.currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
