@@ -122,7 +122,9 @@ BEGIN
 	SET								
 		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, @BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		INNER JOIN #CustTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
+	INNER JOIN CustInfo c WITH (NOLOCK) ON cs.CustID=c.custid
+	INNER JOIN #CustTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
+	WHERE c.roleid IN (2,3,4)
 
 	---------------------------------------------------------------------------------------
 
