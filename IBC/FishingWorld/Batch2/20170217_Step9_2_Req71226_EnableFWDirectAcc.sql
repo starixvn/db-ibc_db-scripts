@@ -7,7 +7,7 @@
 	Date: 20170221
 */ 
 
-ALTER PROCEDURE [dbo].[Acc_DynamicCustSetting3rd_09]
+ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
 	,@target VARCHAR(20)
 AS
@@ -154,7 +154,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend			
+	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend			
 			,@target = 'REPLICATED'
 			
 			
@@ -186,7 +186,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustSetting3rd_09 @srecommend = @srecommend			
+	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend			
 			,@target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'
