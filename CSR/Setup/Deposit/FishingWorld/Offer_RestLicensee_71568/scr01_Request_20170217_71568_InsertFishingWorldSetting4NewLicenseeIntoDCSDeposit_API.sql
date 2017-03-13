@@ -171,7 +171,7 @@ CREATE TABLE #Supers_Offered (custid int)
 INSERT INTO #Supers_Offered (custid)
 SELECT lds.CustID
 FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
-	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
+	INNER JOIN Dep_CustSuper c (NOLOCK) on c.custid = lds.CustID 
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
@@ -234,7 +234,7 @@ CREATE TABLE #Supers_Offered (custid int)
 INSERT INTO #Supers_Offered (custid)
 SELECT lds.CustID
 FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
-	INNER JOIN Customer c (nolock) on c.custid = lds.CustID and c.roleid = 4
+	INNER JOIN Dep_CustSuper c (NOLOCK) on c.custid = lds.CustID 
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
