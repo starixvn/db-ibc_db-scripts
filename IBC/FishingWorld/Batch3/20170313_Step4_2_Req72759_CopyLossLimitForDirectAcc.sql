@@ -219,17 +219,17 @@ BEGIN
 				WHEN c.site='722222' AND @ExchangeID IN(5,67,13) THEN 70
 				WHEN c.site='722222' AND @ExchangeID IN(2,1) THEN 90
 				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking=0.85 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking<>0.5 AND slivepositiontaking<>0.85 THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND mlivepositiontaking=0.85 THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND mlivepositiontaking=0.5 THEN 50
+				WHEN c.site='789y' AND @ExchangeID =3 AND mlivepositiontaking<>0.5 AND mlivepositiontaking<>0.85 THEN 90
 				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking<>0.85 THEN 80
+				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking=0.85 THEN 85
 				WHEN c.site='7aa666' AND @ExchangeID =69 THEN 90
-				WHEN c.site='Best-odds' THEN slivepositiontaking*100
+				WHEN c.site='Best-odds' THEN mlivepositiontaking*100
 				WHEN c.site='XYZbet' AND @ExchangeID =21 THEN 80
 				WHEN c.site='XYZbet' AND @ExchangeID =6 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
+				ELSE ISNULL(mlivepositiontaking*100,90)
 				END
 		,0
 		,0
@@ -297,17 +297,17 @@ BEGIN
 				WHEN c.site='722222' AND @ExchangeID IN(5,67,13) THEN 70
 				WHEN c.site='722222' AND @ExchangeID IN(2,1) THEN 90
 				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking=0.85 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking<>0.5 AND slivepositiontaking<>0.85 THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND alivepositiontaking=0.85 THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND alivepositiontaking=0.5 THEN 50
+				WHEN c.site='789y' AND @ExchangeID =3 AND alivepositiontaking<>0.5 AND alivepositiontaking<>0.85 THEN 90
 				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking<>0.85 THEN 80
+				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking=0.85 THEN 85
 				WHEN c.site='7aa666' AND @ExchangeID =69 THEN 90
-				WHEN c.site='Best-odds' THEN slivepositiontaking*100
+				WHEN c.site='Best-odds' THEN alivepositiontaking*100
 				WHEN c.site='XYZbet' AND @ExchangeID =21 THEN 80
 				WHEN c.site='XYZbet' AND @ExchangeID =6 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
+				ELSE ISNULL(alivepositiontaking*100,90)
 				END
 		,0
 		,0

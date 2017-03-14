@@ -165,17 +165,17 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='722222' AND ci.currency IN(5,67,13) THEN 70
 				WHEN ci.site='722222' AND ci.currency IN(2,1) THEN 90
 				WHEN ci.site='766666' AND ci.currency =70 THEN 90
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking=0.85 THEN 90
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking=0.5 THEN 50
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking<>0.5 AND slivepositiontaking<>0.85 THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND mlivepositiontaking=0.85 THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND mlivepositiontaking=0.5 THEN 50
+				WHEN ci.site='789y' AND ci.currency =3 AND mlivepositiontaking<>0.5 AND mlivepositiontaking<>0.85 THEN 90
 				WHEN ci.site='789y' AND ci.currency IN (40,17,64) THEN 80
-				WHEN ci.site='789y' AND ci.currency =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN ci.site='789y' AND ci.currency =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN ci.site='789y' AND ci.currency =16 AND mlivepositiontaking<>0.85 THEN 80
+				WHEN ci.site='789y' AND ci.currency =16 AND mlivepositiontaking=0.85 THEN 85
 				WHEN ci.site='7aa666' AND ci.currency =69 THEN 90
-				WHEN ci.site='Best-odds' THEN slivepositiontaking*100
+				WHEN ci.site='Best-odds' THEN mlivepositiontaking*100
 				WHEN ci.site='XYZbet' AND ci.currency =21 THEN 80
 				WHEN ci.site='XYZbet' AND ci.currency =6 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
+				ELSE ISNULL(mlivepositiontaking*100,90)
 				END
 		,0
 		,0
@@ -242,17 +242,17 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='722222' AND ci.currency IN(5,67,13) THEN 70
 				WHEN ci.site='722222' AND ci.currency IN(2,1) THEN 90
 				WHEN ci.site='766666' AND ci.currency =70 THEN 90
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking=0.85 THEN 90
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking=0.5 THEN 50
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking<>0.5 AND slivepositiontaking<>0.85 THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND alivepositiontaking=0.85 THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND alivepositiontaking=0.5 THEN 50
+				WHEN ci.site='789y' AND ci.currency =3 AND alivepositiontaking<>0.5 AND alivepositiontaking<>0.85 THEN 90
 				WHEN ci.site='789y' AND ci.currency IN (40,17,64) THEN 80
-				WHEN ci.site='789y' AND ci.currency =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN ci.site='789y' AND ci.currency =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN ci.site='789y' AND ci.currency =16 AND alivepositiontaking<>0.85 THEN 80
+				WHEN ci.site='789y' AND ci.currency =16 AND alivepositiontaking=0.85 THEN 85
 				WHEN ci.site='7aa666' AND ci.currency =69 THEN 90
-				WHEN ci.site='Best-odds' THEN slivepositiontaking*100
+				WHEN ci.site='Best-odds' THEN alivepositiontaking*100
 				WHEN ci.site='XYZbet' AND ci.currency =21 THEN 80
 				WHEN ci.site='XYZbet' AND ci.currency =6 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
+				ELSE ISNULL(alivepositiontaking*100,90)
 				END
 		,0
 		,0
