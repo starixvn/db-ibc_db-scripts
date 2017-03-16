@@ -8,7 +8,7 @@
  
  -- BEGIN STEP 1: DEPLOY THIS SP @DBCUST.CustDB ------
 ------------------------------------------------------
-ALTER PROCEDURE [dbo].[Acc_CustSetting3rd_19]
+ALTER PROCEDURE [dbo].[Acc_CustSetting_19]
 	@target VARCHAR(20)
 AS
 BEGIN
@@ -35,10 +35,10 @@ GO
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
 --------------------------------------------------------------------------------------
-EXEC dbo.Acc_CustSetting3rd_19 @target = 'REPLICATED'
+EXEC dbo.Acc_CustSetting_19 @target = 'REPLICATED'
 
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-EXEC dbo.Acc_CustSetting3rd_19 @target = 'DBCUST'
+EXEC dbo.Acc_CustSetting_19 @target = 'DBCUST'
 
