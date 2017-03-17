@@ -37,7 +37,7 @@ UPDATE cs
 		, minbet = temp_pt.minbet
 	    , maxbet = temp_pt.maxbet
 	    
-FROM custsetting cs
+FROM custsetting cs WITH (UPDLOCK,ROWLOCK)
 	CROSS APPLY	(SELECT cs_temp.custid
 						, apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
 						, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
@@ -87,7 +87,7 @@ UPDATE cs
 		, minlivepositiontaking = temp_pt.minlivepositiontaking
 		, maxlivepositiontaking = temp_pt.maxlivepositiontaking
 		
-FROM custoverride cs
+FROM custoverride cs WITH (ROWLOCK,UPDLOCK)
 	CROSS APPLY	(SELECT cs_temp.custid, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
 				 FROM custoverride cs_temp (NOLOCK) 
 				 WHERE cs_temp.sporttype = 2 AND cs_temp.bettype = 1 AND cs.custid = cs_temp.custid
