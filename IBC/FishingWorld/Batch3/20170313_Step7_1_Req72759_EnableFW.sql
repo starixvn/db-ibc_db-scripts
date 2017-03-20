@@ -29,18 +29,11 @@ BEGIN
 	
 	UPDATE cs
 	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
+		 bitmapIsDisabled = CASE WHEN roleid =1 THEN bitmapIsDisabled ELSE dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0) END
 		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND roleid IN(2,3,4) AND ci.Enabled=1
-
-	UPDATE cs
-	SET
-		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend AND roleid =1 AND ci.Enabled=1
 
 END
 GO
