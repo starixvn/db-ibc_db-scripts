@@ -22,11 +22,17 @@ BEGIN
 	IF dbo.f_CheckRepTable('CustProductStatus') = 0 RETURN
 	IF dbo.f_CheckRepTable('ProductStatusProfile') = 0 RETURN
 
-	CREATE TABLE #CustTemp
+	
+	CREATE TABLE #MemberTemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED
 	)
-	
+
+	CREATE TABLE #SMATemp
+	(
+		CustID INT PRIMARY KEY CLUSTERED,
+		RoleID INT	
+	)
 	CREATE TABLE #DirectMaster (CustID INT PRIMARY KEY,roleid INT)
 	CREATE TABLE #DirectAgent (CustID INT PRIMARY KEY,mrecommend INT,roleid INT)
 	CREATE TABLE #DirectMember (CustID INT PRIMARY KEY,recommend INT,mrecommend INT,roleid INT)			
@@ -35,7 +41,7 @@ BEGIN
 	SELECT ci.custid, ci.roleid
 	FROM Customer ci with(nolock)
 	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
-	WHERE  site in   ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
+	WHERE  site in  ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
 		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.roleid=3 AND ci.srecommend = @srecommend 
@@ -46,7 +52,7 @@ BEGIN
 	SELECT ci.custid, ci.mrecommend,ci.roleid
 	FROM Customer ci WITH(NOLOCK)
 	INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
-	WHERE site in   ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
+	WHERE site in  ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
 		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.roleid=2 AND ci.srecommend = @srecommend 
@@ -60,59 +66,78 @@ BEGIN
 	WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.roleid=1 AND c.srecommend = @srecommend 
-		AND  ca.site in   ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
+		AND  ca.site in  ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
 		AND ci.Enabled=1
 	----------- For SMA  -----------
-	INSERT INTO #CustTemp (CustID)
-	--SELECT @srecommend -- Super
+	INSERT INTO #SMATemp (CustID,RoleID)
+	--SELECT @srecommend,4 -- Super
 	--UNION ALL
-	 
-	SELECT ci.srecommend -- super of Direct Master 
+	SELECT CI.CustID,3 -- Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
-	UNION	
-	SELECT CI.CustID -- Direct Master 
-	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID 		
 	UNION 
-	SELECT DISTINCT CI.srecommend -- super of direct agent
+	SELECT ci.srecommend,4 -- super of Direct Master 
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectAgent D ON CI.custid = d.CustID
-	
+		INNER JOIN #DirectMaster D ON CI.custid = D.CustID	
 	UNION 
-	SELECT DISTINCT CI.CustID -- Master of direct agent
+	SELECT DISTINCT CI.CustID,3 -- Master of direct agent
 	FROM custInfo CI WITH (NOLOCK)
-		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 	
+		INNER JOIN #DirectAgent D ON CI.custid = D.mrecommend 
+
+	UNION 
+	SELECT DISTINCT CI.srecommend,4 -- super of direct agent
+	FROM custInfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent D ON CI.custid = d.CustID	
 	
 	UNION 
 
-	SELECT CI.CustID -- Agent of direct master
+	SELECT CI.CustID,2 -- Agent of direct master
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMaster D ON CI.mrecommend = D.CustID 
-	WHERE CI.roleid = 2
+	WHERE CI.roleid = 2 AND ci.Enabled=1
 				
 	UNION 
-	SELECT CI.CustID -- Direct Agent
+	SELECT CI.CustID,CI.roleid -- Direct Agent
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectAgent D ON CI.custid = D.CustID 
-	
 	UNION 
-	SELECT DISTINCT CI.srecommend -- super of direct member
+
+	SELECT DISTINCT CI.srecommend,4 -- super of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.CustID 
 	WHERE  ci.Enabled = 1
 	UNION 
 
-	SELECT DISTINCT CI.CustID -- Master of direct member
+	SELECT DISTINCT CI.CustID,CI.roleid -- Master of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.mrecommend 
 	WHERE  ci.Enabled = 1
 
 	UNION 
-	SELECT DISTINCT CI.CustID -- agent of direct member
+	SELECT DISTINCT CI.CustID,CI.roleid -- agent of direct member
 	FROM custInfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember D ON CI.custid = D.recommend 
 	WHERE  ci.Enabled = 1 	
+	---------- For members ---------
+	INSERT INTO #MemberTemp (CustID)
+	SELECT  CI.custid
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMaster M ON CI.mrecommend = M.CustID
+	WHERE CI.roleid = 1	AND ci.Enabled=1 			
+
+	UNION 
+	SELECT  CI.custid
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectAgent M ON CI.recommend = M.CustID
+	WHERE CI.roleid = 1 AND ci.Enabled=1 			
+
+	-- Direct member
+		
+	UNION 
+	SELECT  CI.custid
+	FROM Custinfo CI WITH (NOLOCK)
+		INNER JOIN #DirectMember M ON CI.custid = M.CustID	
+		
 	
 	DECLARE @Sporttype INT
 	SELECT @Sporttype=219
@@ -122,8 +147,15 @@ BEGIN
 	UPDATE cs
 	SET								
 		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, @BitOrder,0)
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
-	INNER JOIN #CustTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
+	INNER JOIN #SMATemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
+
+	UPDATE cs
+	SET
+	bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
+	INNER JOIN #MemberTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
 
 
 	---------------------------------------------------------------------------------------

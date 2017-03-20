@@ -30,9 +30,17 @@ BEGIN
 	UPDATE cs
 	SET								
 		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0)
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE ci.srecommend = @srecommend AND roleid IN(2,3,4) AND ci.Enabled=1
+
+	UPDATE cs
+	SET
+		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE ci.srecommend = @srecommend AND roleid =1 AND ci.Enabled=1
 
 END
 GO
@@ -51,7 +59,9 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE (ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
-AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	)
+AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')
+AND  ci.custid NOT IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
+		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 	)
 -- CROSS-SITE
 OR  ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
 
@@ -84,7 +94,9 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE (ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
-AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	)
+AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')
+AND  ci.custid NOT IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
+		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 		)
 -- CROSS-SITE
 OR  ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
 	
