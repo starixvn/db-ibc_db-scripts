@@ -43,8 +43,8 @@ BEGIN
 		AND ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND ci.roleid=3 
-		AND (ci.mrecommend <=100-- dummy acc =<100
-		OR ci.mrecommend IN(1469577, 21278849, 21278858))
+		AND (ci.srecommend <=100-- dummy acc =<100
+		OR ci.srecommend IN(1469577, 21278849, 21278858))
 		AND c.Enabled=1
 	
 	--- get direct agent
@@ -56,8 +56,8 @@ BEGIN
 		and ci.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		and ci.roleid=2
-		AND (ci.mrecommend <=100-- dummy acc =<100
-		OR ci.mrecommend IN(1469577, 21278849, 21278858))
+		AND (ci.srecommend <=100-- dummy acc =<100
+		OR ci.srecommend IN(1469577, 21278849, 21278858))
 		AND c.Enabled=1
 	
 	INSERT INTO #DirectMember(CustID,recommend,mrecommend,roleid)
@@ -68,8 +68,8 @@ BEGIN
 	WHERE c.custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
 		AND c.roleid=1 
-		AND (ci.mrecommend <=100-- dummy acc =<100
-		OR ci.mrecommend IN(1469577, 21278849, 21278858))
+		AND (ci.srecommend <=100-- dummy acc =<100
+		OR ci.srecommend IN(1469577, 21278849, 21278858))
 		AND  ca.site in ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
 		AND ci.Enabled=1
 		
