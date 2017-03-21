@@ -2,12 +2,13 @@
 
 /*
 	Created: Winnie	
-	Task: Enable Fishing World for Credit customers
+	Task: Enable and UnHide Fishing World for SMA + UnHide for new member
 	DB: DBCUST/CustDB
 	Date: 20170313
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
+	,@maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -29,11 +30,18 @@ BEGIN
 	
 	UPDATE cs
 	SET								
-		 bitmapIsDisabled = CASE WHEN roleid =1 THEN bitmapIsDisabled ELSE dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0) END
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,@BitOrder,0) 
 		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE ci.srecommend = @srecommend AND ci.Enabled=1
+	WHERE ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
+
+	UPDATE cs
+	SET	
+		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE ci.srecommend = @srecommend AND ci.roleid =1 AND ci.custid>@maxcustid
 
 END
 GO
@@ -44,7 +52,8 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE  @srecommend INT
+DECLARE  @srecommend INT,@max_custid INT
+SELECT @max_custid = xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
@@ -53,8 +62,10 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')
-AND  ci.custid NOT IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
-		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 
+-- exclude dummy <=100
+AND  ci.custid >100
+-- exclude dummy >100
+AND ci.custid NOT IN (1469577, 21278849, 21278858) 
 AND ci.currency<>20	)
 -- CROSS-SITE
 OR  ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
@@ -69,7 +80,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 			
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			--,@maxcustid = @max_custid
+			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
 			
@@ -80,7 +91,8 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-DECLARE  @srecommend INT
+DECLARE  @srecommend INT,@max_custid INT
+SELECT @max_custid = xxx
 INSERT INTO #supers(custid)
 SELECT ci.custid
 FROM dbo.Customer ci WITH(NOLOCK)
@@ -89,8 +101,10 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')
-AND  ci.custid NOT IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
-		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 
+-- exclude dummy <=100
+AND  ci.custid >100
+-- exclude dummy >100
+AND ci.custid NOT IN (1469577, 21278849, 21278858) 
 AND ci.currency<>20		)
 -- CROSS-SITE
 OR  ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
@@ -105,7 +119,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
-			--,@maxcustid = @max_custid
+			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'

@@ -20,7 +20,11 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE (ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
-AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds'))			
+AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odds')	
+-- exclude dummy <=100
+AND  ci.custid >100
+-- exclude dummy >100
+AND ci.custid NOT IN (1469577, 21278849, 21278858)) 		
 -- CROSS-SITE
 OR ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
 --PT

@@ -2,13 +2,14 @@
 
 /*
 	Created: Winnie
-	Task: Enable Fishing World for direct accounts
+	Task: Enable and UnHide Fishing World for SMA + UnHide for new member
 	DB: DBCUST/CustDB
 	Date: 20170313
 */ 
 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
+	,@maxcustid INT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -152,12 +153,10 @@ BEGIN
 	INNER JOIN #SMATemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
 
 	UPDATE cs
-	SET
-	bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
+	SET	 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN #MemberTemp CI WITH (NOLOCK) ON cs.CustID = ci.CustID	
-
-
+	WHERE ci.CustID>@maxcustid
 	---------------------------------------------------------------------------------------
 
 END
@@ -169,13 +168,14 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,exchangeid INT,isfinished bit default(0))
 
-DECLARE  @srecommend INT
+DECLARE  @srecommend INT,@max_custid INT
+SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid,exchangeid)
 SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE ci.custid IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
-		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 
+WHERE ci.custid <=100-- dummy acc =<100
+OR ci.custid IN(1469577, 21278849, 21278858) 
 
 WHILE (1 = 1)
 BEGIN
@@ -186,7 +186,8 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend			
+	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend	
+			,@maxcustid = @max_custid		
 			,@target = 'REPLICATED'
 			
 			
@@ -197,14 +198,15 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,exchangeid INT,isfinished bit default(0))
 
-DECLARE @srecommend INT
-
+DECLARE @srecommend INT,
+@max_custid INT
+SELECT @max_custid = xxx
 
 INSERT INTO #supers(custid,exchangeid)
 SELECT ci.custid,ci.currency
 FROM dbo.Customer ci WITH(NOLOCK)
-WHERE  ci.custid IN (1,2,3,4,5,6,9,12,13,15,16,22,30,32,33,34,35,36,41,42,1469577,3259509,3259514,3259527,3259546,3259599,3259606,3259614,4042341,4054997,6911902,7178173,7178174,7178175
-		,7178176,7178177,7178178,7178179,7178180,7178181,7205490,7216595,7662761,14174238,17996553,18906414,19354890,21278849,21278858) 
+WHERE ci.custid <=100-- dummy acc =<100
+OR ci.custid IN(1469577, 21278849, 21278858) 
 		
 WHILE (1 = 1)
 BEGIN
@@ -215,7 +217,8 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend			
+	EXEC dbo.[Acc_DynamicCustomerInfo_09] @srecommend = @srecommend		
+			,@maxcustid = @max_custid	
 			,@target = 'DBCUST'
 						
 	waitfor delay '00:00:0.280'
