@@ -221,7 +221,7 @@ BEGIN
 				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND mlivepositiontaking=0.85 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND mlivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND mlivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
 				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking<>0.85 THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking=0.85 THEN 85
@@ -299,7 +299,7 @@ BEGIN
 				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND alivepositiontaking=0.85 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND alivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND alivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
 				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking<>0.85 THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking=0.85 THEN 85

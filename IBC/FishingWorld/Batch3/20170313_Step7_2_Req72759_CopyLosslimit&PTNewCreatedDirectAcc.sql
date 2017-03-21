@@ -170,7 +170,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='766666' AND ci.currency =70 THEN 90
 				WHEN ci.site='789y' AND ci.currency =35 AND mlivepositiontaking=0.85 THEN 90
 				WHEN ci.site='789y' AND ci.currency =35 AND mlivepositiontaking=0.5 THEN 50
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND mlivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
 				WHEN ci.site='789y' AND ci.currency IN (40,17,64) THEN 80
 				WHEN ci.site='789y' AND ci.currency =16 AND mlivepositiontaking<>0.85 THEN 80
 				WHEN ci.site='789y' AND ci.currency =16 AND mlivepositiontaking=0.85 THEN 85
@@ -247,7 +247,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='766666' AND ci.currency =70 THEN 90
 				WHEN ci.site='789y' AND ci.currency =35 AND alivepositiontaking=0.85 THEN 90
 				WHEN ci.site='789y' AND ci.currency =35 AND alivepositiontaking=0.5 THEN 50
-				WHEN ci.site='789y' AND ci.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN ci.site='789y' AND ci.currency =3 AND alivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
 				WHEN ci.site='789y' AND ci.currency IN (40,17,64) THEN 80
 				WHEN ci.site='789y' AND ci.currency =16 AND alivepositiontaking<>0.85 THEN 80
 				WHEN ci.site='789y' AND ci.currency =16 AND alivepositiontaking=0.85 THEN 85
