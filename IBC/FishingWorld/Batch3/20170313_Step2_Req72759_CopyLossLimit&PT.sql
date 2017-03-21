@@ -106,7 +106,7 @@ BEGIN
 				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND slivepositiontaking=0.85 THEN 90
 				WHEN c.site='789y' AND @ExchangeID =35 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =35 AND slivepositiontaking<>0.5 AND slivepositiontaking<>0.85 THEN 90
+				WHEN c.site='789y' AND @ExchangeID =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
 				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking<>0.85 THEN 80
 				WHEN c.site='789y' AND @ExchangeID =16 AND slivepositiontaking=0.85 THEN 85
