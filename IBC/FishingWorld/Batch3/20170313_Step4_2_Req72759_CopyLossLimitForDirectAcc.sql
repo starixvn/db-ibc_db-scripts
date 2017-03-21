@@ -239,9 +239,9 @@ BEGIN
 		,0
 		,@MaxPT
 	FROM #DirectMaster ci WITH(NOLOCK) 
-	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK) ON ci.CustID=cs.custid
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK) ON ci.CustID=cs.custid AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	INNER JOIN Customer c WITH(NOLOCK) ON c.CustID=cs.custid
-	WHERE ci.RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	WHERE ci.RoleID=3
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -316,9 +316,9 @@ BEGIN
 		,0
 		,@MaxPT
 	FROM #DirectAgent ci WITH(NOLOCK) 
-	LEFT JOIN 	 dbo.CustSetting3rd cs WITH(NOLOCK)	 ON ci.CustID=cs.custid
+	LEFT JOIN 	 dbo.CustSetting3rd cs WITH(NOLOCK)	 ON ci.CustID=cs.custid AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
 	INNER JOIN Customer c WITH(NOLOCK) ON c.CustID=cs.custid
-	WHERE ci.RoleID=2	AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	WHERE ci.RoleID=2	
 	-- agent of direct master
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]

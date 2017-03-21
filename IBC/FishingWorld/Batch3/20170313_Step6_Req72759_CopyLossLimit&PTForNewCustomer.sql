@@ -152,9 +152,9 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,@MaxPT
 	FROM  #SMATemp s
-	INNER JOIN Customer c WITH(NOLOCK) ON s.custid=c.custid
-	LEFT JOIN  dbo.CustSetting3rd cs WITH(NOLOCK) ON cs.custid=c.CustID	
-	WHERE s.roleid=4 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	INNER JOIN Customer c WITH(NOLOCK) ON s.custid=c.custid 
+	LEFT JOIN  dbo.CustSetting3rd cs WITH(NOLOCK) ON cs.custid=c.CustID	AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef
+	WHERE s.roleid=4 
 	
 	--Master AGENT LEVEL
 	INSERT INTO dbo.CustPTSetting3rd_Agent

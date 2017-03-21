@@ -189,8 +189,8 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,@MaxPT
 	FROM #DirectMaster dm WITH(NOLOCK) 	
 	INNER JOIN Customer ci WITH(NOLOCK) ON dm.CustID=ci.custid
-	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON dm.CustID=cs.custid	
-	WHERE dm.RoleID=3 AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef AND dm.custid > @maxcustid
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON dm.CustID=cs.custid	AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef  
+	WHERE dm.RoleID=3 AND dm.custid > @maxcustid
 	
 	INSERT INTO dbo.CustPTSetting3rd_Agent
 		(	[CustID]
@@ -264,8 +264,8 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		,0
 		,@MaxPT
 	FROM #DirectAgent da WITH(NOLOCK) 	
-	INNER JOIN Customer ci WITH(NOLOCK) ON da.CustID=ci.custid
-	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON da.CustID=cs.custid	
+	INNER JOIN Customer ci WITH(NOLOCK) ON da.CustID=ci.custid 
+	LEFT JOIN dbo.CustSetting3rd cs WITH(NOLOCK)ON da.CustID=cs.custid	AND cs.sporttype=@SporttypeRef AND	 cs.bettype=@BettypeRef  
 	WHERE da.RoleID=2 AND da.custid > @maxcustid
 	
 	-- agent of direct master
