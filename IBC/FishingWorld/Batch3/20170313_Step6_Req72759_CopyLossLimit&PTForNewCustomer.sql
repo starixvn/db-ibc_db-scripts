@@ -24,7 +24,9 @@ AND ci.site IN ('611111','722222','766666','789y', '7aa666', 'XYZbet', 'Best-odd
 -- exclude dummy <=100
 AND  ci.custid >100
 -- exclude dummy >100
-AND ci.custid NOT IN (1469577, 21278849, 21278858)) 
+AND ci.custid NOT IN (1469577, 21278849, 21278858)
+AND ci.currency<>20
+) 
 -- CROSS-SITE
 OR ci.custid IN (674248,395075,1164457,17721601,1016771,324561,1127269,938136)		
 
@@ -89,74 +91,58 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		   ,[MaxPT])
 	SELECT 
 		cs.custid, @Sporttype, @Bettype, 0
-		,CASE	WHEN c.srecommend=938136 AND c.currency IN (5,13,67) THEN 70
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend=938136 AND c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency =3 AND slivepositiontaking=0.73 THEN 80
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency <>3 AND slivepositiontaking <0.9  THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency =4 THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency <>4 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(5,67,13) THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(2,1) THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='766666' AND c.currency =70 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency IN (40,17,64) THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='7aa666' AND c.currency =69 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='Best-odds' THEN slivepositiontaking*100
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =21 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =6 THEN 90
-				ELSE ISNULL(slivepositiontaking*100,90)
-				END
-		,CASE	WHEN c.srecommend=938136 AND c.currency IN (5,13,67) THEN 70
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend=938136 AND c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency =3 AND slivepositiontaking=0.73 THEN 80
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency <>3 AND slivepositiontaking <0.9  THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency =4 THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency <>4 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(5,67,13) THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(2,1) THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='766666' AND c.currency =70 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency IN (40,17,64) THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='7aa666' AND c.currency =69 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='Best-odds' THEN slivepositiontaking*100
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =21 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =6 THEN 90
+		,CASE	
+				WHEN c.site='611111' AND c.currency =4 THEN 70
+				WHEN c.site='611111' AND c.currency <>4 THEN 90
+				WHEN c.site='722222' AND c.currency IN(5,67,13) THEN 70
+				WHEN c.site='722222' AND c.currency IN(2,1) THEN 90
+				WHEN c.site='766666' AND c.currency =70 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
+				WHEN c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN c.site='789y' AND c.currency IN (40,17,64) THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN c.site='7aa666' AND c.currency =69 THEN 90
+				WHEN c.site='Best-odds' THEN slivepositiontaking*100
+				WHEN c.site='XYZbet' AND c.currency =21 THEN 80
+				WHEN c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(slivepositiontaking*100,90)
 				END
 		,CASE	
-				WHEN c.srecommend=938136 AND c.currency IN (5,13,67) THEN 70
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking IN (0.7,0.8)THEN slivepositiontaking*100
-				WHEN c.srecommend=938136 AND c.currency IN (1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend=938136 AND c.currency NOT IN (5,13,67,1,2) AND slivepositiontaking = 0.85 THEN 90
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency =3 AND slivepositiontaking=0.73 THEN 80
-				WHEN c.srecommend IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269) AND c.currency <>3 AND slivepositiontaking <0.9  THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency =4 THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='611111' AND c.currency <>4 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(5,67,13) THEN 70
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='722222' AND c.currency IN(2,1) THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='766666' AND c.currency =70 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency IN (40,17,64) THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='7aa666' AND c.currency =69 THEN 90
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='Best-odds' THEN slivepositiontaking*100
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =21 THEN 80
-				WHEN c.srecommend NOT IN (674248,395075,1164457,1016771,17721601,1016771,324561,1127269,938136) AND c.site='XYZbet' AND c.currency =6 THEN 90
+				WHEN  c.site='611111' AND c.currency =4 THEN 70
+				WHEN  c.site='611111' AND c.currency <>4 THEN 90
+				WHEN  c.site='722222' AND c.currency IN(5,67,13) THEN 70
+				WHEN  c.site='722222' AND c.currency IN(2,1) THEN 90
+				WHEN  c.site='766666' AND c.currency =70 THEN 90
+				WHEN  c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
+				WHEN  c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
+				WHEN  c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
+				WHEN  c.site='789y' AND c.currency IN (40,17,64) THEN 80
+				WHEN  c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
+				WHEN  c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN  c.site='7aa666' AND c.currency =69 THEN 90
+				WHEN  c.site='Best-odds' THEN slivepositiontaking*100
+				WHEN  c.site='XYZbet' AND c.currency =21 THEN 80
+				WHEN  c.site='XYZbet' AND c.currency =6 THEN 90
+				ELSE ISNULL(slivepositiontaking*100,90)
+				END
+		,CASE				
+				WHEN  c.site='611111' AND c.currency =4 THEN 70
+				WHEN  c.site='611111' AND c.currency <>4 THEN 90
+				WHEN  c.site='722222' AND c.currency IN(5,67,13) THEN 70
+				WHEN  c.site='722222' AND c.currency IN(2,1) THEN 90
+				WHEN  c.site='766666' AND c.currency =70 THEN 90
+				WHEN  c.site='789y' AND c.currency =35 AND slivepositiontaking=0.85 THEN 90
+				WHEN  c.site='789y' AND c.currency =35 AND slivepositiontaking=0.5 THEN 50
+				WHEN  c.site='789y' AND c.currency =3 AND slivepositiontaking IN(0, 0.70, 0.80, 0.85)  THEN 90
+				WHEN  c.site='789y' AND c.currency IN (40,17,64) THEN 80
+				WHEN  c.site='789y' AND c.currency =16 AND slivepositiontaking<>0.85 THEN 80
+				WHEN  c.site='789y' AND c.currency =16 AND slivepositiontaking=0.85 THEN 85
+				WHEN  c.site='7aa666' AND c.currency =69 THEN 90
+				WHEN  c.site='Best-odds' THEN slivepositiontaking*100
+				WHEN  c.site='XYZbet' AND c.currency =21 THEN 80
+				WHEN  c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(slivepositiontaking*100,90)
 				END
 		,0
