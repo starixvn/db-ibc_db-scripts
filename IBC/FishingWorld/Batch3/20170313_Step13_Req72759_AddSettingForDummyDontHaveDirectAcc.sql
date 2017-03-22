@@ -195,9 +195,8 @@ CREATE TABLE #DummyTempbatch3
 	FROM #CustTemp ci WITH(NOLOCK) WHERE ci.CustID<>490221
 	----UnHide 
 	UPDATE cs
-	SET								
-		 bitmapIsDisabled =  dbo.f_GenerateProductStatus (cs.bitmapIsDisabled, @BitOrder,0)
-		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
+	SET		
+		 bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,@BitOrder,0)
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
 	WHERE cs.CustID IN(SELECT custid FROM #CustTemp)
 	OR cs.CustID IN (SELECT CustID FROM #DummyTemp)
