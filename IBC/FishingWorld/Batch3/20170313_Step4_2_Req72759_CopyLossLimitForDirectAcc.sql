@@ -141,10 +141,9 @@ BEGIN
 	FROM Custinfo CI WITH (NOLOCK)
 		INNER JOIN #DirectMember M ON CI.custid = M.CustID AND CI.custid <= @maxcustid 	
 		
-	DECLARE @DefaultLossLimit MONEY	,@Sporttype INT,@Bettype INT,@MaxPT TINYINT,@SporttypeRef INT,@BettypeRef INT
-	SELECT @DefaultLossLimit = ISNULL(DefaultLossLimit,0)
-	FROM LossLimit_GlobalSetting WITH (NOLOCK)
-	WHERE ProductId = 24 AND ExchangeId = @ExchangeID
+	
+	DECLARE @Sporttype INT,@Bettype INT,@MaxPT TINYINT,@SporttypeRef INT,@BettypeRef INT
+	
 	SELECT @Sporttype=219
 	SELECT @Bettype=1011
 	SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Sporttype and BetType=@Bettype and SettingType=1
@@ -155,18 +154,20 @@ BEGIN
 	INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
-		, @DefaultLossLimit AS MaxLossLimit 
+		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = c.currency)AS MaxLossLimit 
 		, 1 IsAutoReset
-	FROM #SMATemp si WITH (NOLOCK) 		
+	FROM #SMATemp si WITH (NOLOCK) 	
+	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.currency
 	WHERE si.custid <= @maxcustid AND si.CustID NOT IN(2,5,13,4,15,4174,4177,4178,4300,8619)
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
 	SELECT si.custid, @Sporttype, @Bettype
 		, 0 AS MaxWinLimit	
-		, @DefaultLossLimit AS MaxLossLimit 
+		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = c.currency)AS MaxLossLimit  
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
-	
+	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.currency
+
 	--------------------------------------PT Setting-------------------------------------------------
 	--Super LEVEL		
 	IF EXISTS(SELECT TOP 1 1 FROM #SMATemp WHERE CustID=@srecommend AND CustID NOT IN(2,5,13,4,15))	
@@ -214,21 +215,21 @@ BEGIN
 	SELECT 
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
-		,CASE	WHEN c.site='611111' AND @ExchangeID =4 THEN 70
-				WHEN c.site='611111' AND @ExchangeID <>4 THEN 90
-				WHEN c.site='722222' AND @ExchangeID IN(5,67,13) THEN 70
-				WHEN c.site='722222' AND @ExchangeID IN(2,1) THEN 90
-				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =35 AND mlivepositiontaking=0.85 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =35 AND mlivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND mlivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
-				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking<>0.85 THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND mlivepositiontaking=0.85 THEN 85
-				WHEN c.site='7aa666' AND @ExchangeID =69 THEN 90
+		,CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
+				WHEN c.site='611111' AND c.currency <>4 THEN 90
+				WHEN c.site='722222' AND c.currency IN(5,67,13) THEN 70
+				WHEN c.site='722222' AND c.currency IN(2,1) THEN 90
+				WHEN c.site='766666' AND c.currency =70 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND mlivepositiontaking=0.85 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND mlivepositiontaking=0.5 THEN 50
+				WHEN c.site='789y' AND c.currency =3 AND mlivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN c.site='789y' AND c.currency IN (40,17,64) THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND mlivepositiontaking<>0.85 THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND mlivepositiontaking=0.85 THEN 85
+				WHEN c.site='7aa666' AND c.currency =69 THEN 90
 				WHEN c.site='Best-odds' THEN mlivepositiontaking*100
-				WHEN c.site='XYZbet' AND @ExchangeID =21 THEN 80
-				WHEN c.site='XYZbet' AND @ExchangeID =6 THEN 90
+				WHEN c.site='XYZbet' AND c.currency =21 THEN 80
+				WHEN c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(mlivepositiontaking*100,90)
 				END
 		,0
@@ -292,21 +293,21 @@ BEGIN
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,CASE	WHEN c.site='611111' AND @ExchangeID =4 THEN 70
-				WHEN c.site='611111' AND @ExchangeID <>4 THEN 90
-				WHEN c.site='722222' AND @ExchangeID IN(5,67,13) THEN 70
-				WHEN c.site='722222' AND @ExchangeID IN(2,1) THEN 90
-				WHEN c.site='766666' AND @ExchangeID =70 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =35 AND alivepositiontaking=0.85 THEN 90
-				WHEN c.site='789y' AND @ExchangeID =35 AND alivepositiontaking=0.5 THEN 50
-				WHEN c.site='789y' AND @ExchangeID =3 AND alivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
-				WHEN c.site='789y' AND @ExchangeID IN (40,17,64) THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking<>0.85 THEN 80
-				WHEN c.site='789y' AND @ExchangeID =16 AND alivepositiontaking=0.85 THEN 85
-				WHEN c.site='7aa666' AND @ExchangeID =69 THEN 90
+		,CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
+				WHEN c.site='611111' AND c.currency <>4 THEN 90
+				WHEN c.site='722222' AND c.currency IN(5,67,13) THEN 70
+				WHEN c.site='722222' AND c.currency IN(2,1) THEN 90
+				WHEN c.site='766666' AND c.currency =70 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND alivepositiontaking=0.85 THEN 90
+				WHEN c.site='789y' AND c.currency =35 AND alivepositiontaking=0.5 THEN 50
+				WHEN c.site='789y' AND c.currency =3 AND alivepositiontaking IN(0, 0.70, 0.80, 0.85) THEN 90
+				WHEN c.site='789y' AND c.currency IN (40,17,64) THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND alivepositiontaking<>0.85 THEN 80
+				WHEN c.site='789y' AND c.currency =16 AND alivepositiontaking=0.85 THEN 85
+				WHEN c.site='7aa666' AND c.currency =69 THEN 90
 				WHEN c.site='Best-odds' THEN alivepositiontaking*100
-				WHEN c.site='XYZbet' AND @ExchangeID =21 THEN 80
-				WHEN c.site='XYZbet' AND @ExchangeID =6 THEN 90
+				WHEN c.site='XYZbet' AND c.currency =21 THEN 80
+				WHEN c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(alivepositiontaking*100,90)
 				END
 		,0
