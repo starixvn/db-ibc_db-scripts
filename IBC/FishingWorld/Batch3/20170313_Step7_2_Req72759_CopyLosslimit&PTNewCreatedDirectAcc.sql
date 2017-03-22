@@ -163,7 +163,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 	SELECT 
 		dm.custid,  @Sporttype, @Bettype, 0
 		,0
-		,CASE	WHEN ci.site='611111' AND ci.currency =4 THEN 70
+		,ISNULL(CASE	WHEN ci.site='611111' AND ci.currency =4 THEN 70
 				WHEN ci.site='611111' AND ci.currency <>4 THEN 90
 				WHEN ci.site='722222' AND ci.currency IN(5,67,13) THEN 70
 				WHEN ci.site='722222' AND ci.currency IN(2,1) THEN 90
@@ -179,7 +179,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='XYZbet' AND ci.currency =21 THEN 80
 				WHEN ci.site='XYZbet' AND ci.currency =6 THEN 90
 				ELSE ISNULL(mlivepositiontaking*100,90)
-				END
+				END,90)
 		,0
 		,0
 		,0
@@ -240,7 +240,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 		da.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,CASE	WHEN ci.site='611111' AND ci.currency =4 THEN 70
+		,ISNULL(CASE	WHEN ci.site='611111' AND ci.currency =4 THEN 70
 				WHEN ci.site='611111' AND ci.currency <>4 THEN 90
 				WHEN ci.site='722222' AND ci.currency IN(5,67,13) THEN 70
 				WHEN ci.site='722222' AND ci.currency IN(2,1) THEN 90
@@ -256,7 +256,7 @@ SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Spo
 				WHEN ci.site='XYZbet' AND ci.currency =21 THEN 80
 				WHEN ci.site='XYZbet' AND ci.currency =6 THEN 90
 				ELSE ISNULL(alivepositiontaking*100,90)
-				END
+				END,90)
 		,0
 		,0
 		,0

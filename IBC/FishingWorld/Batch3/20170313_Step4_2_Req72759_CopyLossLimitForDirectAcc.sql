@@ -215,7 +215,7 @@ BEGIN
 	SELECT 
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
-		,CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
+		,ISNULL(CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
 				WHEN c.site='611111' AND c.currency <>4 THEN 90
 				WHEN c.site='722222' AND c.currency IN(5,67,13) THEN 70
 				WHEN c.site='722222' AND c.currency IN(2,1) THEN 90
@@ -231,7 +231,7 @@ BEGIN
 				WHEN c.site='XYZbet' AND c.currency =21 THEN 80
 				WHEN c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(mlivepositiontaking*100,90)
-				END
+				END,90)
 		,0
 		,0
 		,0
@@ -293,7 +293,7 @@ BEGIN
 		ci.custid, @Sporttype, @Bettype, 0
 		,0
 		,0
-		,CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
+		,ISNULL(CASE	WHEN c.site='611111' AND c.currency =4 THEN 70
 				WHEN c.site='611111' AND c.currency <>4 THEN 90
 				WHEN c.site='722222' AND c.currency IN(5,67,13) THEN 70
 				WHEN c.site='722222' AND c.currency IN(2,1) THEN 90
@@ -309,7 +309,7 @@ BEGIN
 				WHEN c.site='XYZbet' AND c.currency =21 THEN 80
 				WHEN c.site='XYZbet' AND c.currency =6 THEN 90
 				ELSE ISNULL(alivepositiontaking*100,90)
-				END
+				END,90)
 		,0
 		,0
 		,0
