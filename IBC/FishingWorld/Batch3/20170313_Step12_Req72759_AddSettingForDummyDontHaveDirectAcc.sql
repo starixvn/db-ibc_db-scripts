@@ -22,12 +22,11 @@ CREATE TABLE #CustTemp
 INSERT INTO #CustTemp (CustID,RoleID)
 select ci.custid,ci.roleid from custinfo c with(nolock)
  inner join customer ci with(nolock) on c.custid=ci.custid
- where c.srecommend <=72
+ where c.srecommend <=71
  and Enabled=1
  and c.currency not in (20,72)
  and c.roleid in (2,3,4)
  and c.custid not in (Select custid from CustPTSetting3rd_Agent with(nolock) where sporttype=219)
- and c.currency<>72
  and site <>'KING119'
 	-------------------------------------
 	--------------------------------------WinLossLimit-------------------------------------------------
