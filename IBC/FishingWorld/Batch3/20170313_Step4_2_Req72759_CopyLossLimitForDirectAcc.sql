@@ -15,8 +15,8 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DB233') RETURN	-- run at all replicated servers
+	IF (@target = 'DB233' AND @@SERVERNAME <> 'DB233') RETURN -- run at dbtrans only
 	
 	IF dbo.f_CheckRepTable('CustInfo') = 0 RETURN
 	IF dbo.f_CheckRepTable('Customer') = 0 RETURN
@@ -157,7 +157,7 @@ BEGIN
 		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = c.currency)AS MaxLossLimit 
 		, 1 IsAutoReset
 	FROM #SMATemp si WITH (NOLOCK) 	
-	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.currency
+	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.custid
 	WHERE si.custid <= @maxcustid AND si.CustID NOT IN(2,5,13,4,15,4174,4177,4178,4300,8619)
 	--Member Level
 	INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType, MaxWinLimit, MaxLossLimit, IsAutoReset)
@@ -166,7 +166,7 @@ BEGIN
 		, (SELECT ISNULL(DefaultLossLimit,0) FROM LossLimit_GlobalSetting WITH (NOLOCK) WHERE ProductId = 24 AND ExchangeId = c.currency)AS MaxLossLimit  
 		, 1 IsAutoReset
 	FROM #MemberTemp si WITH (NOLOCK) 
-	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.currency
+	INNER JOIN Customer c  WITH (NOLOCK)  ON si.CustID=c.custid
 
 	--------------------------------------PT Setting-------------------------------------------------
 	--Super LEVEL		
