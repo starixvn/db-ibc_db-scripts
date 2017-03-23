@@ -26,7 +26,6 @@ select ci.custid,ci.roleid from custinfo c with(nolock)
  and Enabled=1
  and c.currency not in (20,72)
  and c.roleid in (2,3,4)
- and c.custid not in (Select custid from CustPTSetting3rd_Agent with(nolock) where sporttype=219)
  and site <>'KING119'
 	-------------------------------------
 	--------------------------------------WinLossLimit-------------------------------------------------
