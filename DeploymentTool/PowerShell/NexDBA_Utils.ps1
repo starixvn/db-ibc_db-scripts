@@ -1,21 +1,13 @@
 ﻿#Set-Variable -Name $varName -Value ($a + $b) -Scope Global
 function CheckUnchangedSPs ( $changedFiles )
-{
-    #$DiffFileName
-    [string]$changedName = ""
-    
+{   
+    $fileItems = @()
     try 
     {
-        foreach ($changedName in $changedFiles)
-        {
-            
-            #$changedName.IndexOf('UnchangedSPs.tx')
-            if ($changedName.IndexOf("UnchangedSPs.txt") -gt -1)
-            {
-                $global:hasUnchangedSPs = 1
-                $global:unchangedSPsFile = $changedName
-                break
-            }
+        $fileItems += $changedFiles | Where-Object { $_.FileName.IndexOf("UnchangedSPs.txt") -gt -1 }
+        IF($fileItems.Count -gt 0) {
+            $global:hasUnchangedSPs = 1
+            $global:unchangedSPsFile = $fileItems.Get(0).FileName
         }
     }
     catch

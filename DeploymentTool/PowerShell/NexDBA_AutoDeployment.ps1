@@ -1,4 +1,4 @@
-﻿if($env:IS_AUTO_DEPLOY -eq "false") { exit 0 }
+﻿if($env:IS_AUTO_DEPLOY -eq $null -or $env:IS_AUTO_DEPLOY -eq "false") { exit 0 }
 Write-Host "----------------------------" 
 Write-Host "Auto Deployment Process is running..." 
 
@@ -27,28 +27,35 @@ try
     [string]$keySearch = $null
     [string]$keyReplace = $null
     [int]$depCount = 1
-
-    $sqlfiles = get-childitem $depDir
-
-    foreach($runfile in $sqlfiles.name) 
-    {
     
-        if($runfile.IndexOf(".sql") -eq -1) { continue }
+    [array]$regexFunc = @()
+    [array]$regexValues = @()
+    [array]$regexNested = @()
+    [array]$regexNestedFunc = @()
 
-        $scriptFile = "${depDir}\${runfile}"
-        #Write-Host "Script File: ${scriptFile}"
+    [string]$runfile = ""
+    [regex]$regex = $null
+    [regex]$nRegex = $null
 
-        $fileAttr = dir $scriptFile
+    #foreach($runfile in $sqlfiles.name) {
+    $deployObjects | Sort-Object { $_.isFunction; $_.isNested } -DESC | Foreach {
+    
+        $runfile = $_.fileNameBuild
+        $objectName = $_.objName
+        $deployAliasName = $_.aliasName
+        $deployDbName = $_.dbName
+        $objFunction = $_.isFunction
 
-        $objectName = $fileAttr.BaseName.Replace("dbo.","").Replace(".func","").Replace(".proc","")
-        $objectName = $objectName.Substring($objectName.IndexOf("-${packageName}-")+6)
+        #GET script file path
+        $scriptFile = "${depDir}\${runfile}"              
 
         #GET target version
-        $objectNameVersion = $objectName + $targetVersion
-
- 
+        $objectNameVersion = $objectName + $targetVersion 
         Write-Host "Tartget version: from ${objectName} to ${objectNameVersion}"
-        #continue
+
+        #Expression to replace to target
+        $regexValues = @(@{"expression" ="${objectName}`n"},@{"expression" = "${objectName}[\s]"},@{"expression" ="[\[]${objectName}[\]]"})
+        $regexFunc = @(@{"expression" = "${objectName}[\s+\(]"},@{"expression" = "[\[]${objectName}]\s+\("})
 
         $SQLConnection = New-Object System.Data.SqlClient.SqlConnection 
         #$SQLConnection.ConnectionTimeout = 30
@@ -56,11 +63,6 @@ try
         #$SQLCommandText
         $SQLCommandText = @(Get-Content -Path $scriptFile -Encoding UTF8)
         
-        $pathInfo = $runfile.Split("-")
-                
-        $deployAliasName = $pathInfo.Get(2).ToString() 
-        $deployDbName = $pathInfo.Get(3).ToString() 
-
         #Write-Host "Alias Info: ${aliasName}-${dbName}"
         $serverIP = $servers.$depEnv.Servers.$deployAliasName.IP
         $user = $servers.$depEnv.SQLDeployer.username
@@ -113,106 +115,61 @@ try
                     #-OR $SQLPacket.IndexOf('GRANT') -gt -1
                     IF($SQLPacket.IndexOf('PROCEDURE') -gt -1 -OR $SQLPacket.IndexOf('FUNCTION') -gt -1 -OR $SQLPacket.IndexOf('GRANT') -gt -1)
                     {
+                        
                         #Deploy to Target version
-                        $SQLPacket = $SQLPacket.Replace("[${objectName}]", "[${objectNameVersion}]")
+                        $regexValues | foreach {
+                            $regex = new-object System.Text.RegularExpressions.Regex ($_.expression, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+                            if($regex.IsMatch($SQLPacket) -eq 1)
+                            {
+                                if($_.expression.IndexOf("`n") -gt -1) {
+                                    $SQLPacket = $regex.Replace($SQLPacket, "[${objectNameVersion}]`n")
+                                } else {
+                                    $SQLPacket = $regex.Replace($SQLPacket, "[${objectNameVersion}]")
+                                }
+                            }
+                        }
+                        IF($objFunction -eq 1) {
+                            $regexFunc | foreach {
+                                $regex = new-object System.Text.RegularExpressions.Regex ($_.expression, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+                                if($regex.IsMatch($SQLPacket) -eq 1)
+                                {
+                                    $SQLPacket = $regex.Replace($SQLPacket, "[${objectNameVersion}](")
+                                }
+                            }
+                        }
 
                         #Process Nested Calling
                         IF($SQLPacket.IndexOf('PROCEDURE') -gt -1)
                         {
-                            #nested calling
-                            #ProcessNestedCalling($SQLPacket, $objectName, $targetVersion)
-                            foreach($obj IN $deployObjects)
-                            {
-                                $aliasName = $obj.aliasName
-                                $dbName = $obj.dbName
-                                $objName = $obj.objName
+                            #Process nested calling
+                            #$deployObjects | Where-Object {$_.objName -ne $objectName -and ($_.isFunction -eq 1 -or $_.isNested -eq 1) } | Foreach 
+                            $deployObjects | Foreach {
 
-                                if($SQLPacket.IndexOf($objName) -gt -1 -and $objName -ne $objectName) {
-                                    
-                                    #Replace cross server & database
-                                    #1
-                                    $keySearch = "[${aliasName}].[${dbName}].[dbo].[${objName}]"
-                                    $keyReplace = "[${aliasName}].[${dbName}].[dbo].[${objName}$targetVersion]"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #2
-                                    $keySearch = "${aliasName}.${dbName}.dbo.${objName}"
-                                    $keyReplace = "${aliasName}.${dbName}.dbo.${objName}$targetVersion"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #3
-                                    $keySearch = "${aliasName}.${dbName}.dbo.${objName}`n"
-                                    $keyReplace = "${aliasName}.${dbName}.dbo.${objName}$targetVersion`n"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #4
-                                    $keySearch = "${aliasName}.${dbName}.dbo.${objName} "
-                                    $keyReplace = "${aliasName}.${dbName}.dbo.${objName}$targetVersion "
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
+                                $nestedName = $_.objName
+                                $nestedVersion = "${nestedName}${targetVersion}"
 
-                                    #Replace cross database
-                                    #5
-                                    $keySearch = "[${dbName}].[dbo].[${objName}]"
-                                    $keyReplace = "[${dbName}].[dbo].[${objName}$targetVersion]"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
+                                $regexNested = @(@{"expression" ="${nestedName}`n"},@{"expression" = "${nestedName}[\s]"},@{"expression" ="[\[]${nestedName}[\]]"},@{"expression" ="${nestedName}[\)]"})
+                                #Replace to Target version
+                                $regexNested | foreach {
+                                    $nRegex = new-object System.Text.RegularExpressions.Regex ($_.expression, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+                                    if($nRegex.IsMatch($SQLPacket) -eq 1)
+                                    {
+                                        if($_.expression.IndexOf("`n") -gt -1) {
+                                            $SQLPacket = $nRegex.Replace($SQLPacket, "[${nestedVersion}]`n")
+                                        } else {
+                                            $SQLPacket = $nRegex.Replace($SQLPacket, "[${nestedVersion}]`n")
+                                        }
                                     }
-                                    #6
-                                    $keySearch = "${dbName}.dbo.${objName}"
-                                    $keyReplace = "${dbName}.dbo.${objName}${targetVersion}"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-
-                                    #7
-                                    $keySearch = "${dbName}.dbo.${objName}`n"
-                                    $keyReplace = "${dbName}.dbo.${objName}${targetVersion}`n"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #8
-                                    $keySearch = "${dbName}.dbo.${objName} "
-                                    $keyReplace = "${dbName}.dbo.${objName}${targetVersion} "
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-
-
-                                    #Replace same database
-                                    #9
-                                    $keySearch = "[dbo].[${objName}]"
-                                    $keyReplace = "[dbo].[${objName}${targetVersion}]"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #10
-                                    $keySearch = "dbo.${objName}"
-                                    $keyReplace = "dbo.${objName}${targetVersion}"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #11
-                                    $keySearch = "[${objName}]"
-                                    $keyReplace = "[${objName}${targetVersion}]"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #12
-                                    $keySearch = "${objName}`n"
-                                    $keyReplace = "${objName}${targetVersion}`n"
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
-                                    }
-                                    #13
-                                    $keySearch = "${objName} "
-                                    $keyReplace = "${objName}${targetVersion} "
-                                    if($SQLPacket.IndexOf($keyReplace) -eq -1) {
-                                        $SQLPacket = $SQLPacket.Replace($keySearch, $keyReplace)
+                                }
+                                #Replace for function
+                                IF($_.isFunction -eq 1) {
+                                    $regexNestedFunc = @(@{"expression" = "${nestedName}[\s+\(]"},@{"expression" = "[\[]${nestedName}]\s+\("})
+                                    $regexNestedFunc | foreach {
+                                        $nRegex = new-object System.Text.RegularExpressions.Regex ($_.expression, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+                                        if($nRegex.IsMatch($SQLPacket) -eq 1)
+                                        {
+                                            $SQLPacket = $nRegex.Replace($SQLPacket, "[${nestedVersion}](")
+                                        }
                                     }
                                 }
                             }
@@ -243,6 +200,6 @@ catch
 {
     Write-Host "Auto Deployment Process has been failed at the object [${deployAliasName}-${deployDbName}-${objectNameVersion}]." 
     if($SQLConnection.State -eq 'Open') { $SQLConnection.Close() }
-    $Error
+    $Error[0]
     exit 1
 }

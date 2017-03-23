@@ -1,5 +1,8 @@
-﻿#[string]$packagePath  = "\\10.18.200.200\Users\1.DB_Team\DB_Deployment\Packages"
-[string]$packagePath = $env:PACKAGE_PATH
+﻿[string]$packagePath  = "\\10.18.200.200\Users\1.DB_Team\DB_Deployment\Packages"
+if($env:PACKAGE_PATH -ne $null -and $env:PACKAGE_PATH.Length -gt 0)
+{
+    $packagePath = $env:PACKAGE_PATH
+}
 [string]$branchName = $env:BRANCH_NAME
 [string]$branchNameShort = $env:PACKAGE_NAME
 [string]$projName = $env:JOB_BASE_NAME
@@ -9,7 +12,7 @@
 [string]$buildPath = "$packagePath\$projName\$branchName\$packageName"
 
 #ignore master branch
-if($branchName -eq "master") { exit 0 }
+if($branchName -eq "master" -or $branchName.Length -eq 0) { exit 0 }
 
 #Check DB patch
 if ((Test-Path -Path “$packagePath\$projName”) -ne “true”)
@@ -42,7 +45,7 @@ git.exe branch --force master origin/master
 #git.exe checkout $branchName -f
 git.exe branch --force $branchName origin/$branchName
 #get list file changed to deploy
-git.exe diff --name-only master.."$branchName" > $DiffFileName 
+git.exe diff --name-status master.."$branchName" > $DiffFileName 
 
 #Write-Host "DiffFileName: $DiffFileName"
 
