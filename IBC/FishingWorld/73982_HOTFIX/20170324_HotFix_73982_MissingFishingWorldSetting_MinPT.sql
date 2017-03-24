@@ -125,6 +125,6 @@ SELECT
 	,0
 FROM #CustTemp_MinPT ci WITH(NOLOCK) 
 WHERE CI.RoleID = 1
-	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ci.CustId=ca.CustId)
+	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Member ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ci.CustId=ca.CustId)
 
 DROP TABLE #CustTemp_MinPT
