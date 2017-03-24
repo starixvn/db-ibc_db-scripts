@@ -1,9 +1,9 @@
 /*
-	Created: 20170209@Helen
-	Task: insert the Setting of MacauGames of new licensees into the DCS database.
-	Redmine: https://nexdev.net/issues/71312
-	DB:DBCUST/CustDB
-*/ 
+	Created: 20170324@Helen
+	Task: insert the Setting of Voidbridge of new licensees into the DCS database.
+	Redmine: https://redmine.nexcel.vn/issues/73801
+	DB: DBCUST/CUSTDB
+*/  
 ------------------------------------------------------
 DECLARE @ProductID INT = 22 -- Macau Games
 
