@@ -36,7 +36,7 @@ BEGIN
 										IsDisabledDownline="1"
 								/>
 							</ROOT>'
-	, @UserID			=1
+	, @UserID			=10278938
 	, @IP				='129.168.1.1'
 	, @SystemID			=1
 	, @ErrCode			=@ErrCode
