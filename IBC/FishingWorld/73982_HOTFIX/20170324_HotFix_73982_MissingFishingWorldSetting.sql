@@ -57,16 +57,16 @@ WHERE si.RoleID IN (2,3)
 	AND NOT EXISTS(SELECT 1 FROM CustWinLossLimit_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND si.CustId=ca.CustId)
 
 INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
-SELECT si.custid, @Sporttype, @Bettype
+SELECT ct.custid, @Sporttype, @Bettype
 	, 0 AS MaxWinLimit	
 	, WL.DefaultLossLimit
 	, 1 IsAutoReset
-FROM #CustTemp si WITH (NOLOCK) 	
+FROM #CustTemp ct WITH (NOLOCK) 	
 	CROSS APPLY (SELECT ISNULL(DefaultLossLimit,0) AS DefaultLossLimit 
 				 FROM LossLimit_GlobalSetting WITH (NOLOCK) 
-				 WHERE ProductId = @ProductID AND ExchangeId = si.currency) AS WL
-WHERE si.RoleID = 1
-	AND  NOT EXISTS(SELECT 1 FROM CustWinLossLimit_Member ca WITH(NOLOCK) WHERE SportType=@Sporttype AND si.CustId=ca.CustId)
+				 WHERE ProductId = @ProductID AND ExchangeId = ct.currency) AS WL
+WHERE ct.RoleID = 1
+	AND  NOT EXISTS(SELECT 1 FROM CustWinLossLimit_Member ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ct.CustId=ca.CustId)
 -------------------------------------- PT -------------------------------------------------
 --Master AGENT LEVEL
 INSERT INTO dbo.CustPTSetting3rd_Agent
@@ -84,7 +84,7 @@ INSERT INTO dbo.CustPTSetting3rd_Agent
 	   ,[MinPT]
 	   ,[MaxPT])
 SELECT 
-	ci.custid, @Sporttype, @Bettype, 0
+	ct.custid, @Sporttype, @Bettype, 0
 	,0
 	,0
 	,0
@@ -94,9 +94,9 @@ SELECT
 	,0
 	,0
 	,@MaxPT
-FROM #CustTemp ci 
-WHERE  ci.roleid IN(2,3)
-	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ci.CustId=ca.CustId)
+FROM #CustTemp ct 
+WHERE  ct.roleid IN(2,3)
+	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ct.CustId=ca.CustId)
 
 --MEMBER LEVEL
 INSERT INTO dbo.CustPTSetting3rd_Member
@@ -112,7 +112,7 @@ INSERT INTO dbo.CustPTSetting3rd_Member
 	  ,	[IsAutoSuperPT]
 	  ,	[AutoSuperPT])
 SELECT 
-	ci.custid, @Sporttype, @Bettype, 0
+	ct.custid, @Sporttype, @Bettype, 0
 	,0
 	,0
 	,0
@@ -120,8 +120,8 @@ SELECT
 	,0
 	,0
 	,0
-FROM #CustTemp ci WITH(NOLOCK) 
-WHERE CI.RoleID = 1
-	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Member ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ci.CustId=ca.CustId)
+FROM #CustTemp ct WITH(NOLOCK) 
+WHERE ct.RoleID = 1
+	AND NOT EXISTS(SELECT 1 FROM CustPTSetting3rd_Member ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ct.CustId=ca.CustId)
 
 DROP TABLE #CustTemp
