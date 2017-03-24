@@ -8,9 +8,6 @@ DECLARE @Sporttype INT, @Bettype INT, @MaxPT TINYINT,@ProductID INT
 SELECT @Sporttype = 219, @Bettype = 1011, @ProductID=24
 SELECT @MaxPT= MaxPT from ProductSettingDetail WITH(NOLOCK) where SportType=@Sporttype and BetType=@Bettype and SettingType=1
 
-DECLARE @BitOrder INT
-SELECT @BitOrder= bitmapOrder from ProductStatusProfile WITH(NOLOCK) where SportType=@Sporttype
-
 CREATE TABLE #CustTemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED
