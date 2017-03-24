@@ -45,16 +45,16 @@ WHERE c.recommend IN (
 
 --------------------------------------WinLossLimit-------------------------------------------------
 INSERT INTO CustWinLossLimit_Agent(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
-SELECT si.custid, @Sporttype, @Bettype
+SELECT ct.custid, @Sporttype, @Bettype
 	, 0 AS MaxWinLimit	
 	, WL.DefaultLossLimit
 	, 1 IsAutoReset
-FROM #CustTemp si WITH (NOLOCK) 	
+FROM #CustTemp ct WITH (NOLOCK) 	
 	CROSS APPLY (SELECT ISNULL(DefaultLossLimit,0) AS DefaultLossLimit 
 				 FROM LossLimit_GlobalSetting WITH (NOLOCK) 
-				 WHERE ProductId = @ProductID AND ExchangeId = si.currency) AS WL
-WHERE si.RoleID IN (2,3)
-	AND NOT EXISTS(SELECT 1 FROM CustWinLossLimit_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND si.CustId=ca.CustId)
+				 WHERE ProductId = @ProductID AND ExchangeId = ct.currency) AS WL
+WHERE ct.RoleID IN (2,3)
+	AND NOT EXISTS(SELECT 1 FROM CustWinLossLimit_Agent ca WITH(NOLOCK) WHERE SportType=@Sporttype AND ct.CustId=ca.CustId)
 
 INSERT INTO CustWinLossLimit_Member(CustId, SportType, BetType,MaxWinLimit, MaxLossLimit, IsAutoReset)
 SELECT ct.custid, @Sporttype, @Bettype
