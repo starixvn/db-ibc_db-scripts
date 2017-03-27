@@ -37,14 +37,14 @@ BEGIN
 								/>
 							</ROOT>'
 	, @UserID			=10278938
-	, @IP				='129.168.1.1'
+	, @IP				='202.78.231.3'
 	, @SystemID			=1
 	, @ErrCode			=@ErrCode
 	, @MsgType			=@MsgType
 	, @ErrMsg			=@ErrMsg
 	IF @ErrCode<>0
 	PRINT @ErrCode
-	waitfor delay '00:00:0.280'
+	waitfor delay '00:00:0.100'
 END
 DROP TABLE #temp
 
