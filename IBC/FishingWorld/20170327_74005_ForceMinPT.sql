@@ -246,3 +246,11 @@ BEGIN
 			
 	waitfor delay '00:00:0.100'
 END
+
+DROP TABLE #Super
+DROP TABLE #CheckPTResult_Credit
+DROP TABLE #Cust
+DROP TABLE #AgentPT
+DROP TABLE #MasterPT
+DROP TABLE #MemberPT
+DROP TABLE #SuperPT
