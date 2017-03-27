@@ -179,9 +179,8 @@ BEGIN
 
 		UPDATE cs
 		SET cs.MinPT = 80
-		FROM dbo.CustPTSetting3rd_Agent cs WITH (ROWLOCK,UPDLOCK)
-			INNER JOIN #Super s ON s.CustID = cs.CustID
-		WHERE cs.SportType =219 AND s.custid=@superid
+		FROM dbo.CustPTSetting3rd_Agent cs WITH (ROWLOCK,UPDLOCK)		
+		WHERE cs.SportType =219 AND cs.custid=@superid
 	
 		DECLARE @PT	VARCHAR(MAX)='<ROOT><PT SportType="219" BetType="1011" IsLive="0"/></ROOT>'
 
