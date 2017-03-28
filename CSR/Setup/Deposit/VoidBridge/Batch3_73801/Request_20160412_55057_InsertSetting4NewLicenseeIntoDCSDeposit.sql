@@ -226,7 +226,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site in ('ABB688', 'Taipanbet', 'Brown888', 'Liga')
+	AND site in ('ABB688', 'Taipanbet', 'Brown888', 'Liga','Uwoniwin')
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 
@@ -275,7 +275,7 @@ INSERT INTO #supers(custid,currency)
 SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
-	AND site in ('ABB688','Taipanbet', 'Brown888', 'Liga')
+	AND site in ('ABB688','Taipanbet', 'Brown888', 'Liga','Uwoniwin')
 	AND custid <= @max_custid
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 
