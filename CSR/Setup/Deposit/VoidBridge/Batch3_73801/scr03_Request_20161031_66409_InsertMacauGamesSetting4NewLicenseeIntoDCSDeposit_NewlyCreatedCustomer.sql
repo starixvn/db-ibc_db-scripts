@@ -59,6 +59,7 @@ FROM #tblCust_member C
 					INNER JOIN Dep_StakeLevel sl WITH (NOLOCK) ON ss.val = sl.StakeLevelID  
 				ORDER BY sl.MaxStake, sl.MinStake, SL.GameGroupID
 				) AS L					
+WHERE NOT EXISTS (SELECT 1 FROM Dep_CustStakeLevel_Member cslm WITH (NOLOCK) WHERE cslm.CustID = C.custid AND cslm.SportType = @SportType AND cslm.BetType = @BetType)
 
 DROP TABLE #tblCust_member
 
