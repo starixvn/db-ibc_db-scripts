@@ -1,7 +1,7 @@
 
 /*
 	Created: Winnie	
-	Task:  Enable and UnHide SMA for Virtual Sports,Keno,OneRNG Casino,Colossus Bets,Racing
+	Task:  Enable and UnHide Virtual Sports,Keno,OneRNG Casino,Colossus Bets,Racing for SMA
 	DB: DBCUST/CustDB
 	Date: 20170403
 */ 
