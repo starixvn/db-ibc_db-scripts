@@ -11,27 +11,24 @@ DECLARE @MaxCustID INT
 	
 SELECT @MaxCustID = xxx
 	
-CREATE TABLE #supers (custid INT)
-CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT)
+CREATE TABLE #supers (custid INT,IsLicensee BIT)
+CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT,IsLicensee BIT)
 CREATE TABLE #ProfileVirtualSetting (sporttype SMALLINT,bettype SMALLINT,isLive BIT, ProfileID INT )
 
 --- GET super List ---
-INSERT INTO #supers(custid)
-SELECT ci.custid
+INSERT INTO #supers(custid,IsLicensee)
+SELECT ci.custid, CASE WHEN csd.custid IS NULL THEN 0 ELSE 1 END AS IsLicensee
 FROM customer ci WITH (NOLOCK) 
- INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
- INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+ LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = ci.custid
 WHERE ci.roleid = 4  
-	 AND ci.username NOT LIKE '3rdSuper%'
-	 AND cs.isinternal = 0
-	 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	 AND s.islicensee = 0
+	 
 --- GET All downline
-INSERT INTO #DownlineListTemp (CustID,RoleID)
-SELECT ci.custid,ci.roleid
+INSERT INTO #DownlineListTemp (CustID,RoleID,IsLicensee)
+SELECT ci.custid,ci.roleid,IsLicensee
 FROM Custinfo ci WITH (NOLOCK)
-WHERE Enabled = 1 AND custid > @MaxCustID
-	AND EXISTS (SELECT 1 FROM #supers WHERE custid = ci.srecommend )
+	INNER JOIN #supers s ON ci.srecommend = s.custid
+WHERE ci.Enabled = 1 AND ci.custid > @MaxCustID
+	
 
 INSERT INTO #ProfileVirtualSetting (sporttype,bettype,isLive,ProfileID)
 SELECT sporttype,bettype,isLive,ProfileID
@@ -45,13 +42,13 @@ SELECT
 		, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
 		, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 FROM custsetting cs (NOLOCK) 
-		INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
-	WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
+		INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID AND IsLicensee = 0
+WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 	
 INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
 SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
 FROM custoverride cs
-	INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4)
+	INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4) AND t.IsLicensee = 0
 WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 
 ------------------------------------ Vitual Rate Setting -------------------------------------------------------------

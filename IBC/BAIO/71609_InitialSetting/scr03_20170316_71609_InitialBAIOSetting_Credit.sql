@@ -15,6 +15,7 @@
 ALTER PROCEDURE [dbo].[Acc_CustSetting_19]
 	@srecommend INT	
 	,@maxcustid INT
+	,@IsLicensee BIT
 	,@target VARCHAR(20)
 AS
 BEGIN
@@ -52,22 +53,26 @@ BEGIN
 	WHERE srecommend = @srecommend AND Enabled = 1 AND custid <= @maxcustid
 	
 	------------------------------------ PT/Bet/Com Setting -------------------------------------------------------------
-	INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
-	SELECT
-			cs.custid, @Sporttype,@Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
-			, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
-			, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
-	FROM custsetting cs (NOLOCK) 
-			INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
-		WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
-		
-	INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
-	SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
-	FROM custoverride cs
-		INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4)
-	WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
+	IF @IsLicensee = 0 -- CREDIT
+	BEGIN
 	
-	------------------------------------ Vitual Rate Setting -------------------------------------------------------------
+		INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
+		SELECT
+				cs.custid, @Sporttype,@Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
+				, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
+				, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
+		FROM custsetting cs (NOLOCK) 
+				INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
+			WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
+			
+		INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
+		SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
+		FROM custoverride cs
+			INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4)
+		WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
+	END
+	
+	------------------------------------ CREDIT & DEPOSIT: Vitual Rate Setting -------------------------------------------------------------
 	UPDATE cvs
 		SET bitmapVirtual = (SELECT TOP 1 bitmap FROM dbo.f_GenerateVirtualSetting_multiple(cvs.bitmapVirtual, CONVERT(VARCHAR(MAX),Result.virtualXML))) 
 	FROM CustVirtualSetting	AS cvs WITH (UPDLOCK, ROWLOCK)
@@ -104,22 +109,19 @@ GO
 
 -- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (DB06/DBTP) -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+CREATE TABLE #supers (custid int,isfinished bit default(0), IsLicensee BIT)
 
-DECLARE @max_custid INT, @srecommend INT
+DECLARE @max_custid INT, @srecommend INT, @IsLicensee BIT
 
 SELECT @max_custid = xxx
 
-INSERT INTO #supers(custid)
-SELECT ci.custid
+INSERT INTO #supers(custid,IsLicensee)
+SELECT ci.custid, CASE WHEN csd.custid IS NULL THEN 0 ELSE 1 END AS IsLicensee
 FROM customer ci WITH (NOLOCK) 
 	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
 	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = CS.custid
 WHERE ci.roleid = 4  
-	AND ci.username NOT LIKE '3rdSuper%'
-	AND cs.isinternal = 0
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND s.islicensee = 0
 	AND ci.custid <= @max_custid
 
 -- For Deployer Info
@@ -139,6 +141,7 @@ BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
 		,@srecommend = custid	
+		,@IsLicensee = IsLicensee
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -147,6 +150,7 @@ BEGIN
 			
 	EXEC dbo.[Acc_CustSetting_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
+			,@IsLicensee = @IsLicensee
 			,@target = 'REPLICATED'
 			
 			
@@ -155,22 +159,19 @@ END
 
 -- BEGIN STEP 3: RUN THIS SCRIPT AT DBCUST -----
 --------------------------------------------------------------------------------------
-CREATE TABLE #supers (custid int,isfinished bit default(0))
+CREATE TABLE #supers (custid int,isfinished bit default(0),IsLicensee BIT)
 
-DECLARE @max_custid INT, @srecommend INT
+DECLARE @max_custid INT, @srecommend INT,@IsLicensee BIT
 
 SELECT @max_custid = xxx
 
-INSERT INTO #supers(custid)
-SELECT ci.custid
+INSERT INTO #supers(custid,IsLicensee)
+SELECT ci.custid, CASE WHEN csd.custid IS NULL THEN 0 ELSE 1 END AS IsLicensee
 FROM customer ci WITH (NOLOCK) 
 	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
 	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = CS.custid
 WHERE ci.roleid = 4  
-	AND ci.username NOT LIKE '3rdSuper%'
-	AND cs.isinternal = 0
-	AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
-	AND s.islicensee = 0
 	AND ci.custid <= @max_custid
  
 
@@ -189,7 +190,8 @@ WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
 	SET isfinished = 1
-		,@srecommend = custid	
+		,@srecommend = custid
+		,@IsLicensee = IsLicensee	
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -198,6 +200,7 @@ BEGIN
 			
 	EXEC dbo.[Acc_CustSetting_19] @srecommend = @srecommend
 			,@maxcustid = @max_custid
+			,@IsLicensee = @IsLicensee
 			,@target = 'DBCUST'
 			
 			
