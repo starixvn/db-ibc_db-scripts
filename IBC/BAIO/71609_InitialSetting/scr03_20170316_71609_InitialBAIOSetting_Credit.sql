@@ -118,9 +118,7 @@ SELECT @max_custid = xxx
 INSERT INTO #supers(custid,IsLicensee)
 SELECT ci.custid, CASE WHEN csd.custid IS NULL THEN 0 ELSE 1 END AS IsLicensee
 FROM customer ci WITH (NOLOCK) 
-	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
-	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = CS.custid
+	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = ci.custid
 WHERE ci.roleid = 4  
 	AND ci.custid <= @max_custid
 
@@ -168,9 +166,7 @@ SELECT @max_custid = xxx
 INSERT INTO #supers(custid,IsLicensee)
 SELECT ci.custid, CASE WHEN csd.custid IS NULL THEN 0 ELSE 1 END AS IsLicensee
 FROM customer ci WITH (NOLOCK) 
-	INNER JOIN site s WITH (NOLOCK) ON ci.site = s.site
-	INNER JOIN custsuper cs WITH (NOLOCK) ON ci.custid = cs.custid
-	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = CS.custid
+	LEFT JOIN Dep_CustSuper CSD WITH(NOLOCK) ON CSD.custid = ci.custid
 WHERE ci.roleid = 4  
 	AND ci.custid <= @max_custid
  
