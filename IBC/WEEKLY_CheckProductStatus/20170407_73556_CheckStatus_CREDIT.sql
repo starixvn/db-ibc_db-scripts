@@ -1,11 +1,12 @@
 /*
 Created: 20170328@Helen
 Task: Monthly check Status setting for credit/deposit customers - [Redmine:73556]
-DB: DBCHECK.CheckResultDB
+DB: DB054.CheckResultDB
 Revisions:
 
 */
-
+USE CheckResultDB
+GO
 ------------------------ #1: Number Game	161	81	3	CustInfo.DisableNumber
 EXEC [DBA_CheckStatus_Credit] @sportType=161, @bettype = 81, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableNumber', @HiddenTable='', @HiddenColumnName='',@SynTable='',@SynColumnName = ''
 

@@ -1,7 +1,7 @@
 /*
 Created: 20170328@Helen
 Task: Monthly check Status setting for credit/deposit customers - [Redmine:73556]
-DB: DBCHECK.CheckResultDB
+DB: DB054.CheckResultDB
 Revisions:
 For products using table custinfo to manage status	
 */
@@ -43,7 +43,8 @@ EXEC [DBA_CheckStatus_Deposit] @sportType=1, @bettype = 801, @DisableTable = 'Cu
 ------------------------------------ #12 Keno ---------------------------------------------------------
 -- Hidden: from custinfo
 EXEC [DBA_CheckStatus_Deposit] @sportType=202, @bettype = 1501, @DisableTable = '', @DisableColumnName = '', @HiddenTable='CustInfo', @HiddenColumnName = 'HideKeno',@SynTable='',@SynColumnName = ''
--- Disable
+
+-- Disable FROM CustGameType
 EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1501, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
 EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1502, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
 EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1503, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
