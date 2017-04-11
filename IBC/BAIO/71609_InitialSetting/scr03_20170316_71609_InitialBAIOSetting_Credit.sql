@@ -110,6 +110,7 @@ BEGIN
 	
 	DROP TABLE #DownlineListTemp
 	DROP TABLE #ProfileVirtualSetting
+	DROP TABLE #ProfileVirtualSetting_all
 	
 END
 GO

@@ -89,3 +89,4 @@ WHERE CVS.seqNo = 3
 DROP TABLE #DownlineListTemp
 DROP TABLE #ProfileVirtualSetting	
 DROP TABLE #supers
+DROP TABLE #ProfileVirtualSetting_all
