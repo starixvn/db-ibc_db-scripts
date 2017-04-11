@@ -14,6 +14,7 @@ SELECT @MaxCustID = xxx
 CREATE TABLE #supers (custid INT,IsLicensee BIT)
 CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT,IsLicensee BIT)
 CREATE TABLE #ProfileVirtualSetting (sporttype SMALLINT,bettype SMALLINT,isLive BIT, ProfileID INT )
+CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT, CONSTRAINT ProfileVirtualSetting_all_PK PRIMARY KEY CLUSTERED( sporttype, bettype, seqNo ))
 
 --- GET super List ---
 INSERT INTO #supers(custid,IsLicensee)
@@ -34,6 +35,10 @@ INSERT INTO #ProfileVirtualSetting (sporttype,bettype,isLive,ProfileID)
 SELECT sporttype,bettype,isLive,ProfileID
 FROM ProfileVirtualSetting WITH (NOLOCK) 
 WHERE sporttype = 2 AND bettype IN (20,21) 
+
+INSERT INTO #ProfileVirtualSetting_all (sporttype,bettype,isLive,seqNo,ProfileID)
+SELECT sporttype,bettype,isLive,seqNo,ProfileID
+FROM ProfileVirtualSetting WITH (NOLOCK)
 
 ------------------------------------ PT/Bet/Com Setting -------------------------------------------------------------
 INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
@@ -63,7 +68,7 @@ FROM CustVirtualSetting	AS cvs WITH (UPDLOCK, ROWLOCK)
 								-- GET profileID of bettype Ref
 								CROSS APPLY (SELECT pvs_ref.profileID,cvs_ref.bitmapVirtual 
 											 FROM CustVirtualSetting cvs_ref WITH (NOLOCK)
-												INNER JOIN ProfileVirtualSetting pvs_ref WITH(NOLOCK) ON cvs_ref.seqNo = pvs_ref.seqNo AND pvs_ref.islive = ipvs.islive
+												INNER JOIN #ProfileVirtualSetting_all pvs_ref WITH(NOLOCK) ON cvs_ref.seqNo = pvs_ref.seqNo AND pvs_ref.islive = ipvs.islive
 											 WHERE cvs_ref.custid = CVS.custid 
 													 AND pvs_ref.sporttype = 2 
 													 AND pvs_ref.bettype = (CASE WHEN ipvs.bettype = 20 THEN 1 ELSE 7 END)
