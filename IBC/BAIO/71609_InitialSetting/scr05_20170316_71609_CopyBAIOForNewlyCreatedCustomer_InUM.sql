@@ -14,7 +14,10 @@ SELECT @MaxCustID = xxx
 CREATE TABLE #supers (custid INT,IsLicensee BIT)
 CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT,IsLicensee BIT)
 CREATE TABLE #ProfileVirtualSetting (sporttype SMALLINT,bettype SMALLINT,isLive BIT, ProfileID INT )
-CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT, CONSTRAINT ProfileVirtualSetting_all_PK PRIMARY KEY CLUSTERED( sporttype, bettype, seqNo ))
+CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT)
+
+CREATE NONCLUSTERED INDEX inx_temp ON #ProfileVirtualSetting_all( sporttype, bettype, seqNo )
+INCLUDE (ProfileID)
 
 --- GET super List ---
 INSERT INTO #supers(custid,IsLicensee)
