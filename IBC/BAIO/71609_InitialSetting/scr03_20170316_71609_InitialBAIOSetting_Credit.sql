@@ -42,7 +42,7 @@ BEGIN
 	
 	CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT)
 	
-	CREATE NONCLUSTERED INDEX inx_temp ON #ProfileVirtualSetting_all( sporttype, bettype, seqNo )
+	CREATE NONCLUSTERED INDEX inx_temp ON #ProfileVirtualSetting_all( sporttype, bettype, seqNo,islive )
 	INCLUDE (ProfileID)
 
 	INSERT INTO #ProfileVirtualSetting (sporttype,bettype,isLive,ProfileID)

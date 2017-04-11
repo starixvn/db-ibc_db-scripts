@@ -16,7 +16,7 @@ CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT,IsL
 CREATE TABLE #ProfileVirtualSetting (sporttype SMALLINT,bettype SMALLINT,isLive BIT, ProfileID INT )
 CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT)
 
-CREATE NONCLUSTERED INDEX inx_temp ON #ProfileVirtualSetting_all( sporttype, bettype, seqNo )
+CREATE NONCLUSTERED INDEX inx_temp ON #ProfileVirtualSetting_all( sporttype, bettype, seqNo,islive )
 INCLUDE (ProfileID)
 
 --- GET super List ---
