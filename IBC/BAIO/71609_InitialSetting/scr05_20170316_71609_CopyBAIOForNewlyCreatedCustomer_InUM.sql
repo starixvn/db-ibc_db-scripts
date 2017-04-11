@@ -55,7 +55,7 @@ WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 	
 INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
 SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
-FROM custoverride cs
+FROM custoverride cs WITH (NOLOCK)
 	INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4) AND t.IsLicensee = 0
 WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 

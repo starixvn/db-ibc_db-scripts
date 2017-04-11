@@ -70,13 +70,13 @@ BEGIN
 				cs.custid, @Sporttype,@Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
 				, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
 				, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
-		FROM custsetting cs (NOLOCK) 
+		FROM custsetting cs WITH (NOLOCK) 
 				INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
 			WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 			
 		INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
 		SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
-		FROM custoverride cs
+		FROM custoverride cs WITH (NOLOCK)
 			INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4)
 		WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 	END
