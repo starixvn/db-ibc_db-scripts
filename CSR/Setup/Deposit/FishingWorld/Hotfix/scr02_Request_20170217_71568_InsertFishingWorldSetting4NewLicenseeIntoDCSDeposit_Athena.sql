@@ -29,10 +29,10 @@ BEGIN
 	
 	DECLARE @SportType SMALLINT = 219, @BetType SMALLINT = 1011
 
-	CREATE TABLE #tblCust (custid int,agentid int, roleid int) 
+	CREATE TABLE #tblCust (custid int, roleid int) 
 
 	INSERT INTO #tblCust			
-	SELECT custid,recommend,roleid
+	SELECT custid,roleid
 	FROM custInfo WITH(NOLOCK)
 	WHERE srecommend =@srecommend
 		AND roleid IN (2,3,4)
@@ -53,7 +53,7 @@ BEGIN
 	UPDATE ST
 		SET AgentPT = @SuperPT
 	FROM Dep_CustPTGroupSetting_Member ST WITH (ROWLOCK,UPDLOCK)
-		INNER JOIN #tblCust ci ON ST.AgentID = CI.agentid AND CI.roleid = 2
+		INNER JOIN #tblCust ci ON ST.AgentID = CI.custid AND CI.roleid = 2
 		
 	DROP TABLE #tblCust
 
