@@ -14,9 +14,8 @@ INSERT INTO #Cust_NoVR (CustID,roleID)
 SELECT  ci.custid, ci.roleid 
 FROM CustInfo ci WITH (NOLOCK)
 	LEFT JOIN CustVirtualSetting cvs WITH (NOLOCK) ON ci.custid=cvs.custid 
-WHERE ci.roleid IN (4)
-	AND ci.Enabled=1 AND ci.currency <>20
-	AND cvs.custid IS NULL
+WHERE ci.Enabled=1 AND ci.currency <>20
+	  AND cvs.custid IS NULL
 
 -- For super: virtualmultiplier = 0	
 DECLARE @virtualmultiplier SMALLMONEY = 0
