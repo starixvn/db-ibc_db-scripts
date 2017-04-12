@@ -47,7 +47,7 @@ BEGIN
 			, MasterPT = CASE WHEN ci.roleid IN (3,4) THEN @SuperPT ELSE 0 END 
 			, AgentPT = CASE WHEN ci.roleid IN (2,4) THEN @SuperPT ELSE 0 END
 	FROM [Dep_CustPTSetting_Agent] ST WITH (ROWLOCK,UPDLOCK)
-		INNER JOIN #tblCust ci ON ST.CustID = CI.custid AND roleid IN (2,3,4)
+		INNER JOIN #tblCust ci ON ST.CustID = CI.custid AND ci.roleid IN (2,3,4)
 	WHERE ST.SportType = @SportType AND ST.BetType = @BetType	
 		
 	UPDATE ST
