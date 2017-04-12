@@ -50,44 +50,41 @@ BEGIN
 	WHERE srecommend = @srecommend AND Enabled = 1 AND custid > @maxcustid1 AND custid <= @maxcustid2
 	
 	------------------------------------ CREDIT & DEPOSIT: Vitual Rate Setting -------------------------------------------------------------
-	IF EXISTS (SELECT 1 FROM #DownlineListTemp)
-	BEGIN
 	
-		INSERT INTO #ProfileVirtualSetting (sporttype,bettype,isLive,ProfileID)
-		SELECT sporttype,bettype,isLive,ProfileID
-		FROM ProfileVirtualSetting WITH (NOLOCK) 
-		WHERE sporttype = 2 AND bettype IN (20,21) 
+	INSERT INTO #ProfileVirtualSetting (sporttype,bettype,isLive,ProfileID)
+	SELECT sporttype,bettype,isLive,ProfileID
+	FROM ProfileVirtualSetting WITH (NOLOCK) 
+	WHERE sporttype = 2 AND bettype IN (20,21) 
 
-		INSERT INTO #ProfileVirtualSetting_all (sporttype,bettype,isLive,seqNo,ProfileID)
-		SELECT sporttype,bettype,isLive,seqNo,ProfileID
-		FROM ProfileVirtualSetting WITH (NOLOCK)
-	
-		UPDATE cvs
-			SET bitmapVirtual = (SELECT TOP 1 bitmap FROM dbo.f_GenerateVirtualSetting_multiple(cvs.bitmapVirtual, CONVERT(VARCHAR(MAX),Result.virtualXML))) 
-		FROM CustVirtualSetting	AS cvs WITH (UPDLOCK, ROWLOCK)
-			INNER JOIN	#DownlineListTemp AS ci WITH (NOLOCK)	ON	ci.custid = cvs.custid 
-				CROSS APPLY( SELECT(
-									SELECT	ipvs.profileID			AS '@p',
-											dbo.f_GetVirtualSetting(T.bitmapVirtual, T.profileID) AS '@v'
-									FROM #ProfileVirtualSetting	AS ipvs WITH (NOLOCK)
-										-- GET profileID of bettype Ref
-										CROSS APPLY (SELECT pvs_ref.profileID,cvs_ref.bitmapVirtual 
-													 FROM CustVirtualSetting cvs_ref WITH (NOLOCK)
-														INNER JOIN #ProfileVirtualSetting_all pvs_ref WITH(NOLOCK) ON cvs_ref.seqNo = pvs_ref.seqNo AND pvs_ref.islive = ipvs.islive
-													 WHERE cvs_ref.custid = CVS.custid 
-															 AND pvs_ref.sporttype = 2 
-															 AND pvs_ref.bettype = (CASE WHEN ipvs.bettype = 20 THEN 1 ELSE 7 END)
-													) AS T
-									
-									WHERE ipvs.sporttype = 2 AND ipvs.bettype IN (20,21)
-									
-									FOR XML PATH ('r'),	TYPE
-								)
-							FOR XML PATH ('root'),	TYPE
-						) AS Result (virtualXML)
-				
-		WHERE CVS.seqNo = 3
-	END	
+	INSERT INTO #ProfileVirtualSetting_all (sporttype,bettype,isLive,seqNo,ProfileID)
+	SELECT sporttype,bettype,isLive,seqNo,ProfileID
+	FROM ProfileVirtualSetting WITH (NOLOCK)
+
+	UPDATE cvs
+		SET bitmapVirtual = (SELECT TOP 1 bitmap FROM dbo.f_GenerateVirtualSetting_multiple(cvs.bitmapVirtual, CONVERT(VARCHAR(MAX),Result.virtualXML))) 
+	FROM CustVirtualSetting	AS cvs WITH (UPDLOCK, ROWLOCK)
+		INNER JOIN	#DownlineListTemp AS ci WITH (NOLOCK)	ON	ci.custid = cvs.custid 
+			CROSS APPLY( SELECT(
+								SELECT	ipvs.profileID			AS '@p',
+										dbo.f_GetVirtualSetting(T.bitmapVirtual, T.profileID) AS '@v'
+								FROM #ProfileVirtualSetting	AS ipvs WITH (NOLOCK)
+									-- GET profileID of bettype Ref
+									CROSS APPLY (SELECT pvs_ref.profileID,cvs_ref.bitmapVirtual 
+												 FROM CustVirtualSetting cvs_ref WITH (NOLOCK)
+													INNER JOIN #ProfileVirtualSetting_all pvs_ref WITH(NOLOCK) ON cvs_ref.seqNo = pvs_ref.seqNo AND pvs_ref.islive = ipvs.islive
+												 WHERE cvs_ref.custid = CVS.custid 
+														 AND pvs_ref.sporttype = 2 
+														 AND pvs_ref.bettype = (CASE WHEN ipvs.bettype = 20 THEN 1 ELSE 7 END)
+												) AS T
+								
+								WHERE ipvs.sporttype = 2 AND ipvs.bettype IN (20,21)
+								
+								FOR XML PATH ('r'),	TYPE
+							)
+						FOR XML PATH ('root'),	TYPE
+					) AS Result (virtualXML)
+			
+	WHERE CVS.seqNo = 3
 	
 	DROP TABLE #DownlineListTemp
 	DROP TABLE #ProfileVirtualSetting
@@ -113,7 +110,7 @@ WHERE ci.roleid = 4
 	AND ci.custid <= @max_custid2
 	AND EXISTS (SELECT 1
 				FROM Custinfo ci1 WITH (NOLOCK)
-				WHERE ci1.srecommend = ci.srecommend AND Enabled = 1 AND custid > @max_custid1 AND custid <= @max_custid2 )
+				WHERE ci1.srecommend = ci.custid AND ci1.Enabled = 1 AND ci1.custid > @max_custid1 AND ci1.custid <= @max_custid2 )
 
 -- For Deployer Info
 DECLARE @super_cnt INT, @index INT = 0
@@ -162,7 +159,7 @@ WHERE ci.roleid = 4
 	AND ci.custid <= @max_custid2
 	AND EXISTS (SELECT 1
 				FROM Custinfo ci1 WITH (NOLOCK)
-				WHERE ci1.srecommend = ci.custid AND Enabled = 1 AND custid > @max_custid1 AND custid <= @max_custid2 )
+				WHERE ci1.srecommend = ci.custid AND ci1.Enabled = 1 AND ci1.custid > @max_custid1 AND ci1.custid <= @max_custid2 )
 
 -- For Deployer Info
 DECLARE @super_cnt INT, @index INT = 0
