@@ -11,7 +11,7 @@ DECLARE @MaxCustID INT
 	
 SELECT @MaxCustID = xxx
 	
-CREATE TABLE #supers (custid INT,IsLicensee BIT)
+CREATE TABLE #supers (custid INT)
 CREATE TABLE #DownlineListTemp (CustID INT PRIMARY KEY CLUSTERED, RoleID INT)
 --CREATE TABLE #ProfileVirtualSetting (sporttype SMALLINT,bettype SMALLINT,isLive BIT, ProfileID INT )
 --CREATE TABLE #ProfileVirtualSetting_all (sporttype SMALLINT,bettype SMALLINT,isLive BIT, seqNo INT,ProfileID INT)

@@ -27,10 +27,6 @@ BEGIN
 	IF dbo.f_CheckRepTable('custsetting') = 0 RETURN
 	IF dbo.f_CheckRepTable('custoverride') = 0 RETURN
 
-	IF dbo.f_CheckRepTable('CustVirtualSetting') = 0 RETURN
-	IF dbo.f_CheckRepTable('ProfileVirtualSetting') = 0 RETURN
-	
-
 	CREATE TABLE #DownlineListTemp
 	(
 		CustID INT PRIMARY KEY CLUSTERED
