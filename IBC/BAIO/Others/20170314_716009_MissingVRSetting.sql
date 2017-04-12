@@ -76,43 +76,43 @@ FROM #Cust_NoVR vr
 WHERE VR.roleID = 1
 
 ----------- UPDATE virtualmultiplier (custInfo) --------------------------------------------
--- Super Level
-UPDATE CI
-	SET virtualmultiplier =  @virtualmultiplier
-FROM custInfo  CI WITH (NOLOCK)
-	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
-WHERE CI.roleid = 4	
+---- Super Level
+--UPDATE CI
+--	SET virtualmultiplier =  @virtualmultiplier
+--FROM custInfo  CI WITH (NOLOCK)
+--	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
+--WHERE CI.roleid = 4	
 
--- Master Level
-UPDATE CI
-	SET virtualmultiplier =  VR_CI.virtualmultiplier 
-FROM custInfo  CI WITH (NOLOCK)
-	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
-	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
-				 FROM CustInfo ci_1 WITH(NOLOCK) 
-				 WHERE ci_1.CustID = ci.srecommend
-				) AS VR_CI
-WHERE CI.roleid = 3
+---- Master Level
+--UPDATE CI
+--	SET virtualmultiplier =  VR_CI.virtualmultiplier 
+--FROM custInfo  CI WITH (NOLOCK)
+--	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
+--	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
+--				 FROM CustInfo ci_1 WITH(NOLOCK) 
+--				 WHERE ci_1.CustID = ci.srecommend
+--				) AS VR_CI
+--WHERE CI.roleid = 3
 
--- Agent Level
-UPDATE CI
-	SET virtualmultiplier =  VR_CI.virtualmultiplier 
-FROM custInfo  CI WITH (NOLOCK)
-	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
-	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
-				 FROM CustInfo ci_1 WITH(NOLOCK) 
-				 WHERE ci_1.CustID = ci.mrecommend
-				) AS VR_CI
-WHERE CI.roleid = 2
+---- Agent Level
+--UPDATE CI
+--	SET virtualmultiplier =  VR_CI.virtualmultiplier 
+--FROM custInfo  CI WITH (NOLOCK)
+--	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
+--	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
+--				 FROM CustInfo ci_1 WITH(NOLOCK) 
+--				 WHERE ci_1.CustID = ci.mrecommend
+--				) AS VR_CI
+--WHERE CI.roleid = 2
 
--- Member Level
-UPDATE CI
-	SET virtualmultiplier = VR_CI.virtualmultiplier
-FROM custInfo  CI WITH (NOLOCK)
-	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
-	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
-				 FROM CustInfo ci_1 WITH(NOLOCK) 
-				 WHERE ci_1.CustID = ci.recommend
-				) AS VR_CI
-WHERE CI.roleid = 1
+---- Member Level
+--UPDATE CI
+--	SET virtualmultiplier = VR_CI.virtualmultiplier
+--FROM custInfo  CI WITH (NOLOCK)
+--	INNER JOIN #Cust_NoVR VR ON CI.custid = VR.CustID
+--	CROSS APPLY (SELECT ISNULL(virtualmultiplier,1) AS virtualmultiplier 
+--				 FROM CustInfo ci_1 WITH(NOLOCK) 
+--				 WHERE ci_1.CustID = ci.recommend
+--				) AS VR_CI
+--WHERE CI.roleid = 1
 				
