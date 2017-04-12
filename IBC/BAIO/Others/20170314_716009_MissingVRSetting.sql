@@ -18,7 +18,7 @@ WHERE ci.Enabled=1 AND ci.currency <>20
 	  AND cvs.custid IS NULL
 
 -- For super: virtualmultiplier = 0	
-DECLARE @virtualmultiplier SMALLMONEY = 0
+--DECLARE @virtualmultiplier SMALLMONEY = 0
 
 IF EXISTS (SELECT 1 FROM #Cust_NoVR WHERE roleID = 4)
 BEGIN
