@@ -122,7 +122,7 @@ DECLARE @ProductID INT = 24, @SportType INT = 219
  
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50)
+DECLARE @max_custid INT, @srecommend INT
 SELECT  @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid)

@@ -123,11 +123,11 @@ DECLARE @ProductID INT = 24, @SportType INT = 219
 
 CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50)
+DECLARE @max_custid INT, @srecommend INT
 SELECT  @max_custid= xxx ---input maxcustid
 
 INSERT INTO #supers(custid)
-SELECT custid,currency
+SELECT custid
 FROM  Dep_CustSuper with(nolock) 
 WHERE site in ('Indowin')  -- Athena
 	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
