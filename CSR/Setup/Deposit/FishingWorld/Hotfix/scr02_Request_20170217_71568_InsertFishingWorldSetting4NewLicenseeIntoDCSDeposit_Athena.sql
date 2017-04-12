@@ -18,8 +18,7 @@ BEGIN
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at DBCUST only
 	
 	
-	IF (dbo.f_CheckRepTable('Dep_CustSettingMode') = 0
-		OR dbo.f_CheckRepTable('Dep_CustPTSetting_Agent') = 0
+	IF (dbo.f_CheckRepTable('Dep_CustPTSetting_Agent') = 0
 		OR dbo.f_CheckRepTable('Dep_CustPTGroupSetting_Member') = 0
 	
 	   )
