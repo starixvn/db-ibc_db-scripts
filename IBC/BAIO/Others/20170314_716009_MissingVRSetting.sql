@@ -1,6 +1,6 @@
 /*
 	Created: 20170410@Helen
-	Task: 
+	Task: Missing Virtual Rate setting - https://nexdev.net/issues/74897
 	DB: DBCUST/CUSTDB
 */
 USE CUSTDB
