@@ -7,7 +7,7 @@ USE CustDB
 
 GO
 
-CREATE TABLE #ChangeGroupSetting (GroupID INT,ChangeName VARCHAR(200), LEVEL1 MONEY,LEVEL2 MONEY,LEVEL3 MONEY)
+CREATE TABLE #ChangeGroupSetting (ID INT IDENTITY (1,1), GroupID INT,ChangeName VARCHAR(200), LEVEL1 MONEY,LEVEL2 MONEY,LEVEL3 MONEY)
 
 INSERT INTO #ChangeGroupSetting (GroupID,ChangeName,LEVEL1,LEVEL2,LEVEL3)
 VALUES
@@ -48,10 +48,24 @@ WHERE G.LevelID = 3
 
 DECLARE @Fromdate DATE= GETDATE(), @Todate DATE= GETDATE()  
 
-UPDATE PSD
-	SET MaxWinLimit = CASE WHEN psd.ExchangeID = 20 THEN MaxWinLimit_RM ELSE ROUND(MaxWinLimit_RM / FEX.MYR,2) END
-FROM WinLimit_ProductSettingDetail PSD WITH (ROWLOCK,UPDLOCK)
-	INNER JOIN #ChangeGroupSetting CGS ON PSD.groupID = CGS.GroupID
-	INNER JOIN Lrf_f_GetExchangeDaily(@Fromdate, @Todate) fEx  ON fEx.ExchangeId = psd.ExchangeID
+DECLARE @from_groupID INT = 1, @to_groupID INT, @GroupID INT
+
+SET @to_groupID = (SELECT MAX(ID) FROM #ChangeGroupSetting)
+
+WHILE @Fromdate <=@to_groupID
+BEGIN
+	SET @GroupID = (SELECT GROUPID FROM #ChangeGroupSetting WHERE ID = @from_groupID)
+	
+	UPDATE PSD
+		SET MaxWinLimit = CASE WHEN psd.ExchangeID = 20 THEN MaxWinLimit_RM ELSE ROUND(MaxWinLimit_RM / FEX.MYR,2) END
+	FROM WinLimit_ProductSettingDetail PSD WITH (ROWLOCK,UPDLOCK)
+		INNER JOIN #ChangeGroupSetting CGS ON PSD.groupID = CGS.GroupID
+		INNER JOIN Lrf_f_GetExchangeDaily(@Fromdate, @Todate) fEx  ON fEx.ExchangeId = psd.ExchangeID
+	WHERE PSD.GroupID = @GroupID
+	
+	SET @from_groupID = @from_groupID + 1
+	
+	waitfor delay '00:00:0.280'	
+END
 
 DROP TABLE #ChangeGroupSetting	
