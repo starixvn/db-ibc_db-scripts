@@ -48,13 +48,13 @@ WHERE G.LevelID = 3
 
 DECLARE @Fromdate DATE= GETDATE(), @Todate DATE= GETDATE()  
 
-DECLARE @from_groupID INT = 1, @to_groupID INT, @GroupID INT
+DECLARE @from_ID INT = 1, @to_ID INT, @GroupID INT
 
-SET @to_groupID = (SELECT MAX(ID) FROM #ChangeGroupSetting)
+SET @to_ID = (SELECT MAX(ID) FROM #ChangeGroupSetting)
 
-WHILE @Fromdate <=@to_groupID
+WHILE @from_ID <=@to_ID
 BEGIN
-	SET @GroupID = (SELECT GROUPID FROM #ChangeGroupSetting WHERE ID = @from_groupID)
+	SET @GroupID = (SELECT GroupID FROM #ChangeGroupSetting WHERE ID = @from_ID)
 	
 	UPDATE PSD
 		SET MaxWinLimit = CASE WHEN psd.ExchangeID = 20 THEN MaxWinLimit_RM ELSE ROUND(MaxWinLimit_RM / FEX.MYR,2) END
@@ -63,7 +63,7 @@ BEGIN
 		INNER JOIN Lrf_f_GetExchangeDaily(@Fromdate, @Todate) fEx  ON fEx.ExchangeId = psd.ExchangeID
 	WHERE PSD.GroupID = @GroupID
 	
-	SET @from_groupID = @from_groupID + 1
+	SET @from_ID = @from_ID + 1
 	
 	waitfor delay '00:00:0.280'	
 END
