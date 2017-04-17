@@ -185,7 +185,7 @@ SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Webet138')
-	AND currency IN (20) -- Currency H - it is just test currency, used once in a while 
+	AND currency IN (20) 
 	AND custid <= @max_custid
 
 
@@ -249,7 +249,7 @@ SELECT custid,currency
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('Webet138')
-	AND currency IN (20) -- Currency H - it is just test currency, used once in a while 
+	AND currency IN (20) 
 	AND custid <= @max_custid
 
 
