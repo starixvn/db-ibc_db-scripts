@@ -40,22 +40,30 @@ EXEC [DBA_CheckStatus_Deposit] @sportType=43, @bettype = 1, @DisableTable = 'Cus
 ------------------------------------ #11: Metric Gaming - SuperLive	1	801	1		CustInfo.DisableSuperLive ---------------------------------------------------------
 EXEC [DBA_CheckStatus_Deposit] @sportType=1, @bettype = 801, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableSuperLive', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
+
+------------------------ #12: Horse Racing UK/Irish Tote 151	31	2		Custinfo.DisableOpenTote	N/A
+EXEC [DBA_CheckStatus_Deposit] @sportType=151, @bettype = 31, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableOpenTote', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+------------------------ #13: Horse Racing SA Tote	151	31	2		Custinfo.DisableHorseRacing	N/A
+EXEC [DBA_CheckStatus_Deposit] @sportType=151, @bettype = 31, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableHorseRacing', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+------------------------ #14: Greyhound Aust Tote	152	31	2 Custinfo.Disable152_AU
+EXEC [DBA_CheckStatus_Deposit] @sportType=152, @bettype = 31, @DisableTable = 'CustInfo', @DisableColumnName = 'Disable152_AU', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+------------------------ #15: Harness Aust Tote	153	31	2		Custinfo.Disable153_AU
+EXEC [DBA_CheckStatus_Deposit] @sportType=153, @bettype = 31, @DisableTable = 'CustInfo', @DisableColumnName = 'Disable153_AU', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+
+
 ------------------------------------ #12 Keno ---------------------------------------------------------
 -- Hidden: from custinfo
 EXEC [DBA_CheckStatus_Deposit] @sportType=202, @bettype = 1501, @DisableTable = '', @DisableColumnName = '', @HiddenTable='CustInfo', @HiddenColumnName = 'HideKeno',@SynTable='',@SynColumnName = ''
 
 -- Disable FROM CustGameType
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1501, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1502, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1503, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1504, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1505, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1506, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1507, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1508, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1509, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1511, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1513, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1514, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
-EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1515, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 1, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 3, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 4, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 5, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 8, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 11, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 13, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 14, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 15, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
+EXEC [DBA_CheckStatus_Keno_Deposit] @Sporttype = 202,@Bettype = 16, @DisableTable = 'CustGameType', @DisableColumnName = 'IsDisabled'
 GO
