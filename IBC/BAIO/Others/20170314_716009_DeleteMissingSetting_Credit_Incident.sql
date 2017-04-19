@@ -73,5 +73,11 @@ DELETE FROM DBTXN.bodb02.dbo.BalCreditSports WHERE custid IN (SELECT custid FROM
 DELETE FROM DBTXN.bodb02.dbo.BalCreditTransfer WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM DBTXN.bodb02.dbo.BalCreditCasino WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM DBTXN.bodb02.dbo.BalCreditOthers WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+
+DELETE FROM DBTXN.bodb02.dbo.BalDebitSports WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+DELETE FROM DBTXN.bodb02.dbo.BalDebitTransfer WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+DELETE FROM DBTXN.bodb02.dbo.BalDebitCasino WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+DELETE FROM DBTXN.bodb02.dbo.BalDebitOthers WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+
 DELETE FROM CustPTGroupSetting3rd_Member WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 	
