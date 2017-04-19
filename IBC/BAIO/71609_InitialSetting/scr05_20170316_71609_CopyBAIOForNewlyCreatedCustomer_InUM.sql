@@ -46,10 +46,15 @@ WHERE ci.Enabled = 1 AND ci.custid > @MaxCustID
 INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
 SELECT
 		cs.custid, @Sporttype,@Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
-		, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
+		, Comm.playerdiscount, Comm.discount, Comm.adiscount, Comm.sdiscount, Comm.groupa, Comm.groupb, Comm.groupc, Comm.groupd, Comm.groupe, Comm.groupf
+		, minbet, maxbet
 		, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 FROM custsetting cs (NOLOCK) 
-		INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID 
+		INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
+		CROSS APPLY (SELECT playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+					 FROM custsetting cs1 WITH (NOLOCK) 
+					 WHERE CS1.custid = T.CustID AND CS1.sporttype = 1 AND CS1.bettype = 4 ) AS Comm
+						  
 WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 	
 INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
