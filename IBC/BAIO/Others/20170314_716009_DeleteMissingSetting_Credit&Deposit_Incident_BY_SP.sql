@@ -351,6 +351,8 @@ VALUES
 ('XTD3RMB01323306'),
 ('XTD3RMB01323307')
 
+DECLARE @ErrCode int = 0,
+	@ErrMsg varchar(200) = ''
 	
 WHILE (1 = 1)
 BEGIN
@@ -362,7 +364,9 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.DBA_CustomerDel @UserName = @UserName
+	EXEC dbo.DBA_CustomerDel @UserName = @UserName, @ErrCode = @ErrCode OUTPUT, @ErrMsg= @ErrMsg OUTPUT
+	
+	SELECT @ErrCode, @ErrMsg
 	
 END
  
