@@ -43,8 +43,7 @@ DELETE FROM dbo.CustPTSetting3rd_Member WHERE custid IN (SELECT custid FROM #Cus
 DELETE FROM dbo.CustSettingMode3rd WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM dbo.CustStakeLevel_Agent WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM dbo.CustStakeLevel_Member WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
-DELETE FROM dbo.CustWinLimit3rd_Agent WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
-DELETE FROM dbo.CustWinLimit3rd_Member WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+
 DELETE FROM dbo.CustWinLossLimit_Agent WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM dbo.CustWinLossLimit_Member WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM dbo.CustCommRate WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
@@ -69,6 +68,7 @@ DELETE FROM CustOverrideGame WHERE custid IN (SELECT custid FROM #Cust_MissingSe
 DELETE FROM CustGameType WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM AgentCommRate WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM CustCommRate WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
+
 DELETE FROM DBTXN.bodb02.dbo.BalCreditSports WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM DBTXN.bodb02.dbo.BalCreditTransfer WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
 DELETE FROM DBTXN.bodb02.dbo.BalCreditCasino WHERE custid IN (SELECT custid FROM #Cust_MissingSetting)
