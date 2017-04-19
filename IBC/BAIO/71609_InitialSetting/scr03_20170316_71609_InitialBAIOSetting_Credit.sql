@@ -46,19 +46,24 @@ BEGIN
 	INSERT INTO custsetting (custid, sporttype,Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking	)
 	SELECT
 			cs.custid, @Sporttype,@Bettype,apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
-			, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
+			, Comm.playerdiscount, Comm.discount, Comm.adiscount, Comm.sdiscount, Comm.groupa, Comm.groupb, Comm.groupc, Comm.groupd, Comm.groupe, Comm.groupf
+			, CS.minbet, CS.maxbet
 			, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 	FROM custsetting cs WITH (NOLOCK) 
 			INNER JOIN #DownlineListTemp t ON cs.custid = t.CustID
-		WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
+			CROSS APPLY (SELECT playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+						 FROM custsetting cs1 WITH (NOLOCK) 
+						 WHERE CS1.custid = T.CustID AND CS1.sporttype = 1 AND CS1.bettype = 4 ) AS Comm
+						 
+			
+						 			 
+	WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
 		
 	INSERT INTO custoverride (custid, bettype, sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking)
 	SELECT cs.custid, @Bettype, @Sporttype, minpositiontaking, maxpositiontaking, minlivepositiontaking, maxlivepositiontaking
 	FROM custoverride cs WITH (NOLOCK)
 		INNER JOIN #DownlineListTemp t (NOLOCK) ON t.CustID = cs.custid AND RoleID IN (2,3,4)
 	WHERE cs.sporttype = @SporttypeRef AND cs.bettype = @BettypeRef
-	
-	
 	
 	DROP TABLE #DownlineListTemp
 	

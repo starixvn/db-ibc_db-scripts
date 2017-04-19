@@ -23,16 +23,16 @@ UPDATE cs
 		, isautompositiontaking = temp_pt.isautompositiontaking
 		, isautolivempositiontaking = temp_pt.isautolivempositiontaking
 		-- Commission
-		, playerdiscount = temp_pt.playerdiscount  
-		, discount = temp_pt.discount
-		, adiscount = temp_pt.adiscount
-		, sdiscount =  temp_pt.sdiscount
-		, groupa = temp_pt.groupa
-		, groupb = temp_pt.groupb
-		, groupc = temp_pt.groupc
-		, groupd = temp_pt.groupd
-		, groupe = temp_pt.groupe
-		, groupf = temp_pt.groupf
+		, playerdiscount = temp_comm.playerdiscount  
+		, discount = temp_comm.discount
+		, adiscount = temp_comm.adiscount
+		, sdiscount =  temp_comm.sdiscount
+		, groupa = temp_comm.groupa
+		, groupb = temp_comm.groupb
+		, groupc = temp_comm.groupc
+		, groupd = temp_comm.groupd
+		, groupe = temp_comm.groupe
+		, groupf = temp_comm.groupf
 		-- Bet setting
 		, minbet = temp_pt.minbet
 	    , maxbet = temp_pt.maxbet
@@ -40,11 +40,18 @@ UPDATE cs
 FROM custsetting cs WITH (UPDLOCK,ROWLOCK)
 	CROSS APPLY	(SELECT cs_temp.custid
 						, apositiontaking, mpositiontaking, spositiontaking, alivepositiontaking, mlivepositiontaking, slivepositiontaking
-						, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf, minbet, maxbet
+						, minbet, maxbet
 						, autopositiontaking, autolivepositiontaking, isautopositiontaking, isautolivepositiontaking, autompositiontaking, autolivempositiontaking, isautompositiontaking, isautolivempositiontaking
 				FROM custsetting cs_temp (NOLOCK) 
 				WHERE cs_temp.sporttype = 2 AND cs_temp.bettype = 1 AND cs.custid = cs_temp.custid
-				) AS temp_pt 
+				) AS temp_pt
+				 
+	CROSS APPLY	(SELECT cs_temp_1.custid
+						, playerdiscount, discount, adiscount, sdiscount, groupa, groupb, groupc, groupd, groupe, groupf
+				FROM custsetting cs_temp_1 (NOLOCK) 
+				WHERE cs_temp_1.sporttype = 1 AND cs_temp_1.bettype = 4 AND cs.custid = cs_temp_1.custid
+				) AS temp_comm 
+
 
 WHERE (cs.sporttype = 2 AND cs.bettype = 9999)
 	-- PT ----
@@ -63,16 +70,16 @@ WHERE (cs.sporttype = 2 AND cs.bettype = 9999)
 		 OR cs.isautompositiontaking <> temp_pt.isautompositiontaking 
 		 OR cs.isautolivempositiontaking <> temp_pt.isautolivempositiontaking
 		-- Commission ---
-		OR cs.playerdiscount <> temp_pt.playerdiscount
-		OR cs.discount <> temp_pt.discount
-		OR cs.adiscount <> temp_pt.adiscount
-		OR cs. sdiscount <> temp_pt.sdiscount
-		OR cs.groupa <> temp_pt.groupa
-		OR cs.groupb <> temp_pt.groupb
-		OR cs.groupc <> temp_pt.groupc
-		OR cs.groupd <> temp_pt.groupd
-		OR cs.groupe <> temp_pt.groupe
-		OR cs.groupf <> temp_pt.groupf
+		OR cs.playerdiscount <> temp_comm.playerdiscount
+		OR cs.discount <> temp_comm.discount
+		OR cs.adiscount <> temp_comm.adiscount
+		OR cs. sdiscount <> temp_comm.sdiscount
+		OR cs.groupa <> temp_comm.groupa
+		OR cs.groupb <> temp_comm.groupb
+		OR cs.groupc <> temp_comm.groupc
+		OR cs.groupd <> temp_comm.groupd
+		OR cs.groupe <> temp_comm.groupe
+		OR cs.groupf <> temp_comm.groupf
 		-- BET Setting ---
 		OR cs.minbet <> temp_pt.minbet
 		OR cs.maxbet <> temp_pt.maxbet
