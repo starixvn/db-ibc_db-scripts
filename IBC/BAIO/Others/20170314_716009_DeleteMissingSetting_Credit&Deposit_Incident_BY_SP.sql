@@ -366,7 +366,5 @@ BEGIN
 			
 	EXEC dbo.DBA_CustomerDel @UserName = @UserName, @ErrCode = @ErrCode OUTPUT, @ErrMsg= @ErrMsg OUTPUT
 	
-	SELECT @ErrCode, @ErrMsg
-	
 END
  
