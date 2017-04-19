@@ -6,6 +6,7 @@
 */
 
 CREATE TABLE #Cust_MissingSetting (Custid INT, Roleid INT)
+INSERT INTO #Cust_MissingSetting (Custid,Roleid)
 SELECT c.custid,roleid
 FROM Customer c WITH (NOLOCK)
 WHERE c.username IN (
