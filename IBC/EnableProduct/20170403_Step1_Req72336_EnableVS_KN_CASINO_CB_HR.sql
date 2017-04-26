@@ -19,44 +19,39 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1  
 			AND dbo.f_CheckRepTable('Custgametype') = 1   )
-		RETURN		
+		RETURN	
+	
+	-- update casino
+	UPDATE ci
+	SET	ci.DisableCasino=0
+	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+	WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND ci.SyncCasino=1	AND ci.DisableCasino=1	
+
+	UPDATE ci
+	SET	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
+		,ci.DisableColossusBet=0,ci.HideColossusBet=0
+		,ci.HideKeno=0
+		,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
+	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+	WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
+
+	UPDATE ct
+	SET ct.IsDisabled=0
+	FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
+	INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
+	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	
 	
 	IF @Site<>'imbc' AND @Site <>'789y'
 	BEGIN
+		-- update GD
 		UPDATE ci
-		SET	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
-			,ci.DisableColossusBet=0,ci.HideColossusBet=0
-			,ci.DisableCasino=0,ci.HideKeno=0
-			,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0
-			,ci.[DisableGoldDeluxe]=0,ci.HideGoldDeluxe=0
+		SET	
+			ci.[DisableGoldDeluxe]=0
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-		WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
-
-		UPDATE ct
-		SET ct.IsDisabled=0
-		FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-		WHERE ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
+		WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)		
+		AND ci.HideGoldDeluxe=0 AND ci.[DisableGoldDeluxe]=1		
 
 	END
-	ELSE
-	BEGIN
-
-		UPDATE ci
-		SET	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
-			,ci.DisableColossusBet=0,ci.HideColossusBet=0
-			,ci.DisableCasino=0,ci.HideKeno=0
-			,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
-		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-		WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
-
-		UPDATE ct
-		SET ct.IsDisabled=0
-		FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-		WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)
-
-	END 
 
 END
 GO

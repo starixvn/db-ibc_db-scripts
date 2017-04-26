@@ -10,36 +10,7 @@ DECLARE
 	,@Site VARCHAR(10)
 	
 CREATE TABLE #tempCusts (custid int,site varchar(10))
-SELECT @maxcustid = 25511000
-CREATE TABLE #bitmapOrder (bitmapOrder INT,Disable BIT default(0))
-
-DECLARE @xmlStrDisabledAndHide XML
-DECLARE @StrDisabledAndHide VARCHAR(MAX)
-
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(4)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(5)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(6)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(7)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(8)
-
-
-SET @xmlStrDisabledAndHide = (
-				SELECT (
-						SELECT bitmapOrder	AS '@b'
-							, Disable	AS '@s'
-						FROM #bitmapOrder
-						FOR XML PATH('r')
-							, TYPE
-						)
-				FOR XML PATH('root')
-					, TYPE
-				)						
-SELECT @StrDisabledAndHide=CONVERT(VARCHAR(MAX),@xmlStrDisabledAndHide)
+SELECT @maxcustid = xxx
 
 INSERT INTO #tempCusts(custid,site)
 SELECT c.custid,s.site
@@ -53,10 +24,45 @@ AND c.roleid IN(2,3,4)
 )
 	
 
-UPDATE cs
-SET									
-		bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, @StrDisabledAndHide))	
-		,bitmapIsHidden =  (select bitmap from dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, @StrDisabledAndHide))	
-FROM CustProductStatus Cs WITH (ROWLOCK,UPDLOCK) 
-INNER JOIN #tempCusts t ON cs.custid=t.custid
+	-- FW	
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,8,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,8,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
+	INNER JOIN #tempCusts t ON cs.custid=t.custid			
+			
+	-- Allbet
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,6,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,6,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN #tempCusts t ON cs.custid=t.custid
+	WHERE dbo.f_getProductStatus (cs.bitmapHasSynced,6) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,6) = 1
+
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,7,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,7,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN #tempCusts t ON cs.custid=t.custid
+	WHERE dbo.f_getProductStatus (cs.bitmapHasSynced,7) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,7) = 1			
+	
+	-- Macau
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,5,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,5,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN #tempCusts t ON cs.custid=t.custid	
+	WHERE dbo.f_getProductStatus (cs.bitmapHasSynced,5) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,5) = 1
+	 --NG2
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,4,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,4,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN #tempCusts t ON cs.custid=t.custid	
+	WHERE  dbo.f_getProductStatus (cs.bitmapHasSynced,4) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,4) = 1				
 

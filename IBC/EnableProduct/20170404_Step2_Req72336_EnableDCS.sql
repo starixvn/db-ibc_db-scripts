@@ -9,8 +9,7 @@
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
 	,@maxcustid INT
-	,@target VARCHAR(20)
-	,@StrDisabledAndHide VARCHAR(MAX)	
+	,@target VARCHAR(20)	
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -23,15 +22,49 @@ BEGIN
 	   AND dbo.f_CheckRepTable('ProductStatusProfile') = 1
 	   )
 		RETURN		
-		
+	
+	-- FW	
 	UPDATE cs
-	SET									
-		 bitmapIsDisabled = (select bitmap from dbo.f_GenerateProductStatus_multiple (cs.bitmapIsDisabled, @StrDisabledAndHide))	
-		 ,bitmapIsHidden =  (select bitmap from dbo.f_GenerateProductStatus_multiple (cs.bitmapIsHidden, @StrDisabledAndHide))
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,8,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,8,0)		
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)			
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)		
 			
+	-- Allbet
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,6,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,6,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND dbo.f_getProductStatus (cs.bitmapHasSynced,6) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,6) = 1
+
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,7,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,7,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4) AND dbo.f_getProductStatus (cs.bitmapHasSynced,7) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,7) = 1			
+	
+	-- Macau
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,5,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,5,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND dbo.f_getProductStatus (cs.bitmapHasSynced,5) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,5) = 1
+	 --NG2
+	UPDATE cs
+	SET				
+		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,4,0) 
+		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,4,0)		
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4) AND dbo.f_getProductStatus (cs.bitmapHasSynced,4) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,4) = 1				
 
 END
 GO
@@ -42,37 +75,8 @@ GO
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-CREATE TABLE #bitmapOrder (bitmapOrder INT,Disable BIT default(0))
 DECLARE  @srecommend INT,@max_custid INT
 SELECT @max_custid = xxx
-
-DECLARE @xmlStrDisabledAndHide XML
-DECLARE @StrDisabledAndHide VARCHAR(MAX)
-
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(4)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(5)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(6)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(7)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(8)
-
-
-SET @xmlStrDisabledAndHide = (
-				SELECT (
-						SELECT bitmapOrder	AS '@b'
-							, Disable	AS '@s'
-						FROM #bitmapOrder
-						FOR XML PATH('r')
-							, TYPE
-						)
-				FOR XML PATH('root')
-					, TYPE
-				)						
-SELECT @StrDisabledAndHide=CONVERT(VARCHAR(MAX),@xmlStrDisabledAndHide)
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -93,8 +97,7 @@ BEGIN
 			
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'REPLICATED'
-			,@StrDisabledAndHide=@StrDisabledAndHide		
+			,@target = 'REPLICATED'	
 			
 	waitfor delay '00:00:0.280'
 END
@@ -103,36 +106,8 @@ END
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
-CREATE TABLE #bitmapOrder (bitmapOrder INT,Disable BIT default(0))
 DECLARE  @srecommend INT,@max_custid INT
 SELECT @max_custid = xxx
-DECLARE @xmlStrDisabledAndHide XML
-DECLARE @StrDisabledAndHide VARCHAR(MAX)
-
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(4)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(5)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(6)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(7)
-INSERT INTO #bitmapOrder(bitmapOrder)
-VALUES(8)
-
-SET @xmlStrDisabledAndHide = (
-				SELECT (
-						SELECT bitmapOrder	AS '@b'
-							, Disable	AS '@s'
-						FROM #bitmapOrder
-						FOR XML PATH('r')
-							, TYPE
-						)
-				FOR XML PATH('root')
-					, TYPE
-				)										
-			
-SELECT @StrDisabledAndHide=CONVERT(VARCHAR(MAX),@xmlStrDisabledAndHide)
 
 INSERT INTO #supers(custid)
 SELECT ci.custid
@@ -153,8 +128,7 @@ BEGIN
 
 	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
-			,@StrDisabledAndHide=@StrDisabledAndHide	
+			,@target = 'DBCUST'		
 						
 	waitfor delay '00:00:0.280'
 END

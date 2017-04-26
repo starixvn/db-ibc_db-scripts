@@ -22,14 +22,26 @@ AND c.Enabled=1
 AND c.custid>@maxcustid
 AND c.roleid IN(2,3,4)
 )
-	
+
+-- update casino
+UPDATE ci
+SET	ci.DisableCasino=0
+FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+INNER JOIN #tempCusts t ON ci.custid=t.custid
+WHERE ci.SyncCasino=1	AND ci.DisableCasino=1	
+-- update GD
+UPDATE ci
+SET	
+	ci.[DisableGoldDeluxe]=0
+FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+INNER JOIN #tempCusts t ON ci.custid=t.custid
+WHERE ci.HideGoldDeluxe=0 AND ci.[DisableGoldDeluxe]=1	AND t.site NOT IN ('imbc','789y')
+			
 
 UPDATE ci
-SET	ci.DisableGoldDeluxe= CASE WHEN t.site NOT IN ('imbc','789y') THEN 0 ELSE ci.DisableGoldDeluxe END,
-	ci.HideGoldDeluxe= CASE WHEN t.site NOT IN ('imbc','789y') THEN 0 ELSE ci.HideGoldDeluxe END,
-	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
+SET	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
 	,ci.DisableColossusBet=0,ci.HideColossusBet=0
-	,ci.DisableCasino=0,ci.HideKeno=0
+	,ci.HideKeno=0
 	,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 INNER JOIN #tempCusts t ON ci.custid=t.custid
