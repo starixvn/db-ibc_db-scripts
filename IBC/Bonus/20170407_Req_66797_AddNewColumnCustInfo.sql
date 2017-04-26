@@ -30,11 +30,11 @@ GO
 -- BEGIN STEP 3: DEPLOY THIS SCRIPT ON DBLOG/bodb_CustomerLog	--
 ------------------------------------------------------------------
 
-USE [bodb_CustomerLog]
-GO
+--USE [bodb_CustomerLog]
+--GO
   
-ALTER TABLE [dbo].[CustInfo_history] ADD WalletFlag TINYINT NULL
-GO
+--ALTER TABLE [dbo].[CustInfo_history] ADD WalletFlag TINYINT NULL
+--GO
 
 
 
