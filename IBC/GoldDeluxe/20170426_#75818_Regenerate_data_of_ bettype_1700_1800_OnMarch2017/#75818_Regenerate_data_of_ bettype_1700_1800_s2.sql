@@ -1,0 +1,139 @@
+/*
+	Task: Regen bettype 1700,1800 - s2: insert bettrans from temp table
+	RUN ON  : DBTXN/bodb02
+
+ 	Created by: 20170426@Sophia
+	Task:#75818 - Regenerate data of bettype 1700,1800 and 1900 to bettrans On March 2017
+	 
+	*/
+
+
+*/
+BEGIN
+INSERT INTO dbo.bettrans(custid
+			, transdate
+			, oddsid
+			, hdp1
+			, hdp2
+			, odds
+			, stake
+			, Status
+			, winlost
+			, awinlost
+			, mwinlost
+			, playercomm
+			, comm
+			, acomm
+			, apositiontaking
+			, mpositiontaking
+			, tpositiontaking
+			, playerdiscount
+			, discount
+			, adiscount
+			, livehomescore
+			, liveawayscore
+			, liveindicator
+			, betteam
+			, creator
+			, refno
+			, comstatus
+			, winlostdate
+			, betfrom
+			, betcheck
+			, checktime
+			, oddsspread
+			, actualrate
+			, matchid
+			, recommend
+			, mrecommend
+			, ruben
+			, betid
+			, statuswinlost
+			, modds
+			, bettype
+			, betdaqid
+			--, tstamp
+			, actual_stake
+			, currency
+			, ip
+			, transdesc
+			, sdiscount
+			, scomm
+			, spositiontaking
+			, swinlost
+			, srecommend
+			, Username
+			, CurrencyName
+			, virtualrate
+			, oddstype
+			, statusID
+			, currency2
+			, balance
+			, SecAcceptFlag
+			, transid2
+			, RecommDate)
+			
+SELECT 		custid
+			, transdate
+			, oddsid
+			, hdp1
+			, hdp2
+			, odds
+			, stake
+			, Status
+			, winlost
+			, awinlost
+			, mwinlost
+			, playercomm
+			, comm
+			, acomm
+			, apositiontaking
+			, mpositiontaking
+			, tpositiontaking
+			, playerdiscount
+			, discount
+			, adiscount
+			, livehomescore
+			, liveawayscore
+			, liveindicator
+			, betteam
+			, creator
+			, refno
+			, comstatus
+			, winlostdate
+			, betfrom
+			, betcheck
+			, checktime
+			, oddsspread
+			, actualrate
+			, matchid
+			, recommend
+			, mrecommend
+			, ruben
+			, betid
+			, statuswinlost
+			, modds
+			, bettype
+			, betdaqid
+			--, tstamp
+			, actual_stake
+			, currency
+			, ip
+			, transdesc
+			, sdiscount
+			, scomm
+			, spositiontaking
+			, swinlost
+			, srecommend
+			, Username
+			, CurrencyName
+			, virtualrate
+			, oddstype
+			, statusID
+			, currency2
+			, balance
+			, SecAcceptFlag
+			, transid2
+			, RecommDate
+	FROM bettrans_tmp_AGC				
+END
