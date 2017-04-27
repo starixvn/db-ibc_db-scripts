@@ -18,8 +18,8 @@ GO
 	, @WinlostDate DATE
 SELECT 
 	@FromDate ='2017-03-01'
-	, @ToDate ='2017-04-07'
-	, @WinlostDate = DATEADD (DD,-1 , GETDATE())  --input current date @server
+	, @ToDate ='2017-04-07' --- want to get the Adj ticket of March on April 
+	, @WinlostDate = DATEADD (DD,-1 , GETDATE())  --input yesterdaya of servertime
 
 BEGIN
 	--SET NOCOUNT ON
