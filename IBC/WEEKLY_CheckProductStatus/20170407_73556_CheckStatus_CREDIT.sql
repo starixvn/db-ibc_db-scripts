@@ -11,7 +11,7 @@ GO
 EXEC [DBA_CheckStatus_Credit] @sportType=161, @bettype = 81, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableNumber', @HiddenTable='', @HiddenColumnName='',@SynTable='',@SynColumnName = ''
 
 ------------------------ #2: Live Casino	162	1101	4		CustInfo.DisableLiveCasino	custinfo.SyncLiveCasino
-EXEC [DBA_CheckStatus_Credit] @sportType=161, @bettype = 81,@DisableTable = 'CustInfo', @DisableColumnName = 'DisableLiveCasino', @HiddenTable='', @HiddenColumnName='',@SynTable='CustInfo',@SynColumnName = 'SyncLiveCasino'
+EXEC [DBA_CheckStatus_Credit] @sportType=162, @bettype = 1101,@DisableTable = 'CustInfo', @DisableColumnName = 'DisableLiveCasino', @HiddenTable='', @HiddenColumnName='',@SynTable='CustInfo',@SynColumnName = 'SyncLiveCasino'
 
 ------------------------ #3: "VirtualSports(SportType:180 BetType: 1201	180	1201	5		CustInfo.DisableVirtualSports	CustInfo.HideVirtualSports
 EXEC [DBA_CheckStatus_Credit] @sportType=180, @bettype = 1201, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableVirtualSports', @HiddenTable='CustInfo', @HiddenColumnName = 'HideVirtualSports',@SynTable='',@SynColumnName = ''
@@ -23,13 +23,10 @@ EXEC [DBA_CheckStatus_Credit] @sportType=255, @bettype = 1700, @DisableTable = '
 EXEC [DBA_CheckStatus_Credit] @sportType=203, @bettype = 2001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameLC', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
 ------------------------ #6: Microgaming RNG Casino 205	2008	17		CustInfo.DisableMicrogameRNG
-EXEC [DBA_CheckStatus_Credit] @sportType=203, @bettype = 2001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameRNG', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+EXEC [DBA_CheckStatus_Credit] @sportType=205, @bettype = 2008, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameRNG', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
 ------------------------7: ColossusBet	204	18001	15		CustInfo.DisableColossusBet	Custinfo.HideColossusBet
 EXEC [DBA_CheckStatus_Credit] @sportType=204, @bettype = 18001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableColossusBet', @HiddenTable='CustInfo', @HiddenColumnName = 'HideColossusBet',@SynTable='',@SynColumnName = ''
-
------------------------- #8: HorseRacing	151	31	2		Custinfo.DisableHorseRacing
-EXEC [DBA_CheckStatus_Credit] @sportType=151, @bettype = 31, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableHorseRacing', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
 ------------------------9: Casino	251	71	6		Custinfo.DisableCasino
 EXEC [DBA_CheckStatus_Credit] @sportType=251, @bettype = 71, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableCasino', @HiddenTable='', @HiddenColumnName = '',@SynTable='CustInfo',@SynColumnName = 'SyncCasino'
