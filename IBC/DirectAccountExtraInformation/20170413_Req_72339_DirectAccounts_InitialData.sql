@@ -7,12 +7,12 @@ USE CustDB
 GO
 DELETE FROM CustDirectAccount
 GO
-
 INSERT INTO Acc_CustDirect (custid,roleid)
 SELECT CI.custid,CI.roleid
 FROM custInfo CI WITH (NOLOCK)
 WHERE CI.custid < 100 AND NOT EXISTS (SELECT 1 FROM Acc_CustDirect CD WITH (NOLOCK) WHERE CD.custid =  CI.custid)
-
+	AND CI.currency <> 20
+	
 -- SUPER
 INSERT INTO CustDirectAccount (CustID,ApprovedBy,Boss,ProcessedBy, RequestedBy)
 SELECT ci.custid,'','','',''
@@ -28,25 +28,25 @@ SELECT ci.custid,'','','',''
 FROM custInfo ci WITH(NOLOCK)
 	INNER JOIN CustSuper CS WITH (NOLOCK)  ON CI.srecommend = CS.custid AND CS.IsInternal = 0
 WHERE ci.Custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and ci.roleid=3
-
+	AND ci.srecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND ci.roleid=3
+	
 -- DIRECT AGENT
 INSERT INTO CustDirectAccount (CustID,ApprovedBy,Boss,ProcessedBy, RequestedBy)
 SELECT ci.custid,'','','',''
 FROM custInfo ci WITH(NOLOCK)
 	INNER JOIN CustSuper CS WITH (NOLOCK)  ON CI.srecommend = CS.custid AND CS.IsInternal = 0
 WHERE ci.Custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and roleid=2
-		
+	AND mrecommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND roleid=2
+	
 -- DIRECT MEMBER
 INSERT INTO CustDirectAccount (CustID,ApprovedBy,Boss,ProcessedBy, RequestedBy)
 SELECT ci.custid,'','','',''
 FROM custInfo ci WITH(NOLOCK)
 	INNER JOIN CustSuper CS WITH (NOLOCK)  ON CI.srecommend = CS.custid AND CS.IsInternal = 0
 WHERE ci.Custid NOT IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and ci.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
-	and ci.roleid=1	
-
+	AND ci.recommend IN (SELECT custid from Acc_CustDirect WITH(NOLOCK))
+	AND ci.roleid=1	
+	
 
