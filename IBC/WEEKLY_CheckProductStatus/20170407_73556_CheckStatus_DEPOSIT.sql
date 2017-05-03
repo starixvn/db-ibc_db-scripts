@@ -20,7 +20,7 @@ EXEC [DBA_CheckStatus_Deposit] @sportType=255, @bettype = 1700, @DisableTable = 
 EXEC [DBA_CheckStatus_Deposit] @sportType=203, @bettype = 2001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameLC', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
 ------------------------------------ #6: Microgaming RNG Casino 205	2008	17		CustInfo.DisableMicrogameRNG ---------------------------------------------------------
-EXEC [DBA_CheckStatus_Deposit] @sportType=203, @bettype = 2001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameRNG', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
+EXEC [DBA_CheckStatus_Deposit] @sportType=205, @bettype = 2008, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameRNG', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
 
 ------------------------------------ #7: ColossusBet	204	18001	15		CustInfo.DisableColossusBet	Custinfo.HideColossusBet ---------------------------------------------------------
 EXEC [DBA_CheckStatus_Deposit] @sportType=204, @bettype = 18001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableColossusBet', @HiddenTable='CustInfo', @HiddenColumnName = 'HideColossusBet',@SynTable='',@SynColumnName = ''
