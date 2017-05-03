@@ -10,9 +10,6 @@ GO
 ------------------------ #1: Number Game	161	81	3	CustInfo.DisableNumber
 EXEC [DBA_CheckStatus_Credit] @sportType=161, @bettype = 81, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableNumber', @HiddenTable='', @HiddenColumnName='',@SynTable='',@SynColumnName = ''
 
------------------------- #2: Live Casino	162	1101	4		CustInfo.DisableLiveCasino	custinfo.SyncLiveCasino
-EXEC [DBA_CheckStatus_Credit] @sportType=162, @bettype = 1101,@DisableTable = 'CustInfo', @DisableColumnName = 'DisableLiveCasino', @HiddenTable='', @HiddenColumnName='',@SynTable='CustInfo',@SynColumnName = 'SyncLiveCasino'
-
 ------------------------ #3: "VirtualSports(SportType:180 BetType: 1201	180	1201	5		CustInfo.DisableVirtualSports	CustInfo.HideVirtualSports
 EXEC [DBA_CheckStatus_Credit] @sportType=180, @bettype = 1201, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableVirtualSports', @HiddenTable='CustInfo', @HiddenColumnName = 'HideVirtualSports',@SynTable='',@SynColumnName = ''
 
