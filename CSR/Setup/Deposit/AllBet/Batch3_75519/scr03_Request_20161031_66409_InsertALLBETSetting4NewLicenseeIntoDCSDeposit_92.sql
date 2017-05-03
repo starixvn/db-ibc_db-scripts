@@ -48,7 +48,7 @@ BEGIN
 	
 	-- For PT param
 	, @IsPTSetting BIT = 1
-	, @SuperPT SMALLINT = 85
+	, @SuperPT SMALLINT = 92
 	-- For StakelevelGroup params
 	, @IsStakeLevel BIT = 1
 	
@@ -227,76 +227,23 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site IN ('Macaubet','9Bet','Allbetclub','BE7','Bolanation','Aoncash','NBCbet','Q8bola','M8bola','Goobet','ITCbet','Unobet','BE7TH','Aragon88','Indowin','Sbcbet') -- Athena Info
+	AND C.site IN ( 'TCL','Webet138','Emmyo')
+	
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid select MAX(custid) from custInfo (nolock)
 
 -- Athena Info
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
-VALUES ('Macaubet',3),
-('Macaubet',15),
-('Macaubet',4),
-('Macaubet',13),
-('Macaubet',2),
-('9Bet',3),
-('9Bet',15),
-('Allbetclub',4),
-('BE7',2),
-('BE7',13),
-('BE7',15),
-('BE7',4),
-('BE7',3),
-('Bolanation',15),
-('Aoncash',2),
-('Aoncash',3),
-('Aoncash',4),
-('Aoncash',6),
-('Aoncash',9),
-('Aoncash',13),
-('Aoncash',15),
-('NBCbet',2),
-('NBCbet',3),
-('NBCbet',4),
-('NBCbet',6),
-('NBCbet',9),
-('NBCbet',13),
-('NBCbet',15),
-('Q8bola',2),
-('Q8bola',3),
-('Q8bola',4),
-('Q8bola',6),
-('Q8bola',9),
-('Q8bola',13),
-('Q8bola',15),
-('M8bola',2),
-('M8bola',3),
-('M8bola',4),
-('M8bola',6),
-('M8bola',9),
-('M8bola',13),
-('M8bola',15),
-('Goobet',4),
-('Goobet',3),
-('Goobet',32),
-('ITCbet',1),
-('ITCbet',3),
-('ITCbet',6),
-('ITCbet',9),
-('ITCbet',15),
-('Unobet',2),
-('Unobet',3),
-('Unobet',4),
-('Unobet',6),
-('Unobet',13),
-('Unobet',15),
-('BE7TH',4),
-('Aragon88',45),
-('Aragon88',13),
-('Aragon88',3),
-('Aragon88',51),
-('Aragon88',4),
-('Indowin',15),
-('Sbcbet',15)
+VALUES 
+('Emmyo',2),
+('Emmyo',3),
+('Emmyo',4),
+('Emmyo',6),
+('Emmyo',13),
+('Emmyo',15),
+('TCL',13),
+('Webet138',13)
+
 
 INSERT INTO #supers(custid,currency,SiteID)
 SELECT custid,currency,SiteID
@@ -357,77 +304,21 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site in  ('Macaubet','9Bet','Allbetclub','BE7','Bolanation','Aoncash','NBCbet','Q8bola','M8bola','Goobet','ITCbet','Unobet','BE7TH','Aragon88','Indowin','Sbcbet') -- Athena Info
+	AND C.site IN ( 'TCL','Webet138','Emmyo')
 
 DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
 
 SELECT  @max_custid= xxx ---input maxcustid
 -- Athena Info
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
-VALUES ('Macaubet',3),
-('Macaubet',15),
-('Macaubet',4),
-('Macaubet',13),
-('Macaubet',2),
-('9Bet',3),
-('9Bet',15),
-('Allbetclub',4),
-('BE7',2),
-('BE7',13),
-('BE7',15),
-('BE7',4),
-('BE7',3),
-('Bolanation',15),
-('Aoncash',2),
-('Aoncash',3),
-('Aoncash',4),
-('Aoncash',6),
-('Aoncash',9),
-('Aoncash',13),
-('Aoncash',15),
-('NBCbet',2),
-('NBCbet',3),
-('NBCbet',4),
-('NBCbet',6),
-('NBCbet',9),
-('NBCbet',13),
-('NBCbet',15),
-('Q8bola',2),
-('Q8bola',3),
-('Q8bola',4),
-('Q8bola',6),
-('Q8bola',9),
-('Q8bola',13),
-('Q8bola',15),
-('M8bola',2),
-('M8bola',3),
-('M8bola',4),
-('M8bola',6),
-('M8bola',9),
-('M8bola',13),
-('M8bola',15),
-('Goobet',4),
-('Goobet',3),
-('Goobet',32),
-('ITCbet',1),
-('ITCbet',3),
-('ITCbet',6),
-('ITCbet',9),
-('ITCbet',15),
-('Unobet',2),
-('Unobet',3),
-('Unobet',4),
-('Unobet',6),
-('Unobet',13),
-('Unobet',15),
-('BE7TH',4),
-('Aragon88',45),
-('Aragon88',13),
-('Aragon88',3),
-('Aragon88',51),
-('Aragon88',4),
-('Indowin',15),
-('Sbcbet',15)
+VALUES('Emmyo',2),
+('Emmyo',3),
+('Emmyo',4),
+('Emmyo',6),
+('Emmyo',13),
+('Emmyo',15),
+('TCL',13),
+('Webet138',13)
 
 INSERT INTO #supers(custid,currency,SiteID)
 SELECT custid,currency,SiteID

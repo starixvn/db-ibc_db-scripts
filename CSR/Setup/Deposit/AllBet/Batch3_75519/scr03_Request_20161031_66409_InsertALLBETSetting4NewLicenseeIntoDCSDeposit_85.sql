@@ -48,7 +48,7 @@ BEGIN
 	
 	-- For PT param
 	, @IsPTSetting BIT = 1
-	, @SuperPT SMALLINT = 92
+	, @SuperPT SMALLINT = 85
 	-- For StakelevelGroup params
 	, @IsStakeLevel BIT = 1
 	
@@ -225,7 +225,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
 	-- API Info
-	AND C.site IN ('ISC888','Liga','Brown888')
+	AND C.site IN ('May88')
 
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
@@ -235,16 +235,7 @@ SELECT  @max_custid= xxx ---input maxcustid
 -- API Info
 CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
-VALUES 
-('ISC888',51),
-('ISC888',4),
-('ISC888',32),
-('Liga',15),
-('Brown888',45),
-('Brown888',13),
-('Brown888',3),
-('Brown888',51),
-('Brown888',32)
+VALUES ('May88',51)
 
 INSERT INTO #supers(custid,currency,SiteID)
 SELECT cs.custid,cs.currency,s.SiteID
@@ -299,7 +290,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site in  ('ISC888','Liga','Brown888') -- API Info
+	AND C.site in  ('May88') -- API Info
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
@@ -310,15 +301,7 @@ CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
 -- API Info
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
 VALUES 
-('ISC888',51),
-('ISC888',4),
-('ISC888',32),
-('Liga',15),
-('Brown888',45),
-('Brown888',13),
-('Brown888',3),
-('Brown888',51),
-('Brown888',32)
+('May88',51)
 
 INSERT INTO #supers(custid,currency,SiteID)
 SELECT cs.custid,cs.currency,s.SiteID
