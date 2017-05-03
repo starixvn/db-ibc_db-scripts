@@ -6,14 +6,11 @@
 */ 
 
 ------------------------------------------------------	
-DECLARE @maxcustid INT
-SELECT @maxcustid= xx
-
 CREATE TABLE #tempCust(custid int,roleid int)
 
 DECLARE @max_custid INT, @srecommend INT
 
-SELECT @max_custid= xx
+SELECT @max_custid= xxx
 
 INSERT INTO #tempCust(custid,roleid)
 SELECT custid,c.roleid
@@ -21,6 +18,7 @@ FROM custInfo c WITH(NOLOCK)
 WHERE srecommend IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK) WHERE site in ('Sun988') )	 
 	AND Enabled=1
 	AND custid NOT IN (SELECT Custid FROM Dep_AgentCommRate  da WITH(NOLOCK) WHERE SportType=204)
+	AND custid NOT IN (SELECT Custid FROM Dep_CustCommRate  da WITH(NOLOCK) WHERE SportType=204)
 	AND custid>@max_custid
 
 	INSERT INTO Dep_AgentCommRate 
