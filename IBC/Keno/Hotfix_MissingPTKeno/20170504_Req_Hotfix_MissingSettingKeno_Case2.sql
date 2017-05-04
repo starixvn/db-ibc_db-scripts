@@ -142,6 +142,59 @@ FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14)	
 */
 
+
+DECLARE @mrecommend INT
+
+CREATE TABLE #MasterList (CustID INT, isfinished bit default(0))
+
+INSERT INTO #MasterList (CustID)
+SELECT CI.mrecommend
+FROM #List2 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 2
+
+UNION 
+
+SELECT L.CustID
+FROM #List2 L 
+WHERE L.RoleID = 3
+
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #MasterList
+	SET isfinished = 1
+		,@mrecommend = custid	
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+	
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
+
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
+	
+	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
+	
+	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
+	
+	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
+	
+END	
+
+--------------------SUPER
 DECLARE @srecommend INT
 
 CREATE TABLE #SuperList (CustID INT, isfinished bit default(0))
