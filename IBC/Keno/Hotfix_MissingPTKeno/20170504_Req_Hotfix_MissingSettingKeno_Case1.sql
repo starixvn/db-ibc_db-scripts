@@ -506,7 +506,58 @@ FROM #List1 L1
 WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
 	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L1.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
 	AND l1.RoleID = 1		
+
+--- Correct PT Members under Agent
+
+DECLARE @recommend INT
+
+CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
+
+INSERT INTO #AgentList (CustID)
+SELECT custid FROM #List1 L 
+WHERE L.RoleID = 2
+
+UNION
+
+SELECT CI.recommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 1
+
+WHILE (1 = 1)
+BEGIN
+	UPDATE TOP (1) #AgentList
+	SET isfinished = 1
+		,@recommend = custid	
+	WHERE isfinished = 0
 	
+	IF @@ROWCOUNT = 0 BREAK
+	
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
+
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
+	
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
+	
+	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
+	
+	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
+	
+END		
 ---Correct PT Member under Master
 DECLARE @mrecommend INT
 
@@ -560,14 +611,23 @@ BEGIN
 	
 END	
 
---- Correct PT Members under Agent
+---Correct PT Member under Super
 
-DECLARE @recommend INT
+DECLARE @srecommend INT
 
-CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
+CREATE TABLE #SuperList (CustID INT, isfinished bit default(0))
 
-INSERT INTO #AgentList (CustID)
-SELECT custid FROM #List1 L 
+INSERT INTO #SuperList (CustID)
+SELECT CI.srecommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 1
+
+UNION 
+
+SELECT CI.srecommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
 WHERE L.RoleID = 2
 
 UNION
@@ -577,37 +637,44 @@ FROM #List1 L
 	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
 WHERE L.RoleID = 1
 
+UNION 
+
+SELECT CI.srecommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 3
+
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP (1) #AgentList
+	UPDATE TOP (1) #MasterList
 	SET isfinished = 1
-		,@recommend = custid	
+		,@srecommend = custid	
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
 	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
+	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
 	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
+	--EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
 	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
+	--EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
 	
 END	
