@@ -4,8 +4,6 @@
 
 */
 
-select * from ProductGlobalSetting
-
 CREATE TABLE #List2 (CustID INT PRIMARY KEY,RoleID INT)
 INSERT INTO #List2 (CustID,roleID)
 VALUES 
@@ -129,52 +127,8 @@ FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
 
 */
------------Step 1.3: correct PT member
-DECLARE @mrecommend INT
-
-CREATE TABLE #MasterList (CustID INT, isfinished bit default(0))
-
-INSERT INTO #MasterList (CustID)
-SELECT custid FROM #List2 L 
-WHERE L.RoleID = 3
-
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #MasterList
-	SET isfinished = 1
-		,@mrecommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
-	
-END	
 
 -------------Step 2: Agent insert pt=0, adjust a1=0, correct member pt
-
 -----------Step 2.1: Agent insert PT=0
 INSERT INTO [dbo].[CustSettingGame]
 (
@@ -248,45 +202,55 @@ FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
 */
 
-DECLARE @recommend INT
+DECLARE @srecommend INT
 
-CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
+CREATE TABLE #SuperList (CustID INT, isfinished bit default(0))
 
-INSERT INTO #AgentList (CustID)
-SELECT custid FROM #List2 L 
+INSERT INTO #SuperList (CustID)
+
+SELECT CI.srecommend
+FROM #List2 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
 WHERE L.RoleID = 2
+
+UNION 
+
+SELECT CI.srecommend
+FROM #List2 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 3
 
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP (1) #AgentList
+	UPDATE TOP (1) #SuperList
 	SET isfinished = 1
-		,@recommend = custid	
+		,@srecommend = custid	
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
 
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
 	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
+	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
 	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
+	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
 	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
+	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
 	
 END	
