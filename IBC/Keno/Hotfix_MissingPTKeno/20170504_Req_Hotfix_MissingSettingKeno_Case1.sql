@@ -387,7 +387,7 @@ FROM #List1 L1
 	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK)
 WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
 	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L1.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
-	AND l1.RoleID = 3
+	
 --CustOverrideGame
 INSERT INTO [dbo].[CustOverrideGame]
 (
@@ -404,61 +404,7 @@ FROM #List1 L1
 	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK) 
 WHERE ps.Sporttype = 202 AND ps.IsDep = 0  
 	AND NOT EXISTS (SELECT 1 FROM CustOverrideGame COG WITH (NOLOCK) WHERE COG.CustID = L1.custid AND COG.Sporttype = 202 AND COG.Bettype = PS.Bettype)   
-	AND L1.RoleID = 3
-		
-INSERT INTO [dbo].[CustSettingGame]
-(
-    [custid]
-  , [bettype]
-  , [sporttype]
-  , [apositiontaking]
-  , [mpositiontaking]
-  , [spositiontaking]
-  , [playerdiscount]
-  , [discount]
-  , [adiscount]
-  , [sdiscount]
-  , [autopositiontaking]
-  , [isautopositiontaking]
-  , [autompositiontaking]
-  , [isautompositiontaking]
-)
-SELECT L1.custid
-	 , ps.Bettype
-	 , 202
-	 , 0 --apos
-	 , 0 --mpos
-	 , 0 --spos
-     , 0 --pdis
-	 , 0 --dis
-	 , 0 --adis
-	 , 0 --sdis
-	 , 0 --autopos
-     , 0 --isautopos
-	 , 0 --autompos
-	 , 0 --isautompos
-FROM #List1 L1 
-	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK)
-WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
-	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L1.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
-	AND l1.RoleID = 2	
-
-INSERT INTO [dbo].[CustOverrideGame]
-(
-    [custid]
-  , [bettype]
-  , [sporttype]
-  , [minpositiontaking]
-)
-SELECT l1.custid
-	 , ps.Bettype
-	 , 202
-	 , 0 --minpos
-FROM #List1 L1  
-	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK) 
-WHERE ps.Sporttype = 202 AND ps.IsDep = 0  
-	AND NOT EXISTS (SELECT 1 FROM CustOverrideGame COG WITH (NOLOCK) WHERE COG.CustID = L1.custid AND COG.Sporttype = 202 AND COG.Bettype = PS.Bettype)   
-	AND L1.RoleID = 2
+	AND L1.RoleID IN (2,3)
 
 -----------Step 2: Member: Disable Keno for member, Insert PT and adjust PT 
 
@@ -470,45 +416,7 @@ FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
 
 -----------Step 2.2: Member: Insert PT and adjust PT 
-INSERT INTO [dbo].[CustSettingGame]
-(
-    [custid]
-  , [bettype]
-  , [sporttype]
-  , [apositiontaking]
-  , [mpositiontaking]
-  , [spositiontaking]
-  , [playerdiscount]
-  , [discount]
-  , [adiscount]
-  , [sdiscount]
-  , [autopositiontaking]
-  , [isautopositiontaking]
-  , [autompositiontaking]
-  , [isautompositiontaking]
-)
-SELECT L1.custid
-	 , ps.Bettype
-	 , 202
-	 , 0 --apos
-	 , 0 --mpos
-	 , 0 --spos
-     , 0 --pdis
-	 , 0 --dis
-	 , 0 --adis
-	 , 0 --sdis
-	 , 0 --autopos
-     , 0 --isautopos
-	 , 0 --autompos
-	 , 0 --isautompos
-FROM #List1 L1 
-	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK)
-WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
-	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L1.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
-	AND l1.RoleID = 1		
-
 --- Correct PT Members under Agent
-
 DECLARE @recommend INT
 
 CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
