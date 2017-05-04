@@ -224,7 +224,6 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	-- API Info
 	AND C.site IN ('May88')
 
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
@@ -290,7 +289,7 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSetting ps WITH (NOLOCK) ON lds.ProductSettingID = PS.ProductSettingID AND ps.ProductID= @ProductID
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType 
-	AND C.site in  ('May88') -- API Info
+	AND C.site in  ('May88') 
  
 CREATE TABLE #supers (custid int, currency int,SiteID INT, isfinished bit default(0))
 
@@ -298,7 +297,6 @@ DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid
 
 CREATE TABLE #Licensee_Currency (LicenseeName VARCHAR(200), exchangeID INT)
--- API Info
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
 VALUES 
 ('May88',51)

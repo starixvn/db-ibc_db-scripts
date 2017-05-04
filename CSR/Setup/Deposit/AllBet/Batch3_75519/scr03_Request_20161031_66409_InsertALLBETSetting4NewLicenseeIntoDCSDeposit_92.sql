@@ -232,7 +232,7 @@ WHERE PSD.SportType = @SportType
 DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int , @SiteID INT
 SELECT  @max_custid= xxx ---input maxcustid select MAX(custid) from custInfo (nolock)
 
--- Athena Info
+
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
 VALUES 
 ('Emmyo',2),
@@ -309,7 +309,7 @@ WHERE PSD.SportType = @SportType
 DECLARE @max_custid INT, @srecommend INT, @currency int , @SiteID INT
 
 SELECT  @max_custid= xxx ---input maxcustid
--- Athena Info
+
 INSERT INTO #Licensee_Currency (LicenseeName,exchangeID)
 VALUES('Emmyo',2),
 ('Emmyo',3),
