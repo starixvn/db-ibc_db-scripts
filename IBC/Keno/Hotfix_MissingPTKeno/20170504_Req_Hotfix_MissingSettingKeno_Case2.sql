@@ -89,7 +89,7 @@ FROM #List2 L2
 	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK)
 WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
 	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L2.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
-	AND l2.RoleID = 3
+	
 --CustOverrideGame
 INSERT INTO [dbo].[CustOverrideGame]
 (
@@ -106,8 +106,7 @@ FROM #List2 L2
 	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK) 
 WHERE ps.Sporttype = 202 AND ps.IsDep = 0  
 	AND NOT EXISTS (SELECT 1 FROM CustOverrideGame COG WITH (NOLOCK) WHERE COG.CustID = L2.custid AND COG.Sporttype = 202 AND COG.Bettype = PS.Bettype)   
-	AND L2.RoleID = 3
-
+	
 -----------Step 1.2: adjust member m1=0
 UPDATE CSG
 	SET mpositiontaking = 0
@@ -116,6 +115,12 @@ FROM CustSettingGame CSG WITH (ROWLOCK,UPDLOCK)
 	INNER JOIN #List2 L2 ON CI.mrecommend = L2.CustID AND L2.RoleID = 3
 WHERE CSG.Sporttype = 202	
 
+UPDATE CSG
+	SET apositiontaking = 0
+FROM CustSettingGame CSG WITH (ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON CSG.CustID = CI.custid AND CI.roleid = 1
+	INNER JOIN #List2 L2 ON CI.recommend = L2.CustID AND L2.RoleID = 2
+WHERE CSG.Sporttype = 202	
 
 /* -- Disable Keno for member
 
@@ -124,82 +129,17 @@ UPDATE CGT
 FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CGT.CustID = CI.custid
 	INNER JOIN #List2 l2 ON CI.mrecommend = L2.CustID AND L2.RoleID = 3
-WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
+WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14)	
 
 */
 
--------------Step 2: Agent insert pt=0, adjust a1=0, correct member pt
------------Step 2.1: Agent insert PT=0
-INSERT INTO [dbo].[CustSettingGame]
-(
-    [custid]
-  , [bettype]
-  , [sporttype]
-  , [apositiontaking]
-  , [mpositiontaking]
-  , [spositiontaking]
-  , [playerdiscount]
-  , [discount]
-  , [adiscount]
-  , [sdiscount]
-  , [autopositiontaking]
-  , [isautopositiontaking]
-  , [autompositiontaking]
-  , [isautompositiontaking]
-)
-SELECT L2.custid
-	 , ps.Bettype
-	 , 202
-	 , 0 --apos
-	 , 0 --mpos
-	 , 0 --spos
-     , 0 --pdis
-	 , 0 --dis
-	 , 0 --adis
-	 , 0 --sdis
-	 , 0 --autopos
-     , 0 --isautopos
-	 , 0 --autompos
-	 , 0 --isautompos
-FROM #List2 L2 
-	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK)
-WHERE ps.Sporttype = 202 AND ps.IsDep = 0 
-	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L2.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
-	AND l2.RoleID = 2
---CustOverrideGame
-INSERT INTO [dbo].[CustOverrideGame]
-(
-    [custid]
-  , [bettype]
-  , [sporttype]
-  , [minpositiontaking]
-)
-SELECT l2.custid
-	 , ps.Bettype
-	 , 202
-	 , 0 --minpos
-FROM #List2 L2  
-	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK) 
-WHERE ps.Sporttype = 202 AND ps.IsDep = 0  
-	AND NOT EXISTS (SELECT 1 FROM CustOverrideGame COG WITH (NOLOCK) WHERE COG.CustID = L2.custid AND COG.Sporttype = 202 AND COG.Bettype = PS.Bettype)   
-	AND L2.RoleID = 2
-
------------Step 2.2: adjust member a1=0
-UPDATE CSG
-	SET apositiontaking = 0
-FROM CustSettingGame CSG WITH (ROWLOCK,UPDLOCK)
-	INNER JOIN custInfo CI WITH (NOLOCK) ON CSG.CustID = CI.custid AND CI.roleid = 1
-	INNER JOIN #List2 L2 ON CI.recommend = L2.CustID AND L2.RoleID = 2
-WHERE CSG.Sporttype = 202	
-
------------Step 2.3: correct PT member
 /* -- Disable Keno for member
 UPDATE CGT
 	SET IsDisabled = 1
 FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CGT.CustID = CI.custid
 	INNER JOIN #List2 l2 ON CI.recommend = L2.CustID AND L2.RoleID = 2
-WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
+WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14)	
 */
 
 DECLARE @srecommend INT
