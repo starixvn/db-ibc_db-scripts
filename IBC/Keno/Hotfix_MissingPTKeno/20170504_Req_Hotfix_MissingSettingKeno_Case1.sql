@@ -513,8 +513,17 @@ DECLARE @mrecommend INT
 CREATE TABLE #MasterList (CustID INT, isfinished bit default(0))
 
 INSERT INTO #MasterList (CustID)
-SELECT custid FROM #List1 L 
+SELECT custid 
+FROM #List1 L 
 WHERE L.RoleID = 3
+
+UNION
+
+SELECT CI.mrecommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 1
+
 
 WHILE (1 = 1)
 BEGIN
@@ -560,6 +569,13 @@ CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
 INSERT INTO #AgentList (CustID)
 SELECT custid FROM #List1 L 
 WHERE L.RoleID = 2
+
+UNION
+
+SELECT CI.recommend
+FROM #List1 L 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
+WHERE L.RoleID = 1
 
 WHILE (1 = 1)
 BEGIN
