@@ -81,7 +81,7 @@ UPDATE CI
 	  , HideColossusBet = CIB.HideColossusBet
 	  , MaxPerMatch1MP = CIB.MaxPerMatch1MP
 
-FROM custinfo CI WITH(NOLOCK)	
+FROM custinfo CI WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN custinfo_20170505_BACKUP	 CIB  WITH (NOLOCK) ON CI.username = CIB.username
 WHERE ci.username IN ('TVA96QG82','TY81H104')
 
@@ -106,7 +106,7 @@ UPDATE C
 		, creatdate = CB.creatdate
 		, ugroup = CB.ugroup
 
-FROM Customer C WITH (NOLOCK)
+FROM Customer C WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN Customer_20170505_BACKUP CB WITH (NOLOCK) ON C.username = CB.username
 WHERE c.username IN ('TVA96QG82','TY81H104')
 
@@ -116,7 +116,7 @@ UPDATE CA
 		, TransferOption = CAB.TransferOption
 		, Site = CAB.Site
 
-FROM CustAgent CA WITH (NOLOCK) 
+FROM CustAgent CA WITH(ROWLOCK,UPDLOCK) 
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CA.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustAgent_20170505_BACKUP CAB WITH (NOLOCK) ON CIB.custid = CAB.custID
@@ -133,7 +133,7 @@ UPDATE CLI
 		, isForcedChangeSecurityCode = CLIB.isForcedChangeSecurityCode
 		, LastChangedSecurityCodeDate = CLIB.LastChangedSecurityCodeDate
 
-FROM CustLoginInfo CLI WITH (NOLOCK) 
+FROM CustLoginInfo CLI WITH(ROWLOCK,UPDLOCK) 
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustLoginInfo_20170505_BACKUP CLIB ON CLIB.custid = CIB.custid			    	        
@@ -145,7 +145,7 @@ UPDATE CPS
 		,bitmapIsHidden = CPSD.bitmapIsHidden
 		,bitmapHasSynced = CPSD.bitmapHasSynced
 
-FROM [CustProductStatus] CPS WITH (NOLOCK)
+FROM [CustProductStatus] CPS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustProductStatus_20170505_BACKUP CPSD WITH (NOLOCK) ON CPSD.custid = CIB.custid	
@@ -163,7 +163,7 @@ UPDATE CS
 		   ,[MinPT] = CSB.MinPT
 		   ,[MaxPT] = CSB.MaxPT
 				   
-FROM [CustPTSetting3rd_Agent] CS
+FROM [CustPTSetting3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
 	INNER JOIN CustPTSetting3rd_Agent_20170505_BACKUP CSB ON  CSB.custid = CIB.custid 
@@ -177,7 +177,7 @@ UPDATE CBS
 		   ,[MaxBet] = CSB.MaxBet
 		   ,[MaxPerMatch] = CSB.MaxPerMatch
 
-FROM  [CustBetSetting3rd_Agent] CBS WITH (NOLOCK)
+FROM  [CustBetSetting3rd_Agent] CBS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CBS.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
 	INNER JOIN CustBetSetting3rd_Agent_20170505_BACKUP CSB ON  CSB.custid = CIB.custid 
@@ -188,7 +188,7 @@ WHERE CI.username IN ('TVA96QG82','TY81H104')
 
 UPDATE CS
 	SET [Discount] = CSB.Discount
-FROM  [CustDiscount3rd_Agent] CS WITH(NOLOCK)
+FROM  [CustDiscount3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CS.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
 	INNER JOIN CustDiscount3rd_Agent_20170505_BACKUP CSB (NOLOCK) ON  CSB.custid = CIB.custid 
@@ -202,7 +202,7 @@ UPDATE CWA
 	   ,[MaxLossLimit] = CSB.MaxLossLimit
 	   ,[IsAutoReset] = CSB.IsAutoReset
 
-FROM [CustWinLossLimit_Agent] CWA WITH(NOLOCK)	
+FROM [CustWinLossLimit_Agent] CWA WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CWA.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
 	INNER JOIN CustWinLossLimit_Agent_20170505_BACKUP CSB WITH (NOLOCK) ON  CSB.custid = CIB.custid 
@@ -215,7 +215,7 @@ WHERE CI.username IN ('TVA96QG82','TY81H104')
 UPDATE CS
 	SET StakeLevelList = CSB.StakeLevelList
 
-FROM CustStakeLevel_Agent CS WITH(NOLOCK)	
+FROM CustStakeLevel_Agent CS WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CS.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
 	INNER JOIN CustStakeLevel_Agent_20170505_BACKUP CSB WITH (NOLOCK) ON  CSB.custid = CIB.custid 
