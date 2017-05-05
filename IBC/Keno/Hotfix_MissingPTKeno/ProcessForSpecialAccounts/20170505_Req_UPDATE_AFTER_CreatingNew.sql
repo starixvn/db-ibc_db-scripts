@@ -194,7 +194,7 @@ FROM [CustPTSetting3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType
 				AND CS.IsLive = CSB.IsLive
-WHERE CI.username IN ('TVA96QG82','QW107AA121')
+WHERE CI.username IN ('TVA96QG82')
 
 UPDATE CBS
 		SET [MinBet] = CSB.MinBet
@@ -208,7 +208,7 @@ FROM  [CustBetSetting3rd_Agent] CBS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType
 				
-WHERE CI.username IN ('TVA96QG82','QW107AA121')
+WHERE CI.username IN ('TVA96QG82')
 
 UPDATE CS
 	SET [Discount] = CSB.Discount
@@ -218,7 +218,7 @@ FROM  [CustDiscount3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN CustDiscount3rd_Agent_20170505_BACKUP CSB (NOLOCK) ON  CSB.custid = CIB.custid 
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
-WHERE CI.username IN ('TVA96QG82','QW107AA121')
+WHERE CI.username IN ('TVA96QG82')
 
 
 UPDATE CWA
@@ -233,7 +233,7 @@ FROM [CustWinLossLimit_Agent] CWA WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
 				
-WHERE CI.username IN ('TVA96QG82','QW107AA121')
+WHERE CI.username IN ('TVA96QG82')
 
 
 UPDATE CS
@@ -246,4 +246,4 @@ FROM CustStakeLevel_Agent CS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
 				
-WHERE CI.username IN ('TVA96QG82','QW107AA121')
+WHERE CI.username IN ('TVA96QG82')
