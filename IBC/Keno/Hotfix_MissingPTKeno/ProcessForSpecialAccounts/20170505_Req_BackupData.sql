@@ -48,7 +48,14 @@ WHERE custid IN (21442091,20696396)
 SELECT [CustID],seqNo,bitmapVirtual
 INTO CustVirtualSetting_20170505_BACKUP
 FROM [CustVirtualSetting] WITH (NOLOCK)
+WHERE custid IN (21442091,20696396)
+
+
+SELECT [CustID],SportType,BetType,MaxWinLimit,IsAutoReset,MaxLossLimit
+INTO CustWinLimit_20170505_BACKUP
+FROM [CustWinLimit] WITH (NOLOCK)
 WHERE custid IN (21442091,20696396)	
+
 
 ---------------- AGENT -----------------------------
 SELECT [CustID]

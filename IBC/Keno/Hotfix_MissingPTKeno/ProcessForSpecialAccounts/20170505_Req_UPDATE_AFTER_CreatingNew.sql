@@ -149,6 +149,20 @@ FROM CustVirtualSetting CLI WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN CustVirtualSetting_20170505_BACKUP CLIB ON CLIB.custid = CIB.custid	AND CLI.seqNo = CLIB.seqNo
 WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
+UPDATE CS
+	   SET  MaxWinLimit = CSB.MaxWinLimit
+			, IsAutoReset = CSB.IsAutoReset
+			, MaxLossLimit = CSB.MaxLossLimit
+				   
+FROM [CustWinLimit] CS WITH(ROWLOCK,UPDLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
+	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username 
+	INNER JOIN CustWinLimit_20170505_BACKUP CSB ON  CSB.custid = CIB.custid 
+				AND CS.SportType = CSB.SportType 
+				AND CS.BetType = CSB.BetType
+				
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
+
 
 UPDATE CPS
 	SET bitmapIsDisabled = CPSD.bitmapIsDisabled
