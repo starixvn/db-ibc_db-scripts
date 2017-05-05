@@ -19,14 +19,14 @@ SELECT custid, currency
 	  , MaxPerMatch1MP
 INTO custinfo_20170505_BACKUP	  
 FROM custinfo  WITH(NOLOCK)	
-WHERE custid IN (21442091,20696396)
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)
 
 SELECT username, firstname, lastname, phone, mobilephone, fax, email, address,
 			    city, state, country, postal, userpwd, roleid, srecommend, mrecommend, recommend, 
 			    currency, pwdexpiry, creator, Site, creatdate, ugroup
 INTO Customer_20170505_BACKUP			    
 FROM Customer WITH (NOLOCK)
-WHERE custid IN (21442091,20696396)
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)
 
 SELECT custId, MaxCredit, IsInternal, TransferOption, Site
 INTO CustAgent_20170505_BACKUP			    
@@ -37,25 +37,24 @@ SELECT CustID, OldUserPwd, LastChangedPwdDate, isFirstLogin, SecurityCodeCount,
 	        SecurityCode, isForcedChangeSecurityCode, LastChangedSecurityCodeDate
 INTO CustLoginInfo_20170505_BACKUP			    	        
 FROM CustLoginInfo WITH (NOLOCK) 
-WHERE custid IN (21442091,20696396)
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)
 
 
 SELECT [CustID],bitmapIsDisabled,bitmapIsHidden,bitmapHasSynced
 INTO CustProductStatus_20170505_BACKUP
 FROM [CustProductStatus] WITH (NOLOCK)
-WHERE custid IN (21442091,20696396)	          
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)          
 
 SELECT [CustID],seqNo,bitmapVirtual
 INTO CustVirtualSetting_20170505_BACKUP
 FROM [CustVirtualSetting] WITH (NOLOCK)
-WHERE custid IN (21442091,20696396)
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)
 
 
 SELECT [CustID],SportType,BetType,MaxWinLimit,IsAutoReset,MaxLossLimit
 INTO CustWinLimit_20170505_BACKUP
 FROM [CustWinLimit] WITH (NOLOCK)
-WHERE custid IN (21442091,20696396)	
-
+WHERE custid IN (21442091,20696396,21442964,21443084,21443093)	
 
 ---------------- AGENT -----------------------------
 SELECT [CustID]
@@ -73,7 +72,7 @@ SELECT [CustID]
 				   ,[MaxPT]
 INTO CustPTSetting3rd_Agent_20170505_BACKUP				   
 FROM [CustPTSetting3rd_Agent] WITH(NOLOCK)	
-WHERE custid IN (21442091)
+WHERE custid IN (21442091,21442964)
 
 SELECT  [CustID]
 					   ,[SportType]
@@ -83,14 +82,14 @@ SELECT  [CustID]
 					   ,[MaxPerMatch]
 INTO CustBetSetting3rd_Agent_20170505_BACKUP
 FROM  [CustBetSetting3rd_Agent] WITH (NOLOCK)
-WHERE custid IN (21442091)
+WHERE custid IN (21442091,21442964)
 SELECT  [CustID]
 					   ,[SportType]
 					   ,[BetType]
 					   ,[Discount]
 INTO CustDiscount3rd_Agent_20170505_BACKUP					   
 FROM  [CustDiscount3rd_Agent] WITH(NOLOCK)	
-WHERE custid IN (21442091)
+WHERE custid IN (21442091,21442964)
 
 SELECT  [CustID]
 					   ,[SportType]
@@ -100,10 +99,10 @@ SELECT  [CustID]
 					   ,[IsAutoReset]
 INTO CustWinLossLimit_Agent_20170505_BACKUP					   
 FROM [CustWinLossLimit_Agent] WITH(NOLOCK)	
-WHERE custid IN (21442091)
+WHERE custid IN (21442091,21442964)
 
 SELECT CustID , SportType    , BetType    , StakeLevelList
 INTO CustStakeLevel_Agent_20170505_BACKUP
 FROM CustStakeLevel_Agent WITH(NOLOCK)	
-WHERE custid IN (21442091)
+WHERE custid IN (21442091,21442964)
 
