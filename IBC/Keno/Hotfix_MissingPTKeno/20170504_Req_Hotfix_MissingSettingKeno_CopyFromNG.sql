@@ -4,8 +4,8 @@
 
 */
 
-CREATE TABLE #List2 (CustID INT PRIMARY KEY,RoleID INT)
-INSERT INTO #List2 (CustID,roleID)
+CREATE TABLE #List2 (CustID INT PRIMARY KEY)
+INSERT INTO #List2 (CustID)
 VALUES (15669625),
 (15672158),
 (15669572),
@@ -87,7 +87,7 @@ SELECT L2.custid
 FROM #List2 L2 
 	INNER JOIN CustSetting3rd csn WITH(NOLOCK) ON L2.CustID = csn.CustID 
 	CROSS JOIN ProductGlobalSetting ps WITH(NOLOCK) 
-WHERE L2.RoleID IN (2,3) AND csn.Sporttype = 161 AND csn.bettype  = 81
+WHERE csn.Sporttype = 161 AND csn.bettype  = 81
 	AND ps.Sporttype = 202 AND ps.IsDep = 0 
 	AND NOT EXISTS (SELECT 1 FROM CustSettingGame CSG WITH (NOLOCK) WHERE CSG.CustID = L2.custid AND CSG.Sporttype = 202 AND CSG.Bettype = PS.Bettype)   
 
