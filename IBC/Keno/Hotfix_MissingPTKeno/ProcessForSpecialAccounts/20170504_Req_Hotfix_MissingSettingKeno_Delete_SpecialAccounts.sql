@@ -11,7 +11,7 @@ DECLARE @UserName VARCHAR (200) = ''
 CREATE TABLE #Cust_MissingSetting (username VARCHAR(200), isfinished bit default(0))
 
 INSERT INTO #Cust_MissingSetting (username)
-VALUES('TVA96QG82'),('TY81H104')
+VALUES('TVA96QG82'),('QW107AA121')
 
 DECLARE @ErrCode int = 0,
 	@ErrMsg varchar(200) = ''

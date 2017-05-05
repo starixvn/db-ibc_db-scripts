@@ -83,7 +83,7 @@ UPDATE CI
 
 FROM custinfo CI WITH(ROWLOCK,UPDLOCK)	
 	INNER JOIN custinfo_20170505_BACKUP	 CIB  WITH (NOLOCK) ON CI.username = CIB.username
-WHERE ci.username IN ('TVA96QG82','TY81H104')
+WHERE ci.username IN ('TVA96QG82','QW107AA121')
 
 UPDATE C
 	SET firstname = CB.firstname
@@ -108,7 +108,7 @@ UPDATE C
 
 FROM Customer C WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN Customer_20170505_BACKUP CB WITH (NOLOCK) ON C.username = CB.username
-WHERE c.username IN ('TVA96QG82','TY81H104')
+WHERE c.username IN ('TVA96QG82','QW107AA121')
 
 UPDATE CA
 	SET MaxCredit = CAB.MaxCredit
@@ -121,7 +121,7 @@ FROM CustAgent CA WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustAgent_20170505_BACKUP CAB WITH (NOLOCK) ON CIB.custid = CAB.custID
 				    
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 
 UPDATE CLI
@@ -137,7 +137,17 @@ FROM CustLoginInfo CLI WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustLoginInfo_20170505_BACKUP CLIB ON CLIB.custid = CIB.custid			    	        
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
+
+
+UPDATE CLI
+	SET bitmapVirtual = CLIB.bitmapVirtual
+
+FROM CustVirtualSetting CLI WITH(ROWLOCK,UPDLOCK) 
+	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
+	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
+	INNER JOIN CustVirtualSetting_20170505_BACKUP CLIB ON CLIB.custid = CIB.custid	AND CLI.seqNo = CLIB.seqNo
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 
 UPDATE CPS
@@ -149,7 +159,7 @@ FROM [CustProductStatus] CPS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON CI.custid = CLI.custid
 	INNER JOIN custinfo_20170505_BACKUP CIB WITH (NOLOCK) ON CI.username = 	CIB.username
 	INNER JOIN CustProductStatus_20170505_BACKUP CPSD WITH (NOLOCK) ON CPSD.custid = CIB.custid	
-WHERE CI.username IN ('TVA96QG82','TY81H104')     
+WHERE CI.username IN ('TVA96QG82','QW107AA121')     
 
 
 UPDATE CS
@@ -170,7 +180,7 @@ FROM [CustPTSetting3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType
 				AND CS.IsLive = CSB.IsLive
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 UPDATE CBS
 		SET [MinBet] = CSB.MinBet
@@ -184,7 +194,7 @@ FROM  [CustBetSetting3rd_Agent] CBS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType
 				
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 UPDATE CS
 	SET [Discount] = CSB.Discount
@@ -194,7 +204,7 @@ FROM  [CustDiscount3rd_Agent] CS WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN CustDiscount3rd_Agent_20170505_BACKUP CSB (NOLOCK) ON  CSB.custid = CIB.custid 
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 
 UPDATE CWA
@@ -209,7 +219,7 @@ FROM [CustWinLossLimit_Agent] CWA WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
 				
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
 
 
 UPDATE CS
@@ -222,4 +232,4 @@ FROM CustStakeLevel_Agent CS WITH(ROWLOCK,UPDLOCK)
 				AND CS.SportType = CSB.SportType 
 				AND CS.BetType = CSB.BetType	
 				
-WHERE CI.username IN ('TVA96QG82','TY81H104')
+WHERE CI.username IN ('TVA96QG82','QW107AA121')
