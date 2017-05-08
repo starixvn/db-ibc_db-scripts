@@ -30,7 +30,7 @@ INSERT INTO [dbo].[CustSettingGame]
 SELECT L2.custid
 	 , ps.Bettype
 	 , 202
-	 , 0.7 --apos
+	 , 0.73 --apos
 	 , 0 --mpos
 	 , 0 --spos
      , 0 --pdis
