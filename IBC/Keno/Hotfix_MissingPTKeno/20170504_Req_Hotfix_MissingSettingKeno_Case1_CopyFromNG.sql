@@ -415,173 +415,251 @@ WHERE ps.Sporttype = 202 AND ps.IsDep = 0 AND L1.RoleID IN (2,3)
 -----------Step 2: Member: Disable Keno for member, Insert PT and adjust PT 
 
 -----------Step 2.1: Member: Disable Keno for member
-UPDATE CGT
-	SET IsDisabled = 1
-FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
-	INNER JOIN #List1 l1 ON CGT.CustID = L1.CustID AND L1.RoleID = 1
-WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
+--UPDATE CGT
+--	SET IsDisabled = 1
+--FROM CustGameType CGT WITH (ROWLOCK,UPDLOCK)
+--	INNER JOIN #List1 l1 ON CGT.CustID = L1.CustID AND L1.RoleID = 1
+--WHERE CGT.GameTypeID IN (1,3,4,5,8,11,13,14,15,16)	
 
 -----------Step 2.2: Member: Insert PT and adjust PT 
---- Correct PT Members under Agent
-DECLARE @recommend INT
+DECLARE @sporttype SMALLINT = 202
+declare @mpos smallmoney = 0
+                ,@apos smallmoney = 0
+                ,@spos smallmoney = 0
+                ,@mapos1 smallmoney = 0
+                ,@mapos2 smallmoney = 0
+                ,@mapos smallmoney = 0
+                ,@maxmapos smallmoney = 0
+                
+CREATE TABLE #AffectList (CustID INT)
 
-CREATE TABLE #AgentList (CustID INT, isfinished bit default(0))
-
-INSERT INTO #AgentList (CustID)
-SELECT custid FROM #List1 L 
-WHERE L.RoleID = 2
-
-UNION
-
-SELECT CI.recommend
-FROM #List1 L 
-	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
-WHERE L.RoleID = 1
-
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP (1) #AgentList
-	SET isfinished = 1
-		,@recommend = custid	
-	WHERE isfinished = 0
-	
-	IF @@ROWCOUNT = 0 BREAK
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
-
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @recommend = @recommend, @roleid = 2, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
-	
-END		
+INSERT INTO #AffectList (CustID)
+SELECT CI.custid
+FROM custInfo CI (NOLOCK)
+WHERE CI.custid IN (15672530,
+15669993,
+15671194,
+15673061,
+15671976,
+15668987,
+15671380,
+15667957,
+15667848,
+15672770,
+15672782,
+15672788,
+15672800,
+15672803,
+15671362,
+15670610,
+15673071,
+15671361,
+15670332,
+15669616,
+15673525,
+15669716,
+15672801,
+20696396,
+15670366,
+15670485,
+15668024,
+15671874,
+15672441,
+15672463,
+15669423,
+15670979,
+15671543,
+15673867,
+15673869,
+15673870,
+15673917,
+15673920,
+15673922,
+15673927,
+15673929,
+15673949,
+15673952,
+15669782,
+15672694,
+15670622,
+15672637)
 ---Correct PT Member under Master
-DECLARE @mrecommend INT
+DECLARE @mrecommend INT,@srecommend INT
 
-CREATE TABLE #MasterList (CustID INT, isfinished bit default(0))
+CREATE TABLE #MasterList (CustID INT,srecommend INT, isfinished bit default(0))
 
-INSERT INTO #MasterList (CustID)
-SELECT custid 
-FROM #List1 L 
-WHERE L.RoleID = 3
-
-UNION
-
-SELECT CI.mrecommend
-FROM #List1 L 
-	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
-WHERE L.RoleID = 1
-
+INSERT INTO #MasterList (CustID,srecommend)
+SELECT DISTINCT CI.mrecommend,srecommend
+FROM #AffectList AL
+	INNER JOIN custInfo CI WITH (NOLOCK) ON AL.CustID = CI.custid
 
 WHILE (1 = 1)
 BEGIN
+	
 	UPDATE TOP (1) #MasterList
 	SET isfinished = 1
-		,@mrecommend = custid	
+		,@mrecommend = custid
+		,@srecommend = srecommend	
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
 	
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
+	--Recal AUTO MPT m1=min(m3-a1,u2)
+    UPDATE cs
+    SET cs.mpositiontaking = CASE WHEN mcs.mpositiontaking - cs.apositiontaking > CASE WHEN cs.isautompositiontaking = 1 THEN cs.autompositiontaking ELSE acs.autompositiontaking END THEN
+                                        CASE WHEN cs.isautompositiontaking = 1 THEN cs.autompositiontaking ELSE acs.autompositiontaking END 
+                                        ELSE mcs.mpositiontaking - cs.apositiontaking END
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid
+        INNER JOIN CustSettingGame acs WITH(NOLOCK) ON acs.custid = ci.recommend AND acs.sporttype = cs.sporttype AND acs.bettype = cs.bettype
+        INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = @mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+        AND (cs.isautompositiontaking = 1 OR acs.isautompositiontaking = 1)
+        AND cs.CustID IN (SELECT CustID From #AffectList)
 
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
-
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @mrecommend = @mrecommend, @roleid = 3, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
-	
+    --check master min/max
+    --m1=n3-a1
+    UPDATE cs
+    SET cs.mpositiontaking = mco.minpositiontaking - cs.apositiontaking 
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+        INNER JOIN CustOverrideGame mco WITH(NOLOCK) ON mco.custid = @mrecommend AND mco.sporttype = cs.sporttype AND mco.bettype = cs.bettype
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+         AND cs.mpositiontaking + cs.apositiontaking < mco.minpositiontaking
+		AND cs.CustID IN (SELECT CustID From #AffectList)
+    -- Update m1,a1 when m1+a1>m3
+    -- m1=m3-a1
+    UPDATE cs
+    SET @mpos = CASE WHEN mcs.mpositiontaking - cs.apositiontaking < 0 THEN 0 ELSE mcs.mpositiontaking - cs.apositiontaking END,
+        cs.mpositiontaking = @mpos,
+        @apos = CASE WHEN cs.apositiontaking + @mpos > mcs.mpositiontaking THEN mcs.mpositiontaking - @mpos ELSE cs.apositiontaking END ,
+        cs.apositiontaking = CASE WHEN @apos < aco.minpositiontaking THEN aco.minpositiontaking ELSE @apos END 
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+        INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = @mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+        INNER JOIN CustOverrideGame aco WITH(NOLOCK) ON aco.custid = ci.recommend AND aco.sporttype = cs.sporttype AND aco.bettype = cs.bettype
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype  
+        AND cs.mpositiontaking + cs.apositiontaking > mcs.mpositiontaking        
+        AND cs.CustID IN (SELECT CustID From #AffectList)
+    
+        
+    --recal autopos
+    -- s1=min(s4-m1-a1,u)
+    UPDATE cs
+    SET cs.spositiontaking = CASE WHEN scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking > CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END
+                                THEN CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END
+                                ELSE scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking END 
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+        INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = @srecommend AND scs.sporttype = cs.sporttype AND scs.bettype = cs.bettype 
+        INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = @mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+        AND (mcs.isautopositiontaking = 1 OR cs.isautopositiontaking = 1)
+		AND cs.CustID IN (SELECT CustID From #AffectList)
+    
+    --check super min/max when a1+m1+s1<n4
+    -- s1=n4-m1-a1
+    UPDATE cs
+    SET cs.spositiontaking = sco.minpositiontaking - cs.mpositiontaking - cs.apositiontaking 
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+        INNER JOIN CustOverrideGame sco WITH(NOLOCK) ON sco.custid = @srecommend AND sco.sporttype = cs.sporttype AND sco.bettype = cs.bettype
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+        AND cs.spositiontaking + cs.mpositiontaking + cs.apositiontaking < sco.minpositiontaking 
+        AND cs.CustID IN (SELECT CustID From #AffectList)    
+    --update s1,m1,a1 in case s1+m1+a1>s4
+    --s1=max(0,s4-m1-a1)
+    --@mapos1=iif(s1_new+m1+a1>s4,s4-s1_new,m1+a1)
+    --@maxmapos=min(m3,l3)
+    --@mapos2=min(@mapos1,@maxmapos)
+    --@mapos=max(@mapos2,n3)
+    --m1=max(0,@mapos-a1)
+    --a1=iif(m1_new+a1>@mapos,@mapos-m1_new,a1)
+    UPDATE cs
+    SET @spos = CASE WHEN scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking < 0 THEN 0 ELSE scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking END,
+        cs.spositiontaking = @spos,
+        @mapos1 = CASE WHEN cs.mpositiontaking + cs.apositiontaking + @spos > scs.spositiontaking THEN scs.spositiontaking - @spos ELSE cs.mpositiontaking + cs.apositiontaking END,
+        @mapos2 = CASE WHEN @mapos1 > mcs.mpositiontaking THEN mcs.mpositiontaking ELSE @mapos1 END,
+        @mapos = CASE WHEN @mapos2 < mco.minpositiontaking THEN mco.minpositiontaking ELSE @mapos2 END,
+        @mpos =  CASE WHEN @mapos - cs.apositiontaking < 0 THEN 0 ELSE @mapos - cs.apositiontaking END,
+        cs.mpositiontaking = @mpos,
+        @apos = CASE WHEN cs.apositiontaking + @mpos > @mapos THEN @mapos - @mpos ELSE cs.apositiontaking END,
+        cs.apositiontaking = CASE WHEN @apos < aco.minpositiontaking THEN aco.minpositiontaking ELSE @apos END
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+        INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = @srecommend AND scs.sporttype = cs.sporttype AND scs.bettype = cs.bettype 
+        INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = @mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+        INNER JOIN CustOverrideGame mco WITH(NOLOCK) ON mco.custid = @mrecommend AND mco.sporttype = cs.sporttype AND mco.bettype = cs.bettype
+        INNER JOIN CustSettingGame acs WITH(NOLOCK) ON acs.custid = ci.recommend AND acs.sporttype = cs.sporttype AND acs.bettype = cs.bettype 
+        INNER JOIN CustOverrideGame aco WITH(NOLOCK) ON aco.custid = ci.recommend AND aco.sporttype = cs.sporttype AND aco.bettype = cs.bettype
+    WHERE ci.mrecommend = @mrecommend AND ci.roleid = 1 AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+        AND cs.spositiontaking + cs.mpositiontaking + cs.apositiontaking > scs.spositiontaking 
+		AND cs.CustID IN (SELECT CustID From #AffectList)    
+   
 END	
 
 ---Correct PT Member under Super
-
-DECLARE @srecommend INT
-
 CREATE TABLE #SuperList (CustID INT, isfinished bit default(0))
 
 INSERT INTO #SuperList (CustID)
-SELECT CI.srecommend
-FROM #List1 L 
-	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
-WHERE L.RoleID = 1
+SELECT DISTINCT srecommend
+FROM #MasterList
 
-UNION 
-
-SELECT CI.srecommend
-FROM #List1 L 
-	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
-WHERE L.RoleID = 2
-
-UNION 
-
-SELECT CI.srecommend
-FROM #List1 L 
-	INNER JOIN custInfo CI WITH (NOLOCK) ON L.CustID = CI.custid
-WHERE L.RoleID = 3
-
+SELECT @mpos  = 0
+    ,@apos  = 0
+    ,@spos  = 0
+    ,@mapos1  = 0
+    ,@mapos2  = 0
+    ,@mapos  = 0
+    ,@maxmapos  = 0
+                
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP (1) #MasterList
+	UPDATE TOP (1) #SuperList
 	SET isfinished = 1
 		,@srecommend = custid	
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1501
 
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1503
 
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1504
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1505
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1507
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1508
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1509
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1511
-
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1513
-	
-	EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1514
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1515
-	
-	--EXEC dbo.Acc_CustSetting3rd_07 @srecommend = @srecommend, @roleid = 4, @mode = 'Keno', @Sporttype = 202, @BetType = 1516
+	 --u = (i3 or i1)?(u3 or u1)
+    --s1 = min(s4-m1-a1, u)
+    UPDATE cs 
+    SET spositiontaking = CASE WHEN scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking >
+                                 CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END THEN
+                                (CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END) 
+                            ELSE scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking 
+                        END                            
+    FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+        INNER JOIN CustInfo ci WITH(NOLOCK) ON ci.custid = cs.custid
+        INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = ci.mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype
+        INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = @srecommend AND scs.sporttype = cs.sporttype AND scs.bettype = cs.bettype
+    WHERE ci.srecommend = @srecommend AND ci.roleid = 1
+        AND ci.Enabled = 1
+        AND cs.sporttype = @sporttype 
+        AND (cs.isautopositiontaking = 1 OR mcs.isautopositiontaking = 1)     
+		AND cs.CustID IN (SELECT CustID From #AffectList)
+	--check super min
+    --s1=max(n4-m1-a1,s1)
+    UPDATE cs
+       SET spositiontaking = sco.minpositiontaking - cs.mpositiontaking - cs.apositiontaking
+    FROM CustSettingGame cs WITH(ROWLOCK, UPDLOCK)
+		INNER JOIN custinfo mb WITH(NOLOCK) ON cs.custid = mb.custid
+										   AND mb.srecommend = @srecommend
+										   AND mb.roleid = 1
+										   AND mb.Enabled = 1
+		INNER JOIN CustOverrideGame sco WITH(NOLOCK) ON sco.custid = @srecommend
+												   AND sco.sporttype = cs.sporttype
+												   AND sco.bettype = cs.bettype
+	WHERE  cs.sporttype = @sporttype 
+		AND cs.apositiontaking + cs.mpositiontaking + cs.spositiontaking < sco.minpositiontaking
+		AND cs.CustID IN (SELECT CustID From #AffectList)
 	
 END	
