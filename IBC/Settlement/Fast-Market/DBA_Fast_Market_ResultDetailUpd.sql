@@ -1,6 +1,11 @@
-use bodb02
-go
-alter proc dbo.DBA_Fast_Market_ResultDetailUpd @MatchId int, @bettype smallint = 0, @mode int = 1
+USE [bodb02]
+GO
+/****** Object:  StoredProcedure [dbo].[DBA_Fast_Market_ResultDetailUpd]    Script Date: 05/09/2017 14:07:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER proc [dbo].[DBA_Fast_Market_ResultDetailUpd] @MatchId int, @bettype smallint = 0, @mode int = 1
 as
 /*	Creator: 20160303@Patrick
 	Task: DBA - Generate 
@@ -10,7 +15,7 @@ as
 	Revisions:
 		
 	Param's Explanation:
-	 - @mode: 1: insert
+	 - @mode: 1: insert 
 			  2: select
 
 	exec DBA_Fast_Market_ResultDetailUpd @MatchId = 71000001, @bettype = 0, @mode = 1
@@ -35,7 +40,8 @@ begin
 	from dbo.f_DBA_Fast_Market_GenerateBetOptions() order by newid()
 	set @maxoption = @@rowcount
 
-	--select * from @BetOptions
+	select * from @BetOptions where option_name = 'CornersFreeKickGoalKickPenalty'
+	
 
 	declare @index int = 0, @count int = 0
 		, @betoption tinyint, @option_name varchar(100)
@@ -43,6 +49,7 @@ begin
 		, @homevalue_222 varchar(50) = replicate(char('0'), 50), @awayvalue_222 varchar(50) = replicate(char('0'), 50)
 		, @homevalue_223 varchar(50) = replicate(char('0'), 50), @awayvalue_223 varchar(50) = replicate(char('0'), 50)
 		, @homevalue_224 varchar(50) = replicate(char('0'), 50), @awayvalue_224 varchar(50) = replicate(char('0'), 50)
+		, @homevalue_225 VARCHAR(50) = REPLICATE(CHAR('0'), 50), @awayvalue_225 VARCHAR(50) = REPLICATE(CHAR('0'), 50)
 
 	declare @options_name table(option_name varchar(100))
 	
@@ -75,9 +82,9 @@ begin
 				select @option_ascii_temp = option_ascii from @betoptions where option_name = 'None'
 
 			if @index <= 44
-				select @homevalue_221 = dbo.f_SetByte(@homevalue_221, @index, @option_ascii_temp)
+				select @homevalue_221 = (select data  FROM dbo.f_Set_SetByte_xtest(@homevalue_221, @index, @option_ascii_temp))
 			else
-				select @awayvalue_221 = dbo.f_SetByte(@awayvalue_221, @index, @option_ascii_temp)
+				select @awayvalue_221 = (SELECT data FROM dbo.f_Set_SetByte_xtest(@awayvalue_221, @index, @option_ascii_temp))
 		end
 
 		--for bettype 222
@@ -95,9 +102,9 @@ begin
 			if @index <= 85
 			begin
 				if @index <= 44
-					select @homevalue_222 = dbo.f_SetByte(@homevalue_222, @index, @option_ascii_temp)
+					select @homevalue_222 = (select data  FROM dbo.f_Set_SetByte_xtest(@homevalue_222, @index, @option_ascii_temp))
 				else
-					select @awayvalue_222 = dbo.f_SetByte(@awayvalue_222, @index, @option_ascii_temp)
+					select @awayvalue_222 = (select data  FROM dbo.f_Set_SetByte_xtest(@awayvalue_222, @index, @option_ascii_temp))
 			end
 		end
 
@@ -117,9 +124,9 @@ begin
 				select @option_ascii_temp = ascii(replicate(char('0'), 8))
 
 			if @index <= 44
-				select @homevalue_223 = dbo.f_SetByte(@homevalue_223, @index, @option_ascii_temp)
+				select @homevalue_223 = (select data  FROM dbo.f_Set_SetByte_xtest(@homevalue_223, @index, @option_ascii_temp))
 			else
-				select @awayvalue_223 = dbo.f_SetByte(@awayvalue_223, @index, @option_ascii_temp)
+				select @awayvalue_223 = (select data  FROM dbo.f_Set_SetByte_xtest(@awayvalue_223, @index, @option_ascii_temp))
 		end
 
 		--for bettype 224
@@ -140,12 +147,26 @@ begin
 			if @index <= 85
 			begin
 				if @index <= 44
-					select @homevalue_224 = dbo.f_SetByte(@homevalue_224, @index, @option_ascii_temp)
+					select @homevalue_224 = (select data  FROM dbo.f_Set_SetByte_xtest(@homevalue_224, @index, @option_ascii_temp))
 				else
-					select @awayvalue_224 = dbo.f_SetByte(@awayvalue_224, @index, @option_ascii_temp)
+					select @awayvalue_224 = (select data  FROM dbo.f_Set_SetByte_xtest(@awayvalue_224, @index, @option_ascii_temp))
 			end
 		end
-
+		
+		--for bettype 225
+		if @bettype = 0 or @bettype = 225
+		begin
+			select @option_name_temp = null, @option_ascii_temp = 0
+			
+			select TOP 1 @option_name_temp = option_name
+			from @options_name where option_name IN ( 'CornersFreeKickGoalKickPenalty', 'none')
+			
+			if @index <= 44
+				select @homevalue_225 = (select data  FROM dbo.f_Set_SetByte_xtest(@homevalue_225, @index, 156))
+			else
+				select @awayvalue_225 = (select data  FROM dbo.f_Set_SetByte_xtest(@awayvalue_225, @index, 156))
+		end
+		
 		set @index = @index + 1
 	end
 	
@@ -198,6 +219,18 @@ begin
 				, @homevalue_224 + replicate(char('0'), 50 - datalength(@homevalue_224)) as HomeValue
 				, @awayvalue_224  + replicate(char('0'), 50 - datalength(@awayvalue_224))as AwayValue --223 - result
 		end
+		
+		if @bettype = 0 or @bettype = 225
+		begin
+			delete from dbo.ResultDetail with(rowlock) 
+			where matchid = @matchid and resourceid in (22500,22501)
+			
+			insert into dbo.ResultDetail(MatchId, ResourceId, HomeValue, AwayValue)
+			select @matchid, (225 * 100) as ResourceId, replicate(2, 50) as HomeValue, replicate(2, 50) as AwayValue union 
+			select @matchid, (225 * 100) + 1 as ResourceId
+				, @homevalue_225 + replicate(char('0'), 50 - datalength(@homevalue_225)) as HomeValue
+				, @awayvalue_225 + replicate(char('0'), 50 - datalength(@awayvalue_225)) as AwayValue 
+		end
 
 		select * from dbo.ResultDetail where matchid = @matchid
 	end
@@ -206,56 +239,68 @@ begin
 		select *
 		from (
 			select 221 as bettype, f.pos as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@homevalue_221) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@homevalue_221) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 221 as bettype, f.pos + 45 as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@awayvalue_221) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@awayvalue_221) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 222 as bettype, f.pos as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@homevalue_222) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@homevalue_222) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 222 as bettype, f.pos + 45 as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@awayvalue_222) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@awayvalue_222) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 223 as bettype, f.pos as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@homevalue_223) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@homevalue_223) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 223 as bettype, f.pos + 45 as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@awayvalue_223) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@awayvalue_223) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 224 as bettype, f.pos as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@homevalue_224) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@homevalue_224) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
 
 			union all
 			select 224 as bettype, f.pos + 45 as Position, f.bitmap as BetOption, ff.ResultStatus
-			from dbo.f_GetBytes(@awayvalue_224) f
-				inner join dbo.f_GetChars(replicate(2, 50)) ff on f.pos = ff.pos
+			from dbo.f_Set_GetBytes_xtest(@awayvalue_224) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
 			where f.pos < 45
+			
+			UNION ALL
+			select 225 as bettype, f.pos as Position, f.bitmap as BetOption, ff.ResultStatus
+			from dbo.f_Set_GetBytes_xtest(@homevalue_225) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
+			where f.pos < 45
+
+			union all
+			select 225 as bettype, f.pos + 45 as Position, f.bitmap as BetOption, ff.ResultStatus
+			from dbo.f_Set_GetBytes_xtest(@awayvalue_225) f
+				inner join dbo.f_Set_GetChars_xtest(replicate(2, 50)) ff on f.pos = ff.pos
+			where f.pos < 45
+
 		)t
 		where (bettype IN (222,224) AND Position <= 85)
-			or bettype IN (221,223)
+			or bettype IN (221,223, 225)
 		--exec dbo.NAP_Set_FastMarket_MatchSelDetail @MatchId = @matchid
 	end
 
 end
-go

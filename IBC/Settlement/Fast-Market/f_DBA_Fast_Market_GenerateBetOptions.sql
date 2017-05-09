@@ -1,6 +1,11 @@
-use bodb02
-go
-alter function [dbo].[f_DBA_Fast_Market_GenerateBetOptions] ()
+USE [bodb02]
+GO
+/****** Object:  UserDefinedFunction [dbo].[f_DBA_Fast_Market_GenerateBetOptions]    Script Date: 05/09/2017 14:07:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER function [dbo].[f_DBA_Fast_Market_GenerateBetOptions] ()
 returns @BetOptions table (rowid int identity(0,1), option_name varchar(100) unique
 		, option_binary varchar(8), option_ascii tinyint, option_char varchar(1))
 AS
@@ -87,7 +92,9 @@ begin
 	select '01000000', 'Bookings' union
 	--select '11000000', 'Bookings_Penalty' union
 
-	select '10000000', 'Penalty'
+	select '10000000', 'Penalty' UNION
+	
+	SELECT '10011100', 'CornersFreeKickGoalKickPenalty'
 
 	--
 	update @betoptions

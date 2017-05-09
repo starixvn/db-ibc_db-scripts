@@ -1,6 +1,11 @@
-use bodb02
-go
-alter proc dbo.DBA_Fast_Market_GenTickets @MatchId int = 0
+USE [bodb02]
+GO
+/****** Object:  StoredProcedure [dbo].[DBA_Fast_Market_GenTickets]    Script Date: 05/09/2017 14:06:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER proc [dbo].[DBA_Fast_Market_GenTickets] @MatchId int = 0
 	, @CustId int = 0
 	, @IsCreditCustomer bit = 1
 	, @liveindicator bit = 0
@@ -26,17 +31,17 @@ begin
 		return
 	end
 
-	if (select max(transid) from dbext.bodb_Age.dbo.bettrans_running with(nolock)) > (select max(transid) from dbo.bettrans with(nolock))
-	begin
-		select 'bettrans_running error!!!'
-		return
-	end
+	--if (select max(transid) from dbext.bodb_Age.dbo.bettrans_running with(nolock)) > (select max(transid) from dbo.bettrans with(nolock))
+	--begin
+	--	select 'bettrans_running error!!!'
+	--	return
+	--end
 
-	if (select max(transid) from dbext.bodb02.dbo.bettrans_lrf_betRunning with(nolock)) > (select max(transid) from dbo.bettrans with(nolock))
-	begin
-		select 'bettrans_lrf_betRunning error!!!'
-		return
-	end
+	--if (select max(transid) from dbext.bodb02.dbo.bettrans_lrf_betRunning with(nolock)) > (select max(transid) from dbo.bettrans with(nolock))
+	--begin
+	--	select 'bettrans_lrf_betRunning error!!!'
+	--	return
+	--end
 
 	--get matchinfo
 	declare @eventdate datetime = cast(getdate() as date)
@@ -179,6 +184,17 @@ begin
 		end
 		--else 
 		--	select @option_ascii_temp = ascii(replicate(char('0'), 8))
+		
+		select @option_name_temp = null, @option_ascii_temp = 0
+		select @option_name_temp = coalesce(@option_name_temp + '_' + cast(option_name as varchar), cast(option_name as varchar))
+		from @options_name where option_name  IN ('none', 'CornersFreeKickGoalKickPenalty')
+
+		if exists (select 1 from @betoptions where option_name = @option_name_temp)
+		begin
+			select @option_ascii_temp = option_ascii from @betoptions where option_name = @option_name_temp
+			insert into @tmpBettrans (bettype, betteam, betcheck, hdp1, hdp2)
+			values(225, @option_ascii_temp, '', 0, @option_ascii_temp)
+		end
 
 	end
 	
@@ -202,7 +218,7 @@ begin
 		, modds = 1, betdaqid = -1, ip = '127.0.0.1', transdesc = null, matchid = @matchid
 	from @tmpcustinfo c
 	
-	--select * from @tmpBettrans
+	select * from @tmpBettrans
 
 	declare @index int = 0, @str_result varchar(50)
 	declare @transidlist table(transid bigint, matchid int, bettype smallint)
@@ -220,7 +236,7 @@ begin
 		select @str_result = case when @index <= 44 then HomeValue else AwayValue end
 		from dbo.ResultDetail with(nolock) where matchid = @MatchId and ResourceId = '22101'
 		
-		if dbo.f_GetByte(@str_result, @index) <> ascii(char('0'))
+		if (SELECT byte FROM dbo.f_Set_GetByte_xtest(@str_result, @index)) <> ascii(char('0'))
 		begin
 			insert into dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, [status], winlost, awinlost, mwinlost
 				, swinlost, playercomm, comm, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking
@@ -243,7 +259,7 @@ begin
 		select @str_result = case when @index <= 44 then HomeValue else AwayValue end
 		from dbo.ResultDetail with(nolock) where matchid = @MatchId and ResourceId = '22201'
 		
-		if dbo.f_GetByte(@str_result, @index) <> ascii(char('0'))
+		if (SELECT byte from dbo.f_Set_GetByte_xtest(@str_result, @index)) <> ascii(char('0'))
 		begin
 			insert into dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, [status], winlost, awinlost, mwinlost
 				, swinlost, playercomm, comm, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking
@@ -266,7 +282,7 @@ begin
 		select @str_result = case when @index <= 44 then HomeValue else AwayValue end
 		from dbo.ResultDetail with(nolock) where matchid = @MatchId and ResourceId = '22301'
 		
-		if dbo.f_GetByte(@str_result, @index) <> ascii(char('0'))
+		if (SELECT byte from dbo.f_Set_GetByte_xtest(@str_result, @index)) <> ascii(char('0'))
 		begin
 			insert into dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, [status], winlost, awinlost, mwinlost
 				, swinlost, playercomm, comm, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking
@@ -289,7 +305,7 @@ begin
 		select @str_result = case when @index <= 44 then HomeValue else AwayValue end
 		from dbo.ResultDetail with(nolock) where matchid = @MatchId and ResourceId = '22401'
 		
-		if dbo.f_GetByte(@str_result, @index) <> ascii(char('0'))
+		if (SELECT byte from dbo.f_Set_GetByte_xtest(@str_result, @index)) <> ascii(char('0'))
 		begin
 			insert into dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, [status], winlost, awinlost, mwinlost
 				, swinlost, playercomm, comm, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking
@@ -306,7 +322,29 @@ begin
 				, balance, secacceptflag, transid2, recommdate
 			from @tmpbettrans where bettype = 224
 		end
-
+		
+		set @str_result = null
+		select @str_result = case when @index <= 44 then HomeValue else AwayValue end
+		from dbo.ResultDetail with(nolock) where matchid = @MatchId and ResourceId = '22501'
+		
+		if (SELECT byte from dbo.f_Set_GetByte_xtest(@str_result, @index)) <> ascii(char('0'))
+		begin
+			insert into dbo.bettrans (custid, transdate, oddsid, hdp1, hdp2, odds, stake, [status], winlost, awinlost, mwinlost
+				, swinlost, playercomm, comm, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking
+				, playerdiscount, discount, adiscount, sdiscount, livehomescore, liveawayscore, liveindicator, betteam, creator
+				, refno, comstatus, winlostdate, betfrom, betcheck, checktime, oddsspread, actualrate, matchid, recommend, mrecommend
+				, srecommend, ruben, betid, modds, bettype, betdaqid, actual_stake, currency, currencyname, currency2, ip, transdesc
+				, username, virtualrate, oddstype, statusid, balance, secacceptflag, transid2, recommdate)
+			output inserted.transid, inserted.matchid, inserted.bettype into @transidlist
+			select custid, transdate, oddsid, @index, hdp2, odds, stake, status, winlost, awinlost, mwinlost, swinlost, playercomm, comm
+				, acomm, scomm, apositiontaking, mpositiontaking, spositiontaking, tpositiontaking, playerdiscount, discount, adiscount
+				, sdiscount, livehomescore, liveawayscore, liveindicator, betteam, creator, refno, comstatus, winlostdate, betfrom
+				, betcheck, checktime, oddsspread, actualrate, matchid, recommend, mrecommend, srecommend, ruben, betid, modds, bettype
+				, betdaqid, actual_stake, currency, currencyname, currency2, ip, transdesc, username, virtualrate, oddstype, statusid
+				, balance, secacceptflag, transid2, recommdate
+			from @tmpbettrans where bettype = 225
+		end
+		
 		set @index += 1
 	end
 	
@@ -337,4 +375,3 @@ begin
 	select count(1) as totaltickets from @transIDList
 
 end
-go
