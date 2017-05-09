@@ -3,16 +3,6 @@
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 
 */
-USE [CustDB]
-GO
-
-/****** Object:  Table [dbo].[#CustSettingGame]    Script Date: 05/09/2017 12:53:13 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE #CustSettingGame(
 	[CustID] [int] NOT NULL,
 	[Bettype] [smallint] NOT NULL,
