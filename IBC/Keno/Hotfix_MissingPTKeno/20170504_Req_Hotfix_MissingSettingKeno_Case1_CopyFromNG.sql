@@ -493,7 +493,7 @@ INSERT INTO #AgentList (CustID)
 SELECT DISTINCT CI.recommend
 FROM #AffectList A
 	INNER JOIN custInfo CI WITH (NOLOCK) ON A.CustID = CI.custid
----Correct PT Member under Master
+
 WHILE (1 = 1)
 BEGIN
 	
@@ -601,6 +601,7 @@ BEGIN
                 
 END	
 
+---Correct PT Member under Master
 CREATE TABLE #MasterList (CustID INT,srecommend INT, isfinished bit default(0))
 
 INSERT INTO #MasterList (CustID,srecommend)
