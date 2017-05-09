@@ -435,7 +435,7 @@ CREATE TABLE #AffectList (CustID INT)
 
 INSERT INTO #AffectList (CustID)
 SELECT CI.custid
-FROM custInfo CI (NOLOCK)
+FROM custInfo CI WITH (NOLOCK)
 WHERE CI.custid IN (15672530,
 15669993,
 15671194,
@@ -483,8 +483,123 @@ WHERE CI.custid IN (15672530,
 15672694,
 15670622,
 15672637)
+
+DECLARE @recommend INT,@mrecommend INT,@srecommend INT
+
+---Correct PT Member under Agent
+CREATE TABLE #AgentList (CustID INT,isfinished bit default(0))
+
+INSERT INTO #AgentList (CustID)
+SELECT DISTINCT CI.recommend
+FROM #AffectList A
+	INNER JOIN custInfo CI WITH (NOLOCK) ON A.CustID = CI.custid
 ---Correct PT Member under Master
-DECLARE @mrecommend INT,@srecommend INT
+WHILE (1 = 1)
+BEGIN
+	
+	UPDATE TOP (1) #AgentList
+	SET isfinished = 1
+		,@recommend = custid
+	WHERE isfinished = 0
+	
+	IF @@ROWCOUNT = 0 BREAK
+	
+	UPDATE cs
+            SET cs.apositiontaking = aco.minpositiontaking
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustOverrideGame aco WITH(NOLOCK) ON aco.custid = @recommend AND cs.sporttype = aco.sporttype AND cs.bettype = aco.bettype
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype 
+                AND cs.apositiontaking < aco.minpositiontaking
+                AND cs.CustID IN (SELECT CustID From #AffectList) 
+            
+            --Check m1+a1: m1+a1>m3 => modify m1 set m1=m3-a1
+            UPDATE cs
+            SET cs.mpositiontaking = mcs.mpositiontaking - cs.apositiontaking
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = ci.mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype 
+                AND cs.mpositiontaking + cs.apositiontaking > mcs.mpositiontaking 
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+
+            --Recal um2
+            --Recal AUTO MPT m1=min(m3-a1,um2)
+            UPDATE cs
+            SET cs.mpositiontaking = CASE WHEN mcs.mpositiontaking-cs.apositiontaking > (CASE WHEN cs.isautompositiontaking = 1 THEN cs.autompositiontaking ELSE acs.autompositiontaking END)
+                    THEN (CASE WHEN cs.isautompositiontaking = 1 THEN cs.autompositiontaking ELSE acs.autompositiontaking END)
+                ELSE  mcs.mpositiontaking-cs.apositiontaking END
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustSettingGame acs WITH(NOLOCK) ON acs.custid = @recommend AND acs.sporttype = cs.sporttype AND acs.bettype = cs.bettype 
+                INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = ci.mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype 
+                AND (cs.isautompositiontaking = 1 OR acs.isautompositiontaking = 1)
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+            
+            --Check min max n3<=m1+a1<=m3 => modify m1
+            UPDATE cs
+            SET cs.mpositiontaking = mco.minpositiontaking - cs.apositiontaking
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN custInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustOverrideGame mco WITH(NOLOCK) ON mco.custid = ci.mrecommend AND mco.sporttype = cs.sporttype AND mco.bettype = cs.bettype
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype 
+                AND cs.mpositiontaking + cs.apositiontaking < mco.minpositiontaking
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+            
+            UPDATE cs
+            SET cs.mpositiontaking = mcs.mpositiontaking - cs.apositiontaking
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN custInfo ci WITH(NOLOCK) ON cs.CustID = ci.custid
+                INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = ci.mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype 
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype 
+                AND cs.mpositiontaking + cs.apositiontaking > mcs.mpositiontaking
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+            
+            --Recal u3,u1
+            -- s1=min(s4-m1-a1,u)
+            UPDATE cs
+            SET cs.spositiontaking = CASE WHEN scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking > (CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END) THEN
+                                CASE WHEN cs.isautopositiontaking = 1 THEN cs.autopositiontaking ELSE mcs.autopositiontaking END  ELSE
+                                scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking END
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = ci.srecommend AND scs.sporttype = cs.sporttype AND scs.bettype = cs.bettype
+                INNER JOIN CustSettingGame mcs WITH(NOLOCK) ON mcs.custid = ci.mrecommend AND mcs.sporttype = cs.sporttype AND mcs.bettype = cs.bettype         
+            WHERE ci.recommend = @recommend AND ci.roleid = 1         
+                AND cs.sporttype = @sporttype 
+                AND (cs.isautopositiontaking = 1 OR mcs.isautopositiontaking = 1)
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+
+            --check super min/max when a1+m1+s1<n4
+            -- s1=n4-m1-a1
+            UPDATE cs
+            SET cs.spositiontaking = sco.minpositiontaking - cs.mpositiontaking - cs.apositiontaking 
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustOverrideGame sco WITH(NOLOCK) ON sco.custid = ci.srecommend AND sco.sporttype = cs.sporttype AND sco.bettype = cs.bettype 
+            WHERE ci.recommend = @recommend AND ci.roleid = 1
+                AND cs.sporttype = @sporttype  
+                AND cs.spositiontaking + cs.mpositiontaking + cs.apositiontaking < sco.minpositiontaking
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+            
+            --check a1+m1+s1 > s4
+            UPDATE cs
+            SET cs.spositiontaking = scs.spositiontaking - cs.mpositiontaking - cs.apositiontaking
+            FROM CustSettingGame cs WITH (ROWLOCK, UPDLOCK)
+                INNER JOIN CustInfo ci WITH(NOLOCK) ON cs.custid = ci.custid 
+                INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = ci.srecommend AND scs.sporttype = cs.sporttype AND scs.bettype = cs.bettype 
+            WHERE ci.recommend = @recommend AND ci.roleid = 1 
+                AND cs.sporttype = @sporttype 
+                AND cs.spositiontaking + cs.mpositiontaking + cs.apositiontaking > scs.spositiontaking
+                AND cs.CustID IN (SELECT CustID From #AffectList)
+                
+END	
 
 CREATE TABLE #MasterList (CustID INT,srecommend INT, isfinished bit default(0))
 
