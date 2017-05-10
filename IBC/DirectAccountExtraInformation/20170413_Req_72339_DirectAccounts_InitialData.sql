@@ -7,12 +7,6 @@ USE CustDB
 GO
 DELETE FROM CustDirectAccount
 GO
-INSERT INTO Acc_CustDirect (custid,roleid)
-SELECT CI.custid,CI.roleid
-FROM custInfo CI WITH (NOLOCK)
-WHERE CI.custid < 100 AND NOT EXISTS (SELECT 1 FROM Acc_CustDirect CD WITH (NOLOCK) WHERE CD.custid =  CI.custid)
-	AND CI.currency <> 20
-	
 -- SUPER
 INSERT INTO CustDirectAccount (CustID,ApprovedBy,Boss,ProcessedBy, RequestedBy)
 SELECT ci.custid,'','','',''
