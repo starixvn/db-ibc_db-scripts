@@ -29,6 +29,7 @@ SET	ci.DisableCasino=0
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 INNER JOIN #tempCusts t ON ci.custid=t.custid
 WHERE ci.SyncCasino=1	AND ci.DisableCasino=1	
+
 -- update GD
 UPDATE ci
 SET	
@@ -37,19 +38,29 @@ FROM CustInfo CI WITH (ROWLOCK,UPDLOCK)
 INNER JOIN #tempCusts t ON ci.custid=t.custid
 WHERE ci.HideGoldDeluxe=0 AND ci.[DisableGoldDeluxe]=1	AND t.site NOT IN ('imbc','789y')
 			
+--VS
+UPDATE ci
+SET	ci.DisableVirtualSports=0	
+FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+INNER JOIN #tempCusts t ON ci.custid=t.custid 
+WHERE ci.HideVirtualSports=0
 
 UPDATE ci
-SET	ci.HideVirtualSports=0,ci.DisableVirtualSports=0
-	,ci.DisableColossusBet=0,ci.HideColossusBet=0
-	,ci.HideKeno=0
-	,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
+SET	ci.DisableColossusBet=0
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 INNER JOIN #tempCusts t ON ci.custid=t.custid
-		
+WHERE ci.HideColossusBet=0
+
+UPDATE ci
+SET ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
+FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+INNER JOIN #tempCusts t ON ci.custid=t.custid
 
 UPDATE ct
 SET ct.IsDisabled=0
-FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
+FROM Custgametype ct WITH (ROWLOCK,UPDLOCK)
 INNER JOIN #tempCusts CI WITH(NOLOCK) ON ct.custid=ci.custid
-WHERE ct.GameTypeID between 1 and 16
-drop table #tempCusts
+INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
+WHERE ct.GameTypeID between 1 and 16 AND c.HideKeno=0 AND ct.IsDisabled=1
+
+DROP TABLE #tempCusts
