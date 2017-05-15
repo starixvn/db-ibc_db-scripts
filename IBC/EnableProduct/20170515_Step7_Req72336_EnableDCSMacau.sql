@@ -29,7 +29,8 @@ BEGIN
 		 ,bitmapIsHidden =  dbo.f_GenerateProductStatus (cs.bitmapIsHidden,5,0)		
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND dbo.f_getProductStatus (cs.bitmapHasSynced,5) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,5) = 1
+	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND ci.Enabled=1
+	AND dbo.f_getProductStatus (cs.bitmapHasSynced,5) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,5) = 1
 
 END
 GO
@@ -51,6 +52,8 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
+AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
+,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -82,6 +85,8 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
+AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
+,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
