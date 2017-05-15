@@ -21,8 +21,8 @@ BEGIN
 		RETURN		
 
 	UPDATE ci	
-	SET	ci.DisableVirtualSports = CASE WHEN ci.HideVirtualSports=0 THEN 0 ELSE 1 END
-		,ci.DisableColossusBet= CASE WHEN ci.HideColossusBet=0 THEN 0 ELSE 1 END	
+	SET	ci.DisableVirtualSports = CASE WHEN ci.HideVirtualSports=0 AND ci.DisableVirtualSports=1 THEN 0 ELSE 1 END
+		,ci.DisableColossusBet= CASE WHEN ci.HideColossusBet=0 AND ci.DisableColossusBet=1 THEN 0 ELSE 1 END	
 		,ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
 		,ci.DisableCasino= CASE WHEN ci.SyncCasino=1	AND ci.DisableCasino=1	THEN 0 ELSE 1 END
 	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
