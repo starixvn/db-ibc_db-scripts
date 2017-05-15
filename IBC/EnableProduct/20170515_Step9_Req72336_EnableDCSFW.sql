@@ -29,7 +29,7 @@ BEGIN
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND ci.Enabled=1
-	AND dbo.f_getProductStatus (cs.bitmapIsHidden,8) = 0 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,8) = 1
+	AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsHidden,8)) = 0 AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsDisabled,8)) = 1
 
 END
 GO
