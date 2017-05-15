@@ -2,7 +2,7 @@
 	Created: 20170504@Helen
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 	
-	Notes: Item 2 - 50 members will have diffirent pt with NG - [VIEW]
+	Notes: Item 2 - 47 members will have diffirent pt with NG - [VIEW]
 */
 CREATE TABLE #Item2 (CustID INT PRIMARY KEY)
 INSERT INTO #Item2 (CustID)
@@ -56,6 +56,7 @@ WHERE custid IN (15671194,
 15669716,
 15669616
 )
+
 INSERT INTO [dbo].[CustSettingGame]
 (
     [custid]
