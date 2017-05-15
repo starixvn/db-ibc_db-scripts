@@ -17,12 +17,8 @@ BEGIN
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
 	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
 	
-	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1  
-			AND dbo.f_CheckRepTable('Custgametype') = 1   )
+	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1  )
 		RETURN	
-
-	IF @Site<>'imbc' AND @Site <>'789y'
-	BEGIN
 		-- update GD
 		UPDATE ci
 		SET	
@@ -30,9 +26,6 @@ BEGIN
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 		WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND ci.Enabled=1
 		AND ci.HideGoldDeluxe=0 AND ci.[DisableGoldDeluxe]=1		
-
-	END
-
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -55,7 +48,10 @@ AND c.Enabled=1
 )
 AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
 ,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
-
+AND ci.site <>'imbc'
+AND ci.site <>'789y'
+AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
+where cd.roleid=4)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
@@ -91,7 +87,10 @@ AND c.Enabled=1
 )
 AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
 ,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
-
+AND ci.site <>'imbc'
+AND ci.site <>'789y'
+AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
+where cd.roleid=4)
 WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #Supers
