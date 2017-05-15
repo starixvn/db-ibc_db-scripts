@@ -1,7 +1,7 @@
 /*
 	Created: 20170504@Helen
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
-	Notes: 153 accounts: either adding missing setting or copying from NG [VIEW]
+	Notes: 155 accounts: either adding missing setting or copying from NG [VIEW]
 */
 CREATE TABLE #Item3 (CustID INT PRIMARY KEY)
 INSERT INTO #Item3 (CustID)
@@ -161,7 +161,7 @@ WHERE custid IN (15668356,
 15671424,
 15671432,
 15671414,
-15671419,
+15671419)
 
 -----------Step 1: Master and Agent: Insert default PT=0
 INSERT INTO [dbo].[CustSettingGame]
