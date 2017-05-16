@@ -38,7 +38,7 @@ BEGIN
 	EXEC DBA_CheckComm3rd_Credit @srecommend=@srecommend,@SportType=0,@RuleID=0
 	
 	EXEC DBA_CheckCommGame_Credit @srecommend=@srecommend,@SportType=0,@RuleID=0
-	print @srecommend
+	
 END
 
 DROP TABLE #supers
