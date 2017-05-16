@@ -22,7 +22,7 @@ BEGIN
 	UPDATE ci
 	SET	ci.DisableVirtualSports=0	
 	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-	WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4) AND ci.Enabled=1
+	WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4 AND ci.Enabled=1
 	AND ci.HideVirtualSports=0 AND ci.DisableVirtualSports=1
 
 END

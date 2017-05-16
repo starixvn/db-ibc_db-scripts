@@ -23,7 +23,7 @@ BEGIN
 	SET ct.IsDisabled=0
 	FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
 	INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4)	AND ci.Enabled=1
+	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
 	AND ct.IsDisabled=1 AND Ci.HideKeno=0
 
 END

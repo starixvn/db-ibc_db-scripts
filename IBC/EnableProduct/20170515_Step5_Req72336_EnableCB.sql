@@ -21,7 +21,7 @@ BEGIN
 	UPDATE ci
 	SET	ci.DisableColossusBet=0
 	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-	WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid IN(2,3,4) AND ci.Enabled=1
+	WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4 AND ci.Enabled=1
 	AND ci.HideColossusBet=0 AND ci.DisableColossusBet=1
 END
 GO
