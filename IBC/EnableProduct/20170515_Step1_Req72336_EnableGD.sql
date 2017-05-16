@@ -5,7 +5,7 @@
 	DB: DBCUST/CustDB
 	Date: 20170403
 */ 
-ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
+ALTER PROCEDURE [dbo].[Acc_CustomerInfo_Execrep_09]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -62,7 +62,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
+	EXEC dbo.[Acc_CustomerInfo_Execrep_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			,@Site=@site
@@ -101,7 +101,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.Acc_DynamicCustomerInfo_09 @srecommend = @srecommend
+	EXEC dbo.[Acc_CustomerInfo_Execrep_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 			,@Site=@site
