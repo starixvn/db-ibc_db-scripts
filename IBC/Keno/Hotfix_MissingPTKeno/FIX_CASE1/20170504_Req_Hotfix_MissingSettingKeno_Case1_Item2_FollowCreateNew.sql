@@ -58,15 +58,15 @@ WHERE custid IN (15671194,
 )
 
 INSERT INTO [dbo].[CustSettingGame](CustID, Bettype, Sporttype, apositiontaking, mpositiontaking, spositiontaking, playerdiscount, discount, adiscount, sdiscount, autopositiontaking, isautopositiontaking, autompositiontaking, isautompositiontaking)
-SELECT L1.CustID, csg.Bettype, 202, apositiontaking, mpositiontaking
-	, CASE WHEN ISNULL(isautopositiontaking, 0) = 0 THEN spositiontaking 
+SELECT L1.CustID, csg.Bettype, 202, csg.apositiontaking, csg.mpositiontaking
+	, CASE WHEN ISNULL(csg.isautopositiontaking, 0) = 0 THEN csg.spositiontaking 
 			ELSE 
 				CASE 
-					WHEN autopositiontaking < spositiontaking - mpositiontaking THEN autopositiontaking 
-					ELSE spositiontaking - mpositiontaking 
+					WHEN csg.autopositiontaking < csg.spositiontaking - csg.mpositiontaking THEN csg.autopositiontaking 
+					ELSE csg.spositiontaking - csg.mpositiontaking 
 				END 
 			END
-, 0, 0, 0, 0, 0, 0, 0, 0
+	, 0, 0, 0, 0, 0, 0, 0, 0
 FROM #Item2 L1
 	INNER JOIN custInfo CI WITH (NOLOCK) ON L1.CustID = CI.custid AND ci.roleid = 1
 	INNER JOIN CustSettingGame csg WITH(NOLOCK) ON csg.CustID = CI.recommend
