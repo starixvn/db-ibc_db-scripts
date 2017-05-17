@@ -1,6 +1,6 @@
   /*
 	Created: 20170307Winnie
-	Task : Initial data for 12bet
+	Task : Initial data for CashOut
 	DB: DBCust/CustDB.	 [RedmineID: #71727]
 */
 
@@ -12,7 +12,7 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE ci.roleid = 4 	
 AND ci.custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
-AND ci.site IN ('12bet')
+AND ci.site IN ('Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','NBCbet','BE7','Goobet','Bolanation','IndoWin','IvoryBet','Unobet')
 
 DECLARE @srecommend INT
 WHILE (1 = 1)
