@@ -19,13 +19,18 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1   )
 		RETURN	
-	
+	CREATE TABLE #temp (CustID INT PRIMARY KEY)
+	INSERT INTO #temp(CustID)
+	SELECT CI.custid
+	FROM CustInfo CI WITH (NOLOCK) 
+	WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid  BETWEEN 2 AND 4	AND ci.Enabled=1
+	AND ci.SyncCasino=1	AND ci.DisableCasino=1	
+		
 	-- update casino
 	UPDATE ci
 	SET	ci.DisableCasino=0
 	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-	WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid  BETWEEN 2 AND 4	AND ci.Enabled=1
-	AND ci.SyncCasino=1	AND ci.DisableCasino=1	
+	INNER JOIN #temp t ON ci.custid=t.CustID
 
 END
 GO
@@ -47,8 +52,9 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
-AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
-,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
+AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
+inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
+WHERE groupid=515 and c.roleid=4) --THAUS
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
 where cd.roleid=4)
 WHILE (1 = 1)
@@ -84,8 +90,9 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
-AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
-,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
+AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
+inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
+WHERE groupid=515 and c.roleid=4) --THAUS
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
 where cd.roleid=4)
 

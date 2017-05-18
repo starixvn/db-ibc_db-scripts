@@ -18,13 +18,18 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 AND dbo.f_CheckRepTable('Custgametype') = 1   )
 		RETURN	
+	CREATE TABLE #Temp (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
+	INSERT INTO #Temp(CustID,GameTypeID)
+	SELECT ct.CustID,ct.GameTypeID
+	FROM Custgametype ct WITH (NOLOCK) 
+	INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
+	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
+	AND ct.IsDisabled=1 AND Ci.HideKeno=0
 
 	UPDATE ct
 	SET ct.IsDisabled=0
 	FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-	INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
-	AND ct.IsDisabled=1 AND Ci.HideKeno=0
+	INNER JOIN #Temp t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
 
 END
 GO
@@ -46,8 +51,9 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
-AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
-,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
+AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
+inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
+WHERE groupid=515 and c.roleid=4) --THAUS
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
 where cd.roleid=4)
 WHILE (1 = 1)
@@ -83,8 +89,9 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 )
-AND ci.custid NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
-,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
+AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
+inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
+WHERE groupid=515 and c.roleid=4) --THAUS
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
 where cd.roleid=4)
 WHILE (1 = 1)
