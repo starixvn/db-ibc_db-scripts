@@ -335,7 +335,7 @@ WHERE CI.custid IN (25884623,
 )
 
 UPDATE ci
-	SET HideGoldDeluxe = 0
+	SET HideGoldDeluxe = 1
 FROM custInfo ci WITH (ROWLOCK) 
 	INNER JOIN #custID_GD T ON CI.custid = T.CustID
 
