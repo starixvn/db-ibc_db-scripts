@@ -21,8 +21,9 @@ AND s.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
 AND c.Enabled=1	
 AND c.custid>@maxcustid
 AND c.roleid BETWEEN 2 AND 4
-AND c.srecommend NOT IN (24095164,24095167,24187839,24187891,24187893,24187896,24187897,24187898,24187900,24187902,24187903,24187904,24191062,24191172,24191175,24191178,24191182,24191185
-,24191189,24191194,19475714,19475729,19475733,19609304,19609353) --THAUS
+AND c.srecommend NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
+inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
+WHERE groupid=515 and c.roleid=4) --THAUS
 )
 AND c.srecommend NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK)
 where cd.roleid=4)
