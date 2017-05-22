@@ -22,7 +22,7 @@ BEGIN
 		SET	
 			ci.WalletFlag=0
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-		WHERE roleid=1
+		WHERE roleid=1 AND ci.srecommend=@maxcustid AND ci.custid<=@maxcustid
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------

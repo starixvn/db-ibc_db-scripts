@@ -54,6 +54,7 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE (ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
+AND ci.site ='789y'
 )
 AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
 inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
@@ -90,6 +91,7 @@ INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
 WHERE (ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
+AND ci.site ='789y'
 )
 AND ci.custid NOT IN (SELECT cu.custid FROM custaccount cu WITH  (NOLOCK)
 inner join custinfo c WITH (NOLOCK) ON cu.custid=c.custid
