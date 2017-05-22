@@ -48,13 +48,13 @@ UPDATE ci
 SET	ci.DisableVirtualSports=0	
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 INNER JOIN #tempCusts t ON ci.custid=t.custid 
-WHERE ci.HideVirtualSports=0
+WHERE ci.HideVirtualSports=0 AND ci.DisableVirtualSports=1
 
 UPDATE ci
 SET	ci.DisableColossusBet=0
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 INNER JOIN #tempCusts t ON ci.custid=t.custid
-WHERE ci.HideColossusBet=0
+WHERE ci.HideColossusBet=0 AND ci.DisableColossusBet=1
 
 UPDATE ci
 SET ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
