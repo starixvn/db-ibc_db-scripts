@@ -26,7 +26,7 @@ BEGIN
 	CREATE TABLE #temp (CustID INT PRIMARY KEY)
 	INSERT INTO #temp(CustID)
 	SELECT cs.CustID
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+	FROM [dbo].[CustProductStatus] cs WITH(NOLOCK)
 	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
 	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
 	AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapHasSynced,6) )= 1 AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsDisabled,6)) = 1
