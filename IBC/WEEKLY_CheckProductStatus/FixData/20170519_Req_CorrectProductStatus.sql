@@ -1,8 +1,11 @@
 /*
 		Created: 20170519@Helen
 		Task: Correct ProductStatus - Sheet "WeeklyCheckProductStatus_20170518" - Summary Report - #1,#4,#5,#6,#7,#9
+		DB: DBCUST/CUSTDB
 		
 */
+USE CustDB
+GO
 --#1: Number Game: (161) - dummy super: update enable
 --1	Super IsDisabled= 1, Master IsDisabled = 0	161	Number Game	0	0	25		dummy super: update enable,
 UPDATE ci
