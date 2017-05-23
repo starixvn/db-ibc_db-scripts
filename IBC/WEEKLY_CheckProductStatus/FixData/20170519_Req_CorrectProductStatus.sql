@@ -1,12 +1,18 @@
--- Number Game: (161)
+/*
+		Created: 20170519@Helen
+		Task: Correct ProductStatus - Sheet "WeeklyCheckProductStatus_20170518" - Summary Report - #1,#4,#5,#6,#7,#9
+		
+*/
+--#1: Number Game: (161) - dummy super: update enable
 --1	Super IsDisabled= 1, Master IsDisabled = 0	161	Number Game	0	0	25		dummy super: update enable,
 UPDATE ci
 	SET DisableNumber = 0
 FROM custInfo ci WITH (ROWLOCK) 
-WHERE ci.custid IN (726483,726562,478396,984326,674248)
+WHERE ci.custid IN (4,16,35,478396,674248,726483,726562,984326)
 
-/*
-	3	Agent IsDisabled= 1, Member IsDisabled = 0	206	Cockfighting	0	1	1		update member disabled
+/* #4: update member disabled; #8: update member ishidden=1
+
+  3	Agent IsDisabled= 1, Member IsDisabled = 0	206	Cockfighting	0	1	1		update member disabled
   6	Agent IsHidden= 1, Member IsHidden= 0	206	Cockfighting	0	1	1		update member ishidden=1
 */
 UPDATE CPS
@@ -20,10 +26,10 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 
 WHERE CPS.CustID = 19542865
 
+/*#5: update member disabled */
 --3	Agent IsDisabled= 1, Member IsDisabled = 0	212	Macau Games	0	1	1	Betdaq - Internal use  BET2	update member disabled
 UPDATE CPS
 	SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, T.bitmapOrder, 1)
-	
 FROM CustProductStatus CPS WITH (ROWLOCK)
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
@@ -31,17 +37,19 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 				)AS T
 
 WHERE CPS.CustID = 24021039
-/*
+/* #6: update master ishidden=1 and downline master
+
 -- 4	Super IsHidden= 1, Master IsHidden= 0	180	Virtual Sports	0	0	1		update master ishidden=1 and downline master
 CustInfo.DisableVirtualSports	CustInfo.HideVirtualSports
 */
+-- 5 affected accounts
 UPDATE ci
 	SET HideVirtualSports = 1
 FROM custInfo ci WITH (ROWLOCK) 
 WHERE ci.mrecommend = 404713
 
 
-/*
+/* #7 - update agent hidden=1 
 5	Master IsHidden= 1, Agent IsHidden= 0	212	Macau Games	0	1	1	checking	update agent hidden=1
 */
 UPDATE CPS
@@ -55,7 +63,8 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 
 WHERE CPS.CustID = 752044
 
-/*
+/*	#8 - update member ishidden=1
+	
 	6	Agent IsHidden= 1, Member IsHidden= 0	206	Cockfighting	0	1	1		update member ishidden=1
 */
 UPDATE CPS
@@ -68,7 +77,8 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 				)AS T
 
 WHERE CPS.CustID = 19542865
-/*
+/* #9: update member follow agent, ignore  S305R0322
+
 6	Agent IsHidden= 1, Member IsHidden= 0	212	Macau Games	0	1	9	member is direct acc (bug # #71925)	update member follow agent, ignore  S305R0322
 */
 UPDATE CPS
