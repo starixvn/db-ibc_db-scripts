@@ -33,6 +33,7 @@ WHERE CPS.CustID = 19542865
 --3	Agent IsDisabled= 1, Member IsDisabled = 0	212	Macau Games	0	1	1	Betdaq - Internal use  BET2	update member disabled
 UPDATE CPS
 	SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, T.bitmapOrder, 1)
+		,bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
 FROM CustProductStatus CPS WITH (ROWLOCK)
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
@@ -57,7 +58,7 @@ WHERE ci.mrecommend = 404713
 */
 UPDATE CPS
 	SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, T.bitmapOrder, 1)
-	
+		,bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
 FROM CustProductStatus CPS WITH (ROWLOCK)
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
@@ -72,7 +73,6 @@ WHERE CPS.CustID = 752044
 */
 UPDATE CPS
 	SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, T.bitmapOrder, 1)
-	
 FROM CustProductStatus CPS WITH (ROWLOCK)
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
@@ -81,3 +81,11 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 WHERE CPS.CustID in (24629408,24629447,24927647,25163750,24021039,23146856,24371067,24593501,24657793)
 
 
+UPDATE CPS
+	SET bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
+FROM CustProductStatus CPS WITH (ROWLOCK)
+	CROSS APPLY (SELECT bitmapOrder
+				FROM ProductStatusProfile WITH (NOLOCK)
+				WHERE Sporttype = 212
+				)AS T
+WHERE CPS.CustID in (24629408,24629447,24927647,25163750,24021039,24371067,24593501,24657793) -- remove updating for 23146856 since his upline synced
