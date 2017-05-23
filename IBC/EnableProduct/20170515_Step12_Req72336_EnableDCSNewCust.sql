@@ -31,11 +31,10 @@ where cd.roleid=4)
 	UPDATE cs
 	SET				
 		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,8,0) 		
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)	
-	INNER JOIN Customer c WITH(NOLOCK) ON cs.CustID=c.custid
+	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)		
 	INNER JOIN #tempCusts t ON cs.custid=t.custid
 	WHERE dbo.f_getProductStatus (cs.bitmapHasSynced,8) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,8) = 1 AND dbo.f_getProductStatus (cs.bitmapIsHidden,8) = 0
-	AND c.site='733333'
+	AND t.site='733333'
 
 	-- Allbet
 	UPDATE cs
