@@ -66,20 +66,6 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 
 WHERE CPS.CustID = 752044
 
-/*	#8 - update member ishidden=1
-	
-	6	Agent IsHidden= 1, Member IsHidden= 0	206	Cockfighting	0	1	1		update member ishidden=1
-*/
-UPDATE CPS
-	SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, T.bitmapOrder, 1)
-	
-FROM CustProductStatus CPS WITH (ROWLOCK)
-	CROSS APPLY (SELECT bitmapOrder
-				FROM ProductStatusProfile WITH (NOLOCK)
-				WHERE Sporttype = 206
-				)AS T
-
-WHERE CPS.CustID = 19542865
 /* #9: update member follow agent, ignore  S305R0322
 
 6	Agent IsHidden= 1, Member IsHidden= 0	212	Macau Games	0	1	9	member is direct acc (bug # #71925)	update member follow agent, ignore  S305R0322
