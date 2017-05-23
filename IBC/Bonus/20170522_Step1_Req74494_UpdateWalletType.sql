@@ -5,7 +5,7 @@
 	DB: DBCUST/CustDB
 	Date: 20170522
 */ 
-ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
+ALTER PROCEDURE [dbo].Acc_CustomerInfo_Execrep_09
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)	
@@ -22,7 +22,7 @@ BEGIN
 		SET	
 			ci.WalletFlag=0
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-		WHERE roleid=1 AND ci.srecommend=@maxcustid AND ci.custid<=@maxcustid
+		WHERE ci.custid<=@maxcustid AND roleid=1 AND ci.srecommend=@srecommend 
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -53,7 +53,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			
@@ -85,7 +85,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.Acc_CustomerInfo_Execrep_09 @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'	
 						

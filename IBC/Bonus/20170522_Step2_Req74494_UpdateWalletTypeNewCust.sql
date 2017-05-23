@@ -13,3 +13,6 @@ SET
 	ci.WalletFlag=0
 FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 WHERE custid>@max_custid AND roleid=1
+AND srecommend IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK))
+
+
