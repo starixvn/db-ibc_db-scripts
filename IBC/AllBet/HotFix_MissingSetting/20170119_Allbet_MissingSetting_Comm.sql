@@ -2,6 +2,7 @@
 	Created: 20170208@Helen
 	Task: Missing Allbet setting - [Redmine:68644]
 	DB: DBCUST/CUSTDB
+	Time to execution: AT 10h, on Wednesday - 02/22/2017
 */
 
 CREATE TABLE #cust_missingsetting (custid INT, Roleid INT, srecommend INT, mrecommend INT, recommend INT)
