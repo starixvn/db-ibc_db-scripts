@@ -50,9 +50,9 @@ CustInfo.DisableVirtualSports	CustInfo.HideVirtualSports
 */
 -- 5 affected accounts
 UPDATE ci
-	SET HideVirtualSports = 1
+	SET HideVirtualSports = 1, DisableVirtualSports = 0
 FROM custInfo ci WITH (ROWLOCK) 
-WHERE ci.mrecommend = 404713
+WHERE ci.custid = 404713
 
 
 /* #7 - update agent hidden=1 
