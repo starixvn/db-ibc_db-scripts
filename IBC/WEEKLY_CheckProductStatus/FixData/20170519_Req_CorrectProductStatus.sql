@@ -101,7 +101,7 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 				FROM ProductStatusProfile WITH (NOLOCK)
 				WHERE Sporttype = 212
 				)AS T
-WHERE CI.recommend = 1270 AND roleid IN (1,2)
+WHERE CI.recommend = 1270 AND roleid IN (1,2) AND CI.Enabled = 1
 
 
 
