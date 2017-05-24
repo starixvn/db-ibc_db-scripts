@@ -45,7 +45,7 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 WHERE CPS.CustID = 24021039
 /* #6: update master ishidden=1 and downline master
 
--- 4	Super IsHidden= 1, Master IsHidden= 0	180	Virtual Sports	0	0	1		update master ishidden=1 and downline master
+-- 4	Super IsHidden= 1, Master IsHidden= 0	180	Virtual Sports	0	0	1		update master ishidden=1 and Disable = 0
 CustInfo.DisableVirtualSports	CustInfo.HideVirtualSports
 */
 -- 5 affected accounts
