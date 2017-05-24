@@ -3,6 +3,8 @@
 		Task: Correct ProductStatus - Sheet "WeeklyCheckProductStatus_20170518" - Summary Report - #1,#4,#5,#6,#7,#9
 		DB: DBCUST/CUSTDB
 		
+		Execution Date:N/A
+		
 */
 USE CustDB
 GO
@@ -89,3 +91,17 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 				WHERE Sporttype = 212
 				)AS T
 WHERE CPS.CustID in (24629408,24629447,24927647,25163750,24021039,24371067,24593501,24657793) -- remove updating for 23146856 since his upline synced
+
+-- -- 1270 update agent wsrmb and downline Sync=0
+UPDATE CPS
+	SET bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
+FROM CustProductStatus CPS WITH (ROWLOCK)
+	INNER JOIN custInfo CI WITH (NOLOCK) ON CPS.CustID = CI.custid
+	CROSS APPLY (SELECT bitmapOrder
+				FROM ProductStatusProfile WITH (NOLOCK)
+				WHERE Sporttype = 212
+				)AS T
+WHERE CI.recommend = 1270 AND roleid IN (1,2)
+
+
+
