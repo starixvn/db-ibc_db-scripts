@@ -1,6 +1,7 @@
 /*
 	Created: 20170519@Helen
 	Task: Correct GD Status
+	Execution Date:05/22/2017
 */
 
 CREATE TABLE #custID_GD (CustID INT PRIMARY KEY)
