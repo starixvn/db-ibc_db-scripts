@@ -62,12 +62,15 @@ UPDATE CPS
 	SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, T.bitmapOrder, 1)
 		,bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
 FROM CustProductStatus CPS WITH (ROWLOCK)
+	INNER JOIN custInfo CI WITH (ROWLOCK) ON CPS.CustID = CI.custid AND CI.Enabled = 1
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
 				WHERE Sporttype = 212
 				)AS T
 
-WHERE CPS.CustID = 752044
+WHERE CI.recommend = 752044
+
+
 
 /* #9: update member follow agent, ignore  S305R0322
 
