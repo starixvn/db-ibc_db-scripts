@@ -105,6 +105,13 @@ FROM CustProductStatus CPS WITH (ROWLOCK)
 				WHERE Sporttype = 212
 				)AS T
 WHERE CI.recommend = 1270 AND roleid IN (1,2) AND CI.Enabled = 1
-
-
+-- #16:IsSync = 0, IsDisabled = 0	212	Macau Games	0	1	6		update isdisable = 1
+UPDATE CPS
+	SET bitmapIsDisabled = dbo.f_GenerateProductStatus(bitmapIsDisabled, T.bitmapOrder, 1)
+FROM CustProductStatus CPS WITH (ROWLOCK)
+	CROSS APPLY (SELECT bitmapOrder
+				FROM ProductStatusProfile WITH (NOLOCK)
+				WHERE Sporttype = 212
+				)AS T
+WHERE CPS.CustID in (4183,4177,1265,19545984,31987,19542865)
 
