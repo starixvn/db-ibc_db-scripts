@@ -62,7 +62,7 @@ UPDATE CPS
 	SET bitmapIsHidden = dbo.f_GenerateProductStatus(bitmapIsHidden, T.bitmapOrder, 1)
 		,bitmapHasSynced = dbo.f_GenerateProductStatus(bitmapHasSynced, T.bitmapOrder, 0)
 FROM CustProductStatus CPS WITH (ROWLOCK)
-	INNER JOIN custInfo CI WITH (ROWLOCK) ON CPS.CustID = CI.custid AND CI.Enabled = 1
+	INNER JOIN custInfo CI WITH (NOLOCK) ON CPS.CustID = CI.custid AND CI.Enabled = 1
 	CROSS APPLY (SELECT bitmapOrder
 				FROM ProductStatusProfile WITH (NOLOCK)
 				WHERE Sporttype = 212
