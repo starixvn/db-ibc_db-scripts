@@ -30,3 +30,11 @@ FROM Customer c WITH(NOLOCK)
 INNER JOIN #supers s ON c.srecommend=s.srecommend
 WHERE custid>@maxcustid AND roleid=1 
 
+
+UPDATE c SET c.VirtualMultiplier=0
+FROM custInfo c WITH(ROWLOCK,UPDLOCK)
+INNER JOIN TradeCust tc WITH(NOLOCK) ON c.custid=tc.custid
+
+
+
+
