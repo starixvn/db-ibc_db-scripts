@@ -18,11 +18,11 @@ WHERE ci.roleid = 4
 AND ci.custid IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.site IN ('Macaubet','Aoncash','ITCBET','9Bet','Allbetclub','m8bola','Q8Bola','NBCbet','BE7','Goobet','Bolanation','IndoWin','IvoryBet','Unobet')
-AND c.custid>@MaxCustId
+
 
 INSERT INTO dbo.Dep_SupperProductSetting (CustID, ProductId, IsEnabled)
 SELECT srecommend,25,1
-FROM #supers
+FROM #supers WHERE srecommend>@maxcustid
 	
 INSERT INTO dbo.Dep_CustProductSetting (CustID, ProductId, IsEnabled)
 SELECT c.CustID, 25, 1
@@ -34,7 +34,4 @@ WHERE custid>@maxcustid AND roleid=1
 UPDATE c SET c.VirtualMultiplier=0
 FROM custInfo c WITH(ROWLOCK,UPDLOCK)
 INNER JOIN TradeCust tc WITH(NOLOCK) ON c.custid=tc.custid
-
-
-
 
