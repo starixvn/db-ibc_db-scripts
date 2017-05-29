@@ -30,8 +30,8 @@ BEGIN
 		INSERT INTO #tempAgent(CUSTID)
 		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
 
-		CREATE TABLE #Temp (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
-		INSERT INTO #Temp(CustID,GameTypeID)
+		CREATE TABLE #Temp1 (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
+		INSERT INTO #Temp1(CustID,GameTypeID)
 		SELECT ct.CustID,ct.GameTypeID
 		FROM Custgametype ct WITH (NOLOCK) 
 		INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
@@ -43,11 +43,11 @@ BEGIN
 		UPDATE ct
 		SET ct.IsDisabled=0
 		FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN #Temp t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
+		INNER JOIN #Temp1 t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
 
 		Drop table #tempMaster
 		Drop table #tempAgent
-		DROP TABLE #temp
+		DROP TABLE #temp1
 	END
 	ELSE
 	BEGIN

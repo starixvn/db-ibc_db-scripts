@@ -33,8 +33,8 @@ BEGIN
 		INSERT INTO #tempAgent(CUSTID)
 		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
 		
-		CREATE TABLE #temp (CustID INT PRIMARY KEY)
-		INSERT INTO #temp(CustID)
+		CREATE TABLE #temp1 (CustID INT PRIMARY KEY)
+		INSERT INTO #temp1(CustID)
 		SELECT cs.CustID
 		FROM [dbo].[CustProductStatus] cs WITH(NOLOCK)
 		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID 
@@ -48,11 +48,11 @@ BEGIN
 		SET				
 			 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,4,0) 		
 		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-		INNER JOIN #temp t ON cs.CustID=t.CustID
+		INNER JOIN #temp1 t ON cs.CustID=t.CustID
 
 		Drop table #tempMaster
 		Drop table #tempAgent
-		DROP TABLE #temp
+		DROP TABLE #temp1
 	END
 	ELSE
 	BEGIN

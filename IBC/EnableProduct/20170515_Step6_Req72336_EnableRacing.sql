@@ -31,8 +31,8 @@ BEGIN
 		INSERT INTO #tempAgent(CUSTID)
 		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
 
-		CREATE TABLE #temp (CustID INT PRIMARY KEY)
-		INSERT INTO #temp(CustID)
+		CREATE TABLE #temp1 (CustID INT PRIMARY KEY)
+		INSERT INTO #temp1(CustID)
 		SELECT ci.custid
 		FROM CustInfo CI WITH (NOLOCK) 
 		WHERE  ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4 AND ci.Enabled=1
@@ -42,11 +42,11 @@ BEGIN
 		UPDATE ci
 		SET	ci.DisableHorseRacing=0,ci.DisableOpenTote=0,ci.Disable151_AU=0,ci.Disable152_AU=0,ci.Disable152_UK=0,ci.Disable153_AU=0	
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN #temp t ON CI.custid=t.CustID
+		INNER JOIN #temp1 t ON CI.custid=t.CustID
 
 		Drop table #tempMaster
 		Drop table #tempAgent
-		DROP TABLE #temp
+		DROP TABLE #temp1
 	END
 	ELSE
 	BEGIN
