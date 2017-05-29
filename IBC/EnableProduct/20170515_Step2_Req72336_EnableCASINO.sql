@@ -14,39 +14,57 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
+	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DB233') RETURN	-- run at all replicated servers
+	IF (@target = 'DB233' AND @@SERVERNAME <> 'DB233') RETURN -- run at dbtrans only
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1   )
 		RETURN	
-	CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
-	INSERT INTO #tempMaster(CUSTID)
-	SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('MMMRM','MMPRM','MMSD','MMRMB','M822M','M7RM','M7ARM','M7SD','M7RMB','M7ARMB',
-	'M7BRMB','M7BRM','M7ZRMB','M7CRM','M926R','M50RM','M39IRMB','M863HK','M789H','M79BR','M79CR','FBR','FBM','MTRE','MTRU','M188SD','S188US','M98RM','M98HK','M98ZR','M98ZH',
-	'M79H','M79U','M79V','MQRM','MQARM','MQRMB','MQR','M113H','M90RM','MPHSD','M63H','M63IRMB','M63IHK'
-	)
-	CREATE TABLE #tempAgent(CUSTID INT PRIMARY KEY)
-	INSERT INTO #tempAgent(CUSTID)
-	SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
+	IF @srecommend IN (1,2,3,5,6,13)
+	BEGIN
+		CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
+		INSERT INTO #tempMaster(CUSTID)
+		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('MMMRM','MMPRM','MMSD','MMRMB','M822M','M7RM','M7ARM','M7SD','M7RMB','M7ARMB',
+		'M7BRMB','M7BRM','M7ZRMB','M7CRM','M926R','M50RM','M39IRMB','M863HK','M789H','M79BR','M79CR','FBR','FBM','MTRE','MTRU','M188SD','S188US','M98RM','M98HK','M98ZR','M98ZH',
+		'M79H','M79U','M79V','MQRM','MQARM','MQRMB','MQR','M113H','M90RM','MPHSD','M63H','M63IRMB','M63IHK'
+		)
+		CREATE TABLE #tempAgent(CUSTID INT PRIMARY KEY)
+		INSERT INTO #tempAgent(CUSTID)
+		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
 
-	CREATE TABLE #temp (CustID INT PRIMARY KEY)
-	INSERT INTO #temp(CustID)
-	SELECT CI.custid
-	FROM CustInfo CI WITH (NOLOCK) 
-	WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid  BETWEEN 2 AND 4	AND ci.Enabled=1
-	AND ci.SyncCasino=1	AND ci.DisableCasino=1	
-	AND ci.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
-	AND ci.recommend NOT IN  (SELECT Custid FROM #tempAgent)
+		CREATE TABLE #temp (CustID INT PRIMARY KEY)
+		INSERT INTO #temp(CustID)
+		SELECT CI.custid
+		FROM CustInfo CI WITH (NOLOCK) 
+		WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid  BETWEEN 2 AND 4	AND ci.Enabled=1
+		AND ci.SyncCasino=1	AND ci.DisableCasino=1	
+		AND ci.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
+		AND ci.recommend NOT IN  (SELECT Custid FROM #tempAgent)
 		
-	-- update casino
-	UPDATE ci
-	SET	ci.DisableCasino=0
-	FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
-	INNER JOIN #temp t ON ci.custid=t.CustID
+		-- update casino
+		UPDATE ci
+		SET	ci.DisableCasino=0
+		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+		INNER JOIN #temp t ON ci.custid=t.CustID
 
 		Drop table #tempMaster
 		Drop table #tempAgent
 		DROP TABLE #temp
+	END
+	ELSE
+	BEGIN
+		CREATE TABLE #temp (CustID INT PRIMARY KEY)
+		INSERT INTO #temp(CustID)
+		SELECT CI.custid
+		FROM CustInfo CI WITH (NOLOCK) 
+		WHERE ci.custid<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid  BETWEEN 2 AND 4	AND ci.Enabled=1
+		AND ci.SyncCasino=1	AND ci.DisableCasino=1
+		-- update casino
+		UPDATE ci
+		SET	ci.DisableCasino=0
+		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
+		INNER JOIN #temp t ON ci.custid=t.CustID
+		DROP TABLE #temp
+	END
 
 END
 GO
@@ -153,7 +171,7 @@ END
 CREATE TABLE #supers (custid int,site varchar(10),isfinished bit default(0))
 
 DECLARE  @srecommend INT,@max_custid INT,@site varchar(10)
-SELECT @max_custid = xxx
+SELECT @max_custid = 26119000
 
 CREATE TABLE #tempSuper(CUSTID INT PRIMARY KEY)
 INSERT INTO #tempSuper(CUSTID)
@@ -238,7 +256,7 @@ BEGIN
 
 	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DBCUST'
+			,@target = 'DB233'
 			,@Site=@site
 						
 	waitfor delay '00:00:0.280'

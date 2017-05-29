@@ -20,39 +20,62 @@ BEGIN
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 
 	   AND dbo.f_CheckRepTable('CustProductStatus') = 1	  
 	   )
-		RETURN		
-	CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
-	INSERT INTO #tempMaster(CUSTID)
-	SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('MMMRM','MMPRM','MMSD','MMRMB','M822M','M7RM','M7ARM','M7SD','M7RMB','M7ARMB',
-	'M7BRMB','M7BRM','M7ZRMB','M7CRM','M926R','M50RM','M39IRMB','M863HK','M789H','M79BR','M79CR','FBR','FBM','MTRE','MTRU','M188SD','S188US','M98RM','M98HK','M98ZR','M98ZH',
-	'M79H','M79U','M79V','MQRM','MQARM','MQRMB','MQR','M113H','M90RM','MPHSD','M63H','M63IRMB','M63IHK'
-	)
-	CREATE TABLE #tempAgent(CUSTID INT PRIMARY KEY)
-	INSERT INTO #tempAgent(CUSTID)
-	SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
+		RETURN	
+	IF @srecommend IN (1,2,3,5,6,13)
+	BEGIN	
+		CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
+		INSERT INTO #tempMaster(CUSTID)
+		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('MMMRM','MMPRM','MMSD','MMRMB','M822M','M7RM','M7ARM','M7SD','M7RMB','M7ARMB',
+		'M7BRMB','M7BRM','M7ZRMB','M7CRM','M926R','M50RM','M39IRMB','M863HK','M789H','M79BR','M79CR','FBR','FBM','MTRE','MTRU','M188SD','S188US','M98RM','M98HK','M98ZR','M98ZH',
+		'M79H','M79U','M79V','MQRM','MQARM','MQRMB','MQR','M113H','M90RM','MPHSD','M63H','M63IRMB','M63IHK'
+		)
+		CREATE TABLE #tempAgent(CUSTID INT PRIMARY KEY)
+		INSERT INTO #tempAgent(CUSTID)
+		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
 
-	-- Allbet
-	CREATE TABLE #temp (CustID INT PRIMARY KEY)
-	INSERT INTO #temp(CustID)
-	SELECT cs.CustID
-	FROM [dbo].[CustProductStatus] cs WITH(NOLOCK)
-	INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
-	WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
-	AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapHasSynced,6) )= 1 AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsDisabled,6)) = 1
-	AND  (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsHidden,6) )= 0	
-	AND ci.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
-	AND ci.recommend NOT IN  (SELECT Custid FROM #tempAgent)
+		-- Allbet
+		CREATE TABLE #temp (CustID INT PRIMARY KEY)
+		INSERT INTO #temp(CustID)
+		SELECT cs.CustID
+		FROM [dbo].[CustProductStatus] cs WITH(NOLOCK)
+		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+		WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
+		AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapHasSynced,6) )= 1 AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsDisabled,6)) = 1
+		AND  (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsHidden,6) )= 0	
+		AND ci.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
+		AND ci.recommend NOT IN  (SELECT Custid FROM #tempAgent)
 	
-	UPDATE cs
-	SET				
-		 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,6,0) 		
-	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
-	INNER JOIN #temp t ON cs.CustID=t.CustID
+		UPDATE cs
+		SET				
+			 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,6,0) 		
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN #temp t ON cs.CustID=t.CustID
 
 	
-	Drop table #tempMaster
-	Drop table #tempAgent
-	DROP TABLE #temp
+		Drop table #tempMaster
+		Drop table #tempAgent
+		DROP TABLE #temp
+	END
+	ELSE
+	BEGIN
+		-- Allbet
+		CREATE TABLE #temp (CustID INT PRIMARY KEY)
+		INSERT INTO #temp(CustID)
+		SELECT cs.CustID
+		FROM [dbo].[CustProductStatus] cs WITH(NOLOCK)
+		INNER JOIN custInfo CI WITH (NOLOCK) ON cs.CustID = ci.CustID
+		WHERE cs.CustID<=@maxcustid AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
+		AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapHasSynced,6) )= 1 AND (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsDisabled,6)) = 1
+		AND  (SELECT * FROM dbo.f_CustSetting_ProductStatusSel  (cs.bitmapIsHidden,6) )= 0	
+
+		UPDATE cs
+		SET				
+			 bitmapIsDisabled = dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,6,0) 		
+		FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
+		INNER JOIN #temp t ON cs.CustID=t.CustID
+
+		DROP TABLE #temp
+	END
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
