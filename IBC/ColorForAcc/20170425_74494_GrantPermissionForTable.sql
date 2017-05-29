@@ -10,15 +10,20 @@ GO
 GRANT SELECT ON [dbo].CustLoginInfo_Member TO [bodbDownlineNetView] AS [dbo]
 GO
 
+GRANT SELECT ON [dbo].CustLoginInfo_Member TO [bodbAdminNet] AS [dbo]
+GO
+
+GRANT SELECT ON [dbo].CustLoginInfo_Member TO [bodbExtAccNet] AS [dbo]
+GO
+
 GRANT SELECT ON [dbo].CustLoginInfo TO [bodbDownlineNet] AS [dbo]
 GO
 
 GRANT SELECT ON [dbo].CustLoginInfo TO [bodbDownlineNetView] AS [dbo]
 GO
 
-
-GRANT SELECT ON [dbo].CustLoginInfoSub TO [bodbDownlineNet] AS [dbo]
+GRANT SELECT ON [dbo].CustLoginInfo TO [bodbAdminNet] AS [dbo]
 GO
 
-GRANT SELECT ON [dbo].CustLoginInfoSub TO [bodbDownlineNetView] AS [dbo]
+GRANT SELECT ON [dbo].CustLoginInfo TO [bodbExtAccNet] AS [dbo]
 GO
