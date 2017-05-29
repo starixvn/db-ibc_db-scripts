@@ -168,21 +168,6 @@ FROM dbo.Customer s WITH(NOLOCK)
 INNER JOIN #tempCusts c WITH(NOLOCK) ON s.custid=c.custid
 WHERE s.srecommend NOT IN (SELECT Custid FROM #tempSuperRacing)
 
-
-INSERT INTO #tempCusts(custid,site)
-SELECT c.custid,s.site
-FROM dbo.Customer s WITH(NOLOCK)
-INNER JOIN custInfo c WITH(NOLOCK) ON c.srecommend=s.custid
-WHERE (s.roleid = 4 	
-AND s.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
-AND c.Enabled=1	
-AND c.custid>@maxcustid
-AND c.roleid BETWEEN 2 AND 4
-AND c.srecommend NOT IN (SELECT Custid FROM #tempSuper)
-AND c.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
-AND c.recommend NOT IN (SELECT Custid FROM #tempAgent)
-)
-
 -- update casino
 UPDATE ci
 SET	ci.DisableCasino=0
