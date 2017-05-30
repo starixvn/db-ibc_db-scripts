@@ -1,7 +1,7 @@
 
 /*
 	Created: Winnie	
-	Task:  get max logID
+	Task:  create 2 tables temp
 	DB: DB06/bodb02 AND DBCUST/CUSTDB
 	Date: 20170529
 */ 
