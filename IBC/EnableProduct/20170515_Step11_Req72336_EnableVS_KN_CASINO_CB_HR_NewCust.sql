@@ -160,6 +160,7 @@ AND c.roleid BETWEEN 2 AND 4
 AND c.srecommend NOT IN (SELECT Custid FROM #tempSuper)
 AND c.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
 AND c.recommend NOT IN (SELECT Custid FROM #tempAgent)
+AND c.srecommend NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
 )
 
 INSERT INTO #tempCustsRacing(custid,site)

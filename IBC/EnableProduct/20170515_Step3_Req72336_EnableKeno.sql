@@ -146,6 +146,7 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.custid NOT IN (SELECT custid FROM #tempSuper) --File
+AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
 )
 
 WHILE (1 = 1)
@@ -242,6 +243,7 @@ WHERE (ci.roleid = 4
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.custid NOT IN (SELECT custid FROM #tempSuper) --File
+AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
 )
 
 WHILE (1 = 1)
