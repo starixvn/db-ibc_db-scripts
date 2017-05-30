@@ -7,7 +7,6 @@
 ------------------------------------------------------
 ALTER PROCEDURE [dbo].[Acc_Dep_DynamicCustSetting_09]
  	 @srecommend INT
-	, @currency int
 	, @max_custid INT
 	, @target VARCHAR(20)
 	
@@ -61,7 +60,6 @@ BEGIN
 							   WHERE srecommend=@srecommend and username like '%Acc%' and roleid=3)
 		AND custid <= @max_custid
 							   
-	SELECT @currency = (SELECT Currency FROM custInfo WITH (NOLOCK) WHERE custid = @srecommend)
 
 	-- Licensee profile list
 	IF NOT EXISTS (SELECT 1 
@@ -175,17 +173,17 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType AND C.site in ('UN168')
  
-CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
+CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
+DECLARE @max_custid INT, @srecommend INT, @site varchar (50)
 SELECT  @max_custid= xxx ---input maxcustid
 
-INSERT INTO #supers(custid,currency)
-SELECT custid,currency
+INSERT INTO #supers(custid)
+SELECT custid
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('UN168')
-	AND currency NOT IN (27,20) -- Currency H - it is just test currency, used once in a while 
+	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
 
@@ -206,7 +204,6 @@ BEGIN
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
 		,@srecommend = custid
-		,@currency=currency			
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -215,7 +212,7 @@ BEGIN
 	
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'REPLICATED' 	
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @max_custid=@max_custid,@target = 'REPLICATED' 	
 				
 	WAITFOR DELAY '00:00:00.280'			
 END	
@@ -239,17 +236,17 @@ FROM Dep_LicenseeProductSetting lds WITH (NOLOCK)
 	INNER JOIN Dep_ProductSettingDetail psd WITH (NOLOCK) ON psd.ProductSettingID = ps.ProductSettingID
 WHERE PSD.SportType = @SportType AND C.site in ('UN168')
  
-CREATE TABLE #supers (custid int, currency int, isfinished bit default(0))
+CREATE TABLE #supers (custid int, isfinished bit default(0))
 
-DECLARE @max_custid INT, @srecommend INT, @site varchar (50), @currency int 
+DECLARE @max_custid INT, @srecommend INT, @site varchar (50)
 SELECT  @max_custid= xxx ---input maxcustid
 
-INSERT INTO #supers(custid,currency)
-SELECT custid,currency
+INSERT INTO #supers(custid)
+SELECT custid
 FROM  Dep_CustSuper with(nolock) 
 WHERE custid NOT IN (SELECT custid FROM #Supers_Offered)
 	AND site in ('UN168')
-	AND currency NOT IN (27,20) -- Currency H - it is just test currency, used once in a while 
+	AND currency NOT IN (27) -- Currency H - it is just test currency, used once in a while 
 	AND custid <= @max_custid
 
 
@@ -269,7 +266,7 @@ BEGIN
 	UPDATE TOP (1) #supers
 	SET isfinished = 1
 		,@srecommend = custid
-		,@currency=currency			
+		
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK
@@ -278,7 +275,7 @@ BEGIN
 	
 	RAISERROR (@msg, 0, 1,@index, @srecommend) WITH NOWAIT
 	
-	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @currency=@currency, @max_custid=@max_custid,@target = 'DBCUST'
+	EXEC dbo.[Acc_Dep_DynamicCustSetting_09] @srecommend = @srecommend, @max_custid=@max_custid,@target = 'DBCUST'
 		
 	WAITFOR DELAY '00:00:00.280'			
 END	
