@@ -15,40 +15,27 @@
 
 		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
 		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1
-	
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1105  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
+
+		-- update logid
+		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149)  ORDER BY u.logdate DESC)
 		FROM TempClosedReason t 
-	
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1115 ORDER BY u.logdate DESC)
+
+		
+		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149)  ORDER BY u.logdate DESC)
+		FROM TempClosedReasonMember t 
+
+		----update ClosedReason
+		
+		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115,1149) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM TempClosedReason t 
-	
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=2200  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
-		FROM TempClosedReason t 
-		
-		
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1142  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
-		FROM TempClosedReason t 
-		--member
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1105  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
+		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid
+
+		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115,1149) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM TempClosedReasonMember t 
-	
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1115 ORDER BY u.logdate DESC)
-		FROM TempClosedReasonMember t 
-	
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=2200  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
-		FROM TempClosedReasonMember t 
-		
-		
-		UPDATE t SET ClosedReason=(select top 1 1 FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID=1142  AND u.TrackingValue like '%Closed="1"%' ORDER BY u.logdate DESC)
-		FROM TempClosedReasonMember t 
+		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid
+
 
 		
 

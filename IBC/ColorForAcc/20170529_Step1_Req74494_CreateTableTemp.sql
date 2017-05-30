@@ -9,6 +9,7 @@
 CREATE TABLE [dbo].[TempClosedReason](
 	[CustID] [int] NOT NULL,	
 	[ClosedReason] [tinyint] NULL,
+	LogID		bigint NULL
  CONSTRAINT [PK_TempClosedReason] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
@@ -19,6 +20,7 @@ GO
 CREATE TABLE [dbo].[TempClosedReasonMember](
 	[CustID] [int] NOT NULL,	
 	[ClosedReason] [tinyint] NULL,
+	LogID		bigint NULL
  CONSTRAINT [PK_TempClosedReasonMember] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
