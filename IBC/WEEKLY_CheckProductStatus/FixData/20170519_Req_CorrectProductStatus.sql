@@ -10,11 +10,12 @@ USE CustDB
 GO
 --#1: Number Game: (161) - dummy super: update enable
 --1	Super IsDisabled= 1, Master IsDisabled = 0	161	Number Game	0	0	25		dummy super: update enable,
+/*we don't touch on all accounts under this NG-sporttype-161
 UPDATE ci
 	SET DisableNumber = 0
 FROM custInfo ci WITH (ROWLOCK) 
 WHERE ci.custid IN (4,16,35,478396,674248,726483,726562,984326)
-
+*/
 /* #4: update member disabled; #8: update member ishidden=1
 
   3	Agent IsDisabled= 1, Member IsDisabled = 0	206	Cockfighting	0	1	1		update member disabled
