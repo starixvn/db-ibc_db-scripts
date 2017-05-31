@@ -18,7 +18,7 @@ BEGIN
 		RETURN	
 	DECLARE  @CurrRow INT = 1	, @RowPerBatch INT = 10000, @RowCount INT = 0, @ErrMsg VARCHAR(50)
 
-		SELECT @RowCount = @@rowcount
+		SELECT @RowCount = count(1) from TempClosedReasonMember
 
 			WHILE (@CurrRow <= @RowCount)
 			BEGIN				
