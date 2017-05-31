@@ -137,7 +137,8 @@ SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN(
 'PYT','PYU','PYM','PYG','PYR','PYA','PYB','PYC','PYD','S59BR','S989R','S989M','S989H','S27RMB','S27HK','S27H','S27A','SADA','S27TK','ABS','ABB','ABW','BBA','BBD','BBE','BBF','VVG','SVVG','VAG','KJH','KJHB','KJM','KJI',
 'KJD','KJT','KJMB','KJK','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','KJA','SCHK','SCM','SCS','SCSM','SCH','SCAH','SCAI','SCI','SCBH','SCHI','SCDH','SCDK','S90R','S90AR','S90RM',
 'S90H','S90C','SHK','SPHM','SPK','SPKM','SPKR','SQK','SHJ','SK9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27','S63H','S63K','S63M','S70RMB','S70M','SF8','POR','POT','U311','POK','POY','POB','POW','KTV','KTW',
-'POG','POM','POH','POJ','POZ','POA')
+'POG','POM','POH','POJ','POZ','POA',
+'HPV')--new request from Headline HPO
 
 INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site
@@ -238,7 +239,8 @@ SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN(
 'PYT','PYU','PYM','PYG','PYR','PYA','PYB','PYC','PYD','S59BR','S989R','S989M','S989H','S27RMB','S27HK','S27H','S27A','SADA','S27TK','ABS','ABB','ABW','BBA','BBD','BBE','BBF','VVG','SVVG','VAG','KJH','KJHB','KJM','KJI',
 'KJD','KJT','KJMB','KJK','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','KJA','SCHK','SCM','SCS','SCSM','SCH','SCAH','SCAI','SCI','SCBH','SCHI','SCDH','SCDK','S90R','S90AR','S90RM',
 'S90H','S90C','SHK','SPHM','SPK','SPKM','SPKR','SQK','SHJ','SK9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27','S63H','S63K','S63M','S70RMB','S70M','SF8','POR','POT','U311','POK','POY','POB','POW','KTV','KTW',
-'POG','POM','POH','POJ','POZ','POA')
+'POG','POM','POH','POJ','POZ','POA',
+'HPV')--new request from Headline HPO
 
 INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site
