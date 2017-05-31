@@ -2,14 +2,15 @@
 /*
 	Created: Winnie	
 	Task:  create 2 tables temp
-	DB: DB06/bodb02 AND DBCUST/CUSTDB
+	DB: DB06/bodb02 AND DBCUST/CUSTDB AND DB052/bodb02
 	Date: 20170529
 */ 
 
 CREATE TABLE [dbo].[TempClosedReason](
 	[CustID] [int] NOT NULL,	
 	[ClosedReason] [tinyint] NULL,
-	LogID		bigint NULL
+	LogID		bigint NULL,
+	RowNo INT IDENTITY(1, 1)
  CONSTRAINT [PK_TempClosedReason] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC
@@ -20,7 +21,8 @@ GO
 CREATE TABLE [dbo].[TempClosedReasonMember](
 	[CustID] [int] NOT NULL,	
 	[ClosedReason] [tinyint] NULL,
-	LogID		bigint NULL
+	LogID		bigint NULL,
+	RowNo INT IDENTITY(1, 1)
  CONSTRAINT [PK_TempClosedReasonMember] PRIMARY KEY CLUSTERED 
 (
 	[CustID] ASC

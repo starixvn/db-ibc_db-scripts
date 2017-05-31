@@ -6,15 +6,15 @@
 	Date: 20170529
 */ 
 		DECLARE  @max_logid INT
-		SELECT @max_logid = xxx
+		SELECT @max_logid = 1853000
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid between 2 and 4
+		select custid from Custinfo(nolock) where closed=1 and roleid between 2 and 4
 
 		CREATE TABLE #tempMember (CustID INT PRIMARY KEY)
 		INSERT INTO #tempMember (CustID)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid =1
+		select custid from Custinfo(nolock) where closed=1 and roleid =1
 
 		CREATE TABLE #tempNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,LogID BIGINT NULL)
 		INSERT INTO #tempNewClosed (CustID,ClosedReason)
