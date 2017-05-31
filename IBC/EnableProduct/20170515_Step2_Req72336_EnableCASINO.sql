@@ -266,7 +266,7 @@ BEGIN
 
 	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
-			,@target = 'DB233'
+			,@target = 'DBCUST'
 			,@Site=@site
 						
 	waitfor delay '00:00:0.280'
