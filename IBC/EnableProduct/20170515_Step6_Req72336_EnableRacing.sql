@@ -200,11 +200,15 @@ INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site
 FROM dbo.Customer ci WITH(NOLOCK)
 INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
-WHERE (ci.roleid = 4 	
+WHERE (ci.custid <=@max_custid
+AND ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.custid NOT IN (SELECT custid FROM #tempSuper) --File
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
+AND ci.custid NOT IN (select cu.custid from custaccount cu with  (nolock)
+inner join custinfo c with (nolock) on cu.custid=c.custid
+where groupid=515 and c.roleid=4)
 )
 
 WHILE (1 = 1)
@@ -356,11 +360,15 @@ INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site
 FROM dbo.Customer ci WITH(NOLOCK)
 INNER JOIN custInfo c WITH(NOLOCK) ON ci.custid=c.custid
-WHERE (ci.roleid = 4 	
+WHERE (ci.custid <=@max_custid
+AND ci.roleid = 4 	
 AND ci.custid NOT IN (SELECT custid FROM Dep_CustSuper WITH(NOLOCK)) 
 AND c.Enabled=1	
 AND ci.custid NOT IN (SELECT custid FROM #tempSuper) --File
 AND ci.custid NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
+AND ci.custid NOT IN (select cu.custid from custaccount cu with  (nolock)
+inner join custinfo c with (nolock) on cu.custid=c.custid
+where groupid=515 and c.roleid=4)
 )
 
 WHILE (1 = 1)

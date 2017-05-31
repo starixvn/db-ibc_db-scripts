@@ -97,6 +97,9 @@ AND c.srecommend NOT IN (SELECT Custid FROM #tempSuper)
 AND c.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
 AND c.recommend NOT IN (SELECT Custid FROM #tempAgent)
 AND c.srecommend NOT IN (select cd.custid from Acc_CustDirect cd WITH(NOLOCK) where cd.roleid=4)
+AND c.srecommend NOT IN (select cu.custid from custaccount cu with  (nolock)
+inner join custinfo c with (nolock) on cu.custid=c.custid
+where groupid=515 and c.roleid=4) --THAUS
 )
 
 	-- FW	
