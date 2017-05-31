@@ -1,7 +1,7 @@
 
 /*
 	Created: Winnie	
-	Task:  Update ClosedReason on CustLoginInfo
+	Task:  Update ClosedReason on CustLoginInfoMember
 	DB: DBCUST/CustDB, DB06/bodb02
 	Date: 20170523
 */ 
@@ -16,7 +16,7 @@ BEGIN
 
 	IF NOT (dbo.f_CheckRepTable('CustLoginInfo') = 1 AND  dbo.f_CheckRepTable('CustLoginInfo_Member') = 1 )
 		RETURN	
-	DECLARE  @CurrRow INT = 1	, @RowPerBatch INT = 10000, @RowCount INT = 0, @ErrMsg VARCHAR(50)
+	DECLARE  @CurrRow INT = 1, @RowPerBatch INT = 10000, @RowCount INT = 0, @ErrMsg VARCHAR(50)
 
 		SELECT @RowCount = @@rowcount
 

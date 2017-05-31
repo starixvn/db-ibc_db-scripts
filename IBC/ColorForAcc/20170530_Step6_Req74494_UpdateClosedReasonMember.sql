@@ -1,7 +1,7 @@
 
 /*
 	Created: Winnie	
-	Task:  Update ClosedReason on CustLoginInfo_Member
+	Task:  Update ClosedReason on CustLoginInfoMember
 	DB: DBCUST/CustDB, DB06/bodb02
 	Date: 20170523
 */ 
@@ -23,8 +23,8 @@ BEGIN
 			WHILE (@CurrRow <= @RowCount)
 			BEGIN				
 					UPDATE c SET c.ClosedReason= ISNULL(t.ClosedReason,0)
-					FROM dbo.CustLoginInfo c WITH (ROWLOCK, UPDLOCK)
-					INNER JOIN TempClosedReason t WITH(NOLOCK) ON c.CustID=t.CustID				
+					FROM dbo.CustLoginInfo_Member c WITH (ROWLOCK, UPDLOCK)
+					INNER JOIN TempClosedReasonMember t WITH(NOLOCK) ON c.CustID=t.CustID				
 					WHERE t.RowNo BETWEEN @CurrRow AND (@CurrRow + @RowPerBatch - 1)
 
 					IF (@@ERROR <> 0)
