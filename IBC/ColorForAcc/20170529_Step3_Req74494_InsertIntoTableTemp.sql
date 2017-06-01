@@ -24,7 +24,7 @@
 		FROM TempClosedReason t 
 		CROSS APPLY (SELECT MAX(LogID) LogID
 		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142) 
 		) AS a (LogID)
 		
 		UPDATE t 
@@ -32,16 +32,16 @@
 		FROM TempClosedReasonMember t 
 		CROSS APPLY (SELECT MAX(LogID) LogID
 		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142) 
 		) AS a (LogID)
 
 		----update ClosedReason
 		
-		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115,1149) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
+		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM TempClosedReason t 
 		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid
 
-		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115,1149) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
+		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM TempClosedReasonMember t 
 		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid
 
