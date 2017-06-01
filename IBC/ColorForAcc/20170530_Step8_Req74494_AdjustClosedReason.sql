@@ -6,7 +6,7 @@
 	Date: 20170529
 */ 
 		DECLARE  @max_logid INT
-		SELECT @max_logid = 1853000
+		SELECT @max_logid = xxx
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
