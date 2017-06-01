@@ -25,7 +25,7 @@ BEGIN
 	BEGIN				
 			
 		SELECT TOP 10000 @CrrCust = Custid  
-		FROM TempClosedReason WHERE CustID>@MinCust
+		FROM TempClosedReasonMember WHERE CustID>=@MinCust
 
 		UPDATE c SET c.ClosedReason= ISNULL(t.ClosedReason,0)
 		FROM dbo.CustLoginInfo_Member c WITH (ROWLOCK, UPDLOCK)
