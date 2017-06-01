@@ -19,14 +19,21 @@
 		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1
 
 		-- update logid
-		UPDATE t SET Logid=(select MAX(LogId) FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149))
+		UPDATE t 
+		SET Logid= a.LogID
 		FROM TempClosedReason t 
-
+		CROSS APPLY (SELECT MAX(LogID) LogID
+		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149) 
+		) AS a (LogID)
 		
-		UPDATE t SET Logid=(select MAX(LogId) FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid<=@maxLogID AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149))
+		UPDATE t 
+		SET Logid= a.LogID
 		FROM TempClosedReasonMember t 
+		CROSS APPLY (SELECT MAX(LogID) LogID
+		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149) 
+		) AS a (LogID)
 
 		----update ClosedReason
 		

@@ -16,28 +16,23 @@ BEGIN
 
 	IF NOT (dbo.f_CheckRepTable('CustLoginInfo') = 1 AND  dbo.f_CheckRepTable('CustLoginInfo_Member') = 1 )
 		RETURN	
-	DECLARE  @CurrRow INT = 1, @RowPerBatch INT = 10000, @RowCount INT = 0, @ErrMsg VARCHAR(50)
+	DECLARE  @MinCust INT = 0, @MaxCust INT = 0, @CrrCust INT
 
-		SELECT @RowCount =  count(1) from TempClosedReasonMember
+	SELECT @MinCust =  MIN(Custid) FROM TempClosedReasonMember
+	SELECT @MaxCust =  MAX(Custid) FROM TempClosedReasonMember
+	WHILE (@MinCust <= @MaxCust)
+	BEGIN				
+			UPDATE c SET c.ClosedReason= ISNULL(t.ClosedReason,0)
+			FROM dbo.CustLoginInfo_Member c WITH (ROWLOCK, UPDLOCK)
+			INNER JOIN TempClosedReasonMember t WITH(NOLOCK) ON c.CustID=t.CustID				
+			WHERE  t.CustID BETWEEN @MinCust AND @CrrCust
 
-			WHILE (@CurrRow <= @RowCount)
-			BEGIN				
-					UPDATE c SET c.ClosedReason= ISNULL(t.ClosedReason,0)
-					FROM dbo.CustLoginInfo_Member c WITH (ROWLOCK, UPDLOCK)
-					INNER JOIN TempClosedReasonMember t WITH(NOLOCK) ON c.CustID=t.CustID				
-					WHERE t.RowNo BETWEEN @CurrRow AND (@CurrRow + @RowPerBatch - 1)
+			SELECT @MinCust=@CrrCust
+			IF @MinCust=@MaxCust
+				SELECT @MinCust=@MinCust+1
 
-					IF (@@ERROR <> 0)
-					BEGIN
-						SELECT @ErrMsg = 'Could not update'
-						RETURN
-					END				
-
-				SELECT @CurrRow = @CurrRow + @RowPerBatch
-
-				WAITFOR DELAY '00:00:00.300'
-			END
-		
+		WAITFOR DELAY '00:00:00.300'
+	END		
 
 END
 GO
