@@ -23,13 +23,14 @@ BEGIN
 
 	WHILE (@MinCust <= @MaxCust)
 	BEGIN				
+			
+		SELECT TOP 10000 @CrrCust = Custid  
+		FROM TempClosedReason WHERE CustID>@MinCust
+
 		UPDATE c SET c.ClosedReason= ISNULL(t.ClosedReason,0)
 		FROM dbo.CustLoginInfo_Member c WITH (ROWLOCK, UPDLOCK)
 		INNER JOIN TempClosedReasonMember t WITH(NOLOCK) ON c.CustID=t.CustID				
-		WHERE  t.CustID BETWEEN @MinCust AND @CrrCust
-		
-		SELECT TOP 10000 @CrrCust = Custid  
-		FROM TempClosedReason WHERE CustID>@MinCust
+		WHERE  t.CustID BETWEEN @MinCust AND @CrrCust	
 
 		SELECT @MinCust=@CrrCust+1	
 
