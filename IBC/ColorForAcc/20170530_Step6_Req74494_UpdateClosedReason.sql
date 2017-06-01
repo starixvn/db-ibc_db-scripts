@@ -27,10 +27,11 @@ BEGIN
 			INNER JOIN TempClosedReasonMember t WITH(NOLOCK) ON c.CustID=t.CustID				
 			WHERE  t.CustID BETWEEN @MinCust AND @CrrCust
 
-			SELECT @MinCust=@CrrCust
-			IF @MinCust=@MaxCust
-				SELECT @MinCust=@MinCust+1
+			SELECT TOP 10000 @CrrCust = Custid  
+			FROM TempClosedReason WHERE CustID>@MinCust
 
+			SELECT @MinCust=@CrrCust+1		
+			
 		WAITFOR DELAY '00:00:00.300'
 	END		
 
