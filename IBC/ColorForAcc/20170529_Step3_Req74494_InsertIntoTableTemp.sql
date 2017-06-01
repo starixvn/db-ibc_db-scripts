@@ -24,7 +24,7 @@
 		FROM TempClosedReason t 
 		CROSS APPLY (SELECT MAX(LogID) LogID
 		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
 		) AS a (LogID)
 		
 		UPDATE t 
@@ -32,7 +32,7 @@
 		FROM TempClosedReasonMember t 
 		CROSS APPLY (SELECT MAX(LogID) LogID
 		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,2200,1142,1149) 
+		WHERE  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
 		) AS a (LogID)
 
 		----update ClosedReason
