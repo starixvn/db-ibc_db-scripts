@@ -51,7 +51,7 @@
 		-- new closed SMA
 
 		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142)  ORDER BY u.logdate DESC)
+		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149)  ORDER BY u.logdate DESC)
 		FROM #tempNewClosed t 
 
 		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
@@ -65,7 +65,7 @@
 
 		-- new closed member
 		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142)  ORDER BY u.logdate DESC)
+		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149)  ORDER BY u.logdate DESC)
 		FROM #tempMemberNewClosed t 
 
 		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
