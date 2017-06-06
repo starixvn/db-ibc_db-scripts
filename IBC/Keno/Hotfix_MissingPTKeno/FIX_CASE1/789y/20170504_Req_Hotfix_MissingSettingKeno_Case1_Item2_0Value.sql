@@ -3,6 +3,7 @@
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 	
 	Notes: Item 2 - 47 members will have diffirent pt with NG - [VIEW]
+	Execution Date: Done on 06/06/2019 - At 93:30AM
 */
 CREATE TABLE #Item2 (CustID INT PRIMARY KEY)
 INSERT INTO #Item2 (CustID)

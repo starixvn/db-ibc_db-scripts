@@ -1,6 +1,8 @@
 /*
 	Created: 20170504@Helen
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
+	
+	Execution Date: Done on 06/06/2019 - At 93:30AM
 
 */
 CREATE TABLE #Item4 (CustID INT PRIMARY KEY)

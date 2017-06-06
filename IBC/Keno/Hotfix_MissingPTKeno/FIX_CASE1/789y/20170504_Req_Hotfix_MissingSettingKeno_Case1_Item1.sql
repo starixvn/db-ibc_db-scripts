@@ -3,6 +3,8 @@
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 
 	Notes: 54 members will be having master + agent pt = 0 => super take all pt on members - [VIEW]
+	
+	Executed Date: Done on 06/06/2019 - At 93:30AM
 */
 
 CREATE TABLE #Item1 (CustID INT PRIMARY KEY)

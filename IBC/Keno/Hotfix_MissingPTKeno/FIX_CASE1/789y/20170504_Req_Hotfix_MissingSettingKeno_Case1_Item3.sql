@@ -2,6 +2,8 @@
 	Created: 20170504@Helen
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 	Notes: 155 accounts: either adding missing setting or copying from NG [VIEW]
+	
+	Execution Date: Done on 06/06/2019 - At 93:30AM
 */
 CREATE TABLE #Item3 (CustID INT PRIMARY KEY)
 INSERT INTO #Item3 (CustID)

@@ -3,6 +3,9 @@
 	Task: Keno - Missing PT setting for some accounts - [Redmine: 76020]
 	
 	Notes: Item 5: 55 Agents [VIEW]
+	
+	Execution Date: Done on 06/06/2019 - At 93:30AM
+	
 */
 CREATE TABLE #Item5 (CustID INT PRIMARY KEY)
 INSERT INTO #Item5 (CustID)
