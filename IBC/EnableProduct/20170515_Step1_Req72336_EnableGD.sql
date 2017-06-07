@@ -179,7 +179,7 @@ END
 CREATE TABLE #supers (custid int,site varchar(10),isfinished bit default(0))
 
 DECLARE  @srecommend INT,@max_custid INT,@site varchar(10)
-SELECT @max_custid = 26119000
+SELECT @max_custid = xxx
 
 CREATE TABLE #tempSuper(CUSTID INT PRIMARY KEY)
 INSERT INTO #tempSuper(CUSTID)
