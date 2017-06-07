@@ -14,7 +14,7 @@ GO
 EXEC [DBA_CheckStatus_Deposit] @sportType=180, @bettype = 1201, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableVirtualSports', @HiddenTable='CustInfo', @HiddenColumnName = 'HideVirtualSports',@SynTable='',@SynColumnName = ''
 
 ------------------------------------ #4: Gold Deluxe	255	1700	12		CustInfo.DisableGoldDeluxe	CustInfo.HideGoldDeluxe ---------------------------------------------------------
-EXEC [DBA_CheckStatus_Deposit] @sportType=255, @bettype = 1700, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableGoldDeluxe', @HiddenTable='CustInfo', @HiddenColumnName = 'HideGoldDeluxe',@SynTable='',@SynColumnName = ''
+--EXEC [DBA_CheckStatus_Deposit] @sportType=255, @bettype = 1700, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableGoldDeluxe', @HiddenTable='CustInfo', @HiddenColumnName = 'HideGoldDeluxe',@SynTable='',@SynColumnName = ''
 
 ------------------------------------ #5: Microgaming Live Casino	203	2001	13	CustInfo.DisableMicrogameLC ---------------------------------------------------------
 EXEC [DBA_CheckStatus_Deposit] @sportType=203, @bettype = 2001, @DisableTable = 'CustInfo', @DisableColumnName = 'DisableMicrogameLC', @HiddenTable='', @HiddenColumnName = '',@SynTable='',@SynColumnName = ''
