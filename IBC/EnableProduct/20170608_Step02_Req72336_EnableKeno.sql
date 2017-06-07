@@ -18,53 +18,20 @@ BEGIN
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 AND dbo.f_CheckRepTable('Custgametype') = 1   )
 		RETURN	
-	IF @srecommend IN (1,2,3,5,6,13)
-	BEGIN
-		CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
-		INSERT INTO #tempMaster(CUSTID)
-		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('MMMRM','MMPRM','MMSD','MMRMB','M822M','M7RM','M7ARM','M7SD','M7RMB','M7ARMB',
-		'M7BRMB','M7BRM','M7ZRMB','M7CRM','M926R','M50RM','M39IRMB','M863HK','M789H','M79BR','M79CR','FBR','FBM','MTRE','MTRU','M188SD','S188US','M98RM','M98HK','M98ZR','M98ZH',
-		'M79H','M79U','M79V','MQRM','MQARM','MQRMB','MQR','M113H','M90RM','MPHSD','M63H','M63IRMB','M63IHK'
-		)
-		CREATE TABLE #tempAgent(CUSTID INT PRIMARY KEY)
-		INSERT INTO #tempAgent(CUSTID)
-		SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN ('BBM','3KHK','266HK','1188MR','PHRM'	)
+	
+	CREATE TABLE #Temp (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
+	INSERT INTO #Temp(CustID,GameTypeID)
+	SELECT ct.CustID,ct.GameTypeID
+	FROM Custgametype ct WITH (NOLOCK) 
+	INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
+	WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
+	AND ct.IsDisabled=1 AND Ci.HideKeno=0
 
-		CREATE TABLE #Temp1 (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
-		INSERT INTO #Temp1(CustID,GameTypeID)
-		SELECT ct.CustID,ct.GameTypeID
-		FROM Custgametype ct WITH (NOLOCK) 
-		INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-		WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
-		AND ct.IsDisabled=1 AND Ci.HideKeno=0
-		AND ci.mrecommend NOT IN (SELECT Custid FROM #tempMaster)
-		AND ci.recommend NOT IN  (SELECT Custid FROM #tempAgent)
-
-		UPDATE ct
-		SET ct.IsDisabled=0
-		FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN #Temp1 t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
-
-		Drop table #tempMaster
-		Drop table #tempAgent
-		DROP TABLE #temp1
-	END
-	ELSE
-	BEGIN
-		CREATE TABLE #Temp (CustID INT,GameTypeID INT, PRIMARY KEY(CustID,GameTypeID))
-		INSERT INTO #Temp(CustID,GameTypeID)
-		SELECT ct.CustID,ct.GameTypeID
-		FROM Custgametype ct WITH (NOLOCK) 
-		INNER JOIN CustInfo CI WITH(NOLOCK) ON ct.custid=ci.custid
-		WHERE  ci.custid<=@maxcustid AND ct.GameTypeID between 1 and 16 AND ci.srecommend = @srecommend AND ci.roleid BETWEEN 2 AND 4	AND ci.Enabled=1
-		AND ct.IsDisabled=1 AND Ci.HideKeno=0
-
-		UPDATE ct
-		SET ct.IsDisabled=0
-		FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
-		INNER JOIN #Temp t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
-		DROP TABLE #temp
-	END
+	UPDATE ct
+	SET ct.IsDisabled=0
+	FROM Custgametype ct WITH (ROWLOCK,UPDLOCK) 
+	INNER JOIN #Temp t ON ct.CustID=t.CustID AND ct.GameTypeID=t.GameTypeID
+	DROP TABLE #temp
 END
 GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
@@ -137,7 +104,9 @@ SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN(
 'KJD','KJT','KJMB','KJK','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','KJA','SCHK','SCM','SCS','SCSM','SCH','SCAH','SCAI','SCI','SCBH','SCHI','SCDH','SCDK','S90R','S90AR','S90RM',
 'S90H','S90C','SHK','SPHM','SPK','SPKM','SPKR','SQK','SHJ','SK9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27','S63H','S63K','S63M','S70RMB','S70M','SF8','POR','POT','U311','POK','POY','POB','POW','KTV','KTW',
 'POG','POM','POH','POJ','POZ','POA',
-'HPV')--new request from Headline HPO
+'HPV', --new request from Headline HPO
+'DS23' --Add on 7/6/2017
+)
 
 INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site
@@ -239,7 +208,9 @@ SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN(
 'KJD','KJT','KJMB','KJK','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','KJA','SCHK','SCM','SCS','SCSM','SCH','SCAH','SCAI','SCI','SCBH','SCHI','SCDH','SCDK','S90R','S90AR','S90RM',
 'S90H','S90C','SHK','SPHM','SPK','SPKM','SPKR','SQK','SHJ','SK9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27','S63H','S63K','S63M','S70RMB','S70M','SF8','POR','POT','U311','POK','POY','POB','POW','KTV','KTW',
 'POG','POM','POH','POJ','POZ','POA',
-'HPV')--new request from Headline HPO
+'HPV', --new request from Headline HPO
+'DS23' --Add on 7/6/2017
+)
 
 INSERT INTO #supers(custid,site)
 SELECT ci.custid,ci.site

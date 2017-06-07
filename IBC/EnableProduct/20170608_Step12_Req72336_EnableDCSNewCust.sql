@@ -72,7 +72,9 @@ SELECT Custid FROM Customer WITH(NOLOCK) WHERE username IN(
 'KJD','KJT','KJMB','KJK','KJE','KJB','KJC','KJF','KJMC','KJMA','KJG','KJMD','KJL','KJO','KJME','KJMF','KJMG','KJA','SCHK','SCM','SCS','SCSM','SCH','SCAH','SCAI','SCI','SCBH','SCHI','SCDH','SCDK','S90R','S90AR','S90RM',
 'S90H','S90C','SHK','SPHM','SPK','SPKM','SPKR','SQK','SHJ','SK9','DJA','DJB','DJC','DJD','DJE','DJ27','D27','RM27','S63H','S63K','S63M','S70RMB','S70M','SF8','POR','POT','U311','POK','POY','POB','POW','KTV','KTW',
 'POG','POM','POH','POJ','POZ','POA',
-'HPV')--new request from Headline HPO
+'HPV', --new request from Headline HPO
+'DS23' --Add on 7/6/2017
+)
 
 CREATE TABLE #tempMaster(CUSTID INT PRIMARY KEY)
 	INSERT INTO #tempMaster(CUSTID)
