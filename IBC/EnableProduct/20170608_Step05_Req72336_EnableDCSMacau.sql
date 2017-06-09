@@ -5,6 +5,7 @@
 	Task: Enable and UnHide Macau for SMA
 	DB: DBCUST/CustDB
 	Date: 20170515
+	Deployed Date: 20170608 01:01PM
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	

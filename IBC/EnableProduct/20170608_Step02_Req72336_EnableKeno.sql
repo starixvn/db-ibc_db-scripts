@@ -3,6 +3,7 @@
 	Task:  Enable and UnHide Keno for SMA
 	DB: DBCUST/CustDB
 	Date: 20170515
+	Deployed Date: 20170608 12:39PM
 */ 
 ALTER PROCEDURE [dbo].Acc_CustSetting_19
 	@srecommend INT	

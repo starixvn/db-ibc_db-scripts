@@ -4,8 +4,9 @@
 	Task:  Enable GoldDeluxe
 	DB: DBCUST/CustDB
 	Date: 20170403
+	Deployed Date: 20170608 11:26AM
 */ 
-ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
+ALTER PROCEDURE [dbo].[Acc_CustomerInfo_Execrep_09]
 	@srecommend INT	
 	,@maxcustid INT
 	,@target VARCHAR(20)
@@ -134,7 +135,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 			
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.[Acc_CustomerInfo_Execrep_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'REPLICATED'
 			,@Site=@site
@@ -239,7 +240,7 @@ BEGIN
 	
 	IF @@ROWCOUNT = 0 BREAK
 
-	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend
+	EXEC dbo.[Acc_CustomerInfo_Execrep_09] @srecommend = @srecommend
 			,@maxcustid = @max_custid
 			,@target = 'DBCUST'
 			,@Site=@site

@@ -4,6 +4,7 @@
 	Task:  Enable and UnHide Virtual Sports,Keno,OneRNG Casino,Colossus Bets,Racing for new SMA
 	DB: DBCUST/CustDB
 	Date: 20170515
+	Deployed Date: 20170608 02:25PM
 */ 
 DECLARE	
 	@maxcustid INT	

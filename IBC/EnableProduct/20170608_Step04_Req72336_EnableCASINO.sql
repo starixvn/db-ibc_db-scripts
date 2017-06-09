@@ -4,6 +4,7 @@
 	Task:  Enable and UnHide Casino for SMA
 	DB: DBCUST/CustDB
 	Date: 20170403
+	Deployed Date: 20170608 12:00AM
 */ 
 ALTER PROCEDURE [dbo].[Acc_ExecRep_Cust_09]
 	@srecommend INT	

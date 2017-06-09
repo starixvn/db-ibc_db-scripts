@@ -4,6 +4,7 @@
 	Task:  Enable and UnHide Macau + AllBet + FW + NG2 for SMA for new SMA
 	DB: DBCUST/CustDB
 	Date: 20170515
+	Deployed Date: 20170608 02:30PM
 */ 
 DECLARE	
 	@maxcustid INT	
@@ -135,5 +136,6 @@ where groupid=515 and c.roleid=4) --THAUS
 		 bitmapIsDisabled =dbo.f_GenerateProductStatus (cs.bitmapIsDisabled,4,0) 			
 	FROM [dbo].[CustProductStatus] cs WITH(ROWLOCK,UPDLOCK)
 	INNER JOIN #tempCusts t ON cs.custid=t.custid	
-	WHERE  dbo.f_getProductStatus (cs.bitmapHasSynced,4) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,4) = 1	AND dbo.f_getProductStatus (cs.bitmapIsHidden,4) = 0				
+	WHERE  dbo.f_getProductStatus (cs.bitmapHasSynced,4) = 1 AND dbo.f_getProductStatus (cs.bitmapIsDisabled,4) = 1	AND dbo.f_getProductStatus (cs.bitmapIsHidden,4) = 0	
+	AND t.site ='789y'			
 

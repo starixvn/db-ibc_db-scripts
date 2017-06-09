@@ -5,6 +5,7 @@
 	Task: Enable and UnHide FW for SMA
 	DB: DBCUST/CustDB
 	Date: 20170405
+	Deployed Date: 20170608 02:02PM
 */ 
 ALTER PROCEDURE [dbo].[Acc_DynamicCustomerInfo_09]
 	@srecommend INT	
