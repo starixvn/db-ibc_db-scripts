@@ -83,7 +83,7 @@ VALUES
 	-- Bet Setting
 	,(14,190,2701,0,0,1)
 	,(14,191,2701,0,0,1)
-	,(14,199,2701,0,0,1) -- 199 Virtual Sports Parlay dummy sport for bet setting
+	,(14,199,2799,0,0,1) -- 199 Virtual Sports Parlay dummy sport for bet setting
 	
 GO
 
