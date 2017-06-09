@@ -16,3 +16,9 @@ WHERE ProductID IN (21,22)
 --FROM dbo.ProductSettingDetail WITH (ROWLOCK, UPDLOCK)
 --WHERE ProductID IN (21,22) 
 --	AND SettingType = 13
+
+UPDATE ps
+SET SettingType = 13
+FROM dbo.ProductSettingsystemDisplay ps WITH (ROWLOCK, UPDLOCK)
+WHERE ProductID IN (21,22) 
+	AND SettingType = 4
