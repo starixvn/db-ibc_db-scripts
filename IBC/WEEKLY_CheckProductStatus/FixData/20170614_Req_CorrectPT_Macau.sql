@@ -6,10 +6,9 @@
 */
 USE CUSTDB
 GO
-
 UPDATE CS
 	SET MasterPT = 70
 FROM dbo.CustPTSetting3rd_Member CS WITH (ROWLOCK,UPDLOCK)
-WHERE cs.CUSTID = 22293220 AND cs.SportType = 212
-
+WHERE CS.CustID = 22293220 AND CS.SportType = 212
+GO
 
