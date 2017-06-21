@@ -5,8 +5,10 @@
 	DB: DBCUST/CustDB
 	Date: 20170529
 */ 
-		DECLARE  @max_logid INT
-		SELECT @max_logid = xxx
+--select max(logdate) from  DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
+
+		DECLARE  @max_logdate DATETIME
+		SELECT @max_logdate = '2017-06-25'
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
@@ -16,12 +18,12 @@
 		INSERT INTO #tempMember (CustID)
 		select custid from Custinfo(nolock) where closed=1 and roleid =1
 
-		CREATE TABLE #tempNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,LogID BIGINT NULL)
+		CREATE TABLE #tempNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,Logdate Datetime NULL)
 		INSERT INTO #tempNewClosed (CustID,ClosedReason)
 		select custid,0 from #temp t
 		WHERE t.CustID NOT IN (SELECT Custid FROM TempClosedReason WITH(NOLOCK))
 
-		CREATE TABLE #tempMemberNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,LogID BIGINT NULL)
+		CREATE TABLE #tempMemberNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,Logdate Datetime NULL)
 		INSERT INTO #tempMemberNewClosed (CustID,ClosedReason)
 		select custid,0 from #tempMember t
 		WHERE t.CustID NOT IN (SELECT Custid FROM TempClosedReasonMember WITH(NOLOCK))
@@ -50,13 +52,17 @@
 
 		-- new closed SMA
 
-		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149)  ORDER BY u.logdate DESC)
+		UPDATE t 
+		SET Logdate= a.Logdate
 		FROM #tempNewClosed t 
+		CROSS APPLY (SELECT MAX(logdate) logdate
+		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
+		) AS a (Logdate)
 
 		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM #tempNewClosed t 
-		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid		
+		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.Logdate=u.logdate AND t.CustID=u.custid		
 
 		UPDATE c
 		SET c.ClosedReason=ISNULL(t.ClosedReason,0)
@@ -64,19 +70,30 @@
 		INNER JOIN #tempNewClosed t ON c.CustID=t.CustID
 
 		-- new closed member
-		UPDATE t SET Logid=(select top 1 LogId FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE u.logid>@max_logid  AND u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149)  ORDER BY u.logdate DESC)
+		
+		UPDATE t 
+		SET Logdate= a.Logdate
 		FROM #tempMemberNewClosed t 
+		CROSS APPLY (SELECT MAX(logdate) logdate
+		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+		WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
+		) AS a (Logdate)
 
 		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
 		FROM #tempMemberNewClosed t 
-		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.logid=u.logid
+		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.Logdate=u.logdate AND t.CustID=u.custid
 
 		UPDATE c
 		SET c.ClosedReason=ISNULL(t.ClosedReason,0)
 		FROM CustLoginInfo_Member c WITH(ROWLOCK,UPDLOCK)
 		INNER JOIN #tempMemberNewClosed t ON c.CustID=t.CustID
 
+		drop table #temp
+		drop table #tempMember
+		drop table #tempMemberNewClosed
+		drop table #tempMemberNewOpen
+		drop table #tempNewClosed
+		drop table #tempNewOpen
 
 
 

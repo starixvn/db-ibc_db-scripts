@@ -10,18 +10,18 @@ TRUNCATE TABLE [TempClosedReason]
 INSERT INTO [dbo].[TempClosedReason]
            ([CustID]
            ,[ClosedReason]
-           ,[LogID])
+           ,[LogDate])
     SELECT [CustID]
            ,[ClosedReason]
-           ,[LogID]
+           ,[LogDate]
 FROM DBEXT.bodb02.dbo.[TempClosedReason]
 
 TRUNCATE TABLE TempClosedReasonMember
 INSERT INTO [dbo].TempClosedReasonMember
            ([CustID]
            ,[ClosedReason]
-           ,[LogID])
+           ,[LogDate])
     SELECT [CustID]
            ,[ClosedReason]
-           ,[LogID]
+           ,[LogDate]
 FROM DBEXT.bodb02.dbo.TempClosedReasonMember

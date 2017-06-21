@@ -1,9 +1,9 @@
 
 /*
 	Created: Winnie	
-	Task:  get max logID
+	Task:  get max logDate
 	DB: DBLOG/bodbCustomerLog
 	Date: 20170529
 */ 
 
-SELECT MAX (logid) FROM UserLog_RunSP WITH(NOLOCK)
+SELECT MAX (logdate) FROM UserLog_RunSP WITH(NOLOCK)
