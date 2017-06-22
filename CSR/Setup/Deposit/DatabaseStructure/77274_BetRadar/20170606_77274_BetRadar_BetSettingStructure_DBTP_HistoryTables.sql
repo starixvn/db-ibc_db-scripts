@@ -23,9 +23,9 @@ BEGIN
 	(
 		NAME = Dep_CustBetSetting_table_01,
 		-- Local test
-		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustBetSetting_Member_table_01.NDF'
+		--FILENAME = 'D:\DB234_SQLSERVER2008R2\IBC_DB\bodb_history\Dep_CustBetSetting_table_01.NDF'
 		-- Local dev
-		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\Dep_CustBetSetting_Member_table_01.NDF'
+		--FILENAME = 'E:\IBC_DB\bodb_CustHistory\Dep_CustBetSetting_table_01.NDF'
 		-- Production
 		FILENAME = 'P:\IBC_DB\bodb_CustHistory\Dep_CustBetSetting_table_01.NDF'
 		, SIZE = 32MB , MAXSIZE = UNLIMITED, FILEGROWTH = 32MB

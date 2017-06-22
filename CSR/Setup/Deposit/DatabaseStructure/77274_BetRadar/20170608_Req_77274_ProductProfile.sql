@@ -44,7 +44,7 @@ VALUES
 	
 	-- BetRadar VS
 	--Status
-	,(12,27,4,0,1,1)
+	--,(12,27,4,0,1,1)
 	-- PT
 	,(13,27,1,0,2,1)
 	-- 2: Bet Setting
@@ -77,7 +77,7 @@ VALUES
 	-- Betradar VS
 	-- Virtual Sports
 	-- Status
-	,(12,190,2701,0,0,1)
+	--,(12,190,2701,0,0,1)
 	-- PT	
 	,(13,190,2701,0,0,1)
 	-- Bet Setting
@@ -91,3 +91,4 @@ INSERT INTO [dbo].Dep_ProductStatusProfile (Sporttype,Bettype,bitmapOrder)
 VALUES (180,1201,4) -- Virtual Sports
 		,(190,2701,4) -- Betradar VS
 GO
+

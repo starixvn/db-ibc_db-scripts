@@ -1,0 +1,55 @@
+
+CREATE TABLE CheckSetting_ProductStatusRule (RuleID INT, RuleName VARCHAR(500))
+INSERT INTO CheckSetting_ProductStatusRule (RuleID,RuleName)
+VALUES (1,'Super IsDisabled= 1, Master IsDisabled = 0'),
+(2,'Master IsDisabled= 1, Agent IsDisabled = 0'),
+(3,'Agent IsDisabled= 1, Member IsDisabled = 0'),
+(4,'Super IsHidden= 1, Master IsHidden= 0'),
+(5,'Master IsHidden= 1, Agent IsHidden= 0'),
+(6,'Agent IsHidden= 1, Member IsHidden= 0'),
+(7,'isSync = 0, IsHidden = 0'),
+(8,'IsSync = 0, IsDisabled = 0'),
+(9,'Missing Product Status setting in the table CustProductStatus/Dep_CustProductStatus'),
+(10,'Super IsSync= 0, Master IsSync= 1'),
+(11,'Master IsSync= 0, Agent IsSync= 1'),
+(12,'Agent IsSync= 0, Member IsSync= 1')
+
+
+CREATE TABLE CheckSetting_SportBetTypeReference (ProductID INT, SportType SMALLINT, SportName VARCHAR(500),BetType SMALLINT)
+INSERT INTO CheckSetting_SportBetTypeReference (SportName, SportType,BetType,ProductID)
+VALUES 
+('Muay Thai',44,3,1),
+('Cricket',50,501,1),
+('Cockfighting',206,1003,19),
+('Allbet',211,2401,21),
+('Allbet',211,2402,21),
+('Macau Games',212,4001,22),
+('NG2',213,2501,23),
+('Fishing World',219,1011,24),
+('Macau Games',212,4001,22),
+('Allbet',211,2401,21),
+('Fishing World',219,1011,24),
+('Number Game',161,81,3),
+('Live Casino',162,1101,4),
+('VirtualSports',180,1201,5),
+('Gold Deluxe',255,1700,12),
+('Microgaming Live Casino',203,2001,13),
+('Microgaming RNG Casino',205,2008,17),
+('Keno',202,1,8),
+('Keno',202,3,8),
+('Keno',202,4,8),
+('Keno',202,5,8),
+('Keno',202,8,8),
+('Keno',202,11,8),
+('Keno',202,13,8),
+('Keno',202,14,8),
+('Keno',202,15,8),
+('Keno',202,16,8),
+('ColossusBet',204,18001,15),
+('Horse Racing UK/Irish Tote',151,31,2),
+('Horse Racing SA Tote',151,31,2),
+('Greyhound Aust Tote',152,31,2),
+('Harness Aust Tote',153,31,2),
+('Casino',251,71,6),
+('E-Sports',43,1,1),
+('Metric Gaming - SuperLive',1,801,1)
