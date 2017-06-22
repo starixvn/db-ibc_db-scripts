@@ -38,7 +38,7 @@ INSERT INTO [dbo].[LogAction]
            ,'Enabled/Disabled All day balance transfer'
            ,'Enabled/Disabled All day balance transfer'
            ,NULL
-           ,0
+           ,1
            ,'Enabled/Disabled All day balance transfer')
 GO
 
