@@ -4,6 +4,10 @@
 	Task:  Update ClosedReason new cust
 	DB: DBCUST/CustDB
 	Date: 20170529
+		--ActionID=1149: Admin update closed on NAP-CM
+		--ActionID=1105: Update closed on NAP,ALpha,EXT-NAP
+		--ActionID=918: Account was closed because of failed Security Code over 5 times
+		--ActionID=931: Account was closed because of failed OTP over 5 times
 */ 
 --select max(logdate) from  DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 
@@ -12,11 +16,11 @@
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
-		select custid from Custinfo(nolock) where closed=1 and roleid between 2 and 4
+		select custid from Custinfo(nolock) where closed=1 and roleid between 2 and 4 AND Enabled=1
 
 		CREATE TABLE #tempMember (CustID INT PRIMARY KEY)
 		INSERT INTO #tempMember (CustID)
-		select custid from Custinfo(nolock) where closed=1 and roleid =1
+		select custid from Custinfo(nolock) where closed=1 and roleid =1 AND Enabled=1
 
 		CREATE TABLE #tempNewClosed (CustID INT PRIMARY KEY,ClosedReason TINYINT,Logdate Datetime NULL)
 		INSERT INTO #tempNewClosed (CustID,ClosedReason)

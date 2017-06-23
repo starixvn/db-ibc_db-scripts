@@ -4,6 +4,10 @@
 	Task:  Insert into table temp on db052
 	DB:DB052/bodb02
 	Date: 20170523
+		--ActionID=1149: Admin update closed on NAP-CM
+		--ActionID=1105: Update closed on NAP,ALpha,EXT-NAP
+		--ActionID=918: Account was closed because of failed Security Code over 5 times
+		--ActionID=931: Account was closed because of failed OTP over 5 times
 */ 
 		--select max(logdate) from bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 		DECLARE @maxcustid INT,@maxLogDate DATETIME
@@ -13,10 +17,10 @@
 		TRUNCATE TABLE TempClosedReasonMember
 		
 		INSERT INTO TempClosedReason (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid between 2 and 4
+		select custid,0 from Custinfo(nolock) where closed=1 and roleid between 2 and 4 AND Enabled=1
 
 		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1
+		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1 AND Enabled=1
 
 		-- update logid
 		UPDATE t 
@@ -35,6 +39,7 @@
 			WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 
+	
 		----update ClosedReason
 		
 		UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
