@@ -8,7 +8,7 @@
 --select max(logdate) from  DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 
 		DECLARE  @max_logdate DATETIME
-		SELECT @max_logdate = '2017-06-25'
+		SELECT @max_logdate =xxx
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
@@ -56,13 +56,18 @@
 		SET Logdate= a.Logdate
 		FROM #tempNewClosed t 
 		CROSS APPLY (SELECT MAX(logdate) logdate
-		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
-		) AS a (Logdate)
+					FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931)  
+					) AS a (Logdate)
 
-		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
+		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
+											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
+											WHEN u.ActionID IN(918,931) THEN 3
+											ELSE 0 END								 
 		FROM #tempNewClosed t 
 		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.Logdate=u.logdate AND t.CustID=u.custid		
+		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
 
 		UPDATE c
 		SET c.ClosedReason=ISNULL(t.ClosedReason,0)
@@ -75,13 +80,18 @@
 		SET Logdate= a.Logdate
 		FROM #tempMemberNewClosed t 
 		CROSS APPLY (SELECT MAX(logdate) logdate
-		FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-		WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1115,1142,1149) 
-		) AS a (Logdate)
+					FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+					) AS a (Logdate)
 
-		UPDATE t SET t.ClosedReason= CASE WHEN u.ActionID IN (1115) OR u.TrackingValue like '%Closed="1"%' THEN 1 ELSE 0 END										 
+		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
+											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
+											WHEN u.ActionID IN(918,931) THEN 3
+											ELSE 0 END										 
 		FROM #tempMemberNewClosed t 
 		INNER JOIN DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.Logdate=u.logdate AND t.CustID=u.custid
+		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
 
 		UPDATE c
 		SET c.ClosedReason=ISNULL(t.ClosedReason,0)
