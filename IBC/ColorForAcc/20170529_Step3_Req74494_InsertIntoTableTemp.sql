@@ -4,10 +4,21 @@
 	Task:  Insert into table temp on db052
 	DB:DB052/bodb02
 	Date: 20170523
+	1.ActionID
 		--ActionID=1149: Admin update closed on NAP-CM
 		--ActionID=1105: Update closed on NAP,ALpha,EXT-NAP
 		--ActionID=918: Account was closed because of failed Security Code over 5 times
 		--ActionID=931: Account was closed because of failed OTP over 5 times
+	2.ClosedReason
+	
+    If the field = 1, show purple (RGB(179,162,199)) high lighted username. On mouse over, show tooltip with text text "This account was closed by admin."
+     
+    If the field = 2, show orange (RGB(247,150,70)) high lighted username. On mouse over, show tooltip with text text "This account was closed by upline."
+     
+    If the field = 3, show blue (RGB(134,197,228)) high lighted username. On mouse over, show tooltip with text text "This account was closed by false input of OTP/Security Code."
+     
+    If the field = 0 (Input wrong password, archiving process, etc.), show grey (current color) high lighted username. On mouse over, show tooltip with text text "This account was closed by failed login or account expired."
+
 */ 
 		--select max(logdate) from bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 		DECLARE @maxcustid INT,@maxLogDate DATETIME
