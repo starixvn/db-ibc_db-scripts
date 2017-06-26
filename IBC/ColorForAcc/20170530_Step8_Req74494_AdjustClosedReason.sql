@@ -22,7 +22,7 @@
 --select max(logdate) from  DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 
 		DECLARE  @max_logdate DATETIME
-		SELECT @max_logdate =xxx
+		SELECT @max_logdate ='2017-06-22'
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
@@ -70,7 +70,7 @@
 		SET Logdate= a.Logdate
 		FROM #tempNewClosed t 
 		CROSS APPLY (SELECT MAX(logdate) logdate
-					FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+					FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
 					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931)  
 					) AS a (Logdate)
 
@@ -94,7 +94,7 @@
 		SET Logdate= a.Logdate
 		FROM #tempMemberNewClosed t 
 		CROSS APPLY (SELECT MAX(logdate) logdate
-					FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+					FROM DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
 					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 					) AS a (Logdate)
 

@@ -50,79 +50,68 @@
 			WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 
+
+		-- update closed reason for member
+		DECLARE  @MinCustMem INT = 0, @MaxCustMem INT = 0, @CrrCustMem INT
+		
+		DECLARE @logdateMem DATETIME
+		DECLARE @TrackingValueMem NVARCHAR(MAX), @ActionIDMem INT,@RoleIDMem INT
+
+		SELECT @MinCustMem =  MIN(Custid) FROM TempClosedReasonMember WHERE LogDate is not null
+		SELECT @MaxCustMem =  MAX(Custid) FROM TempClosedReasonMember WHERE LogDate is not null
+
+		WHILE (@MinCustMem <= @MaxCustMem)
+		BEGIN					
 	
-		----update ClosedReason
+			SELECT TOP 1 @logdateMem=logdate,@CrrCustMem=Custid FROM TempClosedReasonMember WHERE CustID>=@MinCustMem AND LogDate is not null
+
+			SELECT @ActionIDMem=u.ActionID,@RoleIDMem=c.roleid,@TrackingValueMem=u.TrackingValue
+			FROM	bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+			INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+			WHERE   u.logdate=@logdateMem AND u.custid=@CrrCustMem
+
+			UPDATE t SET t.ClosedReason= CASE	WHEN @ActionIDMem= 1105 AND  @TrackingValueMem like '%Closed="1"%' AND @RoleIDMem < 5 THEN 1 
+												WHEN @ActionIDMem = 1105 AND @TrackingValueMem like '%Closed="1"%' AND @RoleIDMem >= 5 THEN 2
+												WHEN @ActionIDMem = 1149 AND @TrackingValueMem like '%Closed="1"%' THEN 2
+												WHEN @ActionIDMem IN(918,931) THEN 3
+												ELSE 0 END	
+			FROM TempClosedReasonMember t 
+			WHERE CustID=@CrrCustMem	
+
+			SELECT @MinCustMem=@CrrCustMem+1	
+
+		END
 		
-		UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
-											WHEN u.ActionID IN(918,931) THEN 3
-											ELSE 0 END										 
-		FROM TempClosedReason t 
-		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-
-		UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
-											WHEN u.ActionID IN(918,931) THEN 3
-											ELSE 0 END													 
-		FROM TempClosedReasonMember t 
-		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-
-		/*
-
-		SET @maxLogDate='2017-06-26 03:01:08.947'
-
-		CREATE TABLE #TempClosedReason (CustID INT PRIMARY KEY, ClosedReason TINYINT,LogDate DATETIME NULL)
-		CREATE TABLE #TempClosedReasonMember (CustID INT PRIMARY KEY, ClosedReason TINYINT,LogDate DATETIME NULL)
-
-		INSERT INTO #TempClosedReason (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid between 2 and 4
-
-		INSERT INTO #TempClosedReasonMember (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1
-
-		-- update logid
-		UPDATE t 
-		SET Logdate= a.Logdate
-		FROM #TempClosedReason t 
-			CROSS APPLY (SELECT MAX(logdate) logdate
-			FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-			WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
-			) AS a (Logdate)
 		
-		UPDATE t 
-		SET Logdate= a.Logdate
-		FROM #TempClosedReasonMember t 
-			CROSS APPLY (SELECT MAX(logdate) logdate
-			FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-			WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
-			) AS a (Logdate)
 
-		----update ClosedReason
+		----update ClosedReason for SMA
+		DECLARE  @MinCustSMA INT = 0, @MaxCustSMA INT = 0, @CrrCustSMA INT
 		
-		UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
-											WHEN u.ActionID IN(918,931) THEN 3
-											ELSE 0 END										 
-		FROM #TempClosedReason t 
-		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+		DECLARE @logdateSMA DATETIME
+		DECLARE @TrackingValueSMA NVARCHAR(MAX), @ActionIDSMA INT,@RoleIDSMA INT
 
-		UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
-											WHEN u.ActionID IN(918,931) THEN 3
-											ELSE 0 END													 
-		FROM #TempClosedReasonMember t 
-		INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-		INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+		SELECT @MinCustSMA =  MIN(Custid) FROM TempClosedReason WHERE LogDate is not null
+		SELECT @MaxCustSMA =  MAX(Custid) FROM TempClosedReason WHERE LogDate is not null
 
-		drop table #TempClosedReason
-		drop table #TempClosedReasonMember
-		*/
+		WHILE (@MinCustSMA <= @MaxCustSMA)
+		BEGIN					
+	
+			SELECT TOP 1 @logdateSMA=logdate,@CrrCustSMA=Custid FROM TempClosedReason WHERE CustID>=@MinCustSMA AND LogDate is not null
 
+			SELECT @ActionIDSMA=u.ActionID,@RoleIDSMA=c.roleid,@TrackingValueSMA=u.TrackingValue
+			FROM	bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+			INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+			WHERE   u.logdate=@logdateSMA AND u.custid=@CrrCustSMA
+
+			UPDATE t SET t.ClosedReason= CASE	WHEN @ActionIDSMA= 1105 AND  @TrackingValueSMA like '%Closed="1"%' AND @RoleIDSMA < 5 THEN 1 
+												WHEN @ActionIDSMA = 1105 AND @TrackingValueSMA like '%Closed="1"%' AND @RoleIDSMA >= 5 THEN 2
+												WHEN @ActionIDSMA = 1149 AND @TrackingValueSMA like '%Closed="1"%' THEN 2
+												WHEN @ActionIDSMA IN(918,931) THEN 3
+												ELSE 0 END	
+			FROM TempClosedReason t 
+			WHERE CustID=@CrrCustSMA
+
+			SELECT @MinCustSMA=@CrrCustSMA+1	
+
+		END
 		
