@@ -28,10 +28,10 @@
 		TRUNCATE TABLE TempClosedReasonMember
 		
 		INSERT INTO TempClosedReason (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid between 2 and 4 AND Enabled=1
+		SELECT custid,0 FROM Custinfo(NOLOCK) WHERE closed=1 and roleid between 2 and 4 AND Enabled=1
 
 		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
-		select custid,0 from Custinfo(nolock) where closed=1 and roleid=1 AND Enabled=1
+		SELECT custid,0 FROM Custinfo(NOLOCK) WHERE closed=1 and roleid=1 AND Enabled=1
 
 		-- update logid
 		UPDATE t 
@@ -63,7 +63,7 @@
 			SELECT @CrrDateMem = @MinDateMem+5
 			IF MONTH(@CrrDateMem)<>MONTH(@MinDateMem)
 			BEGIN
-				SELECT @CrrDateMem= DATEADD(month, DATEDIFF(month, 0, @CrrDateMem), 0) 
+				SELECT @CrrDateMem= DATEADD(MONTH, DATEDIFF(MONTH, 0, @CrrDateMem), 0) 
 			END
 
 			DECLARE @strMindate VARCHAR(50),@strcrrDate  VARCHAR(50)
