@@ -55,7 +55,7 @@
 		----update ClosedReason Member
 		DECLARE  @MinDateMem DATETIME = 0, @MaxDateMem DATETIME = 0, @CrrDateMem DATETIME		
 		SELECT @MinDateMem = CONVERT(DATE,MIN(Logdate)) 	FROM TempClosedReasonMember WITH(NOLOCK) 		
-		SELECT @MaxDateMem = CONVERT(DATE,MAX(Logdate)) 	FROM TempClosedReasonMember WITH(NOLOCK) 		
+		SELECT @MaxDateMem = MAX(Logdate) 	FROM TempClosedReasonMember WITH(NOLOCK) 		
 		
 		WHILE (@MinDateMem <= @MaxDateMem)
 		BEGIN		
@@ -80,7 +80,7 @@
 		----update ClosedReason SMA
 		DECLARE  @MinDateSMA DATETIME = 0, @MaxDateSMA DATETIME = 0, @CrrDateSMA DATETIME		
 		SELECT @MinDateSMA =  CONVERT(DATE,MIN(Logdate)) 	FROM TempClosedReason WITH(NOLOCK) 
-		SELECT @MaxDateSMA = CONVERT(DATE,MAX(Logdate)) 	FROM TempClosedReason WITH(NOLOCK) 			
+		SELECT @MaxDateSMA = MAX(Logdate) 	FROM TempClosedReason WITH(NOLOCK) 			
 		WHILE (@MinDateSMA <= @MaxDateSMA)
 		BEGIN		
 			
