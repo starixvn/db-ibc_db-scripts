@@ -119,7 +119,7 @@
 			FROM TempClosedReason t 
 			INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
 			INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-			WHERE  t.logdate >= @MinDateMem AND t.logdate< @CrrDateMem	
+			WHERE  t.logdate >= @MinDateSMA AND t.logdate< @CrrDateSMA	
 
 			SELECT @MinDateSMA=@CrrDateSMA	
 			IF @MinDateSMA=@MaxDateSMA
