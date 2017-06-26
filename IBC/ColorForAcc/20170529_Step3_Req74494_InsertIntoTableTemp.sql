@@ -80,11 +80,11 @@
 		----update ClosedReason SMA
 		DECLARE  @MinDateSMA DATETIME = 0, @MaxDateSMA DATETIME = 0, @CrrDateSMA DATETIME		
 		SELECT @MinDateSMA =  CONVERT(DATE,MIN(Logdate)) 	FROM TempClosedReason WITH(NOLOCK) 
-		SELECT @MaxDateSMA = MAX(Logdate) 	FROM TempClosedReason WITH(NOLOCK) 			
+		SELECT @MaxDateSMA =  MAX(Logdate)	FROM TempClosedReason WITH(NOLOCK) 			
 		WHILE (@MinDateSMA <= @MaxDateSMA)
 		BEGIN		
 			
-			SELECT @CrrDateMem = @MinDateMem+5		
+			SELECT @CrrDateSMA = @MinDateSMA+5		
 		
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
