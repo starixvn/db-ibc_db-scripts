@@ -22,7 +22,7 @@
 */ 
 		--select max(logdate) from bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 		DECLARE @maxcustid INT,@maxLogDate DATETIME
-		SET @maxLogDate='2017-06-26'
+		SET @maxLogDate=xxx
 
 		TRUNCATE TABLE TempClosedReason
 		TRUNCATE TABLE TempClosedReasonMember
