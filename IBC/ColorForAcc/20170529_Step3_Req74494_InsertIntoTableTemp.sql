@@ -98,10 +98,19 @@
 		BEGIN		
 			
 			SELECT @CrrDateSMA = @MinDateSMA+5		
-			IF MONTH(@CrrDateMem)<>MONTH(@MinDateMem)
+			IF MONTH(@CrrDateSMA)<>MONTH(@MinDateSMA)
 			BEGIN
-				SELECT @CrrDateMem= DATEADD(month, DATEDIFF(month, 0, @CrrDateMem), 0) 
+				SELECT @CrrDateSMA= DATEADD(month, DATEDIFF(month, 0, @CrrDateSMA), 0) 
 			END
+			DECLARE @strMindateSMA VARCHAR(50),@strcrrDateSMA  VARCHAR(50)
+			SELECT @strMindateSMA= CAST(@MinDateSMA AS VARCHAR(50))
+			SELECT @strcrrDateSMA= CAST(@CrrDateSMA AS VARCHAR(50))		
+			
+			RAISERROR ('@MinDateSMA', 0, 1) WITH NOWAIT
+			RAISERROR (@strMindateSMA, 0, 1) WITH NOWAIT
+			RAISERROR ('@CrrDateSMA', 0, 1) WITH NOWAIT
+			RAISERROR (@strcrrDateSMA, 0, 1) WITH NOWAIT
+		
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
 												WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
