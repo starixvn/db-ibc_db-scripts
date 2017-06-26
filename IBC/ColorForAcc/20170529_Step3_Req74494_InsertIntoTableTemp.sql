@@ -61,6 +61,19 @@
 		BEGIN		
 			
 			SELECT @CrrDateMem = @MinDateMem+5
+			IF MONTH(@CrrDateMem)<>MONTH(@MinDateMem)
+			BEGIN
+				SELECT @CrrDateMem= DATEADD(month, DATEDIFF(month, 0, @CrrDateMem), 0) 
+			END
+
+			DECLARE @strMindate VARCHAR(50),@strcrrDate  VARCHAR(50)
+			SELECT @strMindate= CAST(@MinDateMem AS VARCHAR(50))
+			SELECT @strcrrDate= CAST(@CrrDateMem AS VARCHAR(50))		
+			
+			RAISERROR ('@MinDateMem', 0, 1) WITH NOWAIT
+			RAISERROR (@strMindate, 0, 1) WITH NOWAIT
+			RAISERROR ('@CrrDateMem', 0, 1) WITH NOWAIT
+			RAISERROR (@strcrrDate, 0, 1) WITH NOWAIT
 		
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
@@ -70,7 +83,7 @@
 			FROM TempClosedReasonMember t 
 			INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
 			INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-			WHERE  t.logdate BETWEEN @MinDateMem AND @CrrDateMem	
+			WHERE  t.logdate >= @MinDateMem AND t.logdate< @CrrDateMem	
 
 			SELECT @MinDateMem=@CrrDateMem
 			IF @MinDateMem=@MaxDateMem
@@ -85,7 +98,10 @@
 		BEGIN		
 			
 			SELECT @CrrDateSMA = @MinDateSMA+5		
-		
+			IF MONTH(@CrrDateMem)<>MONTH(@MinDateMem)
+			BEGIN
+				SELECT @CrrDateMem= DATEADD(month, DATEDIFF(month, 0, @CrrDateMem), 0) 
+			END
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
 												WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
@@ -94,7 +110,7 @@
 			FROM TempClosedReason t 
 			INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
 			INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-			WHERE  t.logdate BETWEEN @MinDateSMA AND @CrrDateSMA	
+			WHERE  t.logdate >= @MinDateMem AND t.logdate< @CrrDateMem	
 
 			SELECT @MinDateSMA=@CrrDateSMA	
 			IF @MinDateSMA=@MaxDateSMA
