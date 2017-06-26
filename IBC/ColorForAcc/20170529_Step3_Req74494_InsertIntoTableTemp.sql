@@ -22,7 +22,7 @@
 */ 
 		--select max(logdate) from bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 		DECLARE @maxcustid INT,@maxLogDate DATETIME
-		SET @maxLogDate=xxx
+		SET @maxLogDate='2017-06-26'
 
 		TRUNCATE TABLE TempClosedReason
 		TRUNCATE TABLE TempClosedReasonMember
@@ -54,11 +54,13 @@
 	
 		----update ClosedReason Member
 		DECLARE  @MinDateMem DATETIME = 0, @MaxDateMem DATETIME = 0, @CrrDateMem DATETIME		
+		SELECT @MinDateMem = CONVERT(DATE,MIN(Logdate)) 	FROM TempClosedReasonMember WITH(NOLOCK) 		
+		SELECT @MaxDateMem = CONVERT(DATE,MAX(Logdate)) 	FROM TempClosedReasonMember WITH(NOLOCK) 		
 		
 		WHILE (@MinDateMem <= @MaxDateMem)
 		BEGIN		
 			
-			SELECT TOP 5 @CrrDateMem = Logdate 	FROM TempClosedReasonMember WITH(NOLOCK) WHERE Logdate>=@MinDateMem
+			SELECT @CrrDateMem = @MinDateMem+5
 		
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
@@ -77,11 +79,12 @@
 
 		----update ClosedReason SMA
 		DECLARE  @MinDateSMA DATETIME = 0, @MaxDateSMA DATETIME = 0, @CrrDateSMA DATETIME		
-		
+		SELECT @MinDateSMA =  CONVERT(DATE,MIN(Logdate)) 	FROM TempClosedReason WITH(NOLOCK) 
+		SELECT @MaxDateSMA = CONVERT(DATE,MAX(Logdate)) 	FROM TempClosedReason WITH(NOLOCK) 			
 		WHILE (@MinDateSMA <= @MaxDateSMA)
 		BEGIN		
 			
-			SELECT TOP 5 @CrrDateSMA = Logdate 	FROM TempClosedReason WITH(NOLOCK) WHERE Logdate>=@MinDateSMA
+			SELECT @CrrDateMem = @MinDateMem+5		
 		
 			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
 												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
