@@ -97,6 +97,6 @@
 			WHERE  t.logdate BETWEEN @MinDateSMA AND @CrrDateSMA	
 
 			SELECT @MinDateSMA=@CrrDateSMA	
-			IF @MinDateMem=@MaxDateMem
-				SET @MinDateMem=@MaxDateMem+1
+			IF @MinDateSMA=@MaxDateSMA
+				SET @MinDateSMA=@MaxDateSMA+1
 		END
