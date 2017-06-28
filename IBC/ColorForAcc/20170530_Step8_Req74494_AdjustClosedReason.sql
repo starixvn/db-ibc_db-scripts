@@ -76,7 +76,7 @@
 
 		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
 											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
+											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 1
 											WHEN u.ActionID IN(918,931) THEN 3
 											ELSE 0 END								 
 		FROM #tempNewClosed t 
@@ -100,7 +100,7 @@
 
 		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
 											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
-											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
+											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 1
 											WHEN u.ActionID IN(918,931) THEN 3
 											ELSE 0 END										 
 		FROM #tempMemberNewClosed t 
