@@ -22,7 +22,7 @@
 */ 
 		--select max(logdate) from bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 		DECLARE @maxcustid INT,@maxLogDate DATETIME
-		SET @maxLogDate='2017-06-26'
+		SET @maxLogDate=xxx
 
 		TRUNCATE TABLE TempClosedReason
 		TRUNCATE TABLE TempClosedReasonMember
@@ -75,8 +75,8 @@
 			RAISERROR ('@CrrDateMem', 0, 1) WITH NOWAIT
 			RAISERROR (@strcrrDate, 0, 1) WITH NOWAIT
 		
-			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
+												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
 												WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
 												WHEN u.ActionID IN(918,931) THEN 3
 												ELSE 0 END										 
@@ -111,8 +111,8 @@
 			RAISERROR ('@CrrDateSMA', 0, 1) WITH NOWAIT
 			RAISERROR (@strcrrDateSMA, 0, 1) WITH NOWAIT
 		
-			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+			UPDATE t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
+												WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
 												WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
 												WHEN u.ActionID IN(918,931) THEN 3
 												ELSE 0 END													 

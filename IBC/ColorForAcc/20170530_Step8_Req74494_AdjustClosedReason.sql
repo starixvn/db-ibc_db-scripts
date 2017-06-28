@@ -22,7 +22,7 @@
 --select max(logdate) from  DBLOG.bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)
 
 		DECLARE  @max_logdate DATETIME
-		SELECT @max_logdate ='2017-06-22'
+		SELECT @max_logdate =xxx
 
 		CREATE TABLE #temp (CustID INT PRIMARY KEY)
 		INSERT INTO #temp (CustID)
@@ -74,8 +74,8 @@
 					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931)  
 					) AS a (Logdate)
 
-		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
+											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
 											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
 											WHEN u.ActionID IN(918,931) THEN 3
 											ELSE 0 END								 
@@ -98,8 +98,8 @@
 					WHERE logdate>@max_logdate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 					) AS a (Logdate)
 
-		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 1 
-											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 2
+		UPDATE  t SET t.ClosedReason= CASE	WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid >= 5 THEN 1 
+											WHEN u.ActionID = 1105 AND u.TrackingValue like '%Closed="1"%' AND c.roleid < 5 THEN 2
 											WHEN u.ActionID = 1149 AND u.TrackingValue like '%Closed="1"%' THEN 2
 											WHEN u.ActionID IN(918,931) THEN 3
 											ELSE 0 END										 
