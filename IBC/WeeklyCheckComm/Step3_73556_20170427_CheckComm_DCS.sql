@@ -30,15 +30,9 @@ BEGIN
 	WHERE isfinished = 0
 	
 	IF @@ROWCOUNT = 0 BREAK	
-		
-	EXEC DBA_CheckComm_Credit @srecommend=@srecommend,@SportType=0,@RuleID=0
-	
-	EXEC DBA_CheckComm_DCS @srecommend=@srecommend,@SportType=0,@RuleID=0
-	
-	EXEC DBA_CheckComm3rd_Credit @srecommend=@srecommend,@SportType=0,@RuleID=0
-	
-	EXEC DBA_CheckCommGame_Credit @srecommend=@srecommend,@SportType=0,@RuleID=0
-	
+
+	EXEC DBA_CheckComm_DCS @srecommend=@srecommend,@SportType=0,@RuleID=0	
+
 END
 
 DROP TABLE #supers
