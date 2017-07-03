@@ -151,10 +151,18 @@ CREATE TABLE [dbo].[Dep_ProductBetSetting](
 ) ON [Dep_ProductBetSetting_table]
 
 GO
-
 ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_Minbet]  DEFAULT ((0)) FOR [MinBet]
 GO
-
+ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_MaxBet]  DEFAULT ((0)) FOR [MaxBet]
+GO
+ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_MaxPerMatch]  DEFAULT ((0)) FOR [MaxPerMatch]
+GO
+ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_DefaultMinBet]  DEFAULT ((0)) FOR [DefaultMinBet]
+GO
+ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_DefaultMaxBet]  DEFAULT ((0)) FOR [DefaultMaxBet]
+GO
+ALTER TABLE [dbo].[Dep_ProductBetSetting] ADD  CONSTRAINT [DF_Dep_ProductBetSetting_DefaultMaxPerMatch]  DEFAULT ((0)) FOR [DefaultMaxPerMatch]
+GO
 
 
 
