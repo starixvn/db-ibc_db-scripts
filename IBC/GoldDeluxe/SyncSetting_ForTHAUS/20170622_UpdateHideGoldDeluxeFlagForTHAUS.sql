@@ -58,7 +58,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend			
-			,@target = 'DBCUST'
+			,@target = 'REPLICATED'
 	
 	waitfor delay '00:00:0.280'
 END			
@@ -96,7 +96,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 
 	EXEC dbo.[Acc_ExecRep_Cust_09] @srecommend = @srecommend			
-			,@target = 'REPLICATED'
+			,@target = 'DBCUST'
 	
 	waitfor delay '00:00:0.280'
 END			

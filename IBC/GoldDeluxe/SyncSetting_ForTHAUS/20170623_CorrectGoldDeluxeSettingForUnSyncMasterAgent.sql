@@ -102,12 +102,8 @@ BEGIN
 	
 	--correct winlimit un-sync masters
 	UPDATE mcw
-	SET mcw.MaxWinlimit = CASE WHEN scw.MaxWinlimit > 0 AND ( mcw.MaxWinlimit = 0 OR mcw.MaxWinlimit > scw.MaxWinlimit) 
-								THEN scw.MaxWinlimit
-								ELSE mcw.MaxWinlimit END,
-		mcw.IsAutoReset = CASE WHEN scw.IsAutoReset = 0 AND mcw.IsAutoReset =1	
-								THEN scw.IsAutoReset
-								ELSE mcw.IsAutoReset END								
+	SET mcw.MaxWinlimit = scw.MaxWinlimit,
+		mcw.IsAutoReset = scw.IsAutoReset								
 	FROM CustInfo ci WITH(NOLOCK)
 		INNER JOIN CustWinlimit mcw WITH(UPDLOCK,ROWLOCK) ON ci.custid = mcw.custid
 		INNER JOIN CustWinlimit scw WITH(NOLOCK) ON scw.custid = @CustID
@@ -120,18 +116,14 @@ BEGIN
 		AND mcw.bettype = 1701
 		AND 
 		(
-			(scw.MaxWinlimit > 0 AND ( mcw.MaxWinlimit = 0 OR mcw.MaxWinlimit > scw.MaxWinlimit))
-			OR (scw.IsAutoReset = 0 AND mcw.IsAutoReset =1)
+			scw.MaxWinlimit <> mcw.MaxWinlimit
+			OR scw.IsAutoReset <> mcw.IsAutoReset
 		)
 			
 	--Correct winlimit un-sync agents
 	UPDATE acw
-	SET acw.MaxWinlimit = CASE WHEN mcw.MaxWinlimit > 0 AND ( acw.MaxWinlimit = 0 OR acw.MaxWinlimit > mcw.MaxWinlimit) 
-								THEN mcw.MaxWinlimit
-								ELSE acw.MaxWinlimit END,
-		acw.IsAutoReset = CASE WHEN mcw.IsAutoReset = 0 AND acw.IsAutoReset =1	
-								THEN mcw.IsAutoReset
-								ELSE acw.IsAutoReset END								
+	SET acw.MaxWinlimit = mcw.MaxWinlimit,
+		acw.IsAutoReset = mcw.IsAutoReset								
 	FROM CustInfo ci WITH(NOLOCK)
 		INNER JOIN CustWinlimit acw WITH(UPDLOCK,ROWLOCK) ON ci.custid = acw.custid
 		INNER JOIN CustWinlimit mcw WITH(NOLOCK) ON mcw.custid = ci.mrecommend
@@ -144,18 +136,14 @@ BEGIN
 		AND acw.bettype = 1701
 		AND 
 		(
-			(mcw.MaxWinlimit > 0 AND ( acw.MaxWinlimit = 0 OR acw.MaxWinlimit > mcw.MaxWinlimit))
-			OR (mcw.IsAutoReset = 0 AND acw.IsAutoReset =1)
+			mcw.MaxWinlimit <> acw.MaxWinlimit 
+			OR mcw.IsAutoReset <> acw.IsAutoReset
 		)
 	
 	--Correct winlimit un-sync members
 	UPDATE cw
-	SET cw.MaxWinlimit = CASE WHEN acw.MaxWinlimit > 0 AND ( cw.MaxWinlimit = 0 OR cw.MaxWinlimit > acw.MaxWinlimit) 
-								THEN acw.MaxWinlimit
-								ELSE cw.MaxWinlimit END,
-		cw.IsAutoReset = CASE WHEN acw.IsAutoReset = 0 AND cw.IsAutoReset =1	
-								THEN acw.IsAutoReset
-								ELSE cw.IsAutoReset END								
+	SET cw.MaxWinlimit = acw.MaxWinlimit,
+		cw.IsAutoReset = acw.IsAutoReset							
 	FROM CustInfo ci WITH(NOLOCK)
 		INNER JOIN CustWinlimit cw WITH(UPDLOCK,ROWLOCK) ON ci.custid = cw.custid
 		INNER JOIN CustWinlimit acw WITH(NOLOCK) ON acw.custid = ci.recommend
@@ -168,8 +156,8 @@ BEGIN
 		AND cw.bettype = 1701
 		AND 
 		(
-			(acw.MaxWinlimit > 0 AND ( cw.MaxWinlimit = 0 OR cw.MaxWinlimit > acw.MaxWinlimit))
-			OR (acw.IsAutoReset = 0 AND cw.IsAutoReset =1)
+			acw.MaxWinlimit <> cw.MaxWinlimit 
+			OR acw.IsAutoReset <> cw.IsAutoReset
 		)
 	
 	--correct stake level for un-sync masters
