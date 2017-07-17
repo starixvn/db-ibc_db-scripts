@@ -14,7 +14,7 @@ FROM custAccount ca with (Nolock)
 WHERE groupID = 515 AND roleid = 4
 
 SELECT DISTINCT s.custid, 0 AS IsFinished
-INTO ##UnSyncSuper
+INTO #UnSyncSuper
 FROM custInfo ci WITH (NOLOCK) 
 	INNER JOIN #super s ON ci.srecommend = s.custid
 WHERE ci.HideGoldDeluxe = 1
@@ -24,7 +24,7 @@ DECLARE	@CustID INT,
 	
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP (1) ##UnSyncSuper
+	UPDATE TOP (1) #UnSyncSuper
 	SET isfinished = 1
 		,@CustID = custid			
 	WHERE isfinished = 0
@@ -71,6 +71,7 @@ BEGIN
 			@Sporttype			= 255,
 			@Bettype			= 1701
 	
+	WAITFOR DELAY '00:00:0.280'
 END
 GO
 
