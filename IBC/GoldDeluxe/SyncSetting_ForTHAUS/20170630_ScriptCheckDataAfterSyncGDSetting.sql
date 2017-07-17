@@ -66,8 +66,8 @@
 			)
 	
 	--check comm setting
-	SELECT top 100 ci.srecommend,ci.username,ci.roleid,scs.sdicousnt as s4,mcs.adiscount as m3, acs.discount as a2
-		, cs.sdicousnt as s1, cs.adiscount as m1, cs.discount as a1
+	SELECT top 100 ci.srecommend,ci.username,ci.roleid,scs.sdiscount as s4,mcs.adiscount as m3, acs.discount as a2
+		, cs.sdiscount as s1, cs.adiscount as m1, cs.discount as a1
 	FROM CustInfo ci WITH(NOLOCK)
 		INNER JOIN CustSettingGame cs WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN CustSettingGame scs WITH(NOLOCK) ON scs.custid = ci.srecommend
@@ -86,11 +86,11 @@
 		AND cs.sporttype= 255
 		AND cs.bettype = 1701
 		AND (
-				scs.sdicousnt <> cs.sdicousnt
+				scs.sdiscount <> cs.sdiscount
 			OR mcs.adiscount <> cs.adiscount
 			OR acs.discount <> cs.discount
 			OR cs.discount > cs.adiscount
-			OR cs.adiscount > cs.sdicousnt
+			OR cs.adiscount > cs.sdiscount
 			)
 	
 	--Check win limit setting for un-sync masters
