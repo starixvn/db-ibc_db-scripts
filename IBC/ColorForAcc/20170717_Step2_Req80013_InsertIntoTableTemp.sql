@@ -17,10 +17,8 @@
 
 		CREATE TABLE #tempUser (UserID INT PRIMARY KEY)
 
-		INSERT INTO #tempUser
-					(UserID)
-		SELECT 
-					u.userid  
+		INSERT INTO #tempUser(UserID)
+		SELECT u.userid  
 		FROM bodb_EAS.dbo.eaUserInfo u WITH (NOLOCK)
 				INNER JOIN bodb_EAS.dbo.eaGroup g WITH (NOLOCK) ON g.GroupID=u.GroupID
 		WHERE g.GroupName NOT IN ('IT','Finance','ACCUUS','Test Group')
@@ -28,27 +26,25 @@
 		TRUNCATE TABLE TempClosedReason
 		TRUNCATE TABLE TempClosedReasonMember
 		
-		INSERT INTO TempClosedReason 
-					(CustID,ClosedReason)
-		SELECT 
-					custid,0 
+		INSERT INTO TempClosedReason (CustID,ClosedReason)
+		SELECT custid,0 
 		FROM Custinfo(NOLOCK)
-		WHERE closed=1 AND roleid BETWEEN 2 AND 4 AND Enabled=1
+		WHERE closed=1 
+			AND roleid BETWEEN 2 AND 4 AND Enabled=1
 
-		INSERT INTO TempClosedReasonMember 
-					(CustID,ClosedReason)
-		SELECT		
-					custid,0 
+		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
+		SELECT	custid,0 
 		FROM Custinfo(NOLOCK) 
-		WHERE closed=1 AND roleid=1 AND Enabled=1
+		WHERE closed=1 
+			AND roleid=1 AND Enabled=1
 
 		-- update logid
 		UPDATE t 
 		SET Logdate= a.Logdate
 		FROM TempClosedReason t 
 			CROSS APPLY (SELECT MAX(logdate) logdate
-			FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-			WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+				FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+				WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 		
 
@@ -56,8 +52,8 @@
 		SET Logdate= a.Logdate
 		FROM TempClosedReasonMember t 
 			CROSS APPLY (SELECT MAX(logdate) logdate
-			FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-			WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+				FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+				WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 
 	
@@ -91,11 +87,12 @@
 			FROM TempClosedReasonMember t 
 					INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
 					INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-			WHERE  t.logdate >= @MinDateMem AND t.logdate< @CrrDateMem	
-											AND u.ActionID=1105 
-											AND  u.TrackingValue like '%Closed="1"%' 
-											AND c.roleid >= 5 
-											AND u.userid IN (SELECT userid FROM #tempUser)
+			WHERE  t.logdate >= @MinDateMem 
+				AND t.logdate< @CrrDateMem	
+				AND u.ActionID=1105 
+				AND  u.TrackingValue like '%Closed="1"%' 
+				AND c.roleid >= 5 
+				AND u.userid IN (SELECT userid FROM #tempUser)
 
 			SELECT @MinDateMem=@CrrDateMem
 			IF @MinDateMem=@MaxDateMem
@@ -132,11 +129,12 @@
 			FROM TempClosedReason t 
 					INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
 					INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
-			WHERE .logdate >= @MinDateSMA	AND t.logdate< @CrrDateSMA	
-											AND u.ActionID=1105 
-											AND  u.TrackingValue like '%Closed="1"%' 
-											AND c.roleid >= 5 
-											AND u.userid IN (SELECT userid FROM #tempUser)
+			WHERE t.logdate >= @MinDateSMA	
+				AND t.logdate< @CrrDateSMA	
+				AND u.ActionID=1105 
+				AND  u.TrackingValue like '%Closed="1"%' 
+				AND c.roleid >= 5 
+				AND u.userid IN (SELECT userid FROM #tempUser)
 
 			SELECT @MinDateSMA=@CrrDateSMA	
 			IF @MinDateSMA=@MaxDateSMA
