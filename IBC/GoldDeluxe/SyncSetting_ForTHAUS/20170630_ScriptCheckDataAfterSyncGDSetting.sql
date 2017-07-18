@@ -169,6 +169,7 @@
 		AND ci.roleid = 2
 		AND ci.HideGoldDeluxe = 1
 		AND mcs.GameTypeID IN (1701,1702)
+		AND mcs.StakeLevelList <> acs.StakeLevelList
 	
 	--check stake level for un-sync members
 	SELECT CustID,GameTypeID,
@@ -179,7 +180,8 @@
 					INNER JOIN dbo.StakeLevel SL WITH(NOLOCK) ON cd.val = sl.StakeLevelID
 				 WHERE MinStake <> 0 AND MaxStake <> 0
 				ORDER BY minstake , maxstake							
-	)LowestStakeLevel
+	)LowestStakeLevel,
+	StakeLevelList
 	INTO #CustGameType_agent 
 	FROM CustGameType acs WITH(NOLOCK) 		
 	WHERE acs.custid IN (SELECT DISTINCT ci.recommend 
@@ -190,7 +192,8 @@
 						)		
 		AND acs.GameTypeID IN (1701,1702)
 	
-	SELECT TOP 100 ci.srecommend, ci.username, ci.roleid, cs.*,acs.StakeLevelList as StakeLevelList_agent
+	SELECT TOP 100 ci.srecommend, ci.username, ci.roleid, cs.*,
+		acs.LowestStakeLevel as LowestStakeLevel_agent, acs.stakeLevelList as StakeLevelList_Agent
 	FROM CustInfo ci WITH(NOLOCK)
 		INNER JOIN CustGameType cs WITH(NOLOCK) ON ci.custid = cs.custid
 		INNER JOIN #CustGameType_agent acs ON acs.custid = ci.recommend
@@ -199,5 +202,6 @@
 		AND ci.roleid = 1
 		AND ci.HideGoldDeluxe = 1
 		AND cs.GameTypeID IN (1701,1702)	
+		AND cs.StakeLevelList <> acs.LowestStakeLevel
 	
 	DROP TABLE #CustGameType_agent
