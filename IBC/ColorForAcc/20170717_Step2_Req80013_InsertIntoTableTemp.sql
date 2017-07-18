@@ -27,16 +27,16 @@
 		TRUNCATE TABLE TempClosedReasonMember
 		
 		INSERT INTO TempClosedReason (CustID,ClosedReason)
-		SELECT custid,0 
-		FROM Custinfo(NOLOCK)
-		WHERE closed=1 
-			AND roleid BETWEEN 2 AND 4 AND Enabled=1
+		SELECT c.custid,0 
+		FROM Custinfo c WITH(NOLOCK)
+			INNER JOIN CustLoginInfo  cl WITH(NOLOCK) ON c.custid=cl.CustID
+		WHERE closed=1 	AND roleid BETWEEN 2 AND 4 AND Enabled=1 AND cl.ClosedReason=1
 
 		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
-		SELECT	custid,0 
-		FROM Custinfo(NOLOCK) 
-		WHERE closed=1 
-			AND roleid=1 AND Enabled=1
+		SELECT	c.custid,0 
+		FROM Custinfo c WITH(NOLOCK) 
+			INNER JOIN CustLoginInfo_Member  cl WITH(NOLOCK) ON c.custid=cl.CustID
+		WHERE closed=1 AND roleid=1 AND Enabled=1 AND cl.ClosedReason=1
 
 		-- update logid
 		UPDATE t 
