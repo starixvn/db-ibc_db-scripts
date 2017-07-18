@@ -165,6 +165,10 @@
 		
 	SELECT DISTINCT custid as CustPTList
 	FROM #BreakRulePT
+	
+	SELECT DISTINCT custid 
+	INTO #PTListCust
+	FROM #BreakRulePT
 GO	
 --END checking PT
 
@@ -337,7 +341,7 @@ GO
 
 	WHILE (1 = 1)
 	BEGIN
-		UPDATE TOP (1) #BreakRulePT
+		UPDATE TOP (1) #PTCustList
 		SET isfinished = 1
 			,@CustID = custid			
 		WHERE isfinished = 0

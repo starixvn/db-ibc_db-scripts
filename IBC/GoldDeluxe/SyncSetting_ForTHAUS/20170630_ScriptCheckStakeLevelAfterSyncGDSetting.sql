@@ -85,6 +85,10 @@
 		
 	SELECT DISTINCT custid as CustStakeLevelList
 	FROM #DiffStakeLevel
+	
+	SELECT DISTINCT custid 
+	INTO #StakeLevelCustList
+	FROM #DiffStakeLevel
 GO	
 --END checking StakeLevel
 ----------------------------------------------------------------------------
@@ -171,7 +175,7 @@ GO
 
 	WHILE (1 = 1)
 	BEGIN
-		UPDATE TOP (1) #DiffStakeLevel
+		UPDATE TOP (1) #StakeLevelCustList
 		SET isfinished = 1
 			,@CustID = custid			
 		WHERE isfinished = 0
