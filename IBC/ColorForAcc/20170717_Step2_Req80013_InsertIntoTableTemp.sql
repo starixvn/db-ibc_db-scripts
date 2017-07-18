@@ -44,7 +44,7 @@
 		FROM TempClosedReason t 
 			CROSS APPLY (	SELECT MAX(logdate) logdate
 							FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-							WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+							WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149) 
 			) AS a (Logdate)
 		
 
@@ -53,7 +53,7 @@
 		FROM TempClosedReasonMember t 
 			CROSS APPLY (	SELECT MAX(logdate) logdate
 							FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-							WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+							WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149) 
 			) AS a (Logdate)
 
 	
