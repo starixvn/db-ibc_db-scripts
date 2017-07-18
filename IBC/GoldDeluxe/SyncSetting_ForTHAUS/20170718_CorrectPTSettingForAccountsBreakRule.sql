@@ -167,7 +167,7 @@
 	FROM #BreakRulePT
 	
 	SELECT DISTINCT custid, 0 as isFinished 
-	INTO #PTListCust
+	INTO #PTCustList
 	FROM #BreakRulePT
 GO	
 --END checking PT
