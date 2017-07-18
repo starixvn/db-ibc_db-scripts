@@ -29,13 +29,13 @@
 		INSERT INTO TempClosedReason (CustID,ClosedReason)
 		SELECT c.custid,1
 		FROM Custinfo c WITH(NOLOCK)
-			INNER JOIN CustLoginInfo  cl WITH(NOLOCK) ON c.custid=cl.CustID
+			INNER JOIN DBCUST.CUSTDB.dbo.CustLoginInfo  cl WITH(NOLOCK) ON c.custid=cl.CustID
 		WHERE closed=1 	AND roleid BETWEEN 2 AND 4 AND Enabled=1 AND cl.ClosedReason=1
 
 		INSERT INTO TempClosedReasonMember (CustID,ClosedReason)
 		SELECT	c.custid,1
 		FROM Custinfo c WITH(NOLOCK) 
-			INNER JOIN CustLoginInfo_Member  cl WITH(NOLOCK) ON c.custid=cl.CustID
+			INNER JOIN DBCUST.CUSTDB.dbo.CustLoginInfo_Member  cl WITH(NOLOCK) ON c.custid=cl.CustID
 		WHERE closed=1 AND roleid=1 AND Enabled=1 AND cl.ClosedReason=1
 
 		-- update logid
