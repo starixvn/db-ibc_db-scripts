@@ -86,7 +86,7 @@
 	SELECT DISTINCT custid as CustStakeLevelList
 	FROM #DiffStakeLevel
 	
-	SELECT DISTINCT custid 
+	SELECT DISTINCT custid,0 as isFinished 
 	INTO #StakeLevelCustList
 	FROM #DiffStakeLevel
 GO	

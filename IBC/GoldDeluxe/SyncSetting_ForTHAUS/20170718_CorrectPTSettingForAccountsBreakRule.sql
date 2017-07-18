@@ -166,7 +166,7 @@
 	SELECT DISTINCT custid as CustPTList
 	FROM #BreakRulePT
 	
-	SELECT DISTINCT custid 
+	SELECT DISTINCT custid, 0 as isFinished 
 	INTO #PTListCust
 	FROM #BreakRulePT
 GO	
