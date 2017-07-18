@@ -4,6 +4,7 @@
 	Task:   Alpha - Enable New Cash Balance for the rest lines of Thai currency RedmineID:#80093
 	DB: DBCUST/CUSTDB
 	Date: 20170718
+	198 rows will be affected
 */ 
 
 
