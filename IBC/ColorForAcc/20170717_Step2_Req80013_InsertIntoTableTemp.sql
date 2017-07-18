@@ -12,8 +12,8 @@
 
 */ 
 		
-		DECLARE @maxcustid INT,@maxLogDate DATETIME
-		SET @maxLogDate='2017-06-05' --@aDaniel: This maxlogDate is fixed.Don't change.
+		DECLARE @maxcustid INT,	@maxLogDate DATETIME
+		SET @maxLogDate	='2017-06-05' --@aDaniel: This maxlogDate is fixed.Don't change.
 
 		CREATE TABLE #tempUser (UserID INT PRIMARY KEY)
 
@@ -42,18 +42,18 @@
 		UPDATE t 
 		SET Logdate= a.Logdate
 		FROM TempClosedReason t 
-			CROSS APPLY (SELECT MAX(logdate) logdate
-				FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-				WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+			CROSS APPLY (	SELECT MAX(logdate) logdate
+							FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+							WHERE logdate<=@maxLogDate AND  u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 		
 
 		UPDATE t 
 		SET Logdate= a.Logdate
 		FROM TempClosedReasonMember t 
-			CROSS APPLY (SELECT MAX(logdate) logdate
-				FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
-				WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
+			CROSS APPLY (	SELECT MAX(logdate) logdate
+							FROM bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK) 
+							WHERE logdate<=@maxLogDate AND u.CustID=t.CustID AND u.ActionID IN (1105,1149,918,931) 
 			) AS a (Logdate)
 
 	
@@ -85,8 +85,8 @@
 		
 			UPDATE t SET t.ClosedReason= 2									 
 			FROM TempClosedReasonMember t 
-					INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-					INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+				INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
+				INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
 			WHERE  t.logdate >= @MinDateMem 
 				AND t.logdate< @CrrDateMem	
 				AND u.ActionID=1105 
@@ -127,8 +127,8 @@
 
 			UPDATE t SET t.ClosedReason= 2									 
 			FROM TempClosedReason t 
-					INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
-					INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
+				INNER JOIN bodb_CustomerLog.dbo.[UserLog_RunSP] u WITH(NOLOCK)  ON t.LogDate=u.LogDate AND t.CustID=u.custid
+				INNER JOIN Customer c WITH(NOLOCK) ON u.userid=c.custid
 			WHERE t.logdate >= @MinDateSMA	
 				AND t.logdate< @CrrDateSMA	
 				AND u.ActionID=1105 
