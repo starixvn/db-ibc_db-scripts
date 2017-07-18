@@ -13,7 +13,7 @@
 */ 
 		
 		DECLARE @maxcustid INT,	@maxLogDate DATETIME
-		SET @maxLogDate	='2017-06-05' --@aDaniel: This maxlogDate is fixed.Don't change.
+		SET @maxLogDate	=xxx -- SELECT MAX (logdate) FROM UserLog_RunSP WITH(NOLOCK)
 
 		CREATE TABLE #tempUser (UserID INT PRIMARY KEY)
 
