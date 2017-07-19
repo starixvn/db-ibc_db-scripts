@@ -2,7 +2,7 @@
 /*
 	Created: Winnie	
 	Task:  Update ClosedReason on CustLoginInfo
-	DB: DBCUST/CustDB, DB06/bodb02
+	DB: DBCUST/CustDB
 	Date: 20170719
 */ 
 
