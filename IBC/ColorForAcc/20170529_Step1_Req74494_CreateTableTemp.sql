@@ -2,8 +2,8 @@
 /*
 	Created: Winnie	
 	Task:  create 2 tables temp
-	DB: DB06/bodb02 AND DBCUST/CUSTDB AND DB052/bodb02
-	Date: 20170529
+	DB: DBCUST/CUSTDB AND DB052/bodb02
+	Date: 20170719
 */ 
 
 CREATE TABLE [dbo].[TempClosedReason](
