@@ -10,7 +10,7 @@
 
 UPDATE cs
 SET cs.IsAllDayBalTransfer=1
-FROM CustSuper cs WITH(NOLOCK) 
+FROM CustSuper cs WITH (ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo c WITH(NOLOCK) ON cs.custid=c.custid
 	INNER JOIN exchange e WITH(NOLOCK) ON c.currency=e.exchangeid
 WHERE e.currency='THB'  AND IsAllDayBalTransfer IS NULL
