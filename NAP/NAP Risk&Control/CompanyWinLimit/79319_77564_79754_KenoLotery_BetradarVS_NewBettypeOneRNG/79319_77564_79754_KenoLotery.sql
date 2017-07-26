@@ -70,9 +70,9 @@ WHERE e.currency NOT IN('H', 'C')
 		 OR (S.isLicensee = 0 AND E.exchangeid IN (2,35,3,64,40,17,16,6,5,67,13,43,47,33,34,15,22,45,70,69,1,12,4,51,61,20,72)))
 	
 INSERT INTO Winlimit_productsetting (ProductID,BettypeID,LevelID,SettingStatus)
-SELECT DISTINCT ProductID,MIN(BettypeID),T.LevelID,0
+SELECT DISTINCT t1.ProductID,1021,T.LevelID,0
 FROM #Temp t1
 	CROSS JOIN (SELECT LEVELID FROM winlimit_levelSetting WITH (NOLOCK)) AS T
 WHERE NOT EXISTS (SELECT 1 FROM winlimit_productsetting t2 WITH (NOLOCK) WHERE T1.ProductID = T2.ProductID)
-GROUP BY ProductID,T.LevelID
+
 
