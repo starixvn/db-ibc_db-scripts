@@ -14,3 +14,4 @@ FROM CustSuper cs WITH (ROWLOCK,UPDLOCK)
 	INNER JOIN custInfo c WITH(NOLOCK) ON cs.custid=c.custid
 	INNER JOIN exchange e WITH(NOLOCK) ON c.currency=e.exchangeid
 WHERE e.currency='THB'  AND IsAllDayBalTransfer IS NULL
+AND c.CustID NOT IN(SELECT CustID FROM Dep_CustSuper WITH(NOLOCK))
