@@ -1,6 +1,6 @@
 /*
 	Created: 20170803@Winnie
-	Task: Modify Virtual Rate data following new requirements
+	Task: Modify Virtual Rate data following new requirements RedmineID: #81115
 	DB: DBCUST/CustDB
 */
 
