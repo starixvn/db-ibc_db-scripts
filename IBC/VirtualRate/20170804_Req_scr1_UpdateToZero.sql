@@ -8,7 +8,7 @@
 
 	DECLARE @bitmap0_Seq1 BINARY(64)
 	DECLARE @bitmap0_Seq3 BINARY(64)
-	CREATE TABLE #Temp (CustID INT PRIMARY KEY)
+
 	SELECT seqNo,
 		  (
 		   SELECT TOP 1 bitmap
@@ -45,12 +45,27 @@
 	FROM #XML		
 	WHERE seqNo = 3	
 
+	CREATE TABLE #supers (custid INT PRIMARY KEY)
+	CREATE TABLE #TempLog (custid INT PRIMARY KEY)
+	CREATE TABLE #Temp (custid INT PRIMARY KEY)
+
+	INSERT INTO #supers(custid)
+	SELECT ci.custid
+	FROM dbo.customer ci WITH (NOLOCK) 
+		INNER JOIN dbo.Dep_CustSuper cs WITH (NOLOCK) ON ci.custid = cs.custid
+	WHERE ci.roleid = 4  
+
+	INSERT INTO #TempLog(CustID)
+	SELECT DISTINCT us.custid
+	FROM DBLOG.bodb_CustomerLog.dbo.UserLog_VirtualRateSettings us WITH (NOLOCK)
+	 INNER JOIN #supers s ON us.srecommend = s.custid
+	WHERE NewVirtualRate = 3
+
 	INSERT INTO #Temp(CustID)
 	SELECT DISTINCT cvs.custid
 	FROM  dbo.[ProfileVirtualSetting] pvs WITH(NOLOCK)
 		INNER JOIN  [dbo].[CustVirtualSetting] cvs WITH(NOLOCK) ON pvs.seqNo=cvs.seqNo
-		INNER JOIN custInfo c WITH(NOLOCK) ON cvs.custid=c.custid
-		INNER JOIN Dep_CustSuper sup WITH(NOLOCK) ON c.srecommend=sup.custid  
+		INNER JOIN #TempLog c WITH(NOLOCK) ON cvs.custid=c.custid		
 	WHERE (SELECT val FROM [dbo].[f_GetVirtualRateSetting](cvs.bitmapVirtual,pvs.profileID))=3
 
 	UPDATE cvs
