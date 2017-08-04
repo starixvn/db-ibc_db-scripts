@@ -48,9 +48,9 @@
 	INSERT INTO #Temp(CustID)
 	SELECT DISTINCT cvs.custid
 	FROM  dbo.[ProfileVirtualSetting] pvs WITH(NOLOCK)
-   INNER JOIN  [dbo].[CustVirtualSetting] cvs WITH(NOLOCK) ON pvs.seqNo=cvs.seqNo
-   INNER JOIN custInfo c WITH(NOLOCK) ON cvs.custid=c.custid
-   INNER JOIN Dep_CustSuper sup WITH(NOLOCK) ON c.srecommend=sup.custid  
+		INNER JOIN  [dbo].[CustVirtualSetting] cvs WITH(NOLOCK) ON pvs.seqNo=cvs.seqNo
+		INNER JOIN custInfo c WITH(NOLOCK) ON cvs.custid=c.custid
+		INNER JOIN Dep_CustSuper sup WITH(NOLOCK) ON c.srecommend=sup.custid  
 	WHERE (SELECT val FROM [dbo].[f_GetVirtualRateSetting](cvs.bitmapVirtual,pvs.profileID))=3
 
 	UPDATE cvs
