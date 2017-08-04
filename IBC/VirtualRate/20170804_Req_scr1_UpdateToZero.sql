@@ -82,3 +82,5 @@
 
 	DROP TABLE #temp
 	DROP TABLE #XML
+	DROP TABLE #supers
+	DROP TABLE #TempLog
