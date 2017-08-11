@@ -12,7 +12,7 @@ BEGIN
 	SET NOCOUNT ON
 	
 	IF (@target = 'REPLICATED' AND @@SERVERNAME = 'DBCUST') RETURN	-- run at all replicated servers
-	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbtrans only
+	IF (@target = 'DBCUST' AND @@SERVERNAME <> 'DBCUST') RETURN -- run at dbcust only
 	
 	IF NOT (dbo.f_CheckRepTable('Custinfo') = 1 )
 		RETURN
