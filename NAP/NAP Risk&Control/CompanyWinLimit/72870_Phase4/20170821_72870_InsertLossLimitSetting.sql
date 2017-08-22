@@ -4,23 +4,25 @@
 	
 	--DELETE  FROM WinLimit_ProductSettingDetail WHERE LevelID IN (4,5)
 */
---------------------------------------- For Products have only one group setting ------------------------------------------
 DECLARE @productID INT, @GroupID INT
 
 CREATE TABLE #CurrencySetting (ProductID INT, Grey MONEY, Black MONEY, IsFinished BIT DEFAULT (0))
+CREATE TABLE #CurrencySetting_Allbet (ProductID INT, GroupID INT,Grey MONEY, Black MONEY,IsFinished BIT DEFAULT (0))
+
+--------------------------------------- For Products have only one group setting ------------------------------------------
 INSERT INTO #CurrencySetting (ProductID,Grey, Black)
 VALUES
-(12,-100000,-300000),
-(13,-100000,-300000),
-(8,-100000,-300000),
-(5,-100000,-300000),
-(3,-100000,-300000),
-(27,-100000,-300000),
-(28,-100000,-300000),
-(24,-10000,-30000),
-(22,-10000,-30000),
-(17,-10000,-30000),
-(6,-10000,-30000)
+	(12,-100000,-300000),
+	(13,-100000,-300000),
+	(8,-100000,-300000),
+	(5,-100000,-300000),
+	(3,-100000,-300000),
+	(27,-100000,-300000),
+	(28,-100000,-300000),
+	(24,-10000,-30000),
+	(22,-10000,-30000),
+	(17,-10000,-30000),
+	(6,-10000,-30000)
 
 WHILE 1=1
 BEGIN
@@ -48,20 +50,18 @@ BEGIN
 	FROM WinLimit_ProductSettingDetail psd WITH (NOLOCK)
 		INNER JOIN #CurrencySetting CS WITH (NOLOCK) ON psd.ProductID = cs.ProductID
 		INNER JOIN Exchange e WITH (NOLOCK)  ON e.ExchangeId = psd.ExchangeID  
-		
 	WHERE LevelID = 1 AND psd.ProductID = @productID
 	
 
 END
 -------------------------------------------- For Products have multiple groups: Allbet ----------------------------------------------------
 -- GroupID: 8 - VIP
-CREATE TABLE #CurrencySetting_Allbet (ProductID INT, GroupID INT,Grey MONEY, Black MONEY,IsFinished BIT DEFAULT (0))
-
 INSERT INTO #CurrencySetting_Allbet (ProductID,GroupID,Grey,Black)
-VALUES (21,8,-200000,-500000)
-		,(21,9,-100000,-300000)
+VALUES 
+	(21,8,-200000,-500000)
+	,(21,9,-100000,-300000)
 
-WHILE 1=1
+WHILE (1 = 1)
 BEGIN
 	UPDATE TOP (1) #CurrencySetting_Allbet
 	SET isfinished = 1
@@ -89,7 +89,6 @@ BEGIN
 	WHERE LevelID = 1 AND psd.ProductID = @productID AND psd.GroupID = @GroupID
 
 END
-
 
 DROP TABLE #CurrencySetting
 
