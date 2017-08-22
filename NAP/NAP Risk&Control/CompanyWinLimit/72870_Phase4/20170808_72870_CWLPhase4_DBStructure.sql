@@ -2,6 +2,10 @@
 	Created: 20170808@Helen
 	Task: CWL - phase 4 - [Redmine: 81078]
 	DB: DBCUST/CUSTDB
+	
+	WinLimit_CustGameMonitoring: 5541 rows
+	WinLimit_CustGameMonitoring_History: 6371 rows
+
 */
 
 USE CustDB
