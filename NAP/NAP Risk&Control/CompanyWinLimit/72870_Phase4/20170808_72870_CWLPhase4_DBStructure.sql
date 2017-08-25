@@ -59,3 +59,4 @@ ALTER TABLE dbo.WinLimit_CustGameMonitoring_History DROP COLUMN BettypeID
 
 GO
 
+ALTER TABLE dbo.Winlimit_LevelSetting ADD LevelOrder TINYINT
