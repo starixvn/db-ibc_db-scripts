@@ -3,7 +3,7 @@
 	Task: CWL - SETTING - PHASE 4 - [redmine:72870]
 	DB: DBCUST/CUSTDB
 	
-	--DELETE  FROM WinLimit_ProductSettingDetail WHERE LevelID IN (4,5)
+	--DELETE  FROM WinLimit_ProductSettingDetail WHERE LevelID IN (101,102)
 */
 DECLARE @productID INT, @GroupID INT
 
@@ -37,7 +37,7 @@ BEGIN
 
 	-- Grey Level setting
 	INSERT INTO WinLimit_ProductSettingDetail (ProductID,GroupID,ExchangeID,SiteID,LevelID,MaxWinLimit_RM,IsBlockedPlaceBet,IsBlockedTransfer, MaxWinLimit)
-	SELECT psd.ProductID,psd.GroupID,psd.ExchangeID,psd.SiteID,4, CS.Grey,0 IsBlockedPlaceBet,0 IsBlockedTransfer
+	SELECT psd.ProductID,psd.GroupID,psd.ExchangeID,psd.SiteID,101, CS.Grey,0 IsBlockedPlaceBet,0 IsBlockedTransfer
 		, CASE WHEN psd.ExchangeID = 20 THEN CS.Grey ELSE ROUND(CS.Grey / e.actualrate,2) END  
 	FROM WinLimit_ProductSettingDetail psd WITH (NOLOCK)
 		INNER JOIN #CurrencySetting CS WITH (NOLOCK) ON psd.ProductID = cs.ProductID
@@ -46,7 +46,7 @@ BEGIN
 	
 	-- Black Level Setting
 	INSERT INTO WinLimit_ProductSettingDetail (ProductID,GroupID,ExchangeID,SiteID,LevelID,MaxWinLimit_RM,IsBlockedPlaceBet,IsBlockedTransfer, MaxWinLimit)
-	SELECT psd.ProductID,psd.GroupID,psd.ExchangeID,psd.SiteID,5, CS.Black,0 IsBlockedPlaceBet,0 IsBlockedTransfer
+	SELECT psd.ProductID,psd.GroupID,psd.ExchangeID,psd.SiteID,102, CS.Black,0 IsBlockedPlaceBet,0 IsBlockedTransfer
 		, CASE WHEN psd.ExchangeID = 20 THEN CS.Black ELSE ROUND(CS.Black / e.actualrate,2) END  
 	FROM WinLimit_ProductSettingDetail psd WITH (NOLOCK)
 		INNER JOIN #CurrencySetting CS WITH (NOLOCK) ON psd.ProductID = cs.ProductID
@@ -73,7 +73,7 @@ BEGIN
 	IF @@ROWCOUNT = 0 BREAK
 	-- Grey Setting
 	INSERT INTO WinLimit_ProductSettingDetail (ProductID,GroupID,ExchangeID,SiteID,LevelID,MaxWinLimit_RM,IsBlockedPlaceBet,IsBlockedTransfer, MaxWinLimit)
-	SELECT psd.ProductID,@GroupID,psd.ExchangeID,psd.SiteID,4, Grey,0 IsBlockedPlaceBet,0 IsBlockedTransfer
+	SELECT psd.ProductID,@GroupID,psd.ExchangeID,psd.SiteID,101, Grey,0 IsBlockedPlaceBet,0 IsBlockedTransfer
 		, CASE WHEN psd.ExchangeID = 20 THEN Grey ELSE ROUND(Grey / e.actualrate,2) END 
 	FROM WinLimit_ProductSettingDetail psd WITH (NOLOCK)
 		INNER JOIN Exchange e WITH (NOLOCK)  ON e.ExchangeId = psd.ExchangeID  
@@ -82,7 +82,7 @@ BEGIN
 	
 	-- Black Setting
 	INSERT INTO WinLimit_ProductSettingDetail (ProductID,GroupID,ExchangeID,SiteID,LevelID,MaxWinLimit_RM,IsBlockedPlaceBet,IsBlockedTransfer, MaxWinLimit)
-	SELECT psd.ProductID,@GroupID,psd.ExchangeID,psd.SiteID,5, Black,0 IsBlockedPlaceBet,0 IsBlockedTransfer
+	SELECT psd.ProductID,@GroupID,psd.ExchangeID,psd.SiteID,102, Black,0 IsBlockedPlaceBet,0 IsBlockedTransfer
 		, CASE WHEN psd.ExchangeID = 20 THEN Black ELSE ROUND(Black / e.actualrate,2) END 
 	FROM WinLimit_ProductSettingDetail psd WITH (NOLOCK)
 		INNER JOIN Exchange e WITH (NOLOCK)  ON e.ExchangeId = psd.ExchangeID  
