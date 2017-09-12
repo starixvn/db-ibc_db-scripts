@@ -1,6 +1,7 @@
 /*
 	Created: 20170821@Helen
 	Task: CWL - SETTING - PHASE 4 - [redmine:72870]
+	DB: DBCUST/CUSTDB
 	
 	--DELETE  FROM WinLimit_ProductSettingDetail WHERE LevelID IN (4,5)
 */
