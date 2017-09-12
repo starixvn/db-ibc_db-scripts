@@ -1,7 +1,7 @@
 /*
 	Created: 20170808@Helen
 	Task: CWL - phase 4 - [Redmine: 81078]
-	DB: DBCUST/CUSTDB
+	DB: DBCUST/CUSTDB - DB06 - DBMNL
 	
 	WinLimit_CustGameMonitoring: 5541 rows
 	WinLimit_CustGameMonitoring_History: 6371 rows
@@ -12,6 +12,7 @@ USE CustDB
 GO
 
 ---------------Change Primary Key, Create New Column BettypeIDList and remove column BettypeID FOR TABLE WinLimit_CustGameMonitoring --------------------------------
+/* Step 1:  RUN ON DBCUST, DB06, DBMNL */
 ALTER TABLE dbo.WinLimit_CustGameMonitoring
 	DROP CONSTRAINT PK_WinLimit_CustGameMonitoring
 GO
@@ -33,7 +34,10 @@ GO
 ALTER TABLE dbo.WinLimit_CustGameMonitoring DROP COLUMN BettypeID
 
 GO
+ALTER TABLE dbo.Winlimit_LevelSetting ADD LevelOrder TINYINT
+GO
 --------------- Change Primary Key, Create New Column BettypeIDList and remove column BettypeID FOR TABLE WinLimit_CustGameMonitoring_History --------------------------------
+/* Step 2: ONLY RUN ON DBCUST */
 ALTER TABLE dbo.WinLimit_CustGameMonitoring_History
 	DROP CONSTRAINT PK_WinLimit_CustGameMonitoring_History
 GO
@@ -59,4 +63,3 @@ ALTER TABLE dbo.WinLimit_CustGameMonitoring_History DROP COLUMN BettypeID
 
 GO
 
-ALTER TABLE dbo.Winlimit_LevelSetting ADD LevelOrder TINYINT
