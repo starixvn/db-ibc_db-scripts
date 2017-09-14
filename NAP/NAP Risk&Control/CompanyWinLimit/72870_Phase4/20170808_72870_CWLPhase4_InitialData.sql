@@ -16,3 +16,14 @@ INSERT INTO Winlimit_LevelSetting (LevelID,LevelName,LevelOrder)
 VALUES (101, 'Grey',101)
 		, (102,'Black',102)
 GO
+
+INSERT INTO dbo.Winlimit_ProductSetting (ProductID, BettypeID, LevelID, SettingStatus)
+SELECT ProductID, BettypeID, 101, 0
+FROM Winlimit_ProductSetting  WITH (NOLOCK)
+WHERE LevelID = 1 
+
+GO
+INSERT INTO dbo.Winlimit_ProductSetting (ProductID, BettypeID, LevelID, SettingStatus)
+SELECT ProductID, BettypeID, 102, 0
+FROM Winlimit_ProductSetting  WITH (NOLOCK)
+WHERE LevelID = 1 
