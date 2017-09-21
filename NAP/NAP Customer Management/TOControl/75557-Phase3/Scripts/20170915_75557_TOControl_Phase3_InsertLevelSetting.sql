@@ -4,7 +4,7 @@
 	DB: DBCUST/CUSTDB; DBAGE/bodb02
 */
 
-INSERT INTO TOControl_LevelSetting (PercentLevel, PercentValue)
+INSERT INTO dbo.TOControl_LevelSetting (PercentLevel, PercentValue)
 VALUES (10,1)
 	, (20, 2)
 	, (30, 3)
