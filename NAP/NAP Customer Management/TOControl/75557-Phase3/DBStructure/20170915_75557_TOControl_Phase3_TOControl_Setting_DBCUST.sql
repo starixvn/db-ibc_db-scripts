@@ -23,3 +23,11 @@ GO
 ALTER TABLE dbo.TOControl_Setting 
 ADD CONSTRAINT PK_TOControl_Setting PRIMARY KEY (CustID,matchid,IsGroupHeadLine)
 GO
+
+CREATE TABLE dbo.TOControl_LevelSetting
+(
+	PercentLevel TINYINT
+	, PercentValue TINYINT
+	, CONSTRAINT [PK_TOControl_LevelSetting] PRIMARY KEY CLUSTERED ([PercentLevel] ASC) ON [DATA]
+) ON [DATA]
+GO
