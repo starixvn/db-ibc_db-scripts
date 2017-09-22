@@ -1,53 +1,8 @@
 /*
 	Created: 20170915@Helen
 	Task: SMA Turnover Control - Enhancement requests from phase 2 [RedmineID:75557]
-	DB: DBAGE/bodb02
+	DB: DBCUST& REPLICATED SERVER
 */
-USE bodb02
-GO
------------------------ TOControl_GlobalSetting ----------------
-ALTER TABLE dbo.TOControl_GlobalSetting
-	DROP CONSTRAINT PK_TO_ControlglobalSetting
-GO
-
-ALTER TABLE dbo.TOControl_GlobalSetting 
-ADD Sporttype SMALLINT 
-
-GO
-
-ALTER TABLE dbo.TOControl_GlobalSetting 
-ADD IsGroupHeadLine BIT 
-
-GO
-
-UPDATE TOControl_GlobalSetting SET Sporttype = 1, IsGroupHeadline = 0
-
-GO
-
-ALTER TABLE dbo.TOControl_GlobalSetting 
-ALTER COLUMN Sporttype SMALLINT NOT NULL
-
-GO
-
-ALTER TABLE dbo.TOControl_GlobalSetting 
-ALTER COLUMN IsGroupHeadLine BIT NOT NULL
-
-GO
-
-ALTER TABLE dbo.TOControl_GlobalSetting 
-ADD CONSTRAINT PK_TO_ControlglobalSetting PRIMARY KEY (CustID,Sporttype,IsGroupHeadLine)
-
-GO
-
-CREATE TABLE dbo.TOControl_LevelSetting
-(
-	PercentLevel TINYINT
-	, PercentValue TINYINT
-	, CONSTRAINT [PK_TOControl_LevelSetting] PRIMARY KEY CLUSTERED ([PercentLevel] ASC) ON [DATA]
-) ON [DATA]
-
-GO
-
 CREATE TABLE [dbo].[Acc_GroupExtraPTSetting](
 	[SuperId] [int] NOT NULL,
 	[GroupId] [int] NOT NULL,
@@ -77,8 +32,4 @@ GO
 ALTER TABLE [dbo].[Acc_GroupExtraPTSetting] ADD  CONSTRAINT [DF_Acc_GroupExtraPTSetting_SubProduct]  DEFAULT ('') FOR [SubProduct]
 GO
 
-ALTER TABLE dbo.TOControl_Transition
-ADD IsGroupHeadLine BIT 
-
-GO
 
