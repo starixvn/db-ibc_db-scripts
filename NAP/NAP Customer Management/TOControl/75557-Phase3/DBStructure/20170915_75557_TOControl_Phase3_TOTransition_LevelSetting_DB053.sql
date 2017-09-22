@@ -18,3 +18,6 @@ ADD IsGroupHeadLine BIT
 
 GO
 
+ALTER TABLE [dbo].[TOControl_Transition] ADD CONSTRAINT [DF_TOControl_Transition_IsGroupHeadLine] DEFAULT ((0)) FOR [IsGroupHeadLine]
+
+GO
