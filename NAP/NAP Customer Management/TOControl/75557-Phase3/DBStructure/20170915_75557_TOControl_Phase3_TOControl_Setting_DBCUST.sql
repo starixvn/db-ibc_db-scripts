@@ -22,6 +22,10 @@ ALTER COLUMN IsGroupHeadLine BIT NOT NULL
 GO
 ALTER TABLE dbo.TOControl_Setting 
 ADD CONSTRAINT PK_TOControl_Setting PRIMARY KEY (CustID,matchid,IsGroupHeadLine)
+
+GO
+ALTER TABLE [dbo].[TOControl_Setting] ADD CONSTRAINT [DF_TOControl_Setting_IsGroupHeadLine] DEFAULT ((0)) FOR [IsGroupHeadLine]
+
 GO
 
 CREATE TABLE dbo.TOControl_LevelSetting
@@ -31,3 +35,4 @@ CREATE TABLE dbo.TOControl_LevelSetting
 	, CONSTRAINT [PK_TOControl_LevelSetting] PRIMARY KEY CLUSTERED ([PercentLevel] ASC) ON [DATA]
 ) ON [DATA]
 GO
+
