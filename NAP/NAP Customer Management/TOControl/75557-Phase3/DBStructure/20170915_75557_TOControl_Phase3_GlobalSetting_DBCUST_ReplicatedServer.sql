@@ -34,10 +34,12 @@ GO
 
 ALTER TABLE [dbo].[TOControl_GlobalSetting] ADD CONSTRAINT [DF_TOControl_GlobalSetting_IsGroupHeadLine] DEFAULT ((0)) FOR [IsGroupHeadLine]
 GO
+
+ALTER TABLE [dbo].[TOControl_GlobalSetting] ADD CONSTRAINT [DF_TOControl_GlobalSetting_Sporttype] DEFAULT ((1)) FOR [Sporttype]
+
+GO
+
 ALTER TABLE dbo.TOControl_GlobalSetting 
 ADD CONSTRAINT PK_TO_ControlglobalSetting PRIMARY KEY (CustID,Sporttype,IsGroupHeadLine)
 GO
 
-ALTER TABLE [dbo].[TOControl_GlobalSetting] ADD CONSTRAINT [DF_TOControl_GlobalSetting_Sporttype] DEFAULT ((1)) FOR [Sporttype]
-
-go
