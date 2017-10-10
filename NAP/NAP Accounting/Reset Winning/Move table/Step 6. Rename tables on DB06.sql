@@ -10,4 +10,4 @@ GO
 
 sp_rename 'Acc_GroupExtraPTSetting', 'Acc_GroupExtraPTSetting_Delete'
 go
-sp_rename 'Acc_GroupExtraPT_Product', 'Acc_GroupExtraPTSetting_Delete'
+sp_rename 'Acc_GroupExtraPT_Product', 'Acc_GroupExtraPT_Product_Delete'
