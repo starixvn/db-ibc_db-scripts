@@ -10,6 +10,3 @@ GO
 
 CREATE SYNONYM [dbo].[Acc_GroupExtraPTSetting]
 FOR [bodb02].[dbo].[Acc_GroupExtraPTSetting]
-
-CREATE SYNONYM [dbo].[Acc_GroupExtraPT_Product]
-FOR [DBCUST].[CustDB].[dbo].[Acc_GroupExtraPT_Product]
