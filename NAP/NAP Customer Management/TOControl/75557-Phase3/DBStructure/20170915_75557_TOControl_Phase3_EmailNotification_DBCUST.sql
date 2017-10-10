@@ -3,6 +3,7 @@
 	Task: SMA Turnover Control - Enhancement requests from phase 2 [RedmineID:75557]
 	DB: DBCUST/CUSTDB
 */
+
 USE CustDB
 GO
 CREATE TABLE dbo.EmailNotification
@@ -11,8 +12,8 @@ CREATE TABLE dbo.EmailNotification
 	, NotificationInfo VARCHAR(MAX)
 	, CreatedDate DATETIME
 	, ActionID INT
-	, IsNotifiedbyTOControl BIT
-	, IsNotifiedbyLossMonitoring BIT
+	, IsNotifiedbyTOControl TINYINT
+	, IsNotifiedbyLossMonitoring TINYINT
 	, CONSTRAINT [PK_EmailNotification] PRIMARY KEY ([ID] ASC) ON [DATA]
 ) ON [DATA]
 
@@ -34,3 +35,4 @@ CREATE NONCLUSTERED INDEX inx_CreatedDate_ActionID ON dbo.EmailNotification
 INCLUDE (NotificationInfo,IsNotifiedbyTOControl,IsNotifiedbyLossMonitoring)
 
 GO
+
