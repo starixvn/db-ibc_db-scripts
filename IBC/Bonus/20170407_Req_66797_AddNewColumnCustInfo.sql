@@ -1,9 +1,9 @@
 /*
 	Created by: Winnie
-	Date: 2017-04-07
+	Date: 2017-10-11
 	Task: Bonus Product - [Redmine: #66797]
 	alter table dbo.custinfo
-	add the column WalletFlag 
+	add the column BonusWalletFlag 
 
 */ 
 
@@ -13,7 +13,7 @@
 USE [CustDB]
 GO
   
-ALTER TABLE [dbo].[CustInfo] ADD WalletFlag TINYINT NULL
+ALTER TABLE [dbo].[CustInfo] ADD BonusWalletFlag BIT NULL
 GO
 
 
@@ -23,7 +23,7 @@ GO
 USE [bodb_Customer]
 GO
   
-ALTER TABLE [dbo].[custInfo_old] ADD WalletFlag TINYINT NULL
+ALTER TABLE [dbo].[custInfo_old] ADD BonusWalletFlag BIT NULL
 GO
 
 
@@ -44,7 +44,7 @@ GO
 USE [bodb_CustHistory]
 GO
   
-ALTER TABLE [dbo].[CustInfo_history] ADD WalletFlag TINYINT NULL
+ALTER TABLE [dbo].[CustInfo_history] ADD BonusWalletFlag TINYINT NULL
 GO
 
 
@@ -134,7 +134,7 @@ AS
   - 20160914@Patrick: Remove DisableMicrogame field [Redmine: #56591]  
 
   - 20161107@Winnie: Separate Bet Setting for Soccer - Parlay [Redmine: #66265]  
-  - 20170407@Winnie: Add the column WalletFlag for Bonus system [Redmine: #66797]  
+  - 20170407@Winnie: Add the column BonusWalletFlag for Bonus system [Redmine: #66797]  
 
 */
 BEGIN
@@ -227,7 +227,7 @@ BEGIN
 		,DisableBinaryOptions
 		,LockUpd
 		,MaxPerMatch1MP
-		,WalletFlag
+		,BonusWalletFlag
 		)
 	SELECT username
 		,custid
@@ -315,7 +315,7 @@ BEGIN
 		,DisableBinaryOptions
 		,LockUpd
 		,MaxPerMatch1MP
-		,WalletFlag
+		,BonusWalletFlag
 	FROM [DELETED]
 END
 

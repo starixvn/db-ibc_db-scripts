@@ -1,9 +1,9 @@
 
 /*
 	Created: Winnie	
-	Task:  Update WalletFlag
+	Task:  Update BonusWalletFlag
 	DB: DBCUST/CustDB
-	Date: 20170522
+	Date: 20171011
 */ 
 ALTER PROCEDURE [dbo].Acc_CustomerInfo_Execrep_09
 	@srecommend INT	
@@ -20,7 +20,7 @@ BEGIN
 		RETURN		
 		UPDATE ci
 		SET	
-			ci.WalletFlag=0
+			ci.BonusWalletFlag=0
 		FROM CustInfo CI WITH (ROWLOCK,UPDLOCK) 
 		WHERE ci.custid<=@maxcustid AND roleid=1 AND ci.srecommend=@srecommend 
 END
