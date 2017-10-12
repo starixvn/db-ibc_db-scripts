@@ -10,3 +10,5 @@ GO
 
 CREATE SYNONYM [dbo].[Acc_GroupExtraPTSetting]
 FOR [bodb02].[dbo].[Acc_GroupExtraPTSetting]
+
+GRANT SELECT ON [dbo].[Acc_GroupExtraPTSetting] TO [bodbAdminNet] AS [dbo]
