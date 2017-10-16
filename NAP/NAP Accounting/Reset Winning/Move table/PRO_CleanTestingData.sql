@@ -10,4 +10,4 @@ GO
 
 TRUNCATE TABLE dbo.Acc_GroupExtraPT_Product
 
-TRUNCATE TABLE dbo.Acc_GroupExtraPTSetting
+DELETE dbo.Acc_GroupExtraPTSetting WITH (TABLOCK)
