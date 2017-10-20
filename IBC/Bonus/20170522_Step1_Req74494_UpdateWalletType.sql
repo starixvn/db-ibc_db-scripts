@@ -28,7 +28,7 @@ GO
 -- END STEP 1: DEPLOY THIS SP @DBCUST.CustDB --------
 ------------------------------------------------------	
 
--- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS (06/DBTP) -----
+-- BEGIN STEP 2: RUN THIS SCRIPT AT ALL REPLICATED SERVERS  -----
 --------------------------------------------------------------------------------------
 CREATE TABLE #supers (custid int,isfinished bit default(0))
 
