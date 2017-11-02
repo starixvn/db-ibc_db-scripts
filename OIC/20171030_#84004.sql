@@ -54,7 +54,8 @@ INSERT INTO dbo.LogAction( LogActionId, LogActionTypeId, SPName, ActionNameEn, E
 VALUES ( 4005, 4, 'OIC_AmendmentResultIns', 'Insert Result Amendment Notification', 1, 4006 ),
 	( 4006, 4, 'OIC_AmendmentNotificationUpd', 'Update Result Amendment Notification', 1, 4007 ),
 	( 4007, 4, 'OIC_AmendmentMessageUserIns', 'Insert Amendment User', 1, 4008 ),
-	( 4008, 4, 'OIC_APIUserMessageIns', 'API Insert User Message', 1, 4009 );
+	( 4008, 4, 'OIC_APIUserMessageIns', 'API Insert User Message', 1, 4009 ),
+	( 4009, 4, 'OIC_ReminderUpd', 'Update Reminder', 1, 4010 );
 GO
 
 INSERT INTO dbo.MessageError(MessageErrorId, MessageErrorGroupId, ContentEn)
