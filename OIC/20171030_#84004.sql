@@ -2,14 +2,14 @@ USE [bodb_OIC]
 GO
 
 CREATE TABLE [dbo].[AmendmentMessageUser](
-	[TicketID] [int] NOT NULL,
+	[MessageID] [int] NOT NULL,
 	[UserID] [int] NOT NULL,
 	[LicenseeName] [nvarchar](300) NOT NULL,
 	[IsRead] [bit] NOT NULL,
 	[UpdatedDate] [datetime] NOT NULL,
  CONSTRAINT [PK_AmendmentMessageUser] PRIMARY KEY CLUSTERED 
 (
-	[TicketID] ASC,
+	[MessageID] ASC,
 	[UserID] ASC,
 	[LicenseeName] ASC
 ))
