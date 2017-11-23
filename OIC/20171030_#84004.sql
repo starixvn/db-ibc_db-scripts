@@ -1,16 +1,18 @@
 USE [bodb_OIC]
 GO
 
-CREATE TABLE [dbo].[AmendmentMessageUser](
+CREATE TABLE [dbo].[ExternalMessageUser](
 	[MessageID] [int] NOT NULL,
-	[UserID] [int] NOT NULL,
-	[LicenseeName] [nvarchar](300) NOT NULL,
+	[MessageType] [int] NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
+	[LicenseeName] [nvarchar](100) NOT NULL,
 	[IsRead] [bit] NOT NULL,
 	[UpdatedDate] [datetime] NOT NULL,
- CONSTRAINT [PK_AmendmentMessageUser] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_ExternalMessageUser] PRIMARY KEY CLUSTERED 
 (
 	[MessageID] ASC,
-	[UserID] ASC,
+	[MessageType] ASC,
+	[UserName] ASC,
 	[LicenseeName] ASC
 ))
 GO
@@ -45,16 +47,11 @@ CREATE TABLE [dbo].[AmendmentTicket](
 ))
 GO
 
-ALTER TABLE dbo.UserMessage ADD LicenseeName VARCHAR(300) NOT NULL DEFAULT '';
-ALTER TABLE dbo.UserMessage DROP CONSTRAINT PK_UserMessage;
-ALTER TABLE dbo.UserMessage ADD CONSTRAINT PK_UserMessage PRIMARY KEY (MessageId, UserId, LicenseeName);
-GO
-
 INSERT INTO dbo.LogAction( LogActionId, LogActionTypeId, SPName, ActionNameEn, Enable, "Order" )
-VALUES ( 4005, 4, 'OIC_AmendmentResultIns', 'Insert Result Amendment Notification', 1, 4006 ),
+VALUES ( 4005, 4, 'OIC_API_AmendmentMessageIns', 'Insert Result Amendment Notification', 1, 4006 ),
 	( 4006, 4, 'OIC_AmendmentNotificationUpd', 'Update Result Amendment Notification', 1, 4007 ),
-	( 4007, 4, 'OIC_AmendmentMessageUserIns', 'Insert Amendment User', 1, 4008 ),
-	( 4008, 4, 'OIC_APIUserMessageIns', 'API Insert User Message', 1, 4009 ),
+	( 4007, 4, 'OIC_API_AmendmentMessageUserIns', 'Insert Amendment User', 1, 4008 ),
+	( 4008, 4, 'OIC_API_UserMessageIns', 'API Insert User Message', 1, 4009 ),
 	( 4009, 4, 'OIC_ReminderUpd', 'Update Reminder', 1, 4010 );
 GO
 
