@@ -1,6 +1,11 @@
 USE [bodb_OIC]
 GO
-
+/*
+	Creator: Scofield
+	Date: 2017-12-05
+	DB: DBOIC.bodb_OIC
+	Task: Create tables for Result Amendment, and update LogAction, MessageError [#84004]
+*/
 CREATE TABLE [dbo].[ExternalMessageUser](
 	[MessageID] [int] NOT NULL,
 	[MessageType] [int] NOT NULL,
