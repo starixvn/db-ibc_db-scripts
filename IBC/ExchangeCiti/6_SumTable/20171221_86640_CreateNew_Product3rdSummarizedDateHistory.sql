@@ -14,13 +14,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Product3rd_SummarizedDateHistory](
-	[ID] [BIGINT] NOT NULL,
-	[ProductID] [INT] NULL,
-	[CreatedDate] [SMALLDATETIME] NULL,
-	[SummarizedDate] [SMALLDATETIME] NULL,
-	[SettledDate] [DATETIME] NULL,
-	[SummarizedBy] [TINYINT] NULL,
-	[SummarizedFor] [VARCHAR](200) NULL,
+	[ID]  [BIGINT] IDENTITY(1,1) NOT NULL,
+	[ProductID] [INT] NOT NULL,
+	[CreatedDate] [SMALLDATETIME] NOT NULL,	
+	[WinlostDate] [DATE] NOT NULL,
+	[SumToThirdPartyDate] [SMALLDATETIME] NULL,
+	[SumToBettingProductDate] [SMALLDATETIME] NULL,
  CONSTRAINT [PK_Product3rd_SummarizedDateHistory] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -28,9 +27,9 @@ CREATE TABLE [dbo].[Product3rd_SummarizedDateHistory](
 
 GO
 
-CREATE NONCLUSTERED INDEX [CIX_SettledDate] ON [dbo].[Product3rd_SummarizedDateHistory]
+CREATE NONCLUSTERED INDEX [CIX_WinlostDate] ON [dbo].[Product3rd_SummarizedDateHistory]
 (
-	[SettledDate] ASC	
+	[WinlostDate] ASC	
 ) ON [3rdProduct_Data]
 GO
 
