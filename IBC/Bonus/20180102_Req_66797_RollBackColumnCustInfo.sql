@@ -12,6 +12,9 @@
 USE [bodb02]
 GO
 
+DISABLE TRIGGER CustInfo_update ON custInfo
+GO  
+
 -- Modify trigger DBTP.bodb02.dbo.CustInfo_update --
 ALTER TRIGGER [dbo].[CustInfo_update] ON [dbo].[custInfo]
 AFTER UPDATE
@@ -302,5 +305,11 @@ GO
 ALTER TABLE [dbo].[CustInfo_history] DROP COLUMN BonusWalletFlag 
 GO
 
+-- BEGIN STEP 5: DEPLOY THIS SCRIPT ON DBTP/bodb02				--
+------------------------------------------------------------------
 
+USE [bodb02]
+GO
 
+ENABLE TRIGGER CustInfo_update ON custInfo
+GO  
