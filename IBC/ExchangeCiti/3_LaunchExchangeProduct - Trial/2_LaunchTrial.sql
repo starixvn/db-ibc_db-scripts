@@ -40,7 +40,7 @@ BEGIN
 	
 	EXEC dbo.OAS_ChargeInfoIns 
 		@ProductName = 'BX',
-		@FromPartyName = @LicenseeName
+		@FromPartyName = @LicenseeName,
 		@ToPartyName = 'ONEWorks', 
 		@FromDate = NULL,  ---- due to trial, so this field will have NULL data 
 		@ToDate = '2050-01-01', 
