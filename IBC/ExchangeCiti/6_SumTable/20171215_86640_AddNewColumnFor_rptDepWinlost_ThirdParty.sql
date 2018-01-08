@@ -11,3 +11,5 @@ ALTER TABLE dbo.rptDepWinlost_ThirdParty ADD ValidBetAmount MONEY
 ALTER TABLE dbo.rptDepWinlost_ThirdParty ADD CommissionP MONEY
 
 ALTER TABLE dbo.rptDepWinlost_ThirdParty ADD CommissionA MONEY
+
+ALTER TABLE dbo.rptDepWinlost_ThirdParty ADD WinLostA MONEY

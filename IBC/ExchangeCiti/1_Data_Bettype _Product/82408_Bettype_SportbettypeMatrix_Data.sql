@@ -16,3 +16,4 @@ INSERT INTO  bettype  (TypeId,TypeNamee,typedesc,ParentTypeid, DisplayedTypeID )
 
 --- SportbettypeMatrix
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (221,8000,0,31,1,0,0,'',0)
+insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (221,8001,0,31,1,0,0,'',0)
