@@ -20,6 +20,7 @@ CREATE TABLE [dbo].[Product3rd_SummarizedDateHistory](
 	[WinlostDate] [DATE] NOT NULL,
 	[SumToThirdPartyDate] [SMALLDATETIME] NULL,
 	[SumToBettingProductDate] [SMALLDATETIME] NULL,
+	[SumToBettransDate] [SMALLDATETIME] NULL,
  CONSTRAINT [PK_Product3rd_SummarizedDateHistory] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
