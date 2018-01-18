@@ -23,6 +23,6 @@ INSERT INTO  Functions
 	Environment,
 	IsFunction
 )
-VALUES (77, 'Exchange Win loss', '', 3, 'ExchangeWinlossReport', 1, 1, 52, 1, 'ExchangeWinloss77', 'LIVE', 1)
+VALUES (77, 'Exchange Win loss', '', 3, 'ExchangeWinlossReport', 1, 1, 52, 1, 'ExchangeWinloss77', 'UAT', 1)
   
 SET IDENTITY_INSERT Functions OFF
