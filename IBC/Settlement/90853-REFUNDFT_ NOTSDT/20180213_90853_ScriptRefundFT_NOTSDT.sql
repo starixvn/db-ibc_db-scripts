@@ -5,18 +5,7 @@
 */
 USE bodb02
 GO
------------------------------------Step 1: Insert result into Intg_OddsFeed_SettlementAction to log Settlement Action -------------------------
-DECLARE @p6 INT
-SET @p6=0
-DECLARE @p7 VARCHAR(300)
-SET @p7=NULL
-EXEC NAP_Set_SettlementActionIns @MatchId=24073483,@LeagueId=49218
-	-- Default value
-	,@ActionType=13,@OtherInfo='',@IsAutoPayout=0,@ErrCode=@p6 output,@ErrMsg=@p7 output
-SELECT @p6, @p7
-
-GO
------------------------------------Step 2: Refund FT Action -------------------------
+----------------------------------- Refund FT Action -------------------------
 DECLARE @p4 int
 SET @p4=0
 DECLARE @p22 NVARCHAR(200)
