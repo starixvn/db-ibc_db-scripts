@@ -14,6 +14,7 @@ EXEC NAP_Set_SettlementActionIns @MatchId=24073483,@LeagueId=49218
 	,@ActionType=13,@OtherInfo='',@IsAutoPayout=0,@ErrCode=@p6 output,@ErrMsg=@p7 output
 SELECT @p6, @p7
 
+GO
 -- Step 1.2: Refund FT Action --
 DECLARE @p4 int
 SET @p4=0
@@ -36,4 +37,4 @@ EXEC NAP_Admin_Settlement_RefundFT_Push
 	
 SELECT @p4, @p22, @p23
 
-
+GO
