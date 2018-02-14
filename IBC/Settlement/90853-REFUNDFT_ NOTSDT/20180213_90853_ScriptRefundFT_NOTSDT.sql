@@ -13,13 +13,13 @@ SET @p22=N''
 DECLARE @p23 NVARCHAR(max)
 SET @p23=NULL
 EXEC NAP_Admin_Settlement_RefundFT_Push @MatchId=24073483,@AdminId=8,@IP='10.18.200.119'
-	,@GoalSequence='HHHAA'
+	,@GoalSequence='HHHAA;'
 	,@ResourceResult='<Results>
 						<Resource Id="14F" HomeValue="" SettlementStatusId="3" ResultStatusId="5" />
 						<Resource Id="14L" HomeValue="" SettlementStatusId="3" ResultStatusId="5" />
 						<Resource Id="08" HomeValue="" SettlementStatusId="3" ResultStatusId="5" />
 					</Results>'
-	, @BetStatus=N'1FL:1-0;'
+	, @BetStatus=N'1FL:1-2;'
 	-- Default Value
 	,@FullTimeHome=0,@FullTimeAway=0,@fthCorners=0,@ftaCorners=0
 	,@IsExcludeBetdaq=0,@IsSettleAbandonedMatch=0,@IsExcludeBetfair=0,@IsSettleAbandonedMatchBetFair=0,@IsSettleAbandonedMatchIBC=0
