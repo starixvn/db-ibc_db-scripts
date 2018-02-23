@@ -7,3 +7,5 @@ USE bodb02
 GO
 ALTER TABLE dbo.ResultDetail3rd ADD ResourceId VARCHAR(20) 
 GO
+ALTER TABLE dbo.ResultDetail3rd14 ADD ResourceId VARCHAR(20) 
+GO
