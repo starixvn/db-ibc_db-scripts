@@ -1,6 +1,6 @@
 /*
 	Created: 20180207@Helen
-	Task: Add column ResourceID in table ResultDetail3rd - [Redmine:90154]
+	Task: Add column ResourceID in table ResultDetail3rd, ResultDetail3rd14 - [Redmine:90154]
 	DB: DBPRO/bodb02 
 */
 USE bodb02
