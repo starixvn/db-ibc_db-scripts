@@ -55,6 +55,7 @@ ALTER TABLE [dbo].[rptProgressiveGamesContribution] ADD  CONSTRAINT [DF_rptProgr
 GO
 
 CREATE CLUSTERED INDEX CIX_winlostdate_SMA ON [dbo].[rptProgressiveGamesContribution] (winlostdate, srecommend, mrecommend, recommend, roleid, productId, gameId)
+	WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [DATA]
 GO
 
 GRANT SELECT ON [dbo].[rptProgressiveGamesContribution] TO [bodbAdminNet] AS [dbo]
