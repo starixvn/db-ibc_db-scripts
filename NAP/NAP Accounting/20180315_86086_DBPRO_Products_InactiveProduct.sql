@@ -6,7 +6,7 @@ GO
 	-- Hide inactive Product
 */
 
-DECLARE @lauchdate DATETIME = '2018-03-01' -- release date
+DECLARE @lauchdate DATETIME = '2017-11-30' -- end of support date
 
 UPDATE dbo.Products WITH (ROWLOCK, UPDLOCK)
 SET Enabled = 0, EndOfSupportDate = @lauchdate
