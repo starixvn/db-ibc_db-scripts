@@ -6,7 +6,7 @@ GO
 	Task: Regen data for rptProgressiveGamesContribution [Redmine: #96053]
 	DB: DBSUM.bodb_Summary
 
-	Step 1: Create temp table
+	Step 2: Create temp table
 */
 
 CREATE TABLE [dbo].[rptProgressiveGamesContribution_tmp](

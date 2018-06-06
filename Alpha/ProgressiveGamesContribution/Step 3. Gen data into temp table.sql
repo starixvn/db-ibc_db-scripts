@@ -6,16 +6,8 @@ GO
 	Task: Regen data for rptProgressiveGamesContribution [Redmine: #96053]
 	DB: DBSUM.bodb_Summary
 
-	Step 2. Gen data into temp table
+	Step 3. Gen data into temp table
 */
-
--- Check productId, bettype
-/*
-	ProductId = 6
-	Bettype IN (2198, 2398, 2998)
-*/
-SELECT ProductID, ContributionBettype
-FROM bodb02.dbo.f_ProgressiveGamesContribution_Bettype_Sel('All')
 
 -- Member - RoleId = 1
 BEGIN
@@ -160,7 +152,7 @@ BEGIN
 		FROM bodb_Archive.dbo.Bettrans_bk b WITH (NOLOCK)
 		WHERE b.StatusID NOT IN (0,1,102,101,103)
 			AND b.WinlostDate >= ''2018-04-12''
-			AND b.bettype IN (2198, 2298, 2998)
+			AND b.bettype IN (2198, 2398, 2998)
 		GROUP BY
 			b.WinlostDate,
 			b.CustId,

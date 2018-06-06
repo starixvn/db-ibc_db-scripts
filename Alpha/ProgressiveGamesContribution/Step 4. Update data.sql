@@ -6,7 +6,7 @@ GO
 	Task: Regen data for rptProgressiveGamesContribution [Redmine: #96053]
 	DB: DBSUM.bodb_Summary
 
-	Step 3: Update data
+	Step 4: Update data
 */
 
 -- 3133 rows
