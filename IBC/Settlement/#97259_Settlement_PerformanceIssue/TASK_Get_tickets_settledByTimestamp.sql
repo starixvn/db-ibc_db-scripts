@@ -1,6 +1,6 @@
 USE [bodb02]
 GO
-/****** Object:  StoredProcedure [dbo].[TASK_Get_tickets_settledByTimestamp]    Script Date: 6/21/2018 4:34:59 AM ******/
+/****** Object:  StoredProcedure [dbo].[TASK_Get_tickets_settledByTimestamp]    Script Date: 6/21/2018 5:47:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -32,7 +32,19 @@ BEGIN
 
 	SELECT @maxID = MAX(tstamp) from @IDs
 	SET @maxID = ISNULL(@maxID,@lastID)
-	 	
+	 
+	/*
+	WHILE (1=1)
+	BEGIN
+		SELECT @maxID = MAX(tstamp)
+		FROM dbo.bettrans WITH(NOLOCK, INDEX=IX_ticketSettled)
+		WHERE tstamp BETWEEN @lastID AND @temp_tstamp
+
+		IF @@ROWCOUNT = 0
+		SET @maxID = @temp_tstamp
+		SET @temp_tstamp = cast((cast(@temp_tstamp as bigint) + @batchSize) as binary(8))
+	END
+	*/
 	
 	IF (@maxID = @lastID) RETURN -- no row
 	

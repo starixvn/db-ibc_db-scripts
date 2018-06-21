@@ -1,3 +1,11 @@
+USE [bodb02]
+GO
+/****** Object:  StoredProcedure [dbo].[Task_SettleTicketsByTrans]    Script Date: 6/21/2018 5:46:33 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
 ALTER PROCEDURE [dbo].[Task_SettleTicketsByTrans]	
 AS
 /*
@@ -20,15 +28,20 @@ BEGIN
 
 	DECLARE @xml XML = N'<root><r>' + REPLACE(@TransIDs, ',', '</r><r>') + '</r></root>'	
 
+	DECLARE @__TransIds TABLE (transid bigint primary key)
+	INSERT @__TransIds(transid)
+	SELECT r.value('.','bigint')
+	FROM @xml.nodes('//root/r') AS RECORDS(r)
+	OPTION (OPTIMIZE FOR (@xml = NULL ))
+	
 	UPDATE dbo.bettrans WITH(ROWLOCK, UPDLOCK)
 	SET ruben = 1, statusID = 88 -- no_more_running ticket
 	WHERE transid IN (
-		SELECT r.value('.','bigint')
-		FROM @xml.nodes('//root/r') AS RECORDS(r)
+		SELECT transid
+		FROM @__TransIds
 	)
 
 	UPDATE dbo.Tickets_settled_setting WITH(ROWLOCK, UPDLOCK) 
 	SET sValue = cast(@maxID as bigint) 
 	WHERE sKey = 'bettrans_tstamp'
 END
-
