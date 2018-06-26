@@ -4,7 +4,7 @@ GO
 /*
 	Created: 20180620@Percy
 	DB: DBODDSFEED.bodb_oddsfeed
-	Task: Add new bettypes: from 448 to 460
+	Task: Add new bettypes: from 448 to 460 (except 454, 457)
 */
 
 /*
@@ -12,6 +12,6 @@ Old value: 1,2,3,4,5,6,7,8,10,11,12,15,16,17,18,20,13,14,17,18,21,22,24,25,26,27
 */
 
 UPDATE dbo.SystemSetting WITH (ROWLOCK, UPDLOCK)
-SET SValue = SValue + ',448,449,450,451,452,453,454,455,456,457,458,459,460'
+SET SValue = SValue + ',448,449,450,451,452,453,455,456,458,459,460'
 WHERE Type = 'BetTypes' AND SName = 'SupportedBettypes'
 GO
