@@ -71,7 +71,13 @@ VALUES
 ('Acc_ExchangeRateCheckValid'),
 ('Acc_ExchangeRateIns'),
 ('Acc_ExchangeRateUpd'),
-('Acc_ExchangeRateSel')
+('Acc_ExchangeRateSel'),
+('Age_CustomerUpdPwd'), -- SP used in dbcust/custdb only (ALPHA, extNap),not DB05
+
+('Age_CustomerSelOnlineList_Ag'),
+('Age_CustomerSelOnlineList_MAg'),
+('Age_CustomerSelOnlineList_SAg')
+
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''
