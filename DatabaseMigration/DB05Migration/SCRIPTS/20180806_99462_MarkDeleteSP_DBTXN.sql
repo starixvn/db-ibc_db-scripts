@@ -52,7 +52,9 @@ VALUES
 ('Agw_Transfer_SelList_SAg'),
 ('DBA_Settlement_AbandonedMatch'),
 ('NAP_BettransDelSpecial_LiveCS'),
-('NAP_BettransRecoverBet_LiveCS')
+('NAP_BettransRecoverBet_LiveCS'),
+('NAP_BettransDelSpecialDel_MixParlay'),
+('NAP_BettransDelSpecial')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''
