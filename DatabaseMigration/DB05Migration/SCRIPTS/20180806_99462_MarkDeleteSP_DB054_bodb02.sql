@@ -13,27 +13,13 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
-('Acc_SMATurnoverCheckList'),
-('Acc_SMATurnoverIns'),
-('Acc_SMATurnoverUpd'),
-('NAP_SMATurnoverGlobalSettingDel'),
-('NAP_SMATurnoverGlobalSettingIns'),
-('NAP_SMATurnoverGlobalSettingUpd'),
-('NAP_SMATurnoverUpd'),
-('Acc_SMATurnoverCheckList'),
-('Acc_SMATurnoverIns'),
-('Acc_SMATurnoverUpd'),
-('NAP_SMATurnover_LeagueControlDel'),
-('NAP_SMATurnover_LeagueControlUpd'),
-('NAP_SMATurnover_MatchControlDel'),
-('NAP_SMATurnover_MatchControlUpd'),
-('NAP_SMATurnover_SMAControlByEventDel'),
-('NAP_SMATurnover_SMAControlByEventIns'),
-('NAP_SMATurnover_SMAControlByEventUpd'),
-('NAP_SMATurnover_SMAControlDel'),
-('NAP_SMATurnover_SMAControlIns'),
-('NAP_SMATurnover_SMAControlUpd'),
-('NAP_SMATurnover_SportControlUpd')
+('Acc_SMATurnoverCheckList'),	
+('Acc_SMATurnoverIns'),	
+('Acc_SMATurnoverUpd'),	
+('NAP_SMATurnoverGlobalSettingDel'),	
+('NAP_SMATurnoverGlobalSettingIns'),	
+('NAP_SMATurnoverGlobalSettingUpd'),	
+('NAP_SMATurnoverUpd')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''
