@@ -22,7 +22,8 @@ VALUES
 ('f_IsAllowedAccUser'),
 ('Acc_CustomerUpdSuperLiveCS_CommissionForAllLevels'),
 ('Acc_ExchangeUpdateOpenToteRate'),
-('Acc_RacingBetSettingUpd')
+('Acc_RacingBetSettingUpd'),
+('Acc_CustomerSelStatus')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''
