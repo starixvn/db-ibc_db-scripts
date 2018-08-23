@@ -62,14 +62,14 @@ GO
 SET IDENTITY_INSERT Acc_GroupInfo ON
 INSERT INTO Acc_GroupInfo (GroupID, GroupName, GroupDesc, CreateDate, ModifyDate, DisplayOrder, Creator, System)
 SELECT GroupID, GroupName, GroupDesc, CreateDate, ModifyDate, DisplayOrder, Creator, System FROM DBPOLICY.BODB02.dbo.Acc_GroupInfo_1 WITH (NOLOCK)
-SET IDENTITY_INSERT Acc_GroupInfo ON
+SET IDENTITY_INSERT Acc_GroupInfo OFF
 
 GO
 SET IDENTITY_INSERT Acc_FunctionInfo ON
 INSERT INTO Acc_FunctionInfo (FuncID, FuncName, FuncNote, FuncDesc, FuncRender, CreateDate, ModifyDate, DisplayOrder, Creator, ParentID, Filenames, [System])
 SELECT FuncID, FuncName, FuncNote, FuncDesc, FuncRender, CreateDate, ModifyDate, DisplayOrder, Creator, ParentID, Filenames, [System] 
 FROM DBPOLICY.BODB02.dbo.Acc_FunctionInfo WITH (NOLOCK)
-SET IDENTITY_INSERT Acc_FunctionInfo ON
+SET IDENTITY_INSERT Acc_FunctionInfo OFF
 GO
 
 
