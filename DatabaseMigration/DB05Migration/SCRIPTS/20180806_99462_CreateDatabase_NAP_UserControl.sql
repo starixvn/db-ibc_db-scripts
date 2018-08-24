@@ -7,7 +7,7 @@
 CREATE DATABASE [NAP_UserControl] ON  PRIMARY 
 ( NAME = N'NAP_UserControl_Primary', FILENAME = N'H:\USER_DB\NAP_UserControl\Primary.MDF' , SIZE = 5120KB , MAXSIZE = UNLIMITED, FILEGROWTH = 32768KB ), 
  FILEGROUP [NAP_UserControl_table] 
-( NAME = N'NAP_UserControl_table_01', FILENAME = N'D:\USER_DB\NAP_UserControl\NAP_UserControl_table_01.NDF' , SIZE = 5120KB , MAXSIZE = UNLIMITED, FILEGROWTH = 32768KB )
+( NAME = N'NAP_UserControl_table_01', FILENAME = N'H:\USER_DB\NAP_UserControl\NAP_UserControl_table_01.NDF' , SIZE = 5120KB , MAXSIZE = UNLIMITED, FILEGROWTH = 32768KB )
 
 /*
 -- Local Test
