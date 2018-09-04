@@ -60,7 +60,7 @@ SELECT GroupID, FuncID, Policy, CreateDate, ModifyDate, Creator FROM DBPOLICY.BO
 
 GO
 SET IDENTITY_INSERT Acc_GroupInfo ON
-INSERT INTO Acc_GroupInfo (GroupID, GroupName, GroupDesc, CreateDate, ModifyDate, DisplayOrder, Creator, System)
+INSERT INTO Acc_GroupInfo (GroupID, GroupName, GroupDesc, CreateDate, ModifyDate, DisplayOrder, Creator, [System])
 SELECT GroupID, GroupName, GroupDesc, CreateDate, ModifyDate, DisplayOrder, Creator, System FROM DBPOLICY.BODB02.dbo.Acc_GroupInfo_1 WITH (NOLOCK)
 SET IDENTITY_INSERT Acc_GroupInfo OFF
 
