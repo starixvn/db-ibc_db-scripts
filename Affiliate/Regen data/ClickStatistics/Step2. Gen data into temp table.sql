@@ -25,7 +25,7 @@ from #tmpByDate t
 	inner join TrackingCode a (nolock)  on a.TrackingID=t.TrackingID
 
 -- Monthly by Date
-insert into ClickStatisticsSum(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
+insert into ClickStatisticsSum_tmp(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
 select a.AffID, t.TrackingID, '2018-08-01' as Date, sum(t.TotalClick), sum(t.UniqueClick), 1 as IsForMonth
 from #tmpByDate t
 	inner join TrackingCode a (nolock)  on a.TrackingID=t.TrackingID
@@ -44,12 +44,14 @@ where date between @fromdate and @todate
 group by a.AffID,s.Date
 
 -- Summary for Daily All
-insert into ClickStatisticsSum(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
+insert into ClickStatisticsSum_tmp(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
 select AffID,0 as TrackingID,[Date],TotalClick,UniqueClick,0 as IsForMonth
 from #tmpAll
 
 --Summary for Monthly All
-insert into ClickStatisticsSum(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
+insert into ClickStatisticsSum_tmp(AffID,TrackingID,[Date],TotalClick,UniqueClick,IsForMonth)
 select AffID,0 as TrackingID,'2018-08-01' as [Date],sum(TotalClick),sum(UniqueClick),1 as IsForMonth
 from #tmpAll
 group by AffId
+
+drop table #tmpAll
