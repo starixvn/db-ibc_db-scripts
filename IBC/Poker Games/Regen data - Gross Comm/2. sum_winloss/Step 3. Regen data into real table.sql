@@ -3,7 +3,7 @@ GO
 
 /*
 	Created: 20180914@Percy
-	DB: DBSUM.bodb_Summary
+	DB: DBTXN.bodb02
 	Task: Regen data sum_winloss - Step 3: Regen data into real table
 */
 
