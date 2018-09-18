@@ -8,7 +8,7 @@ GO
 */
 
 DELETE dbo.sum_winloss_old WITH (ROWLOCK, UPDLOCK)
-WHERE winlostdate >= '2018-09-04' AND sporttype = 163 AND bettype = 0
+WHERE winlostdate >= '2018-09-02' AND sporttype = 163 AND bettype = 0
 
 INSERT INTO dbo.sum_winloss_old
 (
