@@ -29,7 +29,7 @@ SELECT
 	playercomm, comm, acomm, scomm,
 	apositiontaking, mpositiontaking, spositiontaking
 FROM dbo.bettrans_bk b WITH (NOLOCK)
-WHERE winlostdate >= '2018-09-04'
+WHERE winlostdate >= '2018-09-02'
 	AND bettype BETWEEN 1401 AND 1499
 	AND statusID NOT IN (0,1,102,101,103)
 
