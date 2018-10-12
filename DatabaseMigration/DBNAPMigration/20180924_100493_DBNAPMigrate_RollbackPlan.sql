@@ -42,7 +42,8 @@ WHEN NOT MATCHED BY SOURCE THEN DELETE ;
 
 GO	
 -- Table 2: MenuItems	
-SET IDENTITY_INSERT MenuItems ON
+SET IDENTITY_INSERT MenuItems ON;
+
 MERGE dbo.MenuItems TARGET
 USING (
 	SELECT   MenuItemId, FunctionId, SiteId, MenuItemName, Description, ParentId, ParentName, Policy, URL, DisplayOrder, IsActive, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Environment
@@ -77,7 +78,7 @@ SET IDENTITY_INSERT MenuItems OFF
 GO
 
 -- Table 3: Sites
-SET IDENTITY_INSERT Sites ON
+SET IDENTITY_INSERT Sites ON;
 MERGE dbo.Sites TARGET
 USING (
 	SELECT   SiteId, SiteName, Description, URL, TestURL, IsActive, Environment, SecretAccessKey, SiteKey
@@ -97,7 +98,7 @@ SET IDENTITY_INSERT Sites OFF
 
 GO
 -- Table 4: SiteURL	
-SET IDENTITY_INSERT SiteURL ON
+SET IDENTITY_INSERT SiteURL ON;
 MERGE dbo.SiteURL TARGET
 USING (
 	SELECT SiteURLId, SiteId, URL, Environment, IsDefault, IsActive
@@ -172,7 +173,7 @@ WHEN NOT MATCHED BY SOURCE THEN DELETE ;
 
 GO
 -- Table 8: Functions
-SET IDENTITY_INSERT Functions ON
+SET IDENTITY_INSERT Functions ON;
 MERGE dbo.Functions TARGET
 USING (
 	SELECT FunctionId, SiteId, FunctionName, FunctionKey, Description, ParentId, ParentName, CRUD, DisplayOrder, IsActive, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Environment
@@ -227,6 +228,7 @@ WHEN NOT MATCHED BY TARGET THEN
 WHEN NOT MATCHED BY SOURCE THEN DELETE ;
 
 -- Table 11: Groups
+SET IDENTITY_INSERT Groups ON;
 MERGE dbo.Groups TARGET
 USING (
 	SELECT GroupId, GroupName, Description, IsActive, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate
@@ -242,37 +244,49 @@ WHEN NOT MATCHED BY TARGET THEN
 	VALUES(SOURCE.GroupId, SOURCE.GroupName, SOURCE.Description, SOURCE.IsActive, SOURCE.CreatedBy, SOURCE.CreatedDate, SOURCE.ModifiedBy, SOURCE.ModifiedDate)	
 
 WHEN NOT MATCHED BY SOURCE THEN DELETE ;
-
+SET IDENTITY_INSERT Groups OFF
 /*
 CHECKING DATA
 
+1.UserMarkedMenus
+		2. MenuItems
+		3. Sites
+		4. SiteURL
+		5. UserFunction
+		6. Users
+		7. UserSite
+		8. Functions
+--		OnUser
+		9. ObjectType
+		10. GroupFunction
+		11. Groups
+		
+SELECT COUNT(1) FROM MenuItems WITH (NOLOCK) 
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_MenuItems with (nolock)
 
-SELECT COUNT(1) FROM AccCustomer_1 WITH (NOLOCK) 
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.AccCustomer with (nolock)
+SELECT COUNT(1) FROM Sites WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_Sites with (nolock)
 
-SELECT COUNT(1) FROM Acc_Menu WITH (NOLOCK)
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.Acc_Menu with (nolock)
+SELECT COUNT(1) FROM SiteURL WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_SiteURL with (nolock)
 
-SELECT COUNT(1) FROM Acc_MemberPolicy_1 WITH (NOLOCK)
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.Acc_MemberPolicy with (nolock)
+SELECT COUNT(1) FROM UserFunction WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_UserFunction with (nolock)
 
-SELECT COUNT(1) FROM Acc_GroupPolicy_1 WITH (NOLOCK)
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.Acc_GroupPolicy with (nolock)
+SELECT COUNT(1) FROM Users WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_Users with (nolock)
 
-SELECT COUNT(1) FROM Acc_GroupInfo_1 WITH (NOLOCK)
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.Acc_GroupInfo with (nolock)
+SELECT COUNT(1) FROM Functions WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_Functions with (nolock)
 
-SELECT COUNT(1) FROM Acc_FunctionInfo WITH (NOLOCK)
-SELECT COUNT(1) FROM DBCUST.NAP_UserControl.dbo.Acc_FunctionInfo with (nolock)
+SELECT COUNT(1) FROM ObjectType WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_ObjectType WITH (NOLOCK)
 
-SELECT COUNT(1) FROM Acc_ExchangeRate WITH (NOLOCK)
-SELECT COUNT(1) FROM DBTRANS.bodb02.dbo.Acc_ExchangeRate WITH (NOLOCK)
+SELECT COUNT(1) FROM GroupFunction WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_GroupFunction WITH (NOLOCK)
 
-SELECT COUNT(1) FROM Acc_ExchangeRate_History WITH (NOLOCK)
-SELECT COUNT(1) FROM DBTRANS.bodb02.dbo.Acc_ExchangeRate_History WITH (NOLOCK)
-
-SELECT COUNT(1) FROM Acc_ExchangeRate_InvalidTransfer WITH (NOLOCK)
-SELECT COUNT(1) FROM DBTRANS.bodb02.dbo.Acc_ExchangeRate_InvalidTransfer WITH (NOLOCK)
+SELECT COUNT(1) FROM Groups WITH (NOLOCK)
+SELECT COUNT(1) FROM DBPOL.NAP_UserControl.dbo.NAP_Groups WITH (NOLOCK)
 
 */
 
