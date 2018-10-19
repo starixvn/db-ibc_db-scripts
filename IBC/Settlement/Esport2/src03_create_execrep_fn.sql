@@ -17,7 +17,7 @@ BEGIN
 END 
 GO
 -------------------------------------------------------------SP NAP_Admin_Calculate_Refund_9001	
-CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_Refund_9001]
+CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_Refund_TransID]
 	@transIds					VARCHAR(MAX)	 = NULL
 
 AS
