@@ -1,12 +1,19 @@
-﻿/*
+﻿USE [CustDB]
+GO
+
+/*
 	Created: 20181012@Percy
-	DB: DBAGE.bodb02, DBEXT.bodb02, DBTXN.bodb02, DBCUST.CustDB
+	DB: DBCUST.CustDB
 	Task: Update translation error messages
 
 	SELECT *
 	FROM dbo.MsgError WITH (NOLOCK)
 	WHERE MsgId IN (40036, 40037, 50012, 50013, 50014)
 */
+
+-- Remove messages
+DELETE dbo.MsgError WITH (ROWLOCK, UPDLOCK)
+WHERE MsgId IN (40036, 40037, 50012, 50013, 50014)
 
 CREATE TABLE #MsgError
 (
@@ -47,23 +54,8 @@ SET MsgNameJP = MsgNameEN,
 	MsgNameES = MsgNameEN,
 	MsgNameCN = MsgNameEN
 
-MERGE dbo.MsgError AS TARGET
-USING #MsgError AS SOURCE
-	ON TARGET.MsgID = SOURCE.MsgID
-WHEN MATCHED THEN UPDATE
-	SET TARGET.MsgGroupID	= SOURCE.MsgGroupID,
-		TARGET.IsActive		= SOURCE.IsActive,
-		TARGET.MsgNameEN	= SOURCE.MsgNameEN,
-		TARGET.MsgNameCT	= SOURCE.MsgNameCT,
-		TARGET.MsgNameCS	= SOURCE.MsgNameCS,
-		TARGET.MsgNameJP	= SOURCE.MsgNameJP,
-		TARGET.MsgNameTH	= SOURCE.MsgNameTH,
-		TARGET.MsgNameKO	= SOURCE.MsgNameKO,
-		TARGET.MsgNameES	= SOURCE.MsgNameES,
-		TARGET.MsgNameVI	= SOURCE.MsgNameVI,
-		TARGET.MsgNameCN	= SOURCE.MsgNameCN
-WHEN NOT MATCHED BY TARGET THEN
-	INSERT (MsgID,MsgGroupID,IsActive,MsgNameEN,MsgNameCT,MsgNameCS,MsgNameJP,MsgNameTH,MsgNameKO,MsgNameES,MsgNameVI,MsgNameCN)
-	VALUES (MsgID,MsgGroupID,IsActive,MsgNameEN,MsgNameCT,MsgNameCS,MsgNameJP,MsgNameTH,MsgNameKO,MsgNameES,MsgNameVI,MsgNameCN);
+INSERT INTO dbo.MsgError(MsgID,MsgGroupID,IsActive,MsgNameEN,MsgNameCT,MsgNameCS,MsgNameJP,MsgNameTH,MsgNameKO,MsgNameES,MsgNameVI,MsgNameCN)
+SELECT MsgID,MsgGroupID,IsActive,MsgNameEN,MsgNameCT,MsgNameCS,MsgNameJP,MsgNameTH,MsgNameKO,MsgNameES,MsgNameVI,MsgNameCN
+FROM #MsgError
 
 DROP TABLE #MsgError
