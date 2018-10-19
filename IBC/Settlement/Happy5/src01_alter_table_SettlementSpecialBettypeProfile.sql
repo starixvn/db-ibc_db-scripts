@@ -8,4 +8,4 @@ USE [bodb02]
 GO
 
 ALTER SettlementSpecialBettypeProfile
-ADD OddsType SMALLINT;
+ADD OddsType SMALLINT
