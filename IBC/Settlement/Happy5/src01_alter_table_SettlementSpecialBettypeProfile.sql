@@ -7,5 +7,5 @@
 USE [bodb02]
 GO
 
-ALTER SettlementSpecialBettypeProfile
+ALTER TABLE SettlementSpecialBettypeProfile
 ADD OddsType SMALLINT
