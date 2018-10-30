@@ -20,9 +20,9 @@ SELECT m.Matchid
 		   ELSE 0 END
 		AS SettlementStatusID
 	,m.creator
-	,m.kickofftime
+	,GETDATE()
 	,m.creator
-	,m.changetime
+	,GETDATE()
 FROM Match m
 WHERE m.Sporttype = 43 
 	AND (m.finalhomescore IS NOT NULL OR m.finalawayscore IS NOT NULL)
