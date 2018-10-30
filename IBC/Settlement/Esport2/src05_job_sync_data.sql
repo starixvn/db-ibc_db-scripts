@@ -16,17 +16,18 @@ AS
 	*/ 
 BEGIN
 	SET NOCOUNT ON
-	DECLARE @varTimeCheck SMALLINT = 20
+	DECLARE @deltaTime SMALLINT = 20
 	DECLARE @tblData TABLE (matchid INT, finalhomescore VARCHAR(50), finalawayscore VARCHAR(50), creator INT)
 	-----------------------------------------------------------------------------------
 	
 	--get data from table match	
 	INSERT INTO @tblData (matchid, finalhomescore, finalawayscore, creator)
 	SELECT matchid, finalhomescore, finalawayscore, creator
-	FROM dbo.[match] WITH (NOLOCK, INDEX(IX_match_eventstatus))
-	WHERE eventstatus = N'completed' 
-		AND sporttype = 43 
-		AND DATEDIFF(second, changetime, GETDATE()) <= @varTimeCheck
+	FROM dbo.[match] WITH (NOLOCK)
+	WHERE sporttype = 43 
+		AND DATEDIFF(second, changetime, GETDATE()) <= @deltaTime
+		AND eventstatus <> N'completed' 
+		
 
 	
 	DELETE d
@@ -54,9 +55,8 @@ BEGIN
 
     WHEN NOT MATCHED BY TARGET THEN
         INSERT (MatchId, ResourceId, HomeValue, AwayValue, ResultStatusID, SettlementStatusID, CreateDate, LastModifyDate, CreateBy, LastModifyBy)               
-        VALUES(SOURCE.matchid, '00', SOURCE.finalhomescore, SOURCE.finalawayscore, 5, 4, GETDATE(), GETDATE(), SOURCE.creator, SOURCE.creator);
+        VALUES(SOURCE.matchid, '00', SOURCE.finalhomescore, SOURCE.finalawayscore, 0, 0, GETDATE(), GETDATE(), SOURCE.creator, SOURCE.creator);
 	        
-	
 END 
 GO
 
