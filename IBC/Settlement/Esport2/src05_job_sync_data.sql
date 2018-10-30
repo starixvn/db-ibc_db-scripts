@@ -9,6 +9,8 @@ AS
 		Created: 20181008@Vicky
 		Task: Synchronize data for ESport
 		DB: DBPRO.bodb02
+		Schedule: - This task only starts in case Settlement's site and Member's site which are not released the same day.
+				  - It should be called every day every 20 seconds until Member's Site is released.
 		
 		Revisions:
 		
