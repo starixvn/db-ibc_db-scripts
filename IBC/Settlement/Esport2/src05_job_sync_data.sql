@@ -2,15 +2,15 @@
 USE [bodb02]
 GO
 
-ALTER  PROCEDURE [dbo].[Task_Set_SyncDataToResultDetail_ESport]
-
+ALTER  PROCEDURE [dbo].[Task_Set_SyncDataToResultDetailES_ESport]
+		@timeIntervals		SMALLINT	= 15 --second		
 AS
 	/*
 		Created: 20181008@Vicky
 		Task: Synchronize data for ESport
 		DB: DBPRO.bodb02
 		Schedule: - This task only starts in case Settlement's site and Member's site which are not released the same day.
-				  - It should be called every day every 20 seconds until Member's Site is released.
+				  - It should be called every day every @timeIntervals seconds until Member's Site is released.
 		
 		Revisions:
 		
@@ -18,7 +18,6 @@ AS
 	*/ 
 BEGIN
 	SET NOCOUNT ON
-	DECLARE @deltaTime SMALLINT = 20
 	DECLARE @tblData TABLE (matchid INT, finalhomescore VARCHAR(50), finalawayscore VARCHAR(50), creator INT)
 	-----------------------------------------------------------------------------------
 	
@@ -27,19 +26,11 @@ BEGIN
 	SELECT matchid, finalhomescore, finalawayscore, creator
 	FROM dbo.[match] WITH (NOLOCK)
 	WHERE sporttype = 43 
-		AND DATEDIFF(second, changetime, GETDATE()) <= @deltaTime
-		AND eventstatus <> N'completed' 
+		AND DATEDIFF(second, changetime, GETDATE()) <= @timeIntervals + 5
+		AND eventstatus <> N'completed'
+		AND (finalhomescore IS NOT NULL OR finalawayscore IS NOT NULL)
 		
-
 	
-	DELETE d
-	FROM @tblData d
-		INNER JOIN dbo.ResultDetailES rd WITH (NOLOCK) ON rd.matchid = d.matchid
-	WHERE rd.ResourceID = '00'
-		AND rd.HomeValue = d.finalhomescore
-		AND rd.AwayValue = d.finalawayscore
-		
-		
 	IF NOT EXISTS (SELECT TOP 1 1 FROM @tblData)
 		RETURN
 		

@@ -8,7 +8,7 @@
 USE [bodb02]
 GO
 
--------------------------------------------------------------SP NAP_Admin_Calculate_TransID
+-------------------------------------------------------------
 CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_TransID]
     @transIds           VARCHAR(MAX)
 AS
@@ -16,9 +16,9 @@ BEGIN
 	SELECT 1
 END 
 GO
--------------------------------------------------------------SP NAP_Admin_Calculate_Refund_9001	
+-------------------------------------------------------------	
 CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_Refund_TransID]
-	@transIds					VARCHAR(MAX)	 = NULL
+	@transIds			VARCHAR(MAX)
 
 AS
 BEGIN
@@ -26,7 +26,7 @@ BEGIN
 END 
 GO
 
--------------------------------------------------------------SP NAP_Admin_Calculate_Undo_TransID
+-------------------------------------------------------------
 CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_Undo_TransID]
 	@transIds      		VARCHAR(MAX)
 AS

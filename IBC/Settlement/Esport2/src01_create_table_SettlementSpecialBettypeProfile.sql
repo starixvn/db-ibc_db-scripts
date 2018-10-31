@@ -15,25 +15,34 @@ SET ANSI_PADDING ON
 GO
 CREATE TABLE [dbo].[SettlementSpecialBettypeProfile](
 	[pfID] [smallint] NOT NULL,
-	[SportType] [tinyint] NOT NULL,
 	[BetType] [smallint] NOT NULL,
+	[SportType] [tinyint] NOT NULL,
 	[BetID] [bigint] NOT NULL,
 	[ResourceID] [varchar](20) NOT NULL,
 	[SettleType] [char](3) NOT NULL,
 	[GroupType] [char](2) NOT NULL,
 	[OrdNo] [smallint] NULL,
-	[RoundID] [varchar](10) NULL
+	[RoundID] [varchar](10) NULL,
+	[OddsType] [smallint] NULL
 ) ON [DATA]
 GO
 
 
-
-CREATE CLUSTERED INDEX [IX_SettlementSpecialBettypeProfile_resourceid_sporttype] ON [dbo].[SettlementSpecialBettypeProfile] 
+----this cluster index is used when needed to determine the corresponding Bettype and BetID from ResourceID (settle)
+CREATE CLUSTERED INDEX [IX_SettlementSpecialBettypeProfile_resourceid] ON [dbo].[SettlementSpecialBettypeProfile] 
 (
-	[ResourceID] ASC,
-	[SportType] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
+	[ResourceID] ASC
+) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
 GO
 
+
+
+----this non-cluster index is used when needed to determine the corresponding resourceID from Bettype and BetID (return for web)
+CREATE NONCLUSTERED INDEX [IX_SettlementSpecialBettypeProfile_Bettype_BetID] ON [dbo].[SettlementSpecialBettypeProfile] 
+(
+	[Bettype] ASC,
+	[BetID] ASC
+) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
+GO
 
 
