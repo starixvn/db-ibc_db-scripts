@@ -27,9 +27,3 @@ FROM Match m
 WHERE m.Sporttype = 43 
 	AND (m.finalhomescore IS NOT NULL OR m.finalawayscore IS NOT NULL)
 	
-	
-	
-
-	
-	
-	
