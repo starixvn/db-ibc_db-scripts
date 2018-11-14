@@ -1,8 +1,8 @@
 /*
 	Created: Vicky
-	Task: create execrep fn
-	DB: DBTXN/bodb02, DBACC/bodb02, DBAGE/bodb02, DBEXT/bodb02, DB042/bodb02
-	Date: 20180912
+	Task: insert LogAction for happy5
+	DB: DBLOG/bodb_CustomerLog
+	Date: 20181114
 	
 */
 USE [bodb_CustomerLog]
