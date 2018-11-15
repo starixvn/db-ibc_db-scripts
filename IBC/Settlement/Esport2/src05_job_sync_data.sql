@@ -3,7 +3,7 @@ USE [bodb02]
 GO
 
 ALTER  PROCEDURE [dbo].[Task_Set_SyncDataToResultDetailES_ESport]
-		@timeIntervals		SMALLINT	= 15 --second		
+		@timeIntervals		INT	= 15 --second		
 AS
 	/*
 		Created: 20181008@Vicky
@@ -36,27 +36,20 @@ BEGIN
 		
 		
 	MERGE dbo.ResultDetailES WITH (HOLDLOCK) TARGET
-    USING (
-        SELECT  sr.matchid, sr.finalhomescore, sr.finalawayscore, sr.creator
-        FROM    @tblData sr
-        ) AS SOURCE ON  TARGET.ResourceId = '00' AND TARGET.MatchId = SOURCE.matchid
-    WHEN MATCHED THEN
-    
-        UPDATE SET HomeValue     = SOURCE.finalhomescore
-            ,AwayValue           = SOURCE.finalawayscore
-            ,LastModifyDate      = GETDATE()
+	USING (
+		SELECT  sr.matchid, sr.finalhomescore, sr.finalawayscore, sr.creator
+		FROM	@tblData sr
+		) AS SOURCE ON  TARGET.ResourceId = '00' AND TARGET.MatchId = SOURCE.matchid
+	WHEN MATCHED THEN
+	
+		UPDATE SET HomeValue	 = SOURCE.finalhomescore
+			,AwayValue		   = SOURCE.finalawayscore
+			,LastModifyDate	  = GETDATE()
 
-    WHEN NOT MATCHED BY TARGET THEN
-        INSERT (MatchId, ResourceId, HomeValue, AwayValue, ResultStatusID, SettlementStatusID, CreateDate, LastModifyDate, CreateBy, LastModifyBy)               
-        VALUES(SOURCE.matchid, '00', SOURCE.finalhomescore, SOURCE.finalawayscore, 0, 0, GETDATE(), GETDATE(), SOURCE.creator, SOURCE.creator);
-	        
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT (MatchId, ResourceId, HomeValue, AwayValue, ResultStatusID, SettlementStatusID, CreateDate, LastModifyDate, CreateBy, LastModifyBy)
+		VALUES(SOURCE.matchid, '00', SOURCE.finalhomescore, SOURCE.finalawayscore, 0, 0, GETDATE(), GETDATE(), SOURCE.creator, SOURCE.creator);
+			
 END 
 GO
 
-	
-	
-	
-
-	
-	
-	
