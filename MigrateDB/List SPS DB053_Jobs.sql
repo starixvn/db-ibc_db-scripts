@@ -1175,8 +1175,7 @@ AND o.Name NOT LIKE '%/_UAT%' ESCAPE '/'
 AND o.Name NOT LIKE '%/_DEL%' ESCAPE '/'
 AND o.Name NOT LIKE '%DEL/_%' ESCAPE '/'
 AND o.Name NOT LIKE '%sp/_MSin%' ESCAPE '/'
-AND o.Name NOT LIKE '%sp/_MSin%' ESCAPE '/' 
-AND o.Name NOT LIKE '%/__%' ESCAPE '/' 
+AND o.Name NOT LIKE '%sp/_MSin%' ESCAPE '/'  
 
 
 DROP TABLE #tables 
