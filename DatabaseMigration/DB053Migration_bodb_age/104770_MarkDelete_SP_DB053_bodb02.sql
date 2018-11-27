@@ -13,9 +13,9 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
-('Age_Rpt_DailyWLFoobet '),
-('DBA_ReInit_bettrans_forecast_agent '),
-('Task_Delete_bettrans_running '),
+('Age_Rpt_DailyWLFoobet'),
+('DBA_ReInit_bettrans_forecast_agent'),
+('Task_Delete_bettrans_running'),
 ('Acc_Rpt_Winloss_12Bet'),
 ('Acc_Rpt_Winloss_12Bet_BetList'),
 ('Acc_Rpt_Winloss_12Bet_BetList_History'),

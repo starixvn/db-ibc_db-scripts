@@ -13,14 +13,14 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
-('Task_Delete_bettrans_running '),
+('Task_Delete_bettrans_running'),
 ('Task_STDBY_Sync_AGE'),
 ('Task_STDBY_Sync_AGE_CustGroup'),
 ('Task_STDBY_Sync_AGE_CustGroup_xpre'),
 ('Task_STDBY_Sync_AGE_CustProfilePicture'),
 ('Acc_CustGroupSelGroup'),
 ('Acc_CustGroupSelGroup_test'),
-('Age_CustomerSelSuggestUsername_lukas '),
+('Age_CustomerSelSuggestUsername_lukas'),
 ('DBA_NAP_LimitLoss_update'),
 ('Task_STDBY_Sync_AGE'),
 ('Task_STDBY_Sync_AGE_CustGroup'),
