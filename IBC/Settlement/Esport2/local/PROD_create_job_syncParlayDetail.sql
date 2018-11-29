@@ -1,3 +1,10 @@
+/*
+	Created: Vicky
+	Task: create job vnDBA: manually sync parlaydetail
+	DB: DBACC/bodb02
+	Date: 20181129
+*/
+
 USE [msdb]
 GO
 
