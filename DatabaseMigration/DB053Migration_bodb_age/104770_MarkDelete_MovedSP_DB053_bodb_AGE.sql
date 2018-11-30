@@ -25,7 +25,9 @@ VALUES
 ('Age_CustomerSelSuggestUsername'),
 ('Age_CustomerUpdProfilePicture'),
 ('EAS_CustomerDateLimitMultipleUpd'),
-('EAS_CustomerDateLimitSel')
+('EAS_CustomerDateLimitSel'),
+-- SP not use anymore after release
+('Acc_CustGroupSelGroup')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''

@@ -18,7 +18,7 @@ VALUES
 ('Task_STDBY_Sync_AGE_CustGroup'),
 ('Task_STDBY_Sync_AGE_CustGroup_xpre'),
 ('Task_STDBY_Sync_AGE_CustProfilePicture'),
-('Acc_CustGroupSelGroup'),
+--('Acc_CustGroupSelGroup'),
 ('Acc_CustGroupSelGroup_test'),
 ('Age_CustomerSelSuggestUsername_lukas'),
 ('DBA_NAP_LimitLoss_update'),
