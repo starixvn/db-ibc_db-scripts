@@ -1,0 +1,250 @@
+
+---DB052 
+Use bodb_Licensee
+Go
+DROP PROC DEL_Lbs_UserLogin
+DROP PROC DEL_Acc_BA_GroupCurrency_ViewLog
+DROP PROC DEL_Acc_BA_GroupCurrencySel
+DROP PROC DEL_Acc_BA_GroupCurrencyUpd
+DROP PROC DEL_Acc_BA_LicConfig_ViewLog
+DROP PROC DEL_Acc_BA_LicConfigSel
+DROP PROC DEL_Acc_BA_LicConfigUpd
+DROP PROC DEL_Acc_BA_SpecialCust_ViewLog
+DROP PROC DEL_Acc_BA_SpecialCustAdd
+DROP PROC DEL_Acc_BA_SpecialCustDel
+DROP PROC DEL_Acc_BA_SpecialCustSel
+DROP PROC DEL_Acc_BA_SpecialCustUpd
+DROP PROC DEL_DBA_AddLicenseeToBA
+DROP PROC DEL_DBA_CreateLicenseeAgent
+DROP PROC DEL_DBA_CreateLicenseeUser
+DROP PROC DEL_DBA_LicenseeBAConfig_Ins
+DROP PROC DEL_DBA_LicenseeCustomerDel
+DROP PROC DEL_DBA_Lrf_ActiveLicenseeSystem
+DROP PROC DEL_DBA_Lrf_AddUserIntoLicensee
+DROP PROC DEL_DBA_Lrf_CreateNewLicensee
+DROP PROC DEL_DBA_Lrf_EnablePlayerComm
+DROP PROC DEL_DBA_Lrf_FunctionProduct
+DROP PROC DEL_DBA_Lrf_FunctionUserRole
+DROP PROC DEL_DBA_Lrf_LaunchLicensee
+DROP PROC DEL_DBA_Lrf_LaunchProduct
+DROP PROC DEL_DBA_Lrf_OfferProduct
+DROP PROC DEL_Licensee_UserPasswordUpd
+DROP PROC DEL_Lrf_ActiveDomainUpd
+DROP PROC DEL_Lrf_CheckIn
+DROP PROC DEL_Lrf_CurrencyCustIns
+DROP PROC DEL_Lrf_CustomerMoveGroupComm
+DROP PROC DEL_Lrf_CustomerRemoveGroupComm
+DROP PROC DEL_Lrf_CustomerSetDefaultComm
+DROP PROC DEL_Lrf_CustomerUpdMemberComm
+DROP PROC DEL_Lrf_LicenseeBACustUpdComm
+DROP PROC DEL_Lrf_LicenseeBAHistoryIns
+DROP PROC DEL_Lrf_LicenseeBAHistoryUpdDone
+DROP PROC DEL_Lrf_LicenseeCustCommUpd
+DROP PROC DEL_Lrf_LicenseeGroupCommDel
+DROP PROC DEL_Lrf_LicenseeGroupCommIns
+DROP PROC DEL_Lrf_LicenseeGroupCommUpd
+DROP PROC DEL_LRF_LicenseeSourcedSel
+DROP PROC DEL_Lrf_LicenseeUserFunctionsDel
+DROP PROC DEL_Lrf_LicenseeUserFunctionsIns
+DROP PROC DEL_Lrf_ReCheckIn
+DROP PROC DEL_Lrf_UpdateUser
+DROP PROC DEL_Lrf_UserLogout
+DROP PROC DEL_Lrf_UserPasswordUpd
+DROP PROC DEL_Lrf_UserPwdReset
+DROP PROC DEL_Lrf_UserUpdAccount
+DROP PROC DEL_Task_Licensee_ClearLogin
+DROP PROC DEL_Lrf_BATimeCheck
+DROP PROC DEL_LRF_InternalLogin
+DROP PROC DEL_Lrf_SyncInternalUser
+DROP PROC DEL_Lrf_UserLogin
+
+DROP PROC DEL_Lrf_CustomerUpdUserSearch
+DROP PROC DEL_Acc_Dep_SyncLicenseeSetting
+DROP PROC DEL_Acc_KenoCurrencySelByLicensee
+DROP PROC DEL_Acc_KenoLicenseeSel
+DROP PROC DEL_Acc_Licensee_Product3rdSel
+DROP PROC DEL_Acc_LicenseeByResellerSel
+
+DROP PROC DEL_Acc_MoveBet_LicenseeBAConfigSel
+DROP PROC DEL_Acc_MoveBet_LicenseeCurrencyBAGroupSel
+DROP PROC DEL_Acc_MoveBet_LicenseeCustSel
+DROP PROC DEL_Acc_MoveBet_LicenseesSel
+DROP PROC DEL_Acc_Rpt_CreditSite_BetCount
+DROP PROC DEL_Acc_Rpt_KenoLicenseeWinLoss
+DROP PROC DEL_DBA_BatchCreateAndMapLicensee
+DROP PROC DEL_DBA_CreateNewLicensee
+DROP PROC DEL_DBA_EnableAGCasino
+DROP PROC DEL_DBA_InsertMemberBATicket
+DROP PROC DEL_DBA_LicenseeProduct3rd_TurnOn
+DROP PROC DEL_DBA_Lrf_OfferProduct3rd
+DROP PROC DEL_GEN_rptBetting_CreditSites
+DROP PROC DEL_GEN_rptBetting_DepositSites
+DROP PROC DEL_GEN_RptKPI_MTD_CreditSites
+DROP PROC DEL_GEN_RptKPI_MTD_DepositSites
+DROP PROC DEL_KPI_AddNewGroup
+DROP PROC DEL_KPI_GetAllGroups
+DROP PROC DEL_KPI_GetGroupSiteRelation
+DROP PROC DEL_KPI_GetReportData
+DROP PROC DEL_KPI_GetReportData_BA
+DROP PROC DEL_KPI_GetTopThreeSports
+DROP PROC DEL_Licensee_CheckIn
+DROP PROC DEL_Licensee_ReCheckIn
+DROP PROC DEL_Licensee_UserLogout
+DROP PROC DEL_Lrf_BrowserStatistic
+DROP PROC DEL_Lrf_CreateNormalUser
+DROP PROC DEL_Lrf_DomainStatusUpd
+DROP PROC DEL_LRF_Get_GroupAll_KPIs
+DROP PROC DEL_LRF_Get_GroupAll_KPIs_LC
+DROP PROC DEL_LRF_Get_GroupAll_KPIs_NG
+DROP PROC DEL_LRF_Get_GroupAll_KPIs_VS
+DROP PROC DEL_LRF_GET_Licensees_KPIs
+DROP PROC DEL_LRF_Get_TopSportsAll_KPIs_BA
+DROP PROC DEL_Lrf_GetFunctionStatistic
+DROP PROC DEL_Lrf_GetLicenseeStatistic
+DROP PROC DEL_Lrf_GetNonFunctionStatistic
+DROP PROC DEL_Lrf_LicenseeGroupCommSel_Francis
+DROP PROC DEL_Lrf_LicenseeGroupCommSel_lukas
+DROP PROC DEL_Lrf_LicenseeSel_bkup
+DROP PROC DEL_Lrf_SelLeagueBySport_xtest100
+DROP PROC DEL_Lrf_SyncInternalUser_bk
+DROP PROC DEL_LRF_UpdateUserVisitStatistic
+DROP PROC DEL_Lrf_UserLogin_mnl
+DROP PROC DEL_OA_FunctionLicenseesGetByFunctionID
+DROP PROC DEL_OA_FunctionResellersGetByFunctionID
+DROP PROC DEL_OA_GroupLicenseesGetByGroupID
+DROP PROC DEL_OA_GroupResellersGetByGroupID
+DROP PROC DEL_OA_LicenseesGetByResellerID
+DROP PROC DEL_OA_ResellersGet
+DROP PROC DEL_OA_ResellerTransactionSel
+DROP PROC DEL_OA_rptUserLicenseesGetByUserID
+DROP PROC DEL_OA_rptUserResellersGetByUserID
+DROP PROC DEL_OA_UserLicenseesGetByUserID
+DROP PROC DEL_OA_UserLicenseesProductGetByUserID
+DROP PROC DEL_OA_UserResellersGetByUserID
+DROP PROC DEL_OAS_addProductToParty
+DROP PROC DEL_SYNC_BAHistory_FromDB052
+DROP PROC DEL_SYNC_LicenseeCommSetting
+DROP PROC DEL_Task_PrepareStaging_8RM
+DROP PROC DEL_Task_PrepareStaging_Archive
+DROP PROC DEL_Task_PrepareStaging_bk
+DROP PROC DEL_Task_PrepareStaging_bk1
+DROP PROC DEL_Task_PrepareStaging_CreditSites
+DROP PROC DEL_Task_PrepareStaging_DepositSites
+DROP PROC DEL_Task_PrepareStaging_NegativeStake
+DROP PROC DEL_UpdLicenseeBAConfig_Support12443
+DROP PROC DEL_UpdLicenseeBAConfig_Support14986
+DROP PROC DEL_UpdLicenseeBAGroupCommHistory_Support12443
+DROP PROC DEL_UpdLicenseeBAGroupCommHistory_Support14986
+DROP PROC DEL_UpdOtherCommRate_Support14986
+DROP PROC DEL_UpdOtherCommRate_Support16065
+DROP PROC DEL_view_kpi_labels
+DROP PROC DEL_view_kpi_labels_LC
+DROP PROC DEL_view_kpi_labels_NG
+DROP PROC DEL_view_kpi_labels_VS
+
+---DB052 
+Use bodb02
+Go
+DROP PROC DEL_DBA_LicenseeCustInfo_InsertMissingData
+DROP PROC DEL_Lrf_LicenseeGroupCommSel
+DROP PROC DEL_Lrf_LicenseeCustRngCommSel
+
+DROP PROC DEL_Acc_ActivelicenseeSel
+DROP PROC DEL_Acc_CustomerSelAllInfo
+DROP PROC DEL_Acc_MoveBet_ExchangeSel
+DROP PROC DEL_Acc_PlaytechCS_LicenseeSelAll
+DROP PROC DEL_Acc_Rpt_BALicWinlossByCommissionLevel
+DROP PROC DEL_Acc_Rpt_LicLiveCasinoWinloss
+DROP PROC DEL_Acc_Rpt_LicNumberGameWinloss
+DROP PROC DEL_Acc_Rpt_LicVirtualSportWinloss
+DROP PROC DEL_Acc_Rpt_LicWinloss
+DROP PROC DEL_Acc_Rpt_LicWinloss2
+DROP PROC DEL_Acc_Rpt_LicWinloss2_Daniel
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail_Ag
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail_Ag2
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail_SAg2
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail2
+DROP PROC DEL_Acc_Rpt_TicketsListing
+DROP PROC DEL_Acc_Rpt_TicketsListingDetail
+DROP PROC DEL_Age_CustomerSelOnlineList_Ag
+DROP PROC DEL_Age_CustomerSelOnlineList_MAg
+DROP PROC DEL_Age_CustomerSelOnlineList_SAg
+DROP PROC DEL_bettrans_after_insert4lrf
+DROP PROC DEL_clearLogin
+DROP PROC DEL_DBA_CreateLicenseeAgent
+DROP PROC DEL_LA_Rpt_LicPerformance_Detail_Francis
+DROP PROC DEL_Lrf_BetList_MobileReport_SelWinloss_Mem
+DROP PROC DEL_Lrf_BetList_SelByDayAll_Mem_Old
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_17730
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_support
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_support_17631
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_support_18267
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_support_Bk
+DROP PROC DEL_Lrf_BetList_SelWinlossDaily_viet
+DROP PROC DEL_Lrf_BetList_SelWinlostRacing
+DROP PROC DEL_Lrf_CustomerSel_20140617
+DROP PROC DEL_Lrf_CustomerSel_DonTest
+DROP PROC DEL_Lrf_CustomerSel_DonTest02
+DROP PROC DEL_Lrf_CustomerSel_viet
+DROP PROC DEL_Lrf_CustomerSel_viet2
+
+DROP PROC DEL_Lrf_CustomerSelBalance_viet
+DROP PROC DEL_Lrf_CustomerSelBalance_xTest_2
+DROP PROC DEL_Lrf_Rpt_CustomerTurnOver_Bk20140211
+DROP PROC DEL_Lrf_Rpt_CustomerTurnOver_dontest
+DROP PROC DEL_Lrf_Rpt_CustomerTurnOver_Lukas
+DROP PROC DEL_Lrf_Rpt_PlaytechWinloss
+DROP PROC DEL_Lrf_Rpt_PlaytechWinlossDetail
+DROP PROC DEL_Lrf_Rpt_PlaytechWinlossDetail_Ag
+DROP PROC DEL_Lrf_Rpt_TurnOver_viettest
+DROP PROC DEL_Lrf_Rpt_WinLoss_viet
+DROP PROC DEL_Lrf_Rpt_WinlostRacing_bk
+DROP PROC DEL_NAP_Rpt_TicketsListingDetail
+DROP PROC DEL_OA_Get_ResellerProductCharge
+DROP PROC DEL_OA_Rpt_LicPerformance_LicensingFee
+DROP PROC DEL_OA_Rpt_LicPerformance_LicensingMargin
+DROP PROC DEL_OA_Rpt_LicPerformance_Summary
+DROP PROC DEL_OA_Rpt_LicPerformance_TurnOver
+DROP PROC DEL_OA_Rpt_LicWinloss
+DROP PROC DEL_OA_Rpt_LicWinloss_Summary
+DROP PROC DEL_OA_Rpt_LicWinloss_Summary2
+DROP PROC DEL_OA_Rpt_LicWinlossDetail
+DROP PROC DEL_OA_Rpt_LicWinlossDetail_Ag
+DROP PROC DEL_OA_Rpt_LiveCasinoWinloss
+DROP PROC DEL_OA_Rpt_NumberGameWinloss
+DROP PROC DEL_OA_Rpt_VirtualSportWinloss
+DROP PROC DEL_OAS_Report_BAWinloss_NewStruct
+DROP PROC DEL_OAS_Report_GetTotalTicket_NewStruct
+DROP PROC DEL_OAS_Report_LicenseeWinloss_NewStruct
+DROP PROC DEL_OAS_Report_LicenseeWinlossDetail
+DROP PROC DEL_OAS_Report_LicenseeWinlossDetail_Ag
+DROP PROC DEL_OAS_Report_LiveCasinoWinloss_NewStruct
+DROP PROC DEL_OAS_Report_NumberGameWinloss_NewStruct
+DROP PROC DEL_OAS_Report_VirtualSportWinloss_NewStruct
+DROP PROC DEL_SYNC_BAHistory_FromDB054
+DROP PROC DEL_SYNC_LicenseeCommSetting_FromDB054
+DROP PROC DEL_SYNC_LicenseeUC_FromDB054
+DROP PROC DEL_Task_BATransaction_Check_xtest_20180809
+DROP PROC DEL_Task_BATransaction_Ins_xtest_20180809
+DROP PROC DEL_Task_Licensee_ClearLogin
+DROP PROC DEL_Task_Lrf_Bettrans_Running_Del
+DROP PROC DEL_Task_rptCustomerMatch_Bettrans14_20141121
+DROP PROC DEL_Task_rptWinlostbyleague_Bettrans14_20141121
+DROP PROC DEL_Task_rptWinlostbyleague_bk
+
+ 
+ ---DB052 
+Use bodb_LicenseeReport
+Go
+DROP PROC DEL_GEN_rptBetting_ColossusBets_support
+
+
+----DB052 
+Use bodb_PlaytechCS
+Go
+DROP PROC DEL_Task_DOT_GoldDeluxe_DailySummary_DanielTest
+
+
+
+

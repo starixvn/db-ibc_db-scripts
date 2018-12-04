@@ -1,0 +1,28 @@
+ ----DB053
+Use bodb02
+go  
+DROP PROC DEL_Acc_CustomerSelAllInfo_lukas
+DROP PROC DEL_Acc_Rpt_CompanyWinloss
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail
+DROP PROC DEL_Acc_Rpt_LicWinlossDetail_Ag
+DROP PROC DEL_Age_CustomerSelOnlineList_Ag
+DROP PROC DEL_Age_CustomerSelOnlineList_MAg
+DROP PROC DEL_Age_CustomerSelOnlineList_SAg
+DROP PROC DEL_clearLogin
+DROP PROC DEL_DBA_CreateLicenseeAgent
+DROP PROC DEL_GetTotalOnline
+DROP PROC DEL_Lbs_Rpt_GetTotalTicket
+DROP PROC DEL_Lbs_UserLogin
+DROP PROC DEL_Lrf_CustomerSelBalance
+DROP PROC DEL_Lrf_CustomerSelCheckBelonging
+DROP PROC DEL_Lrf_Rpt_WinLoss
+DROP PROC DEL_online_admin
+DROP PROC DEL_online_user
+DROP PROC DEL_online_usera
+DROP PROC DEL_online_userma
+DROP PROC DEL_Task_BATransaction_Check
+DROP PROC DEL_Task_BATransaction_Ins
+DROP PROC DEL_Task_Licensee_ClearLogin
+
+
+

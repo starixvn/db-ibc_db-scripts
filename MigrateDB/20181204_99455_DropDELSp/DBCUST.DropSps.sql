@@ -1,0 +1,13 @@
+-----DBCUST
+Use CUSTDB
+go
+DROP PROC DEL_DBA_Lrf_ChangeLicenseeName_bk20160329
+DROP PROC DEL_Dot_Dep_CustomerInsMember_Ag_Cust_backup
+DROP PROC DEL_NAP_SpecialCustSettingAgent_SelByCurrencyAndLicensee
+DROP PROC DEL_NAP_WinLimit_CustNotConfigProductSel
+DROP PROC DEL_NAP_WinLimit_SiteLicenseeByProductSel
+DROP PROC DEL_NAP_SpecialCustSetting_LicenseeList
+----DBCUST
+Use SiteConfig
+go 
+DROP PROC DEL_Portal_Import_AFF_Permission_bk
