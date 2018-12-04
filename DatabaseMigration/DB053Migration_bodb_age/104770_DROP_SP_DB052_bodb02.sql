@@ -14,7 +14,8 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
 ('Task_ExternalSettlement'),
-('Task_ExternalSettlement_Loop')
+('Task_ExternalSettlement_Loop'),
+('Acc_CustomerSelAgentInfo')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
 DECLARE @sql NVARCHAR(MAX) = ''
