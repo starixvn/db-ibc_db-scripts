@@ -13,11 +13,6 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
-('rptProgressiveGamesContribution_20180607_bk'),
-('rptProgressiveGamesContribution_20180608_bk'),
-('rptProgressiveGamesContribution_tmp'),
-('sum_winlossFB'),
-('transfer_fi_on_date_May13'),
 ('Acc_ExternalSettlement'),
 ('Acc_GroupExtraPT_Product'),
 ('bettrans_forecast_agent'),
