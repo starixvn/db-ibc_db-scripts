@@ -25,9 +25,20 @@ GO
 			 OR rs.SettlementStatusID <> CASE WHEN m.eventstatus = 'completed' AND m.betstatus LIKE 'Refund%' THEN 1
 			 		       					  WHEN m.eventstatus = 'completed' THEN 4
 			 		       					  ELSE 0 END
-					
 			)
-		
+
+			
+			
+	INSERT INTO @tblData (matchid, finalhomescore, finalawayscore, creator, eventstatus, betstatus)
+	SELECT m.matchid, finalhomescore, finalawayscore, creator, eventstatus, betstatus
+	FROM dbo.[match] m WITH (NOLOCK)
+	WHERE m.Sporttype = 43 
+		AND (m.finalhomescore IS NOT NULL OR m.finalawayscore IS NOT NULL)
+		AND NOT EXISTS(
+			SELECT 1
+			FROM dbo.ResultDetailES rs WITH (NOLOCK)
+			WHERE rs.matchid = m.matchid AND rs.ResourceID  = '00'
+		)
 	
 	IF NOT EXISTS (SELECT TOP 1 1 FROM @tblData)
 		RETURN
