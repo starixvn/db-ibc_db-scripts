@@ -42,9 +42,9 @@ BEGIN
 		) AS SOURCE ON  TARGET.ResourceId = '00' AND TARGET.MatchId = SOURCE.matchid
 	WHEN MATCHED THEN
 	
-		UPDATE SET HomeValue	 = SOURCE.finalhomescore
-			,AwayValue		   = SOURCE.finalawayscore
-			,LastModifyDate	  = GETDATE()
+		UPDATE SET HomeValue	= SOURCE.finalhomescore
+			,AwayValue			= SOURCE.finalawayscore
+			,LastModifyDate		= GETDATE()
 
 	WHEN NOT MATCHED BY TARGET THEN
 		INSERT (MatchId, ResourceId, HomeValue, AwayValue, ResultStatusID, SettlementStatusID, CreateDate, LastModifyDate, CreateBy, LastModifyBy)
