@@ -19,7 +19,9 @@ GO
 	WHERE sporttype = 43 
 		AND (   ISNULL(rs.HomeValue,-1) <> ISNULL(m.finalhomescore,-1)
 			 OR ISNULL(rs.AwayValue,-1) <> ISNULL(m.finalawayscore,-1)
-			 OR rs.ResultStatusID <> CASE WHEN m.eventstatus = 'completed' THEN 5 ELSE rs.ResultStatusID END
+			 OR rs.ResultStatusID <> CASE WHEN m.eventstatus = 'completed' THEN 5
+									      WHEN m.eventstatus = 'running' AND ResultStatusID IN (0,1,3) THEN ResultStatusID
+									      ELSE 0 END
 			 OR rs.SettlementStatusID <> CASE WHEN m.eventstatus = 'completed' AND m.betstatus LIKE 'Refund%' THEN 1
 			 		       					  WHEN m.eventstatus = 'completed' THEN 4
 			 		       					  ELSE 0 END
@@ -39,8 +41,8 @@ GO
 		UPDATE SET HomeValue	= SOURCE.finalhomescore
 			,AwayValue			= SOURCE.finalawayscore
 			,ResultStatusID 	= CASE WHEN SOURCE.eventstatus = 'completed' THEN 5
-									   WHEN SOURCE.eventstatus = 'running' AND ResultStatusID = 5 THEN 0
-									   ELSE ResultStatusID END
+									   WHEN SOURCE.eventstatus = 'running' AND ResultStatusID IN (0,1,3) THEN ResultStatusID
+									   ELSE 0 END
 			,SettlementStatusID = CASE WHEN SOURCE.eventstatus = 'completed' AND SOURCE.betstatus LIKE 'Refund%' THEN 1
 								       WHEN SOURCE.eventstatus = 'completed' THEN 4
 								       ELSE 0 END
