@@ -29,3 +29,6 @@ CREATE TABLE [dbo].[GoldDeluxe_Tip]
 ) ON [PlaytechCS_Data]
 
 GO
+
+CREATE CLUSTERED INDEX CIX_WinlostDate ON [dbo].[GoldDeluxe_Tip] (winlostdate)
+GO
