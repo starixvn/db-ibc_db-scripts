@@ -26,6 +26,7 @@ VALUES
 ('Age_CustomerUpdProfilePicture'),
 ('EAS_CustomerDateLimitMultipleUpd'),
 ('EAS_CustomerDateLimitSel'),
+('Acc_CustGroupUpdPrimaryExtraPTGroup'),
 ('Acc_CustGroupSelGroup')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
