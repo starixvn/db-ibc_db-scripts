@@ -29,7 +29,7 @@ VALUES
 ('LimitLoss_ActionConfig_UAT'),
 ('tmp_binary_dst2'),
 ('tmp_v_tablediff2'),
-('_datasync_FieldsInfo'),
+('__datasync_FieldsInfo'),
 ('_datasync_AGG')
 
 SET @end = (SELECT MAX(ID) FROM #Tables_MarkDelete)
