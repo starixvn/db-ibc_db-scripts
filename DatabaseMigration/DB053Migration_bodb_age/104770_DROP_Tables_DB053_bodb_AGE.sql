@@ -13,7 +13,6 @@ CREATE TABLE #Tables_MarkDelete (ID INT IDENTITY (1,1),ObjectName VARCHAR (200))
 
 INSERT INTO #Tables_MarkDelete (ObjectName)
 VALUES
-('AgeRWLastSyncVersion'),
 ('bettrans_forecast_agent'),
 ('bettrans_running_20180126_bk'),
 ('bettrans_running_del'),
@@ -58,5 +57,7 @@ END
 
 DROP TABLE #Tables_MarkDelete
 
+GO
+DROP TABLE AgeRWLastSyncVersion
 GO
 
