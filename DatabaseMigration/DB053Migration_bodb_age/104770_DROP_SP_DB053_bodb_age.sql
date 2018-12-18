@@ -18,16 +18,9 @@ VALUES
 ('Task_STDBY_Sync_AGE_CustGroup'),
 ('Task_STDBY_Sync_AGE_CustGroup_xpre'),
 ('Task_STDBY_Sync_AGE_CustProfilePicture'),
---('Acc_CustGroupSelGroup'),
 ('Acc_CustGroupSelGroup_test'),
 ('Age_CustomerSelSuggestUsername_lukas'),
 ('DBA_NAP_LimitLoss_update'),
-('Task_STDBY_Sync_AGE'),
-('Task_STDBY_Sync_AGE_CustGroup'),
-('Task_STDBY_Sync_AGE_CustProfilePicture'),
-('Task_STDBY_Sync_AGE_Del'),
-('Task_STDBY_Sync_AGE_Del_CustGroup'),
-('Task_STDBY_Sync_AGE_Del_CustProfilePicture'),
 ('Acc_CustGroupSelExtraPTGroupByCustID'),
 ('NAP_SMATurnover_LeagueControlDel_delete'),
 ('NAP_SMATurnover_LeagueControlSel'),
@@ -82,8 +75,20 @@ BEGIN
 	SET @start = @start + 1
 	
 END
-
 DROP TABLE #Tables_MarkDelete
 
 GO
+DROP PROC Task_STDBY_Sync_AGE
+GO
+DROP PROC Task_STDBY_Sync_AGE_CustGroup
+GO
+DROP PROC Task_STDBY_Sync_AGE_CustProfilePicture
+GO
+DROP PROC Task_STDBY_Sync_AGE_Del
+GO
+DROP PROC Task_STDBY_Sync_AGE_Del_CustGroup
+GO
+DROP PROC Task_STDBY_Sync_AGE_Del_CustProfilePicture
+GO
+
 
