@@ -1,6 +1,6 @@
 /*
 	Created: Vicky
-	Task: turn off auto increase for table DBA_Tasks
+	Task: turn off auto increase for table DBA_Rules
 	DB: DBACC/bodb_Consistency
 	Date: 20181219
 */
@@ -18,28 +18,29 @@ SET ANSI_WARNINGS ON
 COMMIT
 BEGIN TRANSACTION
 GO
-CREATE TABLE dbo.Tmp_DBA_Tasks
+CREATE TABLE dbo.Tmp_DBA_Rules
 	(
-	TaskId int NOT NULL,
-	RuleId int NULL,
-	command nvarchar(MAX) NULL
+	RuleId int NOT NULL,
+	Name nvarchar(128) NULL,
+	Description nvarchar(MAX) NULL,
+	SeverityLevel varchar(20) NULL
 	)  ON bodb_Consistency_INDEX
 	 TEXTIMAGE_ON bodb_Consistency_DATA
 GO
-ALTER TABLE dbo.Tmp_DBA_Tasks SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE dbo.Tmp_DBA_Rules SET (LOCK_ESCALATION = TABLE)
 GO
-IF EXISTS(SELECT * FROM dbo.DBA_Tasks)
-	 EXEC('INSERT INTO dbo.Tmp_DBA_Tasks (TaskId, RuleId, command)
-		SELECT TaskId, RuleId, command FROM dbo.DBA_Tasks WITH (HOLDLOCK TABLOCKX)')
+IF EXISTS(SELECT * FROM dbo.DBA_Rules)
+	 EXEC('INSERT INTO dbo.Tmp_DBA_Rules (RuleId, Name, Description, SeverityLevel)
+		SELECT RuleId, Name, Description, SeverityLevel FROM dbo.DBA_Rules WITH (HOLDLOCK TABLOCKX)')
 GO
-DROP TABLE dbo.DBA_Tasks
+DROP TABLE dbo.DBA_Rules
 GO
-EXECUTE sp_rename N'dbo.Tmp_DBA_Tasks', N'DBA_Tasks', 'OBJECT' 
+EXECUTE sp_rename N'dbo.Tmp_DBA_Rules', N'DBA_Rules', 'OBJECT' 
 GO
-ALTER TABLE dbo.DBA_Tasks ADD CONSTRAINT
-	PK_DBA_Tasks_TaskId PRIMARY KEY CLUSTERED 
+ALTER TABLE dbo.DBA_Rules ADD CONSTRAINT
+	PK_DBA_Rules_RuleId PRIMARY KEY CLUSTERED 
 	(
-	TaskId
+	RuleId
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON bodb_Consistency_INDEX
 
 GO
