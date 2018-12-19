@@ -1,4 +1,13 @@
-/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+/*
+	Created: Vicky
+	Task: turn off auto increase for table DBA_Schedules
+	DB: DBACC/bodb_Consistency
+	Date: 20181219
+*/
+USE [bodb_Consistency]
+GO
+
+
 BEGIN TRANSACTION
 SET QUOTED_IDENTIFIER ON
 SET ARITHABORT ON
