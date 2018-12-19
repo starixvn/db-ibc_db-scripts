@@ -54,7 +54,7 @@ DECLARE @sql_view NVARCHAR(MAX) = ''
 
 WHILE @start < = @end
 BEGIN
-	SELECT @sql = 'DROP VIEW ' + ObjectName 
+	SELECT @sql_view = 'DROP VIEW ' + ObjectName 
 	FROM #Tables_MarkDelete_View
 	WHERE ID = @start
 	
