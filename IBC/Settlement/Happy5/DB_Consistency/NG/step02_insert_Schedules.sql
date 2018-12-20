@@ -1,8 +1,8 @@
 /*
 	Created: Vicky
-	Task: insert task for Happy5
+	Task: insert task for NG
 	DB: DBTP/bodb_Consistency
-	Date: 20181019
+	Date: 20181218
 */
 USE [bodb_Consistency]
 GO
@@ -10,28 +10,30 @@ GO
 
 
 
-DECLARE @activeStartDate VARCHAR(20)
+DECLARE @activeStartDate VARCHAR(20), @email VARCHAR(MAX)
+
 SET @activeStartDate = '2018-12-18 00:00:00'
+SET @email = 'vicky.phan@nexcel.vn'
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 INSERT INTO [DBA_Schedules] (Name,TaskId,IsEnable,FrequenceType,FrequenceInterval,FrequenceSubDayType,FrequenceSubdayInterval,ActiveStartDate,ActiveEndDate,ActiveStartTime,ActiveEndTime,DateCreated,DateModified,NotifyLevelEmail,Emails)
 VALUES
 	 --PT
-	 ('Check PT value'									,25,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	 ('Check PT value'									,25,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2,  @email)
 	 
 	 --stake
-	,('Check Stake >0 for dedicated bettypes'			,26,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	,('Check Stake >0 for dedicated bettypes'			,26,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2,  @email)
 	
 	--IP
-	,('Check Valid IP'									,27,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	,('Check Valid IP'									,27,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2,  @email)
 	
 	--Check all yesterday tickets must be settled
-	,('Check all yesterday tickets must be settled'		,28,1,4,1,1,0, @activeStartDate,NULL,'00:01:30',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	,('Check all yesterday tickets must be settled'		,28,1,4,1,1,0, @activeStartDate,NULL,'00:01:30',NULL,GETDATE(),GETDATE(),2,  @email)
 	
 	--check betteam
-	,('Check Betteam'									,29,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	,('Check Betteam'									,29,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2,  @email)
 	
 	--check comm, discount
-	,('Check if no discount, no comm'					,30,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, 'vicky.phan@nexcel.vn')
+	,('Check if no discount, no comm'					,30,1,4,1,8,1, @activeStartDate,NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2,  @email)
 	
