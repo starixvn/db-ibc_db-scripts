@@ -1,6 +1,6 @@
 /*
 	Created: Vicky
-	Task: insert task for Happy5
+	Task: insert Rules for Happy5
 	DB: DBTP/bodb_Consistency
 	Date: 20181218
 */

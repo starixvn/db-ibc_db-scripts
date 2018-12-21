@@ -1,6 +1,6 @@
 /*
 	Created: Vicky
-	Task: insert task for NG
+	Task: insert Schedules for NG
 	DB: DBTP/bodb_Consistency
 	Date: 20181218
 */

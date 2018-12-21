@@ -7,9 +7,6 @@
 USE [bodb02]
 GO
 -------------------DELETE DATA
-DELETE SettlementSpecialBettypeProfile
-WHERE Sporttype = 164
-
 
 
 INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) 
