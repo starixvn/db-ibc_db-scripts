@@ -1,6 +1,8 @@
 /*
 	Created: 20181224@Helen
 	Task: clean old conversation of othersports - https://nexdev.net/issues/106881
+	DB: DBLICAPI02/DBTP/DB052/DB053/DB054/DB06/DBLICAPI/DB042
+	
 */
 USE bodb02
 GO
