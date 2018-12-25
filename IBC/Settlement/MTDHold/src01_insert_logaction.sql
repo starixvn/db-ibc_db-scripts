@@ -8,8 +8,6 @@
 USE [bodb_CustomerLog]
 GO
 
-DELETE LogAction WHERE ActionID IN (81005)
-
 
 INSERT INTO LogAction(ActionID,ActionTypeID,SPName,ActionNameEN,ActionNameCH,ActionNameCS,ActionNameJP,ActionNameIT,ActionNameTH,ActionNameKO,XsltContent,IsInternal,ActionNameVI)
 VALUES 
