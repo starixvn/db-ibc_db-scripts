@@ -10,8 +10,8 @@ GO
 
 DECLARE @activeStartDate VARCHAR(20), @email VARCHAR(MAX)
 
-SET @activeStartDate = '2018-12-18 00:00:00'
-SET @email = 'vicky.phan@nexcel.vn'
+SET @activeStartDate = '2018-12-27 00:00:00'
+SET @email = 'dbaadmin@starixsoft.com'
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
