@@ -1,6 +1,6 @@
 /*
 	Created: Vicky
-	Task: insert Schedules for Happy5
+	Task: update Schedules for Happy5 & NG
 	DB: DBTP/bodb_Consistency
 	Date: 20181218
 */
