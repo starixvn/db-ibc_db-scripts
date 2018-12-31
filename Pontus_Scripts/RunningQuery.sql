@@ -1,3 +1,4 @@
+-- #1 - Running queries
 SELECT	[ServerName]		= @@SERVERNAME
 
 		-- Priority --
@@ -55,9 +56,61 @@ FROM		sys.dm_exec_requests AS rqs WITH (NOLOCK)
 			AND	rqs.request_id = qmg.request_id
 	LEFT JOIN	sys.dm_exec_connections AS cnn WITH (NOLOCK)
 			ON	rqs.session_id = cnn.session_id
-	WHERE	rqs.session_id <> @@SPID
+WHERE	rqs.session_id <> @@SPID
 		AND	(rqs.session_id > 50 OR stx.text IS NOT NULL OR rqs.blocking_session_id <> 0 OR EXISTS(SELECT 1 FROM sys.dm_exec_requests AS _rqs WITH (NOLOCK) WHERE rqs.session_id = _rqs.blocking_session_id))
 		AND	rqs.command NOT IN ('WAITFOR')
 ORDER BY BlockingSession DESC, rqs.total_elapsed_time DESC
 
+GO
 
+EXEC mondb.dbo.vndba_sp_whoisactive @get_outer_command = 1 
+
+GO
+--#2 - Capture SP plan
+SELECT TOP 100 SUBSTRING(t.TEXT, statement_start_offset / 2 + 1, (
+    (CASE 
+     WHEN qs.statement_end_offset = - 1 THEN (LEN(CONVERT(NVARCHAR(max), t.TEXT)) * 2)
+     ELSE qs.statement_end_offset END
+     ) - qs.statement_start_offset
+    ) / 2 + 1) AS statement_text
+ , creation_time
+     ,last_execution_time, execution_count
+     ,total_elapsed_time/execution_count as avg_elapsed_time
+     ,total_elapsed_time, last_elapsed_time, min_elapsed_time, max_elapsed_time  
+     ,last_worker_time, min_worker_time, max_worker_time
+     ,total_logical_reads, last_logical_reads, min_logical_reads, max_logical_reads    
+     ,p.query_plan
+
+     ,cast(tq.query_plan as XML) as batch_plan
+     , qs.creation_time
+from sys.dm_exec_query_stats qs 
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) t 
+CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) p
+CROSS APPLY sys.dm_exec_text_query_plan(qs.plan_handle, qs.statement_start_offset, qs.statement_end_offset) as tq
+WHERE OBJECT_NAME(t.objectid,t.dbid) = 'ExecRep_09' AND t.dbid = DB_ID('bodb02') 
+
+GO
+-- #2 - Capture remote query plan
+SELECT TOP 100 getdate() AS logdate
+	,OBJECT_NAME(t.objectid, t.dbid) objname
+	,qs.creation_time
+	,SUBSTRING(t.TEXT, statement_start_offset / 2 + 1, (
+	(CASE 
+	WHEN qs.statement_end_offset = - 1 THEN (LEN(CONVERT(NVARCHAR(max), t.TEXT)) * 2)
+	ELSE qs.statement_end_offset END
+	) - qs.statement_start_offset
+	) / 2 + 1) AS statement_text
+	,last_execution_time
+	,execution_count, last_elapsed_time, last_worker_time, total_worker_time, total_elapsed_time, total_logical_reads, last_logical_reads
+	,cast(tq.query_plan AS XML) AS batch_plan
+
+FROM sys.dm_exec_query_stats qs with (nolock)
+	CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) t
+	CROSS APPLY sys.dm_exec_query_plan(qs.plan_handle) p
+	CROSS APPLY sys.dm_exec_text_query_plan(qs.plan_handle, qs.statement_start_offset, qs.statement_end_offset) AS tq
+WHERE t.text like '%CustSuperProfile%' and t.objectid is null
+ORDER BY creation_time desc 
+
+-- --> Remote sample
+--SELECT "Tbl1001"."custid" "Col1027","Tbl1001"."firstname" "Col1028","Tbl1001"."lastname" "Col1029","Tbl1001"."phone" "Col1030"
+GO
