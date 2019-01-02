@@ -4,7 +4,6 @@
 	DB: Distribution DB
 */
 ---- #1: list agent not writting log in specfic duration
-
 SELECT *
 INTO #TEMP 
 FROM(
