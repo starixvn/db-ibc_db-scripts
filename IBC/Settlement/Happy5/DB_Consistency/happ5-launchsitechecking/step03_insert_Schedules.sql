@@ -12,7 +12,7 @@ DECLARE @activeStartDate VARCHAR(20), @email VARCHAR(MAX)
 
 SET @activeStartDate = '2019-01-03 00:00:00'
 SET @email = 'dbaadmin@starixsoft.com'
-
+--SET @email = 'vicky.phan@starixsoft.com'
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
