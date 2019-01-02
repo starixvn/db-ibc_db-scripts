@@ -1,6 +1,6 @@
 /*
 	Create By: 20181227@Helen
-	Task: ServiceBroker Consersation troubleshoot - othersports
+	Task: ServiceBroker Consersation troubleshoot - soccer
 	DB: ServiceBrokerDB
 	
 	Para's explaination
@@ -35,7 +35,7 @@ BEGIN
 	END
 END
 
-DELETE [sb].[DialogPool] WHERE FromService ='Service_Settlement_OtherSports'
+DELETE [sb].[DialogPool] WHERE FromService ='//Service/Calculation_send'
 
 */		
 --- CREATE new conversation for other sports
