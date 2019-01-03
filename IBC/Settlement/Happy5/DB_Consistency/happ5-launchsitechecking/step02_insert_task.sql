@@ -15,6 +15,6 @@ INSERT INTO DBA_Tasks (TaskId, RuleId, Command)
 VALUES
 	--PT
 	 (31,17,'EXEC DBA_Consistency_LaunchedSiteChecking @ProductId=164, @sites=''Indo,KORIBC'', @IsLaunched = 1, @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT ')
-	,(32,17,'EXEC DBA_Consistency_LaunchedSiteChecking @ProductId=164, @sites=''789Y,222227,611111,755555'', @IsLaunched = 0, @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT ')
+	,(32,17,'EXEC DBA_Consistency_LaunchedSiteChecking @ProductId=164, @sites=''789Y,755555'', @IsLaunched = 0, @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT ')
 	
 SET IDENTITY_INSERT DBA_Tasks OFF
