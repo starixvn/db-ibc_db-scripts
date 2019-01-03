@@ -20,4 +20,4 @@ INSERT INTO [DBA_Schedules] (Name,TaskId,IsEnable,FrequenceType,FrequenceInterva
 VALUES
 	 --Check un-launched sites
 	 ('Check un-launched sites Batch1'									,31,1,4,1,8,1, '2019-01-03 00:00:00','2019-01-17 00:00:00','00:00:00','12:00:00',GETDATE(),GETDATE(),2, @email)
-	,('Check un-launched sites Batch2'									,32,1,4,1,8,1, '2019-01-17 00:00:00',NULL,'16:00:00',NULL,GETDATE(),GETDATE(),2, @email)
+	,('Check un-launched sites Batch2'									,32,1,4,1,8,1, '2019-01-17 00:00:00',NULL,'00:00:00',NULL,GETDATE(),GETDATE(),2, @email)
