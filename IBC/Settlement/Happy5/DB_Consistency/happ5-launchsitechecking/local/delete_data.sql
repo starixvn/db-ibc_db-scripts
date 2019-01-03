@@ -1,3 +1,4 @@
 --Happy5
 DELETE DBA_Rules WHERE RuleId IN (17)
 DELETE DBA_Tasks WHERE TaskId IN (31)
+DELETE DBA_Tasks WHERE TaskId IN (32)
