@@ -2,7 +2,7 @@
 	Created: 20181231@Helen
 	Task: https://nexdev.net/issues/107131
 	DB: 
-		#1 - DBCUST.CUSTDB
+		#1 - DBCUST.CUSTDB, DBTRANS/CUSTDB
 		#2 - Replicated Servers ON PUB CustDB_Customer_Info.bodb02: 
 			DB042.BODB02
 			DB043.BODB02
