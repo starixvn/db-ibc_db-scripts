@@ -2,8 +2,9 @@
 	Created: 20181231@Helen
 	Task: https://nexdev.net/issues/107131
 	DB: 
-		#1 - DBCUST.CUSTDB, DBTRANS.CUSTDB
-		#2 - Replicated Servers ON PUB CustDB_Customer_Info.bodb02: 
+		#1 - DBCUST.CUSTDB
+		#2 - DBTRANS/CUSTDB
+		#3 - Replicated Servers ON PUB CustDB_Customer_Info.bodb02: 
 			DB042.BODB02
 			DB043.BODB02
 			DB044.BODB02
@@ -22,7 +23,7 @@ CREATE VIEW dbo.vwCustomer
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]
-	DB: DBCust/custdb, DBTRANS/CUSTDB AND all replicated server/bodb02
+	DB: DBCust/custdb, DBTRANS/CUSTDB AND all replicated server/bodb02 under publication CustDB_Customer_Info
 */
 AS
 SELECT custid, '' AS firstname, '' AS lastname,'' AS address, '' AS postal,'' AS  city, '' AS state, '' AS country, '' AS phone, '' AS mobilephone
@@ -31,9 +32,5 @@ SELECT custid, '' AS firstname, '' AS lastname,'' AS address, '' AS postal,'' AS
 FROM dbo.Customer WITH (NOLOCK) 
 
 GO
-
 DENY SELECT ON dbo.Customer TO vnteam
-
 GO
-
-

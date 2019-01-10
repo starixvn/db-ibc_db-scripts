@@ -2,20 +2,33 @@
 	Created: 20181231@Helen
 	Task: https://nexdev.net/issues/107131
 	DB: 
-		#1 - DBCUST.CUSTDB, DBTRANS/CUSTDB
+		#1 - MainDB
+				DBCUST.CUSTDB
+				DBTRANS.CUSTDB
 		#2 - Replicated Servers ON PUB CustDB_Customer_Info.bodb02: 
-			DB042.BODB02
-			DB043.BODB02
-			DB044.BODB02
-			DB05.BODB02
-			DB052.BODB02
-			DB053.BODB02
-			DB054.BODB02
-			DB05BK1.BODB02
-			DB06.BODB02
-			DBLICAPI.BODB02
-			DBLICAPI02.BODB02
-			DBTP.BODB02
+				DB042.BODB02
+				DB043.BODB02
+				DB044.BODB02
+				DB05.BODB02
+				DB052.BODB02
+				DB053.BODB02
+				DB054.BODB02
+				DB05BK1.BODB02
+				DB06.BODB02
+				DBLICAPI.BODB02
+				DBLICAPI02.BODB02
+				DBTP.BODB02
+		#3 - DBAFF
+				DBAFF.Affiliate_Athena000
+				DBAFF.Affiliate_Spondemo
+				DBAFF.Affiliate_itcbet
+				DBAFF.Affiliate_MacauBet
+					
+		#4 - DB052
+				DB052.Affiliate_12BET
+		#5 - DB06
+				DB06.bodb_OWP	
+			
 */
 
 SELECT  ss.name 
