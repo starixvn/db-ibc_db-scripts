@@ -19,7 +19,7 @@
 			DBTP.BODB02
 */
 
-CREATE VIEW dbo.vwCustomer 
+CREATE VIEW dbo.vw_Customer 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]

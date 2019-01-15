@@ -10,7 +10,7 @@
 
 */
 
-CREATE VIEW dbo.vwEmailHistory 
+CREATE VIEW dbo.vw_EmailHistory 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]
@@ -22,7 +22,7 @@ SELECT MID, Content, Sender, Creator, AffId, AffName
 FROM dbo.EmailHistory WITH (NOLOCK) 
 GO
 
-CREATE VIEW dbo.vwAffInfo 
+CREATE VIEW dbo.vw_AffInfo 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]
@@ -34,7 +34,7 @@ SELECT AffID, UserName, UserName2
 		, '' AS Email, [Password], AffType, IsPageEnabled, [Level], IsLocked, CasinoJoinedDate, ForceChangePass, EUAffID
 FROM dbo.AffInfo WITH (NOLOCK) 
 GO
-CREATE VIEW dbo.vwMemberInfo 
+CREATE VIEW dbo.vw_MemberInfo 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]

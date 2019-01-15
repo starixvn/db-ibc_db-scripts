@@ -18,7 +18,7 @@
 			DBTP.BODB02
 */
 
-CREATE VIEW dbo.vwCustAccount 
+CREATE VIEW dbo.vw_CustAccount 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]

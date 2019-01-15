@@ -5,7 +5,7 @@
 		
 */
 
-CREATE VIEW dbo.vwUser 
+CREATE VIEW dbo.vw_User 
 /*
 	created: 20181231@Helen
 	Task: Data Security - [Redmine: 107131]
