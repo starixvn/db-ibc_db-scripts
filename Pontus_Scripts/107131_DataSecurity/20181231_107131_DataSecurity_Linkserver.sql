@@ -27,7 +27,9 @@
 		#4 - DB052
 				DB052.Affiliate_12BET
 		#5 - DB06
-				DB06.bodb_OWP	
+				DB06.bodb_OWP
+		
+		#6- DBDW, DBDW2, DBSpare, DBDWCSS			
 			
 */
 
