@@ -41,9 +41,9 @@ WHERE sl.remote_name = 'sqllink'
 SELECT * FROM #linkserver
 
 DECLARE @String VARCHAR(MAX) = ''
-SELECT @String = @String +'
+SELECT @String = @String + '
 EXEC master.dbo.sp_addlinkedsrvlogin @rmtsrvname = N''' + name + ''', @locallogin = N''vnteam'', @useself = N''True''' + CHAR (13)
-+'GO' 
+
 FROM #linkserver
 
 PRINT @String
