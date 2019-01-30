@@ -5,11 +5,7 @@
 */
 USE bodb02
 GO
-GRANT EXECUTE ON [dbo].[NAP_Admin_Settlement_BetBuilder_Push] TO [Dot_Intg]
+GRANT EXECUTE ON [dbo].[NAP_Admin_Settlement_BetBuilder_Push_UAT1] TO [Dot_Intg]
 GO
-GRANT EXECUTE ON [dbo].[NAP_Admin_Settlement_BetBuilder] TO [Dot_Intg]
-GO
-GRANT EXECUTE ON [dbo].[NAP_Admin_Settlement_AutoWriteLog] TO [Dot_Intg]
-GO
-GRANT EXECUTE ON [dbo].[NAP_Set_NotificationIns] TO [Dot_Intg]
+GRANT EXECUTE ON [dbo].[NAP_Admin_Settlement_BetBuilder_UAT1] TO [Dot_Intg]
 GO

@@ -5,7 +5,7 @@
 */
 USE bodb02
 GO
-GRANT EXECUTE ON [dbo].[NAP_Admin_SMPMarket_Update] TO [Dot_Intg]
+GRANT EXECUTE ON [dbo].[NAP_Admin_SMPMarket_Update_UAT1] TO [Dot_Intg]
 GO
-GRANT EXECUTE ON [dbo].[NAP_Admin_SMPMarketSelection_Update] TO [Dot_Intg]
+GRANT EXECUTE ON [dbo].[NAP_Admin_SMPMarketSelection_Update_UAT1] TO [Dot_Intg]
 GO
