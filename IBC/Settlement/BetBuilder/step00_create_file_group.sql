@@ -1,0 +1,14 @@
+/*
+	Created: Vicky
+	Task: create file group for Betbuilder
+	DB: SIT2DB02/bodb02
+	Date: 20190130
+*/
+
+
+ALTER DATABASE [bodb02] ADD FILEGROUP [SMP_index]
+ALTER DATABASE [bodb02] ADD FILEGROUP [SMP_table]
+
+
+ALTER DATABASE [bodb02] ADD FILE (NAME = N'SMP_index', FILENAME = N'D:\DB231_SQLSERVER2008R2\IBC_DB\SMP_index.ndf') TO FILEGROUP [SMP_index]
+ALTER DATABASE [bodb02] ADD FILE (NAME = N'SMP_table', FILENAME = N'D:\DB231_SQLSERVER2008R2\IBC_DB\SMP_table.ndf') TO FILEGROUP [SMP_table]
