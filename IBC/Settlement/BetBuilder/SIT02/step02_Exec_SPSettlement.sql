@@ -1,3 +1,9 @@
+/*
+	Created: 20190130@Vicky
+	Task : exec SP setlle 
+	DB:  SIT2DB02/bodb02
+*/
+
 DECLARE @xml_resource varchar(max), @matchID int, @timeStart DATETIME, @timeEnd DATETIME
 -------------------------------------------------------------------------------
 
