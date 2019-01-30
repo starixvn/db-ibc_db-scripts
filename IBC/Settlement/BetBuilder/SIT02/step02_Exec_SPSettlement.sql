@@ -1,7 +1,7 @@
 /*
 	Created: 20190130@Vicky
 	Task : exec SP setlle 
-	DB:  SIT2DB02/bodb02
+	DB:  SIT2DBTRANS/bodb02
 */
 
 DECLARE @xml_resource varchar(max), @matchID int, @timeStart DATETIME, @timeEnd DATETIME
@@ -11,10 +11,9 @@ SET @matchid = (SELECT TOP 1 MatchID FROM DBPRO.bodb02.dbo.Match WHERE matchcode
 SELECT 'matchid',@matchid
 SET @xml_resource = '<Resources><rsc m="100000237"/><rsc m="100000238"/></Resources>'	
 
-
-
 -------------------------------------------------------------------------------
 
+EXECUTE AS user = 'Dot_Intg'
 
 DECLARE @ErrCode INT,@ErrMsg NVARCHAR(200)
 SELECT @ErrCode = 0,@ErrMsg=''
