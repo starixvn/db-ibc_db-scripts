@@ -14,8 +14,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-SET ANSI_PADDING ON
-GO
+
 
 CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
 	[keyid] [int] IDENTITY(1,1) NOT NULL,
@@ -36,8 +35,6 @@ CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
 
 GO
 
-SET ANSI_PADDING OFF
-GO
 
 ALTER TABLE [dbo].[Single_Calculate_Queue_3rd] ADD  CONSTRAINT [DF_Single_Calculate_Queue_3rd_Starttime]  DEFAULT (getdate()) FOR [Starttime]
 GO
