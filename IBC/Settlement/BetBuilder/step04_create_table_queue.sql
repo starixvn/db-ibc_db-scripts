@@ -42,8 +42,9 @@ GO
 ALTER TABLE [dbo].[Single_Calculate_Queue_3rd] ADD  CONSTRAINT [DF_Single_Calculate_Queue_3rd_TryCount]  DEFAULT ((0)) FOR [TryCount]
 GO
 
-/****** Object:  Index [CIX_Single_Calculate_Queue_3rd_Starttime]    Script Date: 02/12/2019 16:16:24 ******/
-CREATE CLUSTERED INDEX [CIX_Single_Calculate_Queue_3rd_Starttime] ON [dbo].[Single_Calculate_Queue_3rd] 
+
+/****** Object:  Index [IX_Single_Calculate_Queue_3rd_Starttime]    Script Date: 02/12/2019 17:14:17 ******/
+CREATE NONCLUSTERED INDEX [IX_Single_Calculate_Queue_3rd_Starttime] ON [dbo].[Single_Calculate_Queue_3rd] 
 (
 	[Starttime] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Event_table]

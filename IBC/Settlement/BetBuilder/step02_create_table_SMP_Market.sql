@@ -7,24 +7,26 @@ GO
 SET ANSI_PADDING ON
 GO
 
+
 CREATE TABLE [dbo].[SMP_Market](
-	[VendorID] [smallint] NOT NULL,
-	[FixtureID] [varchar](20) NOT NULL,
-	[MarketID] [varchar](20) NOT NULL,
+	[MarketId] [varchar](20) NOT NULL,
+	[MatchId] [int] NOT NULL,
+	[VendorId] [smallint] NOT NULL,
 	[Price] [smallmoney] NOT NULL,
-	[TradeStatus] [varchar](20) NULL,
+	[TradeStatus] [varchar](20) NOT NULL,
 	[Result] [varchar](20) NULL,
-	[ResultStatusID] [tinyint] NULL,
-	[SelectionCounts] [tinyint] NOT NULL,
+	[ResultStatusId] [tinyint] NOT NULL,
+	[SelectionCounts] [tinyint] NULL,
 	[CreateTime] [datetime] NOT NULL,
 	[UpdateTime] [datetime] NOT NULL,
+	[tstamp] [timestamp] NOT NULL,
  CONSTRAINT [PK_SMP_Market] PRIMARY KEY CLUSTERED 
 (
-	[VendorID] ASC,
-	[FixtureID] ASC,
-	[MarketID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
-) ON [DATA]
+	[MatchId] ASC,
+	[MarketId] ASC,
+	[VendorId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [SMP_table]
+) ON [SMP_table]
 
 GO
 
