@@ -13,4 +13,5 @@ GO
 UPDATE DBA_Schedules
 SET IsEnable = 0
 	, ActiveEndTime = GETDATE()
+	, ActiveEndDate = Convert(DATE, GETDATE())
 WHERE TaskId IN (31,32)
