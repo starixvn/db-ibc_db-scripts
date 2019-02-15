@@ -8,10 +8,18 @@ USE [bodb_Consistency]
 GO
 
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+UPDATE DBA_Schedules
+SET IsEnable = 0
+	, DateModified	= GETDATE()
+WHERE TaskId IN (31)
+
 
 UPDATE DBA_Schedules
 SET IsEnable = 0
 	, ActiveEndTime = GETDATE()
-	, ActiveEndDate = Convert(DATE, GETDATE())
-WHERE TaskId IN (31,32)
+	, ActiveEndDate = CONVERT(DATE, GETDATE())
+	, DateModified	= GETDATE()
+WHERE TaskId IN (32)
