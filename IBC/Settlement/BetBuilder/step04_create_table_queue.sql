@@ -17,20 +17,20 @@ GO
 
 
 CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
-	[keyid] [int] IDENTITY(1,1) NOT NULL,
-	[matchid] [int] NOT NULL,
-	[matchcode] [nvarchar](50) NULL,
-	[IsCalculating] [int] NULL,
-	[LeagueID] [int] NULL,
-	[SportType] [int] NULL,
-	[AdminId] [int] NULL,
-	[IP] [varchar](15) NULL,
-	[Starttime] [datetime] NULL,
-	[Action] [varchar](20) NULL,
-	[sqlCommand] [nvarchar](max) NULL,
-	[TryCount] [int] NULL,
-	[execTime] [datetime] NULL,
-	[duration] [int] NULL
+	[keyid] [INT] IDENTITY(1,1) NOT NULL,
+	[matchid] [INT] NOT NULL,
+	[matchcode] [NVARCHAR](50) NULL,
+	[IsCalculating] [INT] NULL,
+	[LeagueID] [INT] NULL,
+	[SportType] [INT] NULL,
+	[AdminId] [INT] NULL,
+	[IP] [VARCHAR](15) NULL,
+	[Starttime] [DATETIME] NULL,
+	[Action] [VARCHAR](20) NULL,
+	[sqlCommand] [NVARCHAR](MAX) NULL,
+	[TryCount] [INT] NULL,
+	[execTime] [DATETIME] NULL,
+	[duration] [INT] NULL
 ) ON [Event_table]
 
 GO
