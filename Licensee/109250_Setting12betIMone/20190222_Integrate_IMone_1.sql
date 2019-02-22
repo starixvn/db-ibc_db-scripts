@@ -5,7 +5,7 @@ GO
 	Created: 20190222@Ben (Reviewer: Sophia)
 	Description: #109250: 12bet - Integrate IMone
 
-	Run on dbpro/dbtrans
+	Run on dbpro/bodb02
 */
 
 --RUN ON DBPRO
@@ -22,13 +22,5 @@ BEGIN
 	VALUES (22035, 'DCANIMone', 'DCANIMone', 'E-Sports IMone Cancel Transfer', 'DCANIMone', 22035)	
 END
 
---RUN ON DBTRANS
---insert data for ThirdPartySetting table
-IF NOT EXISTS (SELECT 1 FROM dbo.ThirdPartySetting WITH (NOLOCK) WHERE ThirdPartyType = 14)
-BEGIN
-    INSERT INTO dbo.ThirdPartySetting (ThirdPartyType, ThirdPartyName, TransferBettype, CancelBettype)           
-    VALUES  ( 14 , 'IMone' , 22034 , 22035 )
-END
 
-GO
 
