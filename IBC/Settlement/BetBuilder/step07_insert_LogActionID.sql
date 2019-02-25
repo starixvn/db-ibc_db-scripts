@@ -8,9 +8,9 @@
 USE [bodb_CustomerLog]
 GO
 
-IF EXISTS(SELECT 1 FROM LogAction WHERE ActionID IN (81006,81007,81009,81010,81011,81012))
-	RETURN
---DELETE LogAction WHERE ActionID IN (81006,81007,81009,81010,81011,81012)
+--IF EXISTS(SELECT 1 FROM LogAction WITH(NOLOCK) WHERE ActionID IN (81006,81007,81009,81010,81011,81012))
+--	RETURN
+
 
 INSERT INTO LogAction(ActionID,ActionTypeID,SPName,ActionNameEN,ActionNameCH,ActionNameCS,ActionNameJP,ActionNameIT,ActionNameTH,ActionNameKO,XsltContent,IsInternal,ActionNameVI)
 VALUES 
