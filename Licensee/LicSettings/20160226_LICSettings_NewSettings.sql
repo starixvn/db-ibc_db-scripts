@@ -13,5 +13,5 @@ USE [bodb_licensee]
 GO
 
 INSERT INTO dbo.LICSettings (VName, VValue, VValue2)
-SELECT 'BA_MaxOfFailedCount', '3', '' UNION ALL
+SELECT 'BA_MaxOfFailedCount', '1', '' UNION ALL
 SELECT 'BA_MissingTransID', '0', ''
