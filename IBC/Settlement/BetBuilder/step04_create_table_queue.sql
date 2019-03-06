@@ -27,6 +27,7 @@ CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
 	[IP] [VARCHAR](15) NULL,
 	[Starttime] [DATETIME] NULL,
 	[Action] [VARCHAR](20) NULL,
+	[ActionID] [INT] NULL,
 	[sqlCommand] [NVARCHAR](MAX) NULL,
 	[TryCount] [INT] NULL,
 	[execTime] [DATETIME] NULL,

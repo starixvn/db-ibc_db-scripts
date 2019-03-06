@@ -15,7 +15,7 @@ SET ANSI_WARNINGS ON
 GO
 
 ALTER TABLE dbo.TempVariableNumber ADD
-	KeyValue2 VARCHAR(20) NOT NULL CONSTRAINT DF_TempVariableNumber_KeyValue2 DEFAULT 0
+	KeyValue2 VARCHAR(20) NOT NULL CONSTRAINT DF_TempVariableNumber_KeyValue2 DEFAULT '0'
 GO
 ALTER TABLE dbo.TempVariableNumber
 	DROP CONSTRAINT PK_TempVariableNumber
