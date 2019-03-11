@@ -1,9 +1,3 @@
-/*
-	Created: Vicky
-	Task: Betbuilder
-	DB: DBTXN/bodb02
-	Date: 20190130
-*/
 USE [bodb02]
 GO
 
@@ -14,6 +8,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+SET ANSI_PADDING ON
+GO
 
 CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
 	[keyid] [int] IDENTITY(1,1) NOT NULL,
@@ -39,8 +35,7 @@ CREATE TABLE [dbo].[Single_Calculate_Queue_3rd](
 
 GO
 
-SET ANSI_PADDING OFF
-GO
+
 
 ALTER TABLE [dbo].[Single_Calculate_Queue_3rd] ADD  CONSTRAINT [DF_Single_Calculate_Queue_3rd_Starttime]  DEFAULT (getdate()) FOR [Starttime]
 GO
@@ -49,9 +44,10 @@ ALTER TABLE [dbo].[Single_Calculate_Queue_3rd] ADD  CONSTRAINT [DF_Single_Calcul
 GO
 
 
-CREATE NONCLUSTERED INDEX [IX_Single_Calculate_Queue_3rd_IsCalculating] ON [dbo].[Single_Calculate_Queue_3rd] 
+CREATE NONCLUSTERED INDEX [IX_Single_Calculate_Queue_3rd_IsCalculating_execTime] ON [dbo].[Single_Calculate_Queue_3rd] 
 (
-	[IsCalculating] ASC
+	[IsCalculating] ASC,
+	[execTime] DESC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Event_table]
 GO
 
@@ -61,5 +57,3 @@ CREATE NONCLUSTERED INDEX [IX_Single_Calculate_Queue_3rd_Starttime] ON [dbo].[Si
 	[Starttime] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [Event_table]
 GO
-
-

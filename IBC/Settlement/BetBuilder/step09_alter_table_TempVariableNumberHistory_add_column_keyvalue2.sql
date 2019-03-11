@@ -13,3 +13,4 @@ ALTER TABLE dbo.TempVariableNumberHistory ADD
 	KeyValue2 VARCHAR(20) NOT NULL CONSTRAINT DF_TempVariableNumberHistory_KeyValue2 DEFAULT '0'
 	
 GO
+--DEPLOYED ON PROD: 20190307
