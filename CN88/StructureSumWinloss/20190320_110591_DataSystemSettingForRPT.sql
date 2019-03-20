@@ -1,4 +1,3 @@
-
 use bodb02
 GO 
 
@@ -10,7 +9,7 @@ Resmind: #110591
 */
 
 INSERT INTO SystemSettings (VName,VValue)
-VALUES ('CS_ArchiveDate', '2019-01-27')
+VALUES ('CS_ArchiveDate', '2018-12-24')
 
 
   
