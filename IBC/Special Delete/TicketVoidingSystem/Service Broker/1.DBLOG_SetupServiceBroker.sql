@@ -22,6 +22,7 @@ ON QUEUE Queue_TicketVoiding (Contract_TicketVoiding_Log)
 GO
 
 CREATE ROUTE Route_TicketVoiding_DBTXN -- point back to source
+ AUTHORIZATION dbo
 WITH SERVICE_NAME='Service_TicketVoiding_DBTXN',
 --ADDRESS='TCP://DB230:4741' -- local dev
 --,BROKER_INSTANCE  = N'9F768743-57EA-4C4B-96DA-6CA1AEA4BC7C' -- local dev

@@ -7,6 +7,9 @@
 USE bodb_CustomerLog
 GO
 
+ALTER DATABASE bodb_CustomerLog SET ENABLE_BROKER WITH ROLLBACK IMMEDIATE
+GO
+
 CREATE MESSAGE TYPE MessageType_TicketVoiding_Log
 GO
 
@@ -19,7 +22,13 @@ GO
 CREATE SERVICE Service_TicketVoiding_DBTXN ON QUEUE Queue_TicketVoiding (Contract_TicketVoiding_Log)
 GO
 
-CREATE ROUTE Route_TicketVoiding_DBLOG
+/*
+	SELECT service_broker_guid  
+	FROM sys.databases  
+	WHERE database_id = DB_ID()
+
+*/
+CREATE ROUTE Route_TicketVoiding_DBLOG AUTHORIZATION dbo
 WITH SERVICE_NAME = 'Service_TicketVoiding_DBLOG'
 --,BROKER_INSTANCE  = N'C502B761-9DB4-4C51-8498-A13B3716AEFC' -- local dev
 --,ADDRESS = 'TCP://DB231:4741'
