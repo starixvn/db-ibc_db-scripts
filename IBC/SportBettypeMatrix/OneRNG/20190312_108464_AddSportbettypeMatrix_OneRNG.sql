@@ -1,10 +1,10 @@
-
 use bodb02
 GO 
 
 /*
 Create : 20190312@Sophia: 
 Task: Add sportbettypeMatrix for OneRNG  [redmind:108464]
+DB: DBPRO.bodb02
 
 */
  
