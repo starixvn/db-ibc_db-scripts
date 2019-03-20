@@ -4,7 +4,7 @@ GO
 /*
 Create: 20190320@Sophia
 Task:  Structure Sum Winloss - CN88 [redmind: 105660]
-
+DB: DB052 & DB053 
 */
 
 
