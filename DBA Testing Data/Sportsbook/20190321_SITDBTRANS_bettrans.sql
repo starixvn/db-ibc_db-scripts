@@ -45,6 +45,7 @@ BEGIN
 		FROM dbo.bettrans b WITH (NOLOCK)
 			INNER JOIN dbo.match m WITH (NOLOCK) ON b.matchid = m.matchid
 			INNER JOIN @tblSportType s ON s.SportType = m.sporttype
+		WHERE b.winlostdate >= '2019-02-25'
 	) AS A
 	WHERE rn = 1
 
@@ -56,7 +57,7 @@ BEGIN
 			INNER JOIN dbo.outright m WITH (NOLOCK) ON b.matchid = m.orid
 			INNER JOIN dbo.League l WITH (NOLOCK) ON m.leagueid = l.leagueid
 			INNER JOIN @tblSportType s ON s.SportType = l.sporttype
-		WHERE b.bettype = 10
+		WHERE b.bettype = 10 AND b.winlostdate >= '2019-02-25'
 	) AS A
 	WHERE rn = 1
 	
