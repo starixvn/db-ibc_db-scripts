@@ -4,7 +4,7 @@ GO
 /*
 Create: 20190320@Sophia
 Task:  Structure Sum Winloss - CN88 [redmind: 105660]
-DB: DB052 & DB053 
+
 */
 
 
@@ -56,52 +56,7 @@ GO
 
 GRANT SELECT ON [CS_SumWinloss] TO bodbDownlineNetView
 GO
-
-
-----------------2. [CS_SumWinloss_Old]
-
-
-
-CREATE TABLE [dbo].[CS_SumWinloss_Old](
-	CustID			Int
-	,WinlostDate		Smalldatetime
-	,ProductId		smallint
-	,Sporttype		smallint
-	,Bettype			smallint
-	,IsLive			bit
-	,Wagers			int
-	,Stake			Money
-	,ValidStake		Money
-	,MemberWinloss	Money
-	,MemberComm		Money
-	,Agent			Money
-	,AgentWinloss	Money
-	,AgentComm		Money
-	,AgentStock		Money
-	,AgentResultA	Money
-	,Master			Money
-	,MasterWinloss	Money
-	,MasterComm		Money
-	,MasterStock	Money
-	,Super			Money
-	,SuperWinloss	Money
-	,SuperComm		Money
-	,SuperStock		Money
-	,HeadlineWinloss	Money
-	,HeadlineComm	Money
-	,HeadlineStock	Money
-	,HeadlineId		int
-)
-GO
------ Partition UM 
-
-GRANT SELECt ON [CS_SumWinloss_Old] TO bodbDownlineNet
-GO 
-
-GRANT SELECt ON [CS_SumWinloss_Old] TO bodbDownlineNetView
-GO 
-
-
+ 
  
 ----------------3. [CS_SumCancelled]
   
@@ -134,28 +89,3 @@ GO
 GRANT SELECt ON [CS_SumCancelled] TO bodbDownlineNet
 GO
 
-
-
-
-----------------4. [CS_SumCancelled_Old]  
-
-CREATE TABLE [dbo].[CS_SumCancelled_Old](
-	CustID			Int
-	,WinlostDate	Smalldatetime
-	,ProductId		smallint
-	,Sporttype		smallint
-	,Bettype		smallint
-	,IsLive			bit
-	,CancelType     TINYINT
-	,Wagers			int
-	,Stake			Money
-	,HeadlineId		int	 
-	)
-GO  
------ Partition UM 
-
-GRANT SELECt ON [CS_SumCancelled_Old] TO bodbDownlineNetView
-GO
-
-GRANT SELECt ON [CS_SumCancelled_Old] TO bodbDownlineNet
-GO
