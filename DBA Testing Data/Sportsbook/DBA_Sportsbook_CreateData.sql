@@ -8,7 +8,7 @@ ALTER PROCEDURE [dbo].[DBA_Sportsbook_CreateData]
 	,@SportType		INT = 1 -- input sporttype of SB
 	,@BetType		INT = 1 -- input bettype of SB
 	,@betteam		VARCHAR(10) = NULL -- input betteam of tickets
-	,@matchid		INT = NULL
+	,@matchid		INT = NULL -- input matchid
 	,@NoOfTickets	INT = 1 -- input number of tickets
 	,@status		VARCHAR(20) = 'running' -- input status of tickets
 AS
@@ -26,6 +26,8 @@ AS
 		,@TransDate		= '2019-02-27 12:59:59' -- input transdate
 		,@SportType		= 1 -- input sporttype of SB
 		,@BetType		= 1 -- input bettype of SB
+		,@betteam		= 'a' -- input betteam of tickets
+		,@matchid		= NULL -- input matchid
 		,@NoOfTickets	= 1 -- input number of tickets
 		,@status		= 'running'
 		
@@ -84,6 +86,26 @@ BEGIN
 	RETURN
 END
 
+--
+DECLARE @LeagueId_Ins INT
+IF @matchid IS NOT NULL
+BEGIN
+	IF @BetType = 10
+		SELECT @LeagueId_Ins = o.leagueId
+		FROM dbo.outright o WITH (NOLOCK)
+			INNER JOIN dbo.League l WITH (NOLOCK) ON o.leagueid = l.leagueid
+		WHERE o.orid = @matchid
+			AND l.SportType = @SportType
+	ELSE
+		SELECT @LeagueId_Ins =m.leagueId FROM dbo.match m WITH (NOLOCK) WHERE m.matchid = @matchid AND SportType = @SportType
+	
+	IF @LeagueId_Ins IS NULL
+	BEGIN
+		SELECT 'Invalid @matchid!'
+		RETURN
+	END
+END
+
 -- Insert tickets
 DECLARE @NoOfTickets_Ins INT
 DECLARE @transids_Ins TABLE (transid BIGINT)
@@ -93,27 +115,27 @@ DECLARE @transids TABLE (transid BIGINT, matchid INT, matchId_Ins INT, leagueId 
 IF @bettype <> 10
 BEGIN
 	INSERT INTO @transids (transid, matchid, matchId_Ins, leagueId, leagueId_Ins)
-	SELECT TOP (@NoOfTickets) b.transid, b.matchid, b.matchid, m.leagueId, m.leagueId
+	SELECT TOP (@NoOfTickets) b.transid, b.matchid, @matchid, m.leagueId, @LeagueId_Ins
 	FROM bodb02.dbo.bettrans_DBA_TestData b WITH (NOLOCK)
 		INNER JOIN bodb02.dbo.match_DBA_TestData m WITH (NOLOCK) ON b.matchid = m.matchid
 	WHERE m.sporttype = @SportType AND b.bettype = @BetType
 		AND b.statusId = @statusID
 		AND (b.betteam = @betteam OR @betteam IS NULL)
-		AND (m.matchid_bettrans = @matchid OR @matchid IS NULL)
+		--AND (m.matchid_bettrans = @matchid OR @matchid IS NULL)
 
 	SELECT @NoOfTickets_Ins = @@ROWCOUNT
 END
 ELSE
 BEGIN
 	INSERT INTO @transids (transid, matchid, matchId_Ins, leagueId, leagueId_Ins)
-	SELECT TOP (@NoOfTickets) b.transid, b.matchid, b.matchid, l.leagueId, l.leagueId
+	SELECT TOP (@NoOfTickets) b.transid, b.matchid, @matchid, l.leagueId, @LeagueId_Ins
 	FROM bodb02.dbo.bettrans_DBA_TestData b WITH (NOLOCK)
 		INNER JOIN bodb02.dbo.outright_DBA_TestData m WITH (NOLOCK) ON b.matchid = m.orid
 		INNER JOIN bodb02.dbo.League_DBA_TestData l WITH (NOLOCK) ON m.leagueid = l.leagueid
 	WHERE l.sporttype = @SportType AND b.bettype = @BetType
 		AND b.statusId = @statusID
 		AND (b.betteam = @betteam OR @betteam IS NULL)
-		AND (m.orid_bettrans = @matchid OR @matchid IS NULL)
+		--AND (m.orid_bettrans = @matchid OR @matchid IS NULL)
 
 	SELECT @NoOfTickets_Ins = @@ROWCOUNT
 END
@@ -130,22 +152,22 @@ BEGIN
 	-- For send mail if not have data (job every 5 mins)
 	DECLARE @Message VARCHAR(4000) = ''
 	SELECT  @Message = 'Not have data sample for this info: '
-						+ 'matchid = ' + ISNULL(CONVERT(VARCHAR(20), @matchid), 'NULL')
-						+ 'SportType = ' + ISNULL(CONVERT(VARCHAR(20), @SportType), 'NULL')
-						+ 'Bettype = ' + ISNULL(CONVERT(VARCHAR(20), @BetType), 'NULL')
-						+ 'Status = ' + ISNULL(CONVERT(VARCHAR(20), @Status), 'NULL')
+						+ 'matchid = ' + ISNULL(CONVERT(VARCHAR(20), @matchid), 'NULL') + ', '
+						+ 'SportType = ' + ISNULL(CONVERT(VARCHAR(20), @SportType), 'NULL') + ', '
+						+ 'Bettype = ' + ISNULL(CONVERT(VARCHAR(20), @BetType), 'NULL') + ', '
+						+ 'Status = ' + ISNULL(CONVERT(VARCHAR(20), @Status), 'NULL') + ', '
 						+ 'betteam = ' + ISNULL(CONVERT(VARCHAR(20), @betteam), 'NULL')
 
-	INSERT INTO dbo.DBA_TestData_ErrLog (ErrMsg)
-	VALUES (@Message)
+	INSERT INTO dbo.DBA_TestData_ErrLog (ErrMsg, Username)
+	VALUES (@Message, @host_name)
 
 	RETURN
 END
 
 WHILE @NoOfTickets_Ins < @NoOfTickets
 BEGIN
-	INSERT INTO @transids (transid, matchid, leagueid)
-	SELECT TOP (@NoOfTickets - @NoOfTickets_Ins) transid, matchid, leagueid FROM @transids
+	INSERT INTO @transids (transid, matchid, matchId_Ins, leagueId, leagueId_Ins)
+	SELECT TOP (@NoOfTickets - @NoOfTickets_Ins) transid, matchid, matchId_Ins, leagueId, leagueId_Ins FROM @transids
 
 	SELECT @NoOfTickets_Ins = @NoOfTickets_Ins + @@ROWCOUNT
 END
@@ -200,14 +222,14 @@ BEGIN
 			leagueid,homeid,awayid,eventdate,eventstatus,betstatus,livehomescore,liveawayscore,finalhomescore,finalawayscore,
 			creator,matchcode,kickofftime,closedtime,showtime,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,homeid2,awayid2,
 			DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,InjuryTime,GoalRecord,ParentID,ChildMatchType,
-			GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus
+			GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus,ShowTimeDT
 		)
 		OUTPUT INSERTED.matchid INTO @matchids_Ins (matchId_Ins)
 		SELECT
 			t.leagueid,homeid,awayid,@WinlostDate,eventstatus,betstatus,livehomescore,liveawayscore,finalhomescore,finalawayscore,
 			creator,matchcode,kickofftime,closedtime,showtime,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,homeid2,awayid2,
 			DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,InjuryTime,GoalRecord,ParentID,ChildMatchType,
-			GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus
+			GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus,ShowTimeDT
 		FROM bodb02.dbo.match_DBA_TestData m WITH (NOLOCK)
 			INNER JOIN (SELECT DISTINCT matchid, leagueid FROM @transids) AS t ON m.matchid = t.matchid
 		ORDER BY m.matchid
@@ -243,6 +265,56 @@ BEGIN
 	SET t.matchid_Ins = m.matchid_Ins
 	FROM @transids t
 		INNER JOIN @matchids_Ins m ON t.matchid = m.matchid
+
+	INSERT INTO dbo.match_remark
+	(
+		[matchid],[calculate],[multiple],[calrefund],[refund],[calStatus],[IsTotalBetDenied_1],[IsTotalBetDenied_3],[IsTotalBetDenied_7]
+		,[IsTotalBetDenied_8],[LiveTimer],[HomeRedCard],[AwayRedCard],[LivePeriod],[HedgeForecast],[IsTotalBetDenied_20],[IsTotalBetDenied_21]
+		,[IsNeutral],[StreamingID],[IsInternal],[IsHTCal],[LiveDeleteChecker],[HomeColor],[AwayColor],[ConfirmHT],[ConfirmFT],[PausePeriod]
+		,[TimerSuspend],[isPending],[isUndecided],[StdDelBetCheck],[SettlementStatus135],[DelayLive],[HomeSubstitutes],[AwaySubstitutes]
+		,[StartTeam],[RBEventNumber],[RBLinkStatus],[HomePenalty],[AwayPenalty],[HomeYellowCard],[AwayYellowCard],[IsHT],[IsMiniOdds]
+		,[StreamingOfferToCredit],[Tier],[BestOfMap],[IsStartingSoon],[MoveBO3Down],[ShowLiveScore],[isFullTime],[MatchType],[GameStatus],OfferLive
+	)
+	SELECT
+		matchId_Ins,[calculate],[multiple],[calrefund],[refund],[calStatus],[IsTotalBetDenied_1],[IsTotalBetDenied_3],[IsTotalBetDenied_7]
+		,[IsTotalBetDenied_8],[LiveTimer],[HomeRedCard],[AwayRedCard],[LivePeriod],[HedgeForecast],[IsTotalBetDenied_20],[IsTotalBetDenied_21]
+		,[IsNeutral],[StreamingID],[IsInternal],[IsHTCal],[LiveDeleteChecker],[HomeColor],[AwayColor],[ConfirmHT],[ConfirmFT],[PausePeriod]
+		,[TimerSuspend],[isPending],[isUndecided],[StdDelBetCheck],[SettlementStatus135],[DelayLive],[HomeSubstitutes],[AwaySubstitutes]
+		,[StartTeam],[RBEventNumber],[RBLinkStatus],[HomePenalty],[AwayPenalty],[HomeYellowCard],[AwayYellowCard],[IsHT],[IsMiniOdds]
+		,[StreamingOfferToCredit],[Tier],[BestOfMap],[IsStartingSoon],[MoveBO3Down],[ShowLiveScore],[isFullTime],[MatchType],[GameStatus],OfferLive
+	FROM dbo.match_remark_DBA_TestData m WITH (NOLOCK)
+		INNER JOIN (SELECT DISTINCT matchid, matchId_Ins FROM @transids) AS t ON m.matchid = t.matchid
+
+	INSERT INTO [dbo].[odds]
+	(
+		[matchid],[bettype],[switch],[hdp1],[hdp2],[odds1a],[odds2a],[odds1b],[odds2b],[odds1c],[odds2c],[odds1e],[odds2e],[odds1f],[odds2f]
+		,[odds1d],[odds2d],[odds1hka],[odds2hka],[odds1hkb],[odds2hkb],[odds1hkc],[odds2hkc],[odds1hke],[odds2hke],[odds1hkf],[odds2hkf]
+		,[odds1hkd],[odds2hkd],[oddsspreada],[oddsspreadb],[oddsspreadd],[oddsspreade],[oddsspreadf],[oddsspreadc],[autobookie],[gapodds1]
+		,[gapodds2],[maxstake1],[maxstake2],[minstake1],[minstake2],[diffbalance],[maxodds],[minodds],[oddsstatus],[liveindicator]
+		,[changetime],[risk],[stakerange],[newoffersetup],[livehomescore],[liveawayscore],[creator],[com1],[comx],[com2],[cs00],[cs01]
+		,[cs10],[cs11],[cs02],[cs12],[cs22],[cs21],[cs20],[cs30],[cs31],[cs32],[cs33],[cs23],[cs13],[cs03],[cs43],[cs42],[cs41],[cs40]
+		,[cs44],[cs14],[cs24],[cs04],[cs34],[cs50],[cs05],[comstatus],[csstatus],[commaxbet],[csmaxbet],[com1total],[comxtotal],[com2total]
+		,[bal00],[bal10],[bal11],[bal01],[bal20],[bal21],[bal22],[bal12],[bal02],[bal30],[bal31],[bal32],[bal33],[bal23],[bal13],[bal03]
+		,[bal40],[bal41],[bal42],[bal43],[bal44],[bal34],[bal24],[bal14],[bal04],[bal50],[bal05],[maxbet],[ht],[autoreject],[allowance]
+		,[autosuspend],[multiple],[stakerange2],[risk2],[allowance2],[site2],[site3],[site4],[hometotal],[awaytotal],[sporttype],[goal]
+		,[HasBeenLinked],[LinkedHdpId],[LinkedOUId],[TBRepKey],[Linked1X2Id],[SecAcceptFlag],[SecAccept],[Resourceid],[Resultkey]
+		,[cs99],[bal99],[autosuspend2],[FavLimit],[UndLimit]
+	)
+	SELECT TOP 10
+		matchId_Ins,[bettype],[switch],[hdp1],[hdp2],[odds1a],[odds2a],[odds1b],[odds2b],[odds1c],[odds2c],[odds1e],[odds2e],[odds1f],[odds2f]
+		,[odds1d],[odds2d],[odds1hka],[odds2hka],[odds1hkb],[odds2hkb],[odds1hkc],[odds2hkc],[odds1hke],[odds2hke],[odds1hkf],[odds2hkf]
+		,[odds1hkd],[odds2hkd],[oddsspreada],[oddsspreadb],[oddsspreadd],[oddsspreade],[oddsspreadf],[oddsspreadc],[autobookie],[gapodds1]
+		,[gapodds2],[maxstake1],[maxstake2],[minstake1],[minstake2],[diffbalance],[maxodds],[minodds],[oddsstatus],[liveindicator]
+		,[changetime],[risk],[stakerange],[newoffersetup],[livehomescore],[liveawayscore],[creator],[com1],[comx],[com2],[cs00],[cs01]
+		,[cs10],[cs11],[cs02],[cs12],[cs22],[cs21],[cs20],[cs30],[cs31],[cs32],[cs33],[cs23],[cs13],[cs03],[cs43],[cs42],[cs41],[cs40]
+		,[cs44],[cs14],[cs24],[cs04],[cs34],[cs50],[cs05],[comstatus],[csstatus],[commaxbet],[csmaxbet],[com1total],[comxtotal],[com2total]
+		,[bal00],[bal10],[bal11],[bal01],[bal20],[bal21],[bal22],[bal12],[bal02],[bal30],[bal31],[bal32],[bal33],[bal23],[bal13],[bal03]
+		,[bal40],[bal41],[bal42],[bal43],[bal44],[bal34],[bal24],[bal14],[bal04],[bal50],[bal05],[maxbet],[ht],[autoreject],[allowance]
+		,[autosuspend],[multiple],[stakerange2],[risk2],[allowance2],[site2],[site3],[site4],[hometotal],[awaytotal],[sporttype],[goal]
+		,[HasBeenLinked],[LinkedHdpId],[LinkedOUId],[TBRepKey],[Linked1X2Id],[SecAcceptFlag],1 AS [SecAccept],[Resourceid],[Resultkey]
+		,[cs99],[bal99],[autosuspend2],[FavLimit],[UndLimit]
+	FROM dbo.odds_DBA_TestData o WITH (NOLOCK)
+		INNER JOIN (SELECT DISTINCT matchid, matchId_Ins FROM @transids) AS t ON o.matchid = t.matchid
 END
 
 INSERT INTO bodb02.dbo.bettrans
@@ -276,6 +348,10 @@ BEGIN
 		SELECT 'match' AS TableName, m.*
 		FROM bodb02.dbo.match m WITH (NOLOCK)
 			INNER JOIN @transids t ON m.matchid = t.matchId_Ins
+
+		SELECT 'odds' AS TableName, o.*
+		FROM bodb02.dbo.odds o WITH (NOLOCK)
+			INNER JOIN @transids t ON o.matchid = t.matchId_Ins
 	END
 	ELSE
 	BEGIN
