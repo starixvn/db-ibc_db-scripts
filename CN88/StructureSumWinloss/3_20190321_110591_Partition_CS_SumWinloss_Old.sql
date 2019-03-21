@@ -283,3 +283,17 @@ GO
 GRANT SELECt ON [CS_SumWinloss_Old] TO bodbDownlineNetView
 GO 
 
+
+
+CREATE CLUSTERED INDEX [CIX_CS_SumWinloss_Old] ON [dbo].[CS_SumWinloss_Old]
+(
+	[winlostdate] ASC,
+	[srecommend] ASC,
+	[mrecommend] ASC,
+	[recommend] ASC,
+	[roleid] ASC,	
+	[bettype] ASC,
+	[sporttype] ASC
+) ON ps_CS_SumWinloss_Old_monthly (WinlostDate)
+GO
+ 

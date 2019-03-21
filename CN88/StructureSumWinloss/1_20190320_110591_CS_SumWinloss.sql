@@ -3,12 +3,14 @@ GO
 
 /*
 Create: 20190320@Sophia
-Task:  Structure Sum Winloss - CN88 [redmind: 105660]
+Task:  Structure Sum Winloss CS_SumWinloss - CN88 [redmind: 105660]
 
 */
 
+ALTER DATABASE bodb_Summary ADD filegroup [CS_SumWinloss]
 
-
+ALTER DATABASE bodb_Summary ADD FILE (name = 'CS_SumWinloss', filename ='D:\IBC_DB\bodb_Summary\CS_SumWinloss\CS_SumWinloss.ndf', 
+SIZE = 1 MB ,FILEGROWTH = 16 MB ) TO filegroup [CS_SumWinloss]
  
 -----------1. [CS_SumWinloss]
 
@@ -40,52 +42,29 @@ CREATE TABLE [dbo].[CS_SumWinloss](
 	[HeadlineWinloss] [money] NULL,
 	[HeadlineComm] [money] NULL,
 	[HeadlineStock] [money] NULL,
-	[HeadlineId] [int] NULL,
-	CONSTRAINT  [PK_CS_SumWinloss] PRIMARY KEY NONCLUSTERED
-				(CustID,
-				WinlostDate,				
-				Sporttype,
-				Bettype,
-				IsLive) ON [DATA]
-) ON [DATA]
+	[HeadlineId] [int] NULL
+) ON [CS_SumWinloss]
 GO
 
+ 
+CREATE CLUSTERED INDEX [CIX_CS_SumWinloss] ON [dbo].[CS_SumWinloss]
+(
+	[winlostdate] ASC,
+	[srecommend] ASC,
+	[mrecommend] ASC,
+	[recommend] ASC,
+	[roleid] ASC,	
+	[bettype] ASC,
+	[sporttype] ASC
+) ON [CS_SumWinloss]
+GO
+ 
+			
 
 GRANT SELECT ON [CS_SumWinloss] TO bodbDownlineNet
 GO 
 
 GRANT SELECT ON [CS_SumWinloss] TO bodbDownlineNetView
 GO
- 
- 
-----------------3. [CS_SumCancelled]
   
-CREATE TABLE [dbo].[CS_SumCancelled](
-	CustID			Int
-	,WinlostDate	Smalldatetime
-	,ProductId		smallint
-	,Sporttype		smallint
-	,Bettype		smallint
-	,IsLive			bit
-	,CancelType     TINYINT
-	,Wagers			int
-	,Stake			Money
-	,HeadlineId		int,
-	CONSTRAINT  [PK_CS_SumCancelled] PRIMARY KEY NONCLUSTERED 
-				(CustID,
-				WinlostDate,
-				ProductId,
-				Sporttype,
-				Bettype,
-				IsLive,
-				CancelType) ON [DATA]
-	)
-	ON [DATA]
-GO 
-
-GRANT SELECt ON [CS_SumCancelled] TO bodbDownlineNetView
-GO
-
-GRANT SELECt ON [CS_SumCancelled] TO bodbDownlineNet
-GO
 
