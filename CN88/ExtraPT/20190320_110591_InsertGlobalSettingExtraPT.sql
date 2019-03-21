@@ -14,7 +14,7 @@ Task: CN88 - UAT - initial script for ExtraPT
 	  DECLARE @ErrCode INT, @ErrMsg NVARCHAR(200)  
 
 	  EXEC Acc_GroupExtraPT_GroupByProduct_Ins
-		@UserId = 3,
+		@UserId = 10278938 ,   --- starixIT
 		@GroupId = 27,
 		@ProductId = 1,
 		@ExtraPT = 0.03,
