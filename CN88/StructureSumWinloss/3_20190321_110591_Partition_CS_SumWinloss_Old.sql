@@ -219,7 +219,7 @@ CREATE TABLE [dbo].[CS_SumWinloss_Old](
 	,HeadlineStock	Money
 	,HeadlineId		int
 	)
- ON WITH (DATA_COMPRESSION = PAGE) ps_CS_SumWinloss_Old_monthly (WinlostDate)
+  WITH (DATA_COMPRESSION = PAGE) ON ps_CS_SumWinloss_Old_monthly (WinlostDate)
 GO 
 
  GRANT SELECt ON [CS_SumWinloss_Old] TO bodbDownlineNet
@@ -237,6 +237,6 @@ CREATE CLUSTERED INDEX [CIX_CS_SumWinloss_Old] ON [dbo].[CS_SumWinloss_Old]
 	Sporttype ASC,
 	Bettype ASC,
 	IsLive ASC
-) ON WITH (DATA_COMPRESSION = PAGE) ps_CS_SumWinloss_Old_monthly (WinlostDate)
+)  WITH (DATA_COMPRESSION = PAGE) ON ps_CS_SumWinloss_Old_monthly (WinlostDate)
 GO
  
