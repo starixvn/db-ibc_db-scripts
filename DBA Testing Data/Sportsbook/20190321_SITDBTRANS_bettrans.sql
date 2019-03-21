@@ -1,3 +1,9 @@
+/*
+	Created: 20190321@Percy
+	DB: SITDBTRANS.bodb02
+	Task: CN88 - Support create testing data for Report
+*/
+
 DECLARE @superUsername VARCHAR(30) = 'SuperTestCNL'
 DECLARE @SportTypeGroups VARCHAR(100) = ''
 
@@ -19,7 +25,7 @@ BEGIN
 	FROM (
 		SELECT srecommend, mrecommend, recommend, custid, username, c.currency, e.currency as currencyName, actualrate, ROW_NUMBER() OVER(PARTITION BY recommend ORDER BY custid) AS RN
 		FROM CustDB.dbo.Customer c WITH (NOLOCK)
-			INNER JOIN bodb02.dbo.exchange e WITH (NOLOCK) ON c.currency = e.exchangeid
+			INNER JOIN CustDB.dbo.exchange e WITH (NOLOCK) ON c.currency = e.exchangeid
 		WHERE srecommend = @srecommend AND roleid = 1
 	) AS member
 	WHERE RN <= 2
