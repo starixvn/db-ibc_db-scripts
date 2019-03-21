@@ -2,6 +2,7 @@ Use bodb02
 /*
 Create: 20190321@Sophia
 task: #109295 -  Add 10 new games for Lottery (1039-1048)
+DB: DBPRO.bodb02
 */
 
 
