@@ -49,13 +49,11 @@ GO
  
 CREATE CLUSTERED INDEX [CIX_CS_SumWinloss] ON [dbo].[CS_SumWinloss]
 (
-	[winlostdate] ASC,
-	[srecommend] ASC,
-	[mrecommend] ASC,
-	[recommend] ASC,
-	[roleid] ASC,	
-	[bettype] ASC,
-	[sporttype] ASC
+	CustID ASC,
+	WinlostDate ASC,				
+	Sporttype ASC,
+	Bettype ASC,
+	IsLive ASC
 ) ON [CS_SumWinloss]
 GO
  
