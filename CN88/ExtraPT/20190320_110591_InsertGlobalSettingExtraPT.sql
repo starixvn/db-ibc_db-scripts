@@ -14,17 +14,16 @@ Task: CN88 - UAT - initial script for ExtraPT
 	  DECLARE @ErrCode INT, @ErrMsg NVARCHAR(200)  
 
 	  EXEC Acc_GroupExtraPT_GroupByProduct_Ins
-		@UserId = 10278938 ,   --- starixIT
+		@UserId = 15552859  ,   --- starix26
 		@GroupId = 27,
 		@ProductId = 1,
 		@ExtraPT = 0.03,
-		@EffectiveDate = '2019-03-20',
+		@EffectiveDate = '2019-03-21',
 		@EndDate = NULL,
 		@ErrCode = @ErrCode OUTPUT ,
 		@ErrMsg = @ErrMsg OUTPUT
 
 		SELECT @ErrCode, @ErrMsg
-
 
 
 		---SELECT *  From Acc_GroupExtraPT_Product where groupID= 27
