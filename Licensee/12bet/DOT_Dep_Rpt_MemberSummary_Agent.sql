@@ -9,6 +9,7 @@ ALTER PROCEDURE [dbo].[DOT_Dep_Rpt_MemberSummary_Agent]
 	@CustId INT,
 	@agentid NVARCHAR(3500)
 AS
+/*Revisions: 
 --20130723@Benson(DB06): Get Transfer_Opus data from rptDepWinlost_Transfer3rdOthers.
 --20130806@Benson(DB06): fix Transfer3rd_Opus return null 
 --20131107@BEnson(DB06): fix today Withdrawal Positive and negative exchange
@@ -26,6 +27,7 @@ AS
 --20180806@James(DB06) :Add Topaz(FG) Report Data
 --20190313@James(DB06) :Add IMone Report Data
 --20190319@Angus(DB06) :Add BTi Report Data [redmind: #110748]
+*/
 
 DECLARE @dbtodaydate SMALLDATETIME
 SET @dbtodaydate = CONVERT(NVARCHAR(10),CURRENT_TIMESTAMP,120)
