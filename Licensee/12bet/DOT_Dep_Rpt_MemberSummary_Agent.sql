@@ -1,16 +1,7 @@
 /*<info serverAlias="DB06-bodb02" executers="Dot_Admin,Dot_Member" viewers="" isFunction="0" isNested="0"></info>*/
 USE [bodb02]
 GO
-/****** Object:  StoredProcedure [dbo].[DOT_Dep_Rpt_MemberSummary_Agent]    Script Date: 2019/3/13 ¤W¤È 11:01:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-/****** Object:  Stored Procedure dbo.DOT_Dep_Rpt_MemberSummary_Agent    Script Date: 8/22/2018 4:53:08 AM ******/
-/****** Object:  Stored Procedure dbo.DOT_Dep_Rpt_MemberSummary_Agent    Script Date: 8/10/2018 1:03:26 PM ******/
-
-
-
+ 
 
 ALTER PROCEDURE [dbo].[DOT_Dep_Rpt_MemberSummary_Agent]
 	@fromDate smalldatetime,
@@ -34,7 +25,8 @@ AS
 --20171124@Angus(DB06) :Add CitiBet(Exchange) Report Data
 --20180806@James(DB06) :Add Topaz(FG) Report Data
 --20190313@James(DB06) :Add IMone Report Data
---20190319@Angus(DB06) :Add BTi Report Data
+--20190319@Angus(DB06) :Add BTi Report Data [redmind: #110748]
+
 DECLARE @dbtodaydate SMALLDATETIME
 SET @dbtodaydate = CONVERT(NVARCHAR(10),CURRENT_TIMESTAMP,120)
 
@@ -210,3 +202,4 @@ FROM @WinlostTmp b
 UNION
 SELECT @dbtodaydate, d.* FROM @TodayData d
 ORDER BY b.winlostdate
+Go

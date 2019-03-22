@@ -44,7 +44,7 @@ Revisions:
 20180905@Benson(DB06.bodb02): Add mini game(SportType:209) in RNG relate column
 20190111@Angus(DB06.bodb02): Add Happy5(SportType:164) Report Data
 20190313@James(DB06.bodb02): Add IMone Report Data 
-20190319@Angus(DB06.bodb02): Add BTi Report Data 
+20190319@Angus(DB06.bodb02): Add BTi Report Data [redmind: #110748]
 */
 BEGIN
 	CREATE TABLE #SumWinlost(
