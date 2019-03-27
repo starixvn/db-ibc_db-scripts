@@ -1,16 +1,22 @@
-USE [bodb02]
+﻿USE [bodb02]
 GO
 
 ALTER PROCEDURE [dbo].[DBA_Sportsbook_CreateData]
-	@CustId			INT = 1176092 -- input custid of member
-	,@WinlostDate	SMALLDATETIME = NULL -- input winlostdate
-	,@TransDate		SMALLDATETIME = NULL -- input transdate
-	,@SportType		INT = 1 -- input sporttype of SB
-	,@BetType		INT = 1 -- input bettype of SB
-	,@betteam		VARCHAR(10) = NULL -- input betteam of tickets
-	,@matchid		INT = NULL -- input matchid
-	,@NoOfTickets	INT = 1 -- input number of tickets
-	,@status		VARCHAR(20) = 'running' -- input status of tickets
+	@CustId				INT = 1176092 -- input custid of member
+	,@WinlostDate		SMALLDATETIME = NULL -- input winlostdate
+	,@TransDate			SMALLDATETIME = NULL -- input transdate
+	,@SportType			INT = 1 -- input sporttype of SB
+	,@BetType			INT = 1 -- input bettype of SB
+	,@betteam			VARCHAR(10) = NULL -- input betteam of tickets
+	,@matchid			INT = NULL -- input matchid
+	,@NoOfTickets		INT = 1 -- input number of tickets
+	,@status			VARCHAR(20) = 'running' -- input status of tickets
+	/* ===== for Parlay of SB: bettype = 29 ===== */
+	,@NoOfSubTicket		INT = NULL
+	-- choose one of @ListOfSportType or @ListOfMatchId
+	,@ListOfSportType	VARCHAR(2000) = NULL -- list of SportType for each sub ticket
+	,@ListOfMatchId		VARCHAR(2000) = NULL -- list of matchId for each sub ticket
+	,@ListOfCombo		VARCHAR(100) = NULL -- list of 2 --> @NoOfSubTicket: '2', '2,3', '3'
 AS
 
 /*
@@ -33,6 +39,22 @@ AS
 		
 */
 
+--
+DECLARE @host_name VARCHAR(50)
+SELECT  @host_name = RIGHT(HOST_NAME(), LEN(HOST_NAME()) - 6)
+
+IF EXISTS (
+	SELECT 1 FROM ( VALUES 
+		(6, 5)
+		,(10, 1)
+	) AS X (SportType, Bettype)
+	WHERE SportType = @SportType AND Bettype = @BetType
+)
+BEGIN
+	SELECT 0 AS ErrCode, N'This case is very hiếm =))' AS ErrMsg
+	RETURN
+END
+
 IF @WinlostDate IS NULL
 	SELECT @WinlostDate = CONVERT(DATE, GETDATE())
 
@@ -53,7 +75,7 @@ SELECT  @statusID = CASE @status	WHEN 'WON'		THEN 112
 
 IF @statusID IS NULL
 BEGIN
-	SELECT 'Invalid status!'
+	SELECT 100 AS ErrCode, 'Invalid status!' AS ErrMsg
 	RETURN
 END
 -- customer Info
@@ -65,7 +87,7 @@ WHERE custid = @custid AND roleId = 1
 
 IF @recommend IS NULL
 BEGIN
-	SELECT 'Invalid custid!'
+	SELECT 200 AS ErrCode, 'Invalid custid!' AS ErrMsg
 	RETURN
 END
 
@@ -74,15 +96,84 @@ FROM bodb02.dbo.exchange WITH (NOLOCK)
 WHERE exchangeid = @currency
 
 -- Check valid sporttype/bettype
-IF @BetType IN (9,29)
+IF @BetType IN (9)
 BEGIN
-	SELECT 'Not support parlay yet!'
+	SELECT 300 AS ErrCode, 'Not support bettype 9!' AS ErrMsg
+	RETURN
+END
+ELSE IF @BetType = 29
+BEGIN
+	SELECT 300 AS ErrCode, 'Not support bettype 29!' AS ErrMsg
+	RETURN
+	DECLARE @tblSubSportType TABLE (ID INT, SportType INT)
+	DECLARE @tblSubMatchId TABLE (ID INT, matchid INT)
+
+	IF @ListOfSportType IS NOT NULL
+	BEGIN
+		BEGIN TRY
+			INSERT INTO @tblSubSportType (ID, SportType)
+			SELECT rank, CONVERT(INT, val) FROM dbo.strSplit(@ListOfSportType, ',')
+		END TRY
+		BEGIN CATCH
+			SELECT 400 AS ErrCode, 'Wrong format of @ListOfSportType' AS ErrMsg
+			RETURN
+		END CATCH
+
+		INSERT INTO @tblSubMatchId (ID, matchid)
+		SELECT 1,1
+		FROM @tblSubSportType s
+			INNER JOIN dbo.match m WITH (NOLOCK) ON s.SportType = m.sporttype
+			INNER JOIN dbo.bettransm bm WITH (NOLOCK) ON m.matchid = bm.matchid
+	END
+	ELSE IF @ListOfMatchId IS NOT NULL
+	BEGIN
+		BEGIN TRY
+			INSERT INTO @tblSubMatchId (ID, matchid)
+			SELECT rank, CONVERT(INT, val) FROM dbo.strSplit(@ListOfMatchId, ',')
+		END TRY
+		BEGIN CATCH
+			SELECT 500 AS ErrCode, 'Wrong format of @ListOfMatchId' AS ErrMsg
+			RETURN
+		END CATCH
+	END
+	
+	IF @ListOfCombo IS NULL
+		SELECT @ListOfCombo = '2'
+
+	DECLARE @tblCombo TABLE (Combo INT)
+
+	BEGIN TRY
+		INSERT INTO @tblCombo (Combo)
+		SELECT CONVERT(INT, val) FROM dbo.strSplit(@ListOfCombo, ',')
+	END TRY
+	BEGIN CATCH
+		SELECT 400 AS ErrCode, 'Wrong format of @ListOfCombo' AS ErrMsg
+		RETURN
+	END CATCH
+
+	IF @NoOfSubTicket IS NULL
+		SELECT @NoOfSubTicket = 2
+
+	IF @NoOfSubTicket = 1 OR EXISTS (SELECT 1 FROM @tblCombo WHERE Combo = 1)
+	BEGIN
+		SELECT 500 AS ErrCode, '@ListOfCombo and @NoOfSubTicket not allow value 1' AS ErrMsg
+		RETURN
+	END
+
+	IF (SELECT MAX(Combo) FROM @tblCombo) > @NoOfSubTicket
+	BEGIN
+		SELECT 600 AS ErrCode, 'Not consistance between @ListOfCombo and @NoOfSubTicket' AS ErrMsg
+		RETURN
+	END
+
+	SELECT @matchid = 29
+
 	RETURN
 END
 
-IF NOT EXISTS (SELECT 1 FROM bodb02.dbo.SportBettypeMatrix WITH (NOLOCK) WHERE ProductID = 1 AND SportType = @SportType AND BetType = @BetType)
+IF NOT EXISTS (SELECT 1 FROM bodb02.dbo.CS_SportBettypeMatrix WITH (NOLOCK) WHERE ProductID = 1 AND SportType = @SportType AND BetType = @BetType)
 BEGIN
-	SELECT 'Support SB only!'
+	SELECT 700 AS ErrCode, 'Support SB only!' AS ErrMsg
 	RETURN
 END
 
@@ -101,7 +192,7 @@ BEGIN
 	
 	IF @LeagueId_Ins IS NULL
 	BEGIN
-		SELECT 'Invalid @matchid!'
+		SELECT 300 AS ErrCode, 'Invalid @matchid!' AS ErrMsg
 		RETURN
 	END
 END
@@ -142,9 +233,6 @@ END
 
 IF @NoOfTickets_Ins = 0
 BEGIN
-	DECLARE @host_name VARCHAR(50)
-	SELECT  @host_name = RIGHT(HOST_NAME(), LEN(HOST_NAME()) - 6)
-
 	SELECT 'Hi ' + @host_name + '!' + CHAR(10) + CHAR(13)
 			+ 'Not have data sample for this case! Just sent email to DBA, please wait 5 mins!' AS Message
 			, @matchid AS matchid, @SportType AS SportType, @BetType AS Bettype, @Status AS Status, @betteam AS betteam
@@ -173,7 +261,7 @@ BEGIN
 END
 
 DECLARE @leagueids_Ins TABLE(ID INT IDENTITY(1,1), leagueId INT, leagueId_Ins INT)
-DECLARE @matchids_Ins TABLE (ID INT IDENTITY(1,1), matchid INT, matchId_Ins INT)
+CREATE TABLE #matchids_Ins (ID INT IDENTITY(1,1), matchid INT, matchId_Ins INT)
 
 IF @matchid IS NULL
 BEGIN
@@ -224,7 +312,7 @@ BEGIN
 			DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,InjuryTime,GoalRecord,ParentID,ChildMatchType,
 			GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus,ShowTimeDT
 		)
-		OUTPUT INSERTED.matchid INTO @matchids_Ins (matchId_Ins)
+		OUTPUT INSERTED.matchid INTO #matchids_Ins (matchId_Ins)
 		SELECT
 			t.leagueid,homeid,awayid,@WinlostDate,eventstatus,betstatus,livehomescore,liveawayscore,finalhomescore,finalawayscore,
 			creator,matchcode,kickofftime,closedtime,showtime,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,homeid2,awayid2,
@@ -233,6 +321,28 @@ BEGIN
 		FROM bodb02.dbo.match_DBA_TestData m WITH (NOLOCK)
 			INNER JOIN (SELECT DISTINCT matchid, leagueid FROM @transids) AS t ON m.matchid = t.matchid
 		ORDER BY m.matchid
+
+		WHILE EXISTS (SELECT 1 FROM #matchids_Ins WHERE matchId_Ins BETWEEN 99000000 AND 99000200)
+		BEGIN
+			TRUNCATE TABLE #matchids_Ins
+
+			INSERT INTO bodb02.dbo.match
+			(
+				leagueid,homeid,awayid,eventdate,eventstatus,betstatus,livehomescore,liveawayscore,finalhomescore,finalawayscore,
+				creator,matchcode,kickofftime,closedtime,showtime,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,homeid2,awayid2,
+				DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,InjuryTime,GoalRecord,ParentID,ChildMatchType,
+				GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus,ShowTimeDT
+			)
+			OUTPUT INSERTED.matchid INTO #matchids_Ins (matchId_Ins)
+			SELECT
+				t.leagueid,homeid,awayid,@WinlostDate,eventstatus,betstatus,livehomescore,liveawayscore,finalhomescore,finalawayscore,
+				creator,matchcode,kickofftime,closedtime,showtime,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,homeid2,awayid2,
+				DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,InjuryTime,GoalRecord,ParentID,ChildMatchType,
+				GlobalShowTime,HasLive,changetime,settletime,IsAutoPayout,AutoSetting,SettlementStatus,ShowTimeDT
+			FROM bodb02.dbo.match_DBA_TestData m WITH (NOLOCK)
+				INNER JOIN (SELECT DISTINCT matchid, leagueid FROM @transids) AS t ON m.matchid = t.matchid
+			ORDER BY m.matchid
+		END
 	END
 	ELSE
 	BEGIN
@@ -242,7 +352,7 @@ BEGIN
 			,HorseJockey,HorseDraw,HorseWgt,PlaceOdds,Placing,IsFavor,IsSCR,Colours,HorseTrainer,FOddsStatus,SCRTime,changetime,LeaguePatternID,TeamPatternID
 			,ProgramDate,IsDeadheat,StdDelBetCheck,autosuspend,EventId,Year
 		)
-		OUTPUT INSERTED.orid INTO @matchids_Ins (matchId_Ins)
+		OUTPUT INSERTED.orid INTO #matchids_Ins (matchId_Ins)
 		SELECT
 			t.leagueid,teamid,eventdate,kickofftime,oddsstatus,odds,maxbet,gapodds,matchcode,groupmatch,status,creator,bal,risk,DisplayMode,ProgramID
 			,HorseJockey,HorseDraw,HorseWgt,PlaceOdds,Placing,IsFavor,IsSCR,Colours,HorseTrainer,FOddsStatus,SCRTime,changetime,LeaguePatternID,TeamPatternID
@@ -258,13 +368,13 @@ BEGIN
 	)
 	UPDATE m
 	SET m.matchid = c.matchid
-	FROM @matchids_Ins m
+	FROM #matchids_Ins m
 		INNER JOIN CTE_match c ON m.ID = c.RN
 
 	UPDATE t
 	SET t.matchid_Ins = m.matchid_Ins
 	FROM @transids t
-		INNER JOIN @matchids_Ins m ON t.matchid = m.matchid
+		INNER JOIN #matchids_Ins m ON t.matchid = m.matchid
 
 	INSERT INTO dbo.match_remark
 	(
@@ -360,3 +470,5 @@ BEGIN
 			INNER JOIN @transids t ON m.orid = t.matchId_Ins
 	END
 END
+
+DROP TABLE #matchids_Ins
