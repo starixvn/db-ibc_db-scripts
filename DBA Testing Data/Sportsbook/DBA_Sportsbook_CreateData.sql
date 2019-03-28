@@ -79,7 +79,7 @@ BEGIN
 	RETURN
 END
 -- customer Info
-DECLARE @username NVARCHAR(20), @recommend INT, @mrecommend INT, @srecommend INT, @currency INT, @currencyName VARCHAR(50), @actualrate FLOAT
+DECLARE @username NVARCHAR(50), @recommend INT, @mrecommend INT, @srecommend INT, @currency INT, @currencyName VARCHAR(50), @actualrate FLOAT
 
 SELECT @recommend = recommend, @mrecommend = mrecommend, @srecommend = srecommend, @currency = currency
 FROM CustDB.dbo.custInfo WITH (NOLOCK)
