@@ -13,7 +13,8 @@ CREATE TABLE #recommend (ID INT IDENTITY (1,1), CustID INT )
 INSERT INTO #recommend 
 SELECT  CustID
 FROM CUSTDB.dbo.CustInfo WITH (NOLOCK) 
-WHEre srecommend IN (Select CustID FROM CS_CustSuper)
+WHEre srecommend IN (Select CustID FROM CS_CustSuper WITH (NOLOCK) )
+AND roleID = 2 
 
 INSERT INTO #Winlostdate (ID, Winlostdate)
 EXEC  [Task_MoveBetsDayByScheduleSel] 
