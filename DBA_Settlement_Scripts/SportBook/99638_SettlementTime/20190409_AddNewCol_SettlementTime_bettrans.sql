@@ -9,5 +9,4 @@ USE [bodb02];
 GO 
 
 ALTER TABLE dbo.bettrans
-ADD 
-	SettlementTime DATETIME NULL;
+ADD SettlementTime DATETIME NULL;
