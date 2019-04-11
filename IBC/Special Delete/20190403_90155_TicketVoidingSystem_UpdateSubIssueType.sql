@@ -7,6 +7,6 @@ USE bodb02
 GO
 
 UPDATE TicketVoiding_SubIssueType	
-	SET SubIssueTypeName = 'Non-Live'
+	SET SubIssueTypeName = 'Non Live'
 WHERE SubIssueTypeId = 12
 GO
