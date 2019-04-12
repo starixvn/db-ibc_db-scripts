@@ -1,6 +1,6 @@
 /*
 	Created: 20190409@Sol
-	DB: DBTXN.bodb02; 
+	DB: DBTXN.bodb02; Replicated Dbs; Archived Dbs
 	Task: Add new column SettlementTime into bettrans table
 */
 
