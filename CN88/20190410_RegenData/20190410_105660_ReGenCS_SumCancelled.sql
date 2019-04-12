@@ -21,7 +21,3 @@ DB: DBSUM.bodb_Summary
  EXEC Task_DailyRptCS_SumCancelled_CheckAndCorrect @WinlostDate = '20190407', @IsCheckDataOnly = 0
  
  
-  EXEC Task_DailyRptCS_SumCancelled_CheckAndCorrect @WinlostDate = '20190408', @IsCheckDataOnly = 0
-  
- 
-   EXEC Task_DailyRptCS_SumCancelled_CheckAndCorrect @WinlostDate = '20190409', @IsCheckDataOnly = 0
