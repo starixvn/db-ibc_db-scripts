@@ -16,6 +16,8 @@ DB: DBCUST.CUSTDB
 
 	DECLARE @ErrCode INT, @ErrMsg NVARCHAR(200)  
 	
+	
+	----NumberGame 
 	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
 		@UserId = 15552859  ,   --- starix26
 		@GroupId = 27,
@@ -34,7 +36,7 @@ DB: DBCUST.CUSTDB
 		@UserId = 15552859  ,   --- starix26
 		@GroupId = 28,
 		@ProductId = 3,
-		@ExtraPT = 0.03,
+		@ExtraPT = 0.02,
 		@EffectiveDate = @Date,
 		@EndDate = NULL,
 		@ErrCode = @ErrCode OUTPUT ,
@@ -47,7 +49,7 @@ DB: DBCUST.CUSTDB
 		@UserId = 15552859  ,   --- starix26
 		@GroupId = 29,
 		@ProductId = 3,
-		@ExtraPT = 0.03,
+		@ExtraPT = 0.01,
 		@EffectiveDate = @Date,
 		@EndDate = NULL,
 		@ErrCode = @ErrCode OUTPUT ,
@@ -60,7 +62,219 @@ DB: DBCUST.CUSTDB
 		@UserId = 15552859  ,   --- starix26
 		@GroupId = 30,
 		@ProductId = 3,
+		@ExtraPT = 0,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '30'	
+	
+	--------5	Virtual Sports
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 27,
+		@ProductId = 5,
 		@ExtraPT = 0.03,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '27'
+	
+	
+	  
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 28,
+		@ProductId = 5,
+		@ExtraPT = 0.02,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '28'
+	 	 
+ 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 29,
+		@ProductId = 5,
+		@ExtraPT = 0.01,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '29'	
+	 
+	 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 30,
+		@ProductId = 5,
+		@ExtraPT = 0,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '30'	
+	
+	--------8	Keno
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 27,
+		@ProductId = 8,
+		@ExtraPT = 0.03,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '27'
+	
+	
+	  
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 28,
+		@ProductId = 8,
+		@ExtraPT = 0.02,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '28'
+	 	 
+ 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 29,
+		@ProductId = 8,
+		@ExtraPT = 0.01,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '29'	
+	 
+	 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 30,
+		@ProductId = 8,
+		@ExtraPT = 0,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '30'	
+	
+	--------27	Virtual Sports 2
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 27,
+		@ProductId = 27,
+		@ExtraPT = 0.03,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '27'
+	
+	
+	  
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 28,
+		@ProductId = 27,
+		@ExtraPT = 0.02,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '28'
+	 	 
+ 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 29,
+		@ProductId = 27,
+		@ExtraPT = 0.01,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '29'	
+	 
+	 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 30,
+		@ProductId = 27,
+		@ExtraPT = 0,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '30'	
+	
+	--------28	Lottery
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 27,
+		@ProductId = 28,
+		@ExtraPT = 0.03,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '27'
+	
+	
+	  
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 28,
+		@ProductId = 28,
+		@ExtraPT = 0.02,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '28'
+	 	 
+ 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 29,
+		@ProductId = 28,
+		@ExtraPT = 0.01,
+		@EffectiveDate = @Date,
+		@EndDate = NULL,
+		@ErrCode = @ErrCode OUTPUT ,
+		@ErrMsg = @ErrMsg OUTPUT
+
+	SELECT @ErrCode, @ErrMsg, '29'	
+	 
+	 
+	EXEC Acc_GroupExtraPT_GroupByProduct_Ins
+		@UserId = 15552859  ,   --- starix26
+		@GroupId = 30,
+		@ProductId = 28,
+		@ExtraPT = 0,
 		@EffectiveDate = @Date,
 		@EndDate = NULL,
 		@ErrCode = @ErrCode OUTPUT ,
