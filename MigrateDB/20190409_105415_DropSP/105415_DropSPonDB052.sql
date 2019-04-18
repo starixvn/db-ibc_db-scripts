@@ -8,5 +8,7 @@ Task: Remove Object - Move transfer_fi [redmine: #105415]
  
 
 USE bodb_Summary
-GO  
+GO 
+ 
 DROP TABLE transfer_fi  
+GO
