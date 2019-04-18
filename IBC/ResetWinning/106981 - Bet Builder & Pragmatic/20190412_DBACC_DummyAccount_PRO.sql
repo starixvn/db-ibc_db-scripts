@@ -17,5 +17,5 @@ WHERE seq BETWEEN 36 AND 37
 
 INSERT INTO dbo.Acc_DWLList (custid, product, seq, ProductId, IsDeleted)
 SELECT 35739415, 'Bet Builder', 5, 1, 0 UNION ALL
-SELECT 35742795, 'Bet Builder (Due To Partners)', 6, 1, 0 UNION ALL
-SELECT 35884160, 'PP (Due To Partners)', 36, 32, 0
+SELECT 35999735, 'Bet Builder (Due To Partners)', 6, 1, 0 UNION ALL
+SELECT 35999728, 'PP (Due To Partners)', 36, 32, 0
