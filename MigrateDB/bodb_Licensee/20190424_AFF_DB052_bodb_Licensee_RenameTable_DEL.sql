@@ -7,7 +7,5 @@ go
 	Task: Un-use tables - Step 1: Rename to DEL_
 */
 
-sp_rename 'Aff_LicenseeInfo', 'DEL_Aff_LicenseeInfo'
-go
 sp_rename 'Aff_User_CreatorTransfer', 'DEL_Aff_User_CreatorTransfer'
 go
