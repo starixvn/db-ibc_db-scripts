@@ -7,9 +7,6 @@ go
 	Task: Moved tables - Step 1: Rename to DEL_
 */
 
-sp_rename 'Aff_User_CreatorTransfer', 'DEL_Aff_User_CreatorTransfer'
-go
-
 sp_rename 'Aff_FunctionInfo', 'DEL_Aff_FunctionInfo'
 go
 
