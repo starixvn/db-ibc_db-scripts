@@ -97,3 +97,14 @@ SELECT
 FROM DBLIC.bodb_Licensee.dbo.Aff_UserPolicy WITH (NOLOCK)
 
 GO
+
+/* INSERT DATA dbo.Aff_LicenseeInfo */
+INSERT INTO dbo.Aff_LicenseeInfo
+(
+	LicenseeID,LicenseeName,IsActive
+)
+SELECT
+	LicenseeID,LicenseeName,IsActive
+FROM DBLIC.bodb_Licensee.dbo.Aff_LicenseeInfo WITH (NOLOCK)
+
+GO
