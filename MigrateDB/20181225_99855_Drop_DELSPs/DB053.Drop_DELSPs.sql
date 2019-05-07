@@ -1,0 +1,164 @@
+/*
+	Created: 20190507@Percy
+	DB: DB053
+	Task: Drop un-used SPs
+	Reference: https://docs.google.com/spreadsheets/d/1YGYSeWIKXnAg2EM60kxEpOMhWElfA2LIhwrb4j_mJNM/edit#gid=523938262
+*/
+use bodb_Licensee
+go
+drop procedure DEL_Lrf_BrowserStatistic
+go
+drop procedure DEL_Lrf_CustomerUpdSpecialLevel
+go
+drop procedure DEL_Lrf_CustomerUpdUserSearch
+go
+drop procedure DEL_Lrf_GetFunctionStatistic
+go
+drop procedure DEL_Lrf_GetLicenseeStatistic
+go
+drop procedure DEL_Lrf_GetNonFunctionStatistic
+go
+drop procedure DEL_Lrf_GetSystemNameStatistic
+go
+drop procedure DEL_Lrf_InternalLogin
+go
+drop procedure DEL_Lrf_LicenseeCustCommSel
+go
+drop procedure DEL_Lrf_LicenseeCustCommSel_UAT4
+go
+drop procedure DEL_Lrf_SyncInternalUser
+go
+drop procedure DEL_Lrf_UpdateUserVisitStatistic
+go
+drop procedure DEL_Lrf_UserLogin
+go
+
+
+use bodb_LicenseeReport
+go
+drop procedure DEL_GEN_Customer_Account2
+go
+drop procedure DEL_GEN_rptKPI_Transfer
+go
+
+
+use bodb_PlaytechCS
+go
+drop procedure DEL_Task_PTCS_SelLicenseeList
+go
+
+
+use bodb02
+go
+drop procedure DEL_Acc_CustSetting3rd_19
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Agent_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Agent_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Member_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Member_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_Agent_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_Member_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_ALog_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_ALog_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Bezbet_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Bezbet_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Dela_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Dela_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details_xtest_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_xpre_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_MayFair_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_MayFair_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Spondemo_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Spondemo_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_SunCity_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_SunCity_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_TLC_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_TLC_Details_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Zzun88_delete
+go
+drop procedure DEL_Acc_Rpt_Winloss_Zzun88_Details_delete
+go
+drop procedure DEL_Acc_UserLog_LoginSel_xtest
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet_Details_Agent_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet_Details_Member_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_AB88_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_AB88_Details_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_ALog_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_ALog_Details_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Dela_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Dela_Details_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_M88_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_M88_Details_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Spondemo_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Spondemo_Details_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_TLC_delete
+go
+drop procedure DEL_Lbs_Rpt_Winloss_TLC_Details_delete
+go
+drop procedure DEL_Task_Exchange_HistoryIns_delete
+go
+drop procedure DEL_Task_Exchange_HistoryIns_xtest_delete
+go
+drop procedure DEL_Task_ExternalSettlement_CleanUp_delete
+go
+drop procedure DEL_Task_ExternalSettlement_thien_delete
+go
+drop procedure DEL_Task_ExternalSettlement_Verification_delete
+go
+drop procedure DEL_WriteLog_UserLog_Login
+go

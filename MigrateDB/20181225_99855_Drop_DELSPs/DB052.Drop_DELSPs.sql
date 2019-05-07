@@ -1,0 +1,305 @@
+/*
+	Created: 20190507@Percy
+	DB: DB052
+	Task: Drop un-used SPs
+	Reference: https://docs.google.com/spreadsheets/d/1YGYSeWIKXnAg2EM60kxEpOMhWElfA2LIhwrb4j_mJNM/edit#gid=523938262
+*/
+
+use bodb_Licensee
+go
+drop procedure DEL_Acc_BA_GroupCurrency_ViewLog_xtest
+go
+drop procedure DEL_Acc_BA_GroupCurrencyUpd_xpre
+go
+drop procedure DEL_Acc_BA_GroupCurrencyUpd_xtest
+go
+drop procedure DEL_Acc_BA_LicConfig_ViewLog_xtest
+go
+drop procedure DEL_Acc_BA_LicConfigUpd_UAT4
+go
+drop procedure DEL_Acc_BA_LicConfigUpd_xpre
+go
+drop procedure DEL_Acc_BA_LicConfigUpd_xtest
+go
+drop procedure DEL_Acc_BA_SpecialCust_ViewLog_xtest
+go
+drop procedure DEL_Acc_BA_SpecialCustAdd_xpre
+go
+drop procedure DEL_Acc_BA_SpecialCustAdd_xtest
+go
+drop procedure DEL_Acc_BA_SpecialCustDel_xpre
+go
+drop procedure DEL_Acc_BA_SpecialCustDel_xtest
+go
+drop procedure DEL_Acc_BA_SpecialCustSel_UAT4
+go
+drop procedure DEL_Acc_BA_SpecialCustSel_xtest
+go
+drop procedure DEL_Acc_BA_SpecialCustUpd_xpre
+go
+drop procedure DEL_Acc_BA_SpecialCustUpd_xtest
+go
+drop procedure DEL_DBA_LicenseeBAConfig_Ins_xtest
+go
+drop procedure DEL_DBA_LicenseeCustomerDel_UAT4
+go
+drop procedure DEL_DBA_Lrf_EnablePlayerComm_UAT4
+go
+drop procedure DEL_GEN_RptKPI_MTD
+go
+drop procedure DEL_GEN_RptKPI_MTD_FDL
+go
+drop procedure DEL_GEN_RptKPI_MTD_Old
+go
+drop procedure DEL_GEN_RptKPI_MTD_PeakConcurrentBettors
+go
+drop procedure DEL_GEN_RptKPI_MTD_xtest
+go
+drop procedure DEL_KPI_GetAllBranches
+go
+drop procedure DEL_KPI_GetAllBranches_xtest
+go
+drop procedure DEL_KPI_GetAllGroups_xtest
+go
+drop procedure DEL_KPI_GetAllSections
+go
+drop procedure DEL_KPI_GetAllStatistics
+go
+drop procedure DEL_KPI_GetReportData_BA_UAT2
+go
+drop procedure DEL_KPI_GetReportData_BA_xtest
+go
+drop procedure DEL_KPI_GetReportData_UAT2
+go
+drop procedure DEL_KPI_GetReportData_UAT2
+go
+drop procedure DEL_KPI_GetReportData_xtest
+go
+drop procedure DEL_KPI_GetReportData_xtest
+go
+drop procedure DEL_KPI_GetStatisticsConfig
+go
+drop procedure DEL_KPI_GetStatisticsConfig_xtest
+go
+drop procedure DEL_KPI_GetTopThreeSports_UAT2
+go
+drop procedure DEL_KPI_GetTopThreeSports_xtest
+go
+drop procedure DEL_Lrf_CustomerUpdSpecialLevel
+go
+drop procedure DEL_Lrf_CustomerUpdSpecialLevel_xtest
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_2
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_2012
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_BA_2
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_LC
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_LC_2012
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_LC_xtest
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_NG
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_NG_2012
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_VS
+go
+drop procedure DEL_LRF_GET_Licensees_KPIs_VS_2012
+go
+drop procedure DEL_Lrf_GetSystemNameStatistic
+go
+drop procedure DEL_Lrf_LicenseeCustCommSel
+go
+drop procedure DEL_Lrf_LicenseeCustCommSel_UAT1
+go
+drop procedure DEL_Lrt_BrowserStatistic
+go
+drop procedure DEL_MailKPI_AddUser
+go
+drop procedure DEL_MailKPI_GetReportSectionByUserID
+go
+drop procedure DEL_MailKPI_GetTaskLists
+go
+drop procedure DEL_MailKPI_GetTaskLogByLogID
+go
+drop procedure DEL_MailKPI_GetTaskLogs
+go
+drop procedure DEL_MailKPI_GetUserByTaskID
+go
+drop procedure DEL_MailKPI_GetUserByUserID
+go
+drop procedure DEL_MailKPI_TaskLogs_Insert
+go
+drop procedure DEL_MailKPI_TaskLogs_Upd
+go
+drop procedure DEL_Service_ScheduledTaskDateUpd
+go
+drop procedure DEL_Service_ScheduledTaskListSel
+go
+drop procedure DEL_Service_ScheduledTaskLogCountSel
+go
+drop procedure DEL_Service_ScheduledTaskLogDel
+go
+drop procedure DEL_Service_ScheduledTaskLogIns
+go
+drop procedure DEL_Service_ScheduledTaskLogListSel
+go
+drop procedure DEL_Service_ScheduledTaskLogSel
+go
+drop procedure DEL_Service_ScheduledTaskLogUpd
+go
+drop procedure DEL_SpNamesClearSuffix
+go
+drop procedure DEL_SPNamesDelete
+go
+drop procedure DEL_SpNamesGetAll
+go
+drop procedure DEL_SpNamesGetBySpKey
+go
+drop procedure DEL_SpNamesSearch
+go
+drop procedure DEL_SpNamesUpdateSuffix
+go
+drop procedure DEL_Task_Licensee_BALimitWarning
+go
+drop procedure DEL_view_kpi_statistics
+go
+
+
+use bodb_LicenseeReport
+go
+drop procedure DEL_GEN_Customer_Account2
+go
+drop procedure DEL_GEN_rptKPI_Transfer
+go
+
+
+use bodb_PlaytechCS
+go
+drop procedure DEL_Task_PTCS_SelLicenseeList
+go
+
+
+use bodb02
+go 
+drop procedure DEL_Task_RptLicIPBetting_UpdateCountry
+go
+drop procedure DEL_Task_ExternalSettlement_CleanUp
+go
+drop procedure DEL_Task_ExternalSettlement_delete
+go
+drop procedure DEL_Task_ExternalSettlement_Verification
+go
+drop procedure DEL_Acc_CustSetting3rd_19
+go
+drop procedure DEL_Acc_MoveBet_ExchangeDailySel
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Agent
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Agent_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Member
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_Details_Member_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_12Bet_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_Agent
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_Member
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_Details_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_AB88_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_ALog
+go
+drop procedure DEL_Acc_Rpt_Winloss_ALog_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_Bezbet
+go
+drop procedure DEL_Acc_Rpt_Winloss_Bezbet_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_Dela
+go
+drop procedure DEL_Acc_Rpt_Winloss_Dela_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_Details_xtest
+go
+drop procedure DEL_Acc_Rpt_Winloss_M88_xpre
+go
+drop procedure DEL_Acc_Rpt_Winloss_MayFair
+go
+drop procedure DEL_Acc_Rpt_Winloss_MayFair_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_Spondemo
+go
+drop procedure DEL_Acc_Rpt_Winloss_Spondemo_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_SunCity
+go
+drop procedure DEL_Acc_Rpt_Winloss_SunCity_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_TLC
+go
+drop procedure DEL_Acc_Rpt_Winloss_TLC_Details
+go
+drop procedure DEL_Acc_Rpt_Winloss_Zzun88
+go
+drop procedure DEL_Acc_Rpt_Winloss_Zzun88_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet_Details_Agent
+go
+drop procedure DEL_Lbs_Rpt_Winloss_12Bet_Details_Member
+go
+drop procedure DEL_Lbs_Rpt_Winloss_AB88
+go
+drop procedure DEL_Lbs_Rpt_Winloss_AB88_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_ALog
+go
+drop procedure DEL_Lbs_Rpt_Winloss_ALog_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Dela
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Dela_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_M88
+go
+drop procedure DEL_Lbs_Rpt_Winloss_M88_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Spondemo
+go
+drop procedure DEL_Lbs_Rpt_Winloss_Spondemo_Details
+go
+drop procedure DEL_Lbs_Rpt_Winloss_TLC
+go
+drop procedure DEL_Lbs_Rpt_Winloss_TLC_Details
+go
+drop procedure DEL_Lbs_UserLogin
+go
+drop procedure DEL_Lrf_BetList_SelRunningByDate_Mem_DonTest02
+go
+drop procedure DEL_Task_Exchange_HistoryIns
+go
+drop procedure DEL_Task_Exchange_HistoryIns_xtest
+go
+drop procedure DEL_WriteLog_UserLog_Login
+go
