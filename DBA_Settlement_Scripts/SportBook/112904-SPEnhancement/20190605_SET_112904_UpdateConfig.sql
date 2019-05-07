@@ -7,12 +7,11 @@
 USE MonDB
 GO
 UPDATE T
-	SET AbnormalCost = 4000, NormalCost =  2000
+	SET AbnormalCost = 4000, NormalCost =  800
 FROM Mon_SPPF_List T WITH (ROWLOCK)
 WHERE SPName = 'NAP_Admin_Settlement_MP_Push'
 
 UPDATE T
-	SET AbnormalCost = 20000, NormalCost = 5000 
+	SET AbnormalCost = 20000, NormalCost = 300 
 FROM Mon_SPPF_List T WITH (ROWLOCK)
 WHERE SPName = 'NAP_Admin_Calculate_1'
-
