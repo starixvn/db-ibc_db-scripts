@@ -17,8 +17,8 @@ CREATE TABLE [dbo].[rptTotalBalance_Active](
 	[OpenningTotalBalance] [money] NULL,
  CONSTRAINT [CIX_rptTotalBalance_Active] PRIMARY KEY CLUSTERED 
 (
-	[CustID] ASC,
-	[WinlostDate] ASC	
+	[WinlostDate] ASC,
+	[CustID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [rptStatement_New]
 ) ON [rptStatement_New]
 GO
