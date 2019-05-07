@@ -13,8 +13,8 @@ DB: DBRPT.bodb_report
 CREATE TABLE [dbo].[rptTotalBalance_Active](
 	[CustID] [int] NOT NULL,
 	[WinlostDate] [date] NOT NULL,
-	[OpenningBalance] [money] NULL,
-	[OpenningTotalBalance] [money] NULL,
+	[OpeningBalance] [money] NULL,
+	[OpeningTotalBalance] [money] NULL,
  CONSTRAINT [CIX_rptTotalBalance_Active] PRIMARY KEY CLUSTERED 
 (
 	[WinlostDate] ASC,
@@ -27,8 +27,8 @@ GO
 ---- Add new column 
 
 ALTER TABLE rptStatement 
-ADD OpenningTotalBalance MONEY
+ADD OpeningTotalBalance MONEY
 
 
 ALTER TABLE rptStatement_OLD
-ADD OpenningTotalBalance MONEY 
+ADD OpeningTotalBalance MONEY 
