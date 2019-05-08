@@ -19,7 +19,7 @@ CREATE TABLE dbo.SettlementPerformanceLog (
 	,AdminId INT
 	,HomeScore INT
 	,AwayScore INT
-	,ConfirmDate DATETIME
+	,ConfirmScoreDate DATETIME
 	,Starttime DATETIME
 	,Exectime DATETIME
 	,Duration INT

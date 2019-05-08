@@ -1,7 +1,7 @@
 /*
 	Created: 20190506@Kathy
 	Task : Write User Action Logs to Prepare Keyscore Performance Report [Redmine:#104631]
-	DB: DBTXN.bodb02
+	DB: DBTXN/bodb02
 
 */
 
@@ -75,19 +75,25 @@ FROM	#tmpDATA d
 		FROM	dbarc.bodb_archive.dbo.match_bk m WITH (NOLOCK)
 		WHERE	sporttype = 1
 				AND matchid = d.matchid
+				AND matchcode not like '%hedge%'
 			
 		UNION ALL
 		SELECT  matchid, leagueid, homeid, awayid, kickofftime, globalshowtime
 		FROM	dbo.match14 m WITH (NOLOCK)
 		WHERE	sporttype = 1
 				AND matchid = d.matchid
-			
+				AND matchcode not like '%hedge%'
+
 		UNION ALL
 		SELECT  matchid, leagueid, homeid, awayid, kickofftime, globalshowtime
 		FROM	dbo.match m WITH (NOLOCK)
 		WHERE	sporttype = 1
-				AND matchid = d.matchid		
+				AND matchid = d.matchid	
+				AND matchcode not like '%hedge%'	
 	) m
+	INNER JOIN dbo.League l WITH (NOLOCK)
+		ON m.leagueid = l.leagueid
+WHERE l.isTest = 0
 		
 UPDATE	r	
 	SET homescore = fh.homescore
@@ -136,7 +142,7 @@ WHERE	SourceId = 100
 
 
 INSERT INTO dbo.SettlementPerformanceLog (LeagueId, MatchId, HomeId, AwayId, Kickofftime, GlobalShowtime
-	,Action, IsAuto, AdminId, ConfirmDate, Starttime, Exectime, Duration, HomeScore, AwayScore, CreatedDate)
+	,Action, IsAuto, AdminId, ConfirmScoreDate, Starttime, Exectime, Duration, HomeScore, AwayScore, CreatedDate)
 SELECT	r.leagueid, r.matchid, r.homeid, r.awayid, r.kickofftime, r.globalshowtime
 		,r.action, r.isauto, r.adminid, i.confirmdate,  r.starttime, r.exectime, r.duration, r.homescore, r.awayscore, GETDATE()
 FROM	#tmpRESULT r
