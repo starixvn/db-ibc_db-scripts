@@ -26,3 +26,5 @@ sp_rename 'Aff_User_AffiliateInternalLogin', 'DEL_Aff_User_AffiliateInternalLogi
 go
 sp_rename 'Aff_User_OnUserSelNetSessionID', 'DEL_Aff_User_OnUserSelNetSessionID'
 go
+sp_rename 'Aff_Con_CheckPermission', 'DEL_Aff_Con_CheckPermission'
+go

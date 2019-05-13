@@ -2,28 +2,29 @@
 GO
 
 ALTER PROCEDURE [dbo].[DBA_Sportsbook_CreateData]
-	@CustId				INT = 1176092 -- input custid of member
-	,@WinlostDate		SMALLDATETIME = NULL -- input winlostdate
-	,@TransDate			SMALLDATETIME = NULL -- input transdate
-	,@SportType			INT = 1 -- input sporttype of SB
-	,@BetType			INT = 1 -- input bettype of SB
-	,@betteam			VARCHAR(10) = NULL -- input betteam of tickets
-	,@matchid			INT = NULL -- input matchid
-	,@NoOfTickets		INT = 1 -- input number of tickets
-	,@status			VARCHAR(20) = 'running' -- input status of tickets
+	@CustId					INT = 1176092 -- input custid of member
+	,@WinlostDate			SMALLDATETIME = NULL -- input winlostdate
+	,@TransDate				SMALLDATETIME = NULL -- input transdate
+	,@SportType				INT = 1 -- input sporttype of SB
+	,@BetType				INT = 1 -- input bettype of SB
+	,@betteam				VARCHAR(10) = NULL -- input betteam of tickets
+	,@matchid				INT = NULL -- input matchid
+	,@NoOfTickets			INT = 1 -- input number of tickets
+	,@status				VARCHAR(20) = 'running' -- input status of tickets
+	,@IsIncludedLeagueTest	BIT = 1
 	/* ===== for Parlay of SB: bettype = 29 ===== */
-	,@NoOfSubTicket		INT = NULL
+	,@NoOfSubTicket			INT = NULL
 	-- choose one of @ListOfSportType or @ListOfMatchId
-	,@ListOfSportType	VARCHAR(2000) = NULL -- list of SportType for each sub ticket
-	,@ListOfMatchId		VARCHAR(2000) = NULL -- list of matchId for each sub ticket
-	,@ListOfCombo		VARCHAR(100) = NULL -- list of 2 --> @NoOfSubTicket: '2', '2,3', '3'
+	,@ListOfSportType		VARCHAR(2000) = NULL -- list of SportType for each sub ticket
+	,@ListOfMatchId			VARCHAR(2000) = NULL -- list of matchId for each sub ticket
+	,@ListOfCombo			VARCHAR(100) = NULL -- list of 2 --> @NoOfSubTicket: '2', '2,3', '3'
 AS
 
 /*
 	Created: Percy
 	DB: DB206, DB230
 	Task: Created testing data for Sportsbook
-	-- Parlay, Outright: not support yet
+	-- Parlay: not support yet
 
 	------------------- Sample execute --------------
 	EXEC bodb02.dbo.DBA_Sportsbook_CreateData
@@ -187,8 +188,14 @@ BEGIN
 			INNER JOIN dbo.League l WITH (NOLOCK) ON o.leagueid = l.leagueid
 		WHERE o.orid = @matchid
 			AND l.SportType = @SportType
+			AND l.isTest <= @IsIncludedLeagueTest
 	ELSE
-		SELECT @LeagueId_Ins =m.leagueId FROM dbo.match m WITH (NOLOCK) WHERE m.matchid = @matchid AND SportType = @SportType
+		SELECT @LeagueId_Ins =m.leagueId
+		FROM dbo.match m WITH (NOLOCK)
+			INNER JOIN dbo.League l WITH (NOLOCK) ON m.leagueid = l.leagueid
+		WHERE m.matchid = @matchid
+			AND m.SportType = @SportType
+			AND l.isTest <= @IsIncludedLeagueTest
 	
 	IF @LeagueId_Ins IS NULL
 	BEGIN
@@ -209,9 +216,11 @@ BEGIN
 	SELECT TOP (@NoOfTickets) b.transid, b.matchid, @matchid, m.leagueId, @LeagueId_Ins
 	FROM bodb02.dbo.bettrans_DBA_TestData b WITH (NOLOCK)
 		INNER JOIN bodb02.dbo.match_DBA_TestData m WITH (NOLOCK) ON b.matchid = m.matchid
+		INNER JOIN bodb02.dbo.League_DBA_TestData l WITH (NOLOCK) ON m.leagueid = l.leagueid
 	WHERE m.sporttype = @SportType AND b.bettype = @BetType
 		AND b.statusId = @statusID
 		AND (b.betteam = @betteam OR @betteam IS NULL)
+		AND l.isTest <= @IsIncludedLeagueTest
 		--AND (m.matchid_bettrans = @matchid OR @matchid IS NULL)
 
 	SELECT @NoOfTickets_Ins = @@ROWCOUNT
@@ -226,6 +235,7 @@ BEGIN
 	WHERE l.sporttype = @SportType AND b.bettype = @BetType
 		AND b.statusId = @statusID
 		AND (b.betteam = @betteam OR @betteam IS NULL)
+		AND l.isTest <= @IsIncludedLeagueTest
 		--AND (m.orid_bettrans = @matchid OR @matchid IS NULL)
 
 	SELECT @NoOfTickets_Ins = @@ROWCOUNT
