@@ -135,3 +135,17 @@ DB: DBRPT.bodb_report
 		PRINT 'Done ' + CONVERT(VARCHAR(10),@winlostdate) 		
 		SELECT @WinlostDate  =  DATEADD(DD, 1 , @WinlostDate)
 	END
+	
+----3. Gen For RptTotalBalance_Active:
+
+	SELECT @winlostdate =  DATEADD(DD, 1 , @MoveBetsday ) 
+	DECLARE @Today DATE = GETDATE()
+
+	WHILE @winlostdate <= @Today
+	BEGIN 
+		
+		EXEC Task_DailyRptTotalBalance_Active @winlostdate = @winlostdate, @isCheckDataOnly = 0  
+		
+		PRINT 'Done ' + CONVERT(VARCHAR(10),@winlostdate) 		
+		SELECT @WinlostDate  =  DATEADD(DD, 1 , @WinlostDate)
+	END
