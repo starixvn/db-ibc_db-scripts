@@ -1,4 +1,3 @@
-
 /*
 Create : 20190515@Sophia
 DB: DBPRO.bodb02
@@ -13,12 +12,6 @@ GO
  UPDATE Products
  SET   ProductName = 'RNG Keno'
  WHERE ProductID = 8
- 
-
- UPDATE sports
- SET   SportName = 'RNG Keno'
- WHERE sporttype = 202 
-  
    
 
    
