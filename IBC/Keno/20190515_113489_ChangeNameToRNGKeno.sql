@@ -7,10 +7,10 @@ Task: Update Keno to RNG Keno [redmineId: #113489]
 Use bodb02
 GO
 
-
  
  UPDATE Products
- SET   ProductName = 'RNG Keno'
+ SET   ProductName = 'RNG Keno',
+ Description =  'RNG Keno'
  WHERE ProductID = 8
    
 
@@ -23,5 +23,6 @@ Task: Update Keno to RNG Keno [redmineId: #113489]
 */
     
  UPDATE Product3rd
- SET   ProductName = 'RNG Keno'
+ SET   ProductName = 'RNG Keno',
+ Description =  'RNG Keno'
  WHERE ProductID = 8 
