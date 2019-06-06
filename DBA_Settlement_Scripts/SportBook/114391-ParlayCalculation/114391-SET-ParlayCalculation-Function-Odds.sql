@@ -4,7 +4,7 @@
 	DB: DB054/bodb02, DB06/bodb02
 	
 	Revision: 
-		20190606@Helen: Initialize - [Redmine:114391]
+		20190606@Helen: Initialize- dll version: 1.0.0.0 - [Redmine:114391]
 	
 */
 USE bodb02
