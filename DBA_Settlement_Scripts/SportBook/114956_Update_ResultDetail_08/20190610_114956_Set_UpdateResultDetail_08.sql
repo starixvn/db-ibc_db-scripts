@@ -10,5 +10,5 @@ UPDATE r
 FROM dbo.ResultDetail r WITH (ROWLOCK)
 	INNER JOIN dbo.match m WITH (NOLOCK) ON m.matchid = r.MatchId 
 WHERE m.betstatus = 'Abandoned 2H;' AND r.ResourceId = '08' 
-	AND m.MatchId IN (30757991,30775436) 
+	AND m.MatchId IN (30757991,30775436,30788083) 
 GO	
