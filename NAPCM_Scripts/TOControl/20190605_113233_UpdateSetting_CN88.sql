@@ -5,7 +5,7 @@
 	
 	-- Check data CN88
 	SELECT COUNT(1)
-	FROM dbo.TOControl_GlobalSetting g WITH (ROWLOCK, UPDLOCK)
+	FROM dbo.TOControl_GlobalSetting g WITH (NOLOCK)
 		 INNER JOIN dbo.Customer c WITH (NOLOCK) ON g.CustId = c.CustId
 	WHERE c.Site = 'CN88'
 
