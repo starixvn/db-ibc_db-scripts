@@ -22,7 +22,7 @@ CREATE TABLE #Match_running (Matchid INT)
 --------------1 - DATA PREPARATION ------------------
 INSERT INTO #Global_tmp (CustID, MaxTurnOver)
 SELECT DISTINCT g.custID, CASE WHEN c.currency = 20 THEN @MaxTurnOver ELSE CONVERT(MONEY,(@MaxTurnOver /e.actualrate)) END AS MaxTurnOver
-FROM dbo.TOControl_GlobalSetting g WITH (ROWLOCK)
+FROM dbo.TOControl_GlobalSetting g WITH (NOLOCK)
      INNER JOIN dbo.Customer c WITH (NOLOCK) ON g.CustId = c.CustId
      INNER JOIN dbo.Exchange e WITH (NOLOCK) ON c.Currency = e.ExchangeId
 WHERE c.Site = 'CN88'
@@ -38,7 +38,7 @@ FROM dbo.TOControl_GlobalSetting g WITH (ROWLOCK)
 INSERT INTO #Match_running (Matchid)
 SELECT MatchId 
 FROM OPENQUERY (DBAGE,'SELECT MatchId
-FROM DBAGE.bodb02.dbo.Match WITH (NOLOCK)
+FROM bodb02.dbo.Match WITH (NOLOCK)
 WHERE EventStatus = ''running'' AND SportType = 1')
     
 CREATE TABLE #TOMatchList
