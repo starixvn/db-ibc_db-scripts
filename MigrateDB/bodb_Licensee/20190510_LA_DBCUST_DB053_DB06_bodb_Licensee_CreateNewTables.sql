@@ -73,7 +73,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_DiscountGroupDetail]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_DiscountGroupDetail](
-	[DiscountGroupDetailId] [smallint] IDENTITY(1,1) NOT NULL,
+	[DiscountGroupDetailId] [smallint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[DiscountGroupId] [smallint] NOT NULL,
 	[FromAmount] [money] NULL,
 	[ToAmount] [money] NULL,
@@ -90,7 +90,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_DiscountGroupHeader]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_DiscountGroupHeader](
-	[DiscountGroupId] [smallint] IDENTITY(1,1) NOT NULL,
+	[DiscountGroupId] [smallint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[DiscountGroupName] [nvarchar](110) NULL,
 	[DiscountGroupType] [tinyint] NOT NULL,
 	[CurrencyId] [tinyint] NOT NULL,
@@ -127,7 +127,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_Function]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_Function](
-	[FunctionID] [int] IDENTITY(1,1) NOT NULL,
+	[FunctionID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[FunctionName] [nvarchar](100) NOT NULL,
 	[FunctionDesc] [nvarchar](100) NULL,
 	[ParentID] [int] NOT NULL,
@@ -162,7 +162,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_Group]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_Group](
-	[GroupID] [int] IDENTITY(1,1) NOT NULL,
+	[GroupID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[GroupName] [nvarchar](100) NOT NULL,
 	[GroupDesc] [nvarchar](100) NULL,
 	[StatusID] [int] NOT NULL,
@@ -191,7 +191,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_MinFee]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_MinFee](
-	[MinFeeId] [int] IDENTITY(1,1) NOT NULL,
+	[MinFeeId] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[PartyId] [int] NOT NULL,
 	[FeeTypeId] [tinyint] NOT NULL,
 	[ProductId] [tinyint] NOT NULL,
@@ -214,7 +214,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_PartyGroup]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[LA_PartyGroup](
-	[PartyGroupId] [smallint] IDENTITY(1,1) NOT NULL,
+	[PartyGroupId] [smallint] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[PartyGroupName] [varchar](50) NOT NULL,
  CONSTRAINT [LA_PartyGroup_PK] PRIMARY KEY CLUSTERED 
 (
@@ -289,7 +289,7 @@ GO
 
 /****** Object:  Table [dbo].[OAS_ChargeInfo]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[OAS_ChargeInfo](
-	[ChargeID] [int] IDENTITY(1,1) NOT NULL,
+	[ChargeID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[ProductID] [int] NOT NULL,
 	[FromParty] [int] NOT NULL,
 	[ToParty] [int] NOT NULL,
@@ -316,7 +316,7 @@ GO
 
 /****** Object:  Table [dbo].[OAS_ChargeInfoSub]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[OAS_ChargeInfoSub](
-	[ChargeID] [int] IDENTITY(1,1) NOT NULL,
+	[ChargeID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[ProductID] [int] NOT NULL,
 	[BettypeRef] [int] NULL,
 	[FromParty] [int] NOT NULL,
@@ -344,7 +344,7 @@ GO
 
 /****** Object:  Table [dbo].[OAS_Party]    Script Date: 5/16/2019 10:50:57 PM ******/
 CREATE TABLE [dbo].[OAS_Party](
-	[PartyID] [int] IDENTITY(1,1) NOT NULL,
+	[PartyID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
 	[PartyName] [varchar](50) NULL,
 	[Description] [varchar](100) NULL,
 	[PartyType] [tinyint] NOT NULL,
