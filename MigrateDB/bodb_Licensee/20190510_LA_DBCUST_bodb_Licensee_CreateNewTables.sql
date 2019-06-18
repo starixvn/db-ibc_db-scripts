@@ -234,7 +234,7 @@ GO
 
 /****** Object:  Table [dbo].[LA_InvoiceSetting]    Script Date: 5/17/2019 12:52:39 AM ******/
 CREATE TABLE [dbo].[LA_InvoiceSetting](
-	[InvSettingId] [int] NOT NULL,
+	[InvSettingId] [int] IDENTITY(1,1) NOT NULL,
 	[FromPartyId] [int] NOT NULL,
 	[ToPartyId] [int] NOT NULL,
 	[ProductId] [tinyint] NULL,
