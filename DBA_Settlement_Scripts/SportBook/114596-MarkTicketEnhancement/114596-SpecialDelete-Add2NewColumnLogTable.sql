@@ -52,8 +52,7 @@ SET @ActionName = 'UnMark Ticket For Match - Delete ticket in table MarkedTransa
 INSERT INTO dbo.LogAction (ActionId, SPName, ActionNameEn) VALUES (90502, 'Nap_SpecialDelete_AllMarkedTicketsSummary_Update', 'UnMark Ticket For Match - Delete ticket in table MarkedTransaction')
 
 UPDATE dbo.LogAction
-	SET SPName = 'Nap_SpecialDelete_MarkedTickets_Update'
-		,ActionNameEn = @ActionName
+	SET ActionNameEn = @ActionName
 		,ActionNameCH = @ActionName
 		,ActionNameCS = @ActionName
 		,ActionNameJp = @ActionName
