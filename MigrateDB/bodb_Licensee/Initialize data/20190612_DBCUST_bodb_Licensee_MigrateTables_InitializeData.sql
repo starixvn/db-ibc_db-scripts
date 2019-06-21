@@ -108,3 +108,43 @@ SET IDENTITY_INSERT [OAS_Party] OFF
 /****** Object:  Table [dbo].[OAS_PartyDetail]    Script Date: 5/16/2019 10:50:57 PM ******/
 INSERT INTO [dbo].[OAS_PartyDetail]([PartyID],[IsDeposit],[BrandName],[CompanyName],[IsAllowedMemberComm],[StatusId],[AttnName],[Description],[Address1],[Address2],[BaseCurrencyId],[InvoiceLanguage])
 SELECT [PartyID],[IsDeposit],[BrandName],[CompanyName],[IsAllowedMemberComm],[StatusId],[AttnName],[Description],[Address1],[Address2],[BaseCurrencyId],[InvoiceLanguage] FROM DB215.bodb_Licensee.dbo.[OAS_PartyDetail] WITH (NOLOCK)
+
+/****** Object:  Table [dbo].[LA_InvoiceHeader]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_InvoiceHeader] ON
+INSERT INTO [dbo].[LA_InvoiceHeader]([InvoiceHeaderId],[BillerId],[PartyId],[RefNo],[CurrencyId],[InvoiceSymbol],[InvoiceNumber],[FromDate],[ToDate],[InvoiceDate],[DueDate],[Amount],[InvoiceType],[StatusId],[Note],[HasSent],[HasDeleted],[CreatedBy],[CreatedDateTime],[UpdatedDateTime],[IsSeparateProduct],[MaxPCU],[RateAmount],[IsWaived],[InvoicePath],[InvoiceData],[Environment],[UpdatedBy],[OfficialInvoiceNo])
+SELECT [InvoiceHeaderId],[BillerId],[PartyId],[RefNo],[CurrencyId],[InvoiceSymbol],[InvoiceNumber],[FromDate],[ToDate],[InvoiceDate],[DueDate],[Amount],[InvoiceType],[StatusId],[Note],[HasSent],[HasDeleted],[CreatedBy],[CreatedDateTime],[UpdatedDateTime],[IsSeparateProduct],[MaxPCU],[RateAmount],[IsWaived],[InvoicePath],[InvoiceData],[Environment],[UpdatedBy],[OfficialInvoiceNo] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceHeader] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_InvoiceHeader] OFF
+
+/****** Object:  Table [dbo].[LA_InvoiceSetting]    Script Date: 5/17/2019 12:52:39 AM ******/
+INSERT INTO [dbo].[LA_InvoiceSetting]([InvSettingId],[FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress])
+SELECT [InvSettingId],[FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceSetting] WITH (NOLOCK)
+
+/****** Object:  Table [dbo].[LA_InvoiceStatement]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_InvoiceStatement] ON
+INSERT INTO [dbo].[LA_InvoiceStatement]([InvoiceStatementId],[InvoiceHeaderId],[InvItemTypeId],[StatusID],[Description],[Income],[Expense],[RefNo],[RefPartyId],[ProductId])
+SELECT [InvoiceStatementId],[InvoiceHeaderId],[InvItemTypeId],[StatusID],[Description],[Income],[Expense],[RefNo],[RefPartyId],[ProductId] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceStatement] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_InvoiceStatement] OFF
+
+/****** Object:  Table [dbo].[LA_InvoiceTemplate]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_InvoiceTemplate] ON
+INSERT INTO [dbo].[LA_InvoiceTemplate]([InvTemplateId],[InvTemplateName],[TemplatePath])
+SELECT [InvTemplateId],[InvTemplateName],[TemplatePath] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceTemplate] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_InvoiceTemplate] OFF
+
+/****** Object:  Table [dbo].[LA_HostingFees]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_HostingFees] ON
+INSERT INTO [dbo].[LA_HostingFees]([HostingFeesId],[HostingFeesName],[HostingFeesTypeId],[BaseCurrencyId],[Description])
+SELECT [HostingFeesId],[HostingFeesName],[HostingFeesTypeId],[BaseCurrencyId],[Description] FROM DB215.bodb_Licensee.dbo.[LA_HostingFees] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_HostingFees] OFF
+
+/****** Object:  Table [dbo].[LA_HostingFeesDetail]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_HostingFeesDetail] ON
+INSERT INTO [dbo].[LA_HostingFeesDetail]([HostingFeesDetailId],[HostingFeesId],[BaseCurrencyId],[VCMFrom],[VCMTo],[Amount])
+SELECT [HostingFeesDetailId],[HostingFeesId],[BaseCurrencyId],[VCMFrom],[VCMTo],[Amount] FROM DB215.bodb_Licensee.dbo.[LA_HostingFeesDetail] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_HostingFeesDetail] OFF
+
+/****** Object:  Table [dbo].[LA_HostingFeesSetting]    Script Date: 5/17/2019 12:52:39 AM ******/
+SET IDENTITY_INSERT [LA_HostingFeesSetting] ON
+INSERT INTO [dbo].[LA_HostingFeesSetting]([ChargeId],[SettingType],[ParentId],[FromParty],[ToParty],[FromDate],[ToDate],[ProductName],[FirstBilling],[BasisOfBilling],[BaseCurrencyId],[HostingFeesId],[BasedMinimunFees],[Remark])
+SELECT [ChargeId],[SettingType],[ParentId],[FromParty],[ToParty],[FromDate],[ToDate],[ProductName],[FirstBilling],[BasisOfBilling],[BaseCurrencyId],[HostingFeesId],[BasedMinimunFees],[Remark] FROM DB215.bodb_Licensee.dbo.[LA_HostingFeesSetting] WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_HostingFeesSetting] OFF
