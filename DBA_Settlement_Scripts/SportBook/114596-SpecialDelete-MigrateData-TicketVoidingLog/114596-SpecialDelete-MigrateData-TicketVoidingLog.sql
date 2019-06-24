@@ -8,9 +8,6 @@ GO
 */
 SET NOCOUNT ON
 
-DECLARE @Id INT
-
-
 CREATE TABLE #tmpResult (
 	Id INT IDENTITY(1,1)
 	,LogId INT
@@ -26,8 +23,6 @@ CREATE TABLE #tmpResult (
 	,Rank INT
 	,TransId BIGINT
 )
-
-SET @Id = 0
 
 INSERT INTO #tmpResult (LogId, LogActionId, RequestId, LogData, CreatedDate, UserId, IP, SessionId, MatchId, Rank)
 SELECT LogId
@@ -114,7 +109,6 @@ FROM	#tmpResult r
 		WHERE	transid = r.TransId
 	) b
 
-WHILE (1 = 1)
 BEGIN
 	UPDATE t
 		SET logactionId = r.LogActionId
@@ -125,18 +119,13 @@ BEGIN
 		INNER JOIN #tmpResult r
 			ON t.LogId = r.LogId
 	WHERE	r.Rank = 1
-			AND r.Id BETWEEN @Id + 1 AND @Id + 1000
-
-	IF @@ROWCOUNT < 1000
-		BREAK
-
-	SET @Id = @Id + 1000
-END
 	
-INSERT INTO dbo.Ticketvoiding_Log (LogActionId, RequestId, LogData, CreatedDate, UserId, IP, SessionId, MatchId)
-SELECT	LogActionId, RequestId, LogData, CreatedDate, UserId, IP, SessionId, MatchId
-FROM	#tmpResult
-WHERE	Rank > 1
+	INSERT INTO dbo.Ticketvoiding_Log (LogActionId, RequestId, LogData, CreatedDate, UserId, IP, SessionId, MatchId)
+	SELECT	LogActionId, RequestId, LogData, CreatedDate, UserId, IP, SessionId, MatchId
+	FROM	#tmpResult
+	WHERE	Rank > 1
+
+END	
 
 DROP TABLE #tmpResult
 
