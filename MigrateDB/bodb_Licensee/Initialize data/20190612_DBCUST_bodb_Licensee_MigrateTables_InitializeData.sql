@@ -116,8 +116,8 @@ SELECT [InvoiceHeaderId],[BillerId],[PartyId],[RefNo],[CurrencyId],[InvoiceSymbo
 SET IDENTITY_INSERT [LA_InvoiceHeader] OFF
 
 /****** Object:  Table [dbo].[LA_InvoiceSetting]    Script Date: 5/17/2019 12:52:39 AM ******/
-INSERT INTO [dbo].[LA_InvoiceSetting]([InvSettingId],[FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress])
-SELECT [InvSettingId],[FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceSetting] WITH (NOLOCK)
+INSERT INTO [dbo].[LA_InvoiceSetting]([FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress])
+SELECT [FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceSetting] WITH (NOLOCK)
 
 /****** Object:  Table [dbo].[LA_InvoiceStatement]    Script Date: 5/17/2019 12:52:39 AM ******/
 SET IDENTITY_INSERT [LA_InvoiceStatement] ON

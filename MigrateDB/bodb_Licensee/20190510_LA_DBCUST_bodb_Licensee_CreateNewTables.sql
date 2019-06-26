@@ -318,11 +318,17 @@ GO
 GRANT SELECT ON [dbo].[OAS_Users] TO [bodbAdminNet] AS [dbo]
 GO
 
---EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1: Hosting Fees, 2: Waive' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'LA_HostingFeesSetting', @level2type=N'COLUMN',@level2name=N'SettingType'
---GO
---EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Use in Waive setting, store ChargeId of Hosting Fees' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'LA_HostingFeesSetting', @level2type=N'COLUMN',@level2name=N'ParentId'
---GO
---EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Store "Hosting"' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'LA_HostingFeesSetting', @level2type=N'COLUMN',@level2name=N'ProductName'
---GO
---EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'store ProductId' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'LA_HostingFeesSetting', @level2type=N'COLUMN',@level2name=N'BasedMinimunFees'
---GO
+/****** Object:  Table [dbo].[LA_InvoiceItemType]    Script Date: 5/17/2019 12:52:39 AM ******/
+CREATE TABLE [dbo].[LA_InvoiceItemType](
+	[SignDB] [smallint] NULL,
+	[GroupDB] [varchar](20) NULL,
+	[SignSOA] [smallint] NULL,
+	[GroupSOA] [varchar](20) NULL,
+	[InvItemTypeName] [nvarchar](100) NULL,
+	[InvItemTypeId] [smallint] NOT NULL,
+ CONSTRAINT [PK_LA_InvoiceItemType] PRIMARY KEY CLUSTERED 
+(
+	[InvItemTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [OWA_DATA]
+) ON [OWA_DATA]
+GO
