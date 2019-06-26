@@ -17,10 +17,9 @@ ALTER DATABASE bodb_CustomerLog
 	ADD FILE
 	(
 		NAME = OWA_DATA,  
-		FILENAME = 'OWN_DATA.ndf',  
-		SIZE = 10MB,  
-		MAXSIZE = 100MB,  
-		FILEGROWTH = 5% 
+		FILENAME = 'M:\IBC_DB\bodb_CustomerLog\OWN_DATA.ndf',  
+		SIZE = 64MB,  
+		FILEGROWTH = 16MB
 	)
 	TO FILEGROUP OWA_DATA
 GO
