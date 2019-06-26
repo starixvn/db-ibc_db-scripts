@@ -487,3 +487,58 @@ CREATE TABLE [dbo].[LA_InvoiceTemplate](
 ) ON [OWA_DATA]
 
 GO
+
+/****** Object:  Table [dbo].[LA_HostingFees]    Script Date: 5/17/2019 12:52:39 AM ******/
+CREATE TABLE [dbo].[LA_HostingFees](
+	[HostingFeesId] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[HostingFeesName] [varchar](200) NOT NULL,
+	[HostingFeesTypeId] [tinyint] NOT NULL,
+	[BaseCurrencyId] [int] NOT NULL,
+	[Description] [nvarchar](200) NULL,
+ CONSTRAINT [PK_LA_HostingFees] PRIMARY KEY CLUSTERED 
+(
+	[HostingFeesId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [licensee_table]
+) ON [licensee_table]
+
+GO
+
+/****** Object:  Table [dbo].[LA_HostingFeesDetail]    Script Date: 5/17/2019 12:52:39 AM ******/
+CREATE TABLE [dbo].[LA_HostingFeesDetail](
+	[HostingFeesDetailId] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[HostingFeesId] [int] NOT NULL,
+	[BaseCurrencyId] [int] NOT NULL,
+	[VCMFrom] [int] NULL,
+	[VCMTo] [int] NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_LA_HostingFeesDetail] PRIMARY KEY CLUSTERED 
+(
+	[HostingFeesDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [licensee_table]
+) ON [licensee_table]
+
+GO
+
+/****** Object:  Table [dbo].[LA_HostingFeesSetting]    Script Date: 5/17/2019 12:52:39 AM ******/
+CREATE TABLE [dbo].[LA_HostingFeesSetting](
+	[ChargeId] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
+	[SettingType] [tinyint] NOT NULL,
+	[ParentId] [int] NULL,
+	[FromParty] [int] NOT NULL,
+	[ToParty] [int] NOT NULL,
+	[FromDate] [datetime] NOT NULL,
+	[ToDate] [datetime] NOT NULL,
+	[ProductName] [varchar](50) NULL,
+	[FirstBilling] [datetime] NULL,
+	[BasisOfBilling] [nvarchar](200) NULL,
+	[BaseCurrencyId] [int] NULL,
+	[HostingFeesId] [int] NULL,
+	[BasedMinimunFees] [int] NULL,
+	[Remark] [varchar](200) NULL,
+ CONSTRAINT [PK_LA_HostingFeesSetting] PRIMARY KEY CLUSTERED 
+(
+	[ChargeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [licensee_table]
+) ON [licensee_table]
+
+GO
