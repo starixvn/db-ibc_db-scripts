@@ -102,3 +102,7 @@ SET IDENTITY_INSERT [OAS_Users] ON
 INSERT INTO [dbo].[OAS_Users]([UserID],[Username],[UserPwd],[DisplayName],[Role],[UserSalt],[IsActive],[Creator],[CreatedDate],[ModifiedDate],[IsTest])
 SELECT [UserID],[Username],[UserPwd],[DisplayName],[Role],[UserSalt],[IsActive],[Creator],[CreatedDate],[ModifiedDate],[IsTest] FROM DB215.bodb_Licensee.dbo.[OAS_Users] WITH (NOLOCK)
 SET IDENTITY_INSERT [OAS_Users] OFF
+
+/****** Object:  Table [dbo].[LA_InvoiceItemType]    Script Date: 5/17/2019 12:52:39 AM ******/
+INSERT INTO [dbo].[LA_InvoiceItemType]([SignDB],[GroupDB],[SignSOA],[GroupSOA],[InvItemTypeName],[InvItemTypeId])
+SELECT [SignDB],[GroupDB],[SignSOA],[GroupSOA],[InvItemTypeName],[InvItemTypeId] FROM DB215.bodb_Licensee.dbo.[LA_InvoiceItemType] WITH (NOLOCK)
