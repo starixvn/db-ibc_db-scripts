@@ -17,9 +17,10 @@ ALTER TABLE dbo.TicketVoiding_OperatorInfo ADD CONSTRAINT PK_TicketVoiding_Opera
 GO
 
 --[dbo].[TicketVoiding_ReasonTemplate]
-ALTER TABLE dbo.TicketVoiding_ReasonTemplate ADD Id INT IDENTITY(1,1)
+DROP INDEX CIX_TicketVoiding_ReasonTemplate_Sporttype_SubIssueTypeId ON dbo.TicketVoiding_ReasonTemplate
 GO
-ALTER TABLE dbo.TicketVoiding_ReasonTemplate ADD CONSTRAINT PK_TicketVoiding_ReasonTemplate_Id PRIMARY KEY NONCLUSTERED (Id) ON [DATA]
+ALTER TABLE dbo.TicketVoiding_ReasonTemplate 
+	ADD CONSTRAINT PK_TicketVoiding_ReasonTemplate_Sporttype_SubIssueTypeId PRIMARY KEY (Sporttype, SubIssueTypeId) ON [DATA]
 GO
 
 --[dbo].[TicketVoiding_RequestDetail] --> id
