@@ -32,9 +32,3 @@ ALTER TABLE dbo.TicketVoiding_VoidedTransaction ADD Id INT IDENTITY(1,1)
 GO
 ALTER TABLE dbo.TicketVoiding_VoidedTransaction ADD CONSTRAINT PK_TicketVoiding_VoidedTransaction_Id PRIMARY KEY NONCLUSTERED (Id) ON [DATA]
 GO
-
---[dbo].[SettlementSpecialBettypeProfile]
-ALTER TABLE dbo.SettlementSpecialBettypeProfile ADD Id INT IDENTITY(1,1)
-GO
-ALTER TABLE dbo.SettlementSpecialBettypeProfile ADD CONSTRAINT PK_SettlementSpecialBettypeProfile_Id PRIMARY KEY NONCLUSTERED (Id) ON [DATA]
-GO

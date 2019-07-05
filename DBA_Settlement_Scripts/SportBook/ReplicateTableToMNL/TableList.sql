@@ -16,7 +16,6 @@
 10. [dbo].[TicketVoiding_SubIssueType]
 11. [dbo].[TicketVoiding_VoidedTransaction]
 12. [dbo].[TicketVoiding_VoidingHistory]
-13. [dbo].[SettlementSpecialBettypeProfile]
 
 -- DBPRO
 1. [dbo].[SettlementSetting]
