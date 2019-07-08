@@ -11,8 +11,8 @@ GO
 --Table #1: VRLeagueGroup
 	CREATE TABLE [dbo].[VRLeagueGroup](
 		[GroupID] [smallint] NOT NULL,
-		[GroupName] [varchar](200) NULL,
-		[SportType] [smallint] NULL,
+		[GroupName] [varchar](200) NOT NULL,
+		[SportType] [smallint] NOT NULL,
 	 CONSTRAINT [PK_VRLeagueGroup] PRIMARY KEY CLUSTERED 
 	(
 		[GroupID] ASC
@@ -23,7 +23,7 @@ GO
 --Table #2: VRLeagueGroupMapping
 	CREATE TABLE [dbo].[VRLeagueGroupMapping](
 		[LeagueGroupID] [smallint] NOT NULL,
-		[VRLeagueGroupID] [smallint] NULL,
+		[VRLeagueGroupID] [smallint] NOT NULL,
 	 CONSTRAINT [PK_VRLeagueGroupMapping] PRIMARY KEY CLUSTERED 
 	(
 		[LeagueGroupID] ASC
@@ -34,8 +34,8 @@ GO
 --Table #3: VRBettypeGroup
 	CREATE TABLE [dbo].[VRBettypeGroup](
 		[GroupID] [smallint] NOT NULL,
-		[GroupName] [varchar](200) NULL,
-		[SportType] [smallint] NULL,
+		[GroupName] [varchar](200) NOT NULL,
+		[SportType] [smallint] NOT NULL,
 	 CONSTRAINT [PK_VRBettypeGroup] PRIMARY KEY CLUSTERED 
 	(
 		[GroupID] ASC
@@ -57,11 +57,11 @@ GO
 --Table #5: VRSetttingHierarchy
 	CREATE TABLE [dbo].[VRSettingHierarchy](
 		[LevelID] [int] NOT NULL,
-		[SportType] [smallint] NULL,
-		[VRLeagueGroupID] [smallint] NULL,
-		[VRBetTypeGroupID] [smallint] NULL,
-		[BetType] [int] NULL,
-		[ParentLevelID] [int] NULL,
+		[SportType] [smallint] NOT NULL,
+		[VRLeagueGroupID] [smallint] NOT NULL,
+		[VRBetTypeGroupID] [smallint] NOT NULL,
+		[BetType] [int] NOT NULL,
+		[ParentLevelID] [int] NOT NULL,
 	 CONSTRAINT [PK_VRSettingHierarchy] PRIMARY KEY CLUSTERED 
 	(
 		[LevelID] ASC
@@ -75,8 +75,8 @@ GO
 	CREATE TABLE [dbo].[VRCustSetting](
 		[CustID] [int] NOT NULL,
 		[LevelID] [int] NOT NULL,
-		[ValueIDLIVE] [tinyint] NULL,
-		[ValueIDNonLIVE] [tinyint] NULL,
+		[ValueIDLIVE] [tinyint] NOT NULL,
+		[ValueIDNonLIVE] [tinyint] NOT NULL,
 	 CONSTRAINT [PK_VRCustSetting] PRIMARY KEY CLUSTERED 
 	(
 		[CustID] ASC,
