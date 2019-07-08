@@ -8,8 +8,9 @@ GO
 */
 
 -- Products
-INSERT INTO dbo.Products (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType,GroupType,CasinoType,IsOfferPlayForFun)
-	VALUES (34,'Card Club','Card Club','CC',1,3,NULL,0,0,0)
+INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun) 
+VALUES (34,'Card Club','Card Club','CC',1,3,NULL,0,1,0) 
+ 
 GO
 
 

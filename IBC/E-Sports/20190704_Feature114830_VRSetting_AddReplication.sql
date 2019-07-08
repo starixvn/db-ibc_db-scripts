@@ -11,7 +11,7 @@ GO
 --Table #1: VRLeagueGroup
 	CREATE TABLE [dbo].[VRLeagueGroup](
 		[GroupID] [smallint] NOT NULL,
-		[GroupName] [nvarchar](200) NULL,
+		[GroupName] [varchar](200) NULL,
 		[SportType] [smallint] NULL,
 	 CONSTRAINT [PK_VRLeagueGroup] PRIMARY KEY CLUSTERED 
 	(
@@ -34,7 +34,7 @@ GO
 --Table #3: VRBettypeGroup
 	CREATE TABLE [dbo].[VRBettypeGroup](
 		[GroupID] [smallint] NOT NULL,
-		[GroupName] [nvarchar](200) NULL,
+		[GroupName] [varchar](200) NULL,
 		[SportType] [smallint] NULL,
 	 CONSTRAINT [PK_VRBettypeGroup] PRIMARY KEY CLUSTERED 
 	(
