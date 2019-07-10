@@ -62,6 +62,7 @@ GO
 		[VRBetTypeGroupID] [smallint] NOT NULL,
 		[BetType] [int] NOT NULL,
 		[ParentLevelID] [int] NOT NULL,
+		[SortOrder] [smallint] NOT NULL,
 	 CONSTRAINT [PK_VRSettingHierarchy] PRIMARY KEY CLUSTERED 
 	(
 		[LevelID] ASC
