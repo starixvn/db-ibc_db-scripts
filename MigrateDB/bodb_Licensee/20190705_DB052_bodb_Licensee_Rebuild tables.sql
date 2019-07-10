@@ -10,118 +10,118 @@ GO
 
 -- 28 migrate tables = 28 tables
 
---- Step 1. Drop tables
+--- Step 1. Rename tables to DEL_XXX
 
 -- 13 
-drop table dbo.LA_ChargeInfo_MinFee
+sp_rename 'LA_ChargeInfo_MinFee', 'DEL_LA_ChargeInfo_MinFee'
 go
 
 -- 14 
-drop table dbo.LA_ChargeInfo_SystemMapping
+sp_rename 'LA_ChargeInfo_SystemMapping', 'DEL_LA_ChargeInfo_SystemMapping'
 go
 
 -- 17 
-drop table dbo.LA_DiscountGroupAssignment
+sp_rename 'LA_DiscountGroupAssignment', 'DEL_LA_DiscountGroupAssignment'
 go
 
 -- 18 
-drop table dbo.LA_DiscountGroupCurrency
+sp_rename 'LA_DiscountGroupCurrency', 'DEL_LA_DiscountGroupCurrency'
 go
 
 -- 19 
-drop table dbo.LA_DiscountGroupDetail
+sp_rename 'LA_DiscountGroupDetail', 'DEL_LA_DiscountGroupDetail'
 go
 
 -- 20 
-drop table dbo.LA_DiscountGroupHeader
+sp_rename 'LA_DiscountGroupHeader', 'DEL_LA_DiscountGroupHeader'
 go
 
 -- 21 
-drop table dbo.LA_DiscountGroupProduct
+sp_rename 'LA_DiscountGroupProduct', 'DEL_LA_DiscountGroupProduct'
 go
 
 -- 22 
-drop table dbo.LA_Function
+sp_rename 'LA_Function', 'DEL_LA_Function'
 go
 
 -- 23 
-drop table dbo.LA_FunctionParty
+sp_rename 'LA_FunctionParty', 'DEL_LA_FunctionParty'
 go
 
 -- 24 
-drop table dbo.LA_Group
+sp_rename 'LA_Group', 'DEL_LA_Group'
 go
 
 -- 25 
-drop table dbo.LA_GroupFunction
+sp_rename 'LA_GroupFunction', 'DEL_LA_GroupFunction'
 go
 
 -- 26 
-drop table dbo.LA_HostingFees
+sp_rename 'LA_HostingFees', 'DEL_LA_HostingFees'
 go
 
 -- 27 
-drop table dbo.LA_HostingFeesDetail
+sp_rename 'LA_HostingFeesDetail', 'DEL_LA_HostingFeesDetail'
 go
 
 -- 28 
-drop table dbo.LA_HostingFeesSetting
+sp_rename 'LA_HostingFeesSetting', 'DEL_LA_HostingFeesSetting'
 go
 
 -- 32 
-drop table dbo.LA_InvoiceHeader
+sp_rename 'LA_InvoiceHeader', 'DEL_LA_InvoiceHeader'
 go
 
 -- 34 
-drop table dbo.LA_InvoiceSetting
+sp_rename 'LA_InvoiceSetting', 'DEL_LA_InvoiceSetting'
 go
 
 -- 35 
-drop table dbo.LA_InvoiceStatement
+sp_rename 'LA_InvoiceStatement', 'DEL_LA_InvoiceStatement'
 go
 
 -- 36 
-drop table dbo.LA_InvoiceTemplate
+sp_rename 'LA_InvoiceTemplate', 'DEL_LA_InvoiceTemplate'
 go
 
 -- 40 
-drop table dbo.LA_MinFee
+sp_rename 'LA_MinFee', 'DEL_LA_MinFee'
 go
 
 -- 42 
-drop table dbo.LA_PartyGroup
+sp_rename 'LA_PartyGroup', 'DEL_LA_PartyGroup'
 go
 
 -- 43 
-drop table dbo.LA_PartyGroupAssignment
+sp_rename 'LA_PartyGroupAssignment', 'DEL_LA_PartyGroupAssignment'
 go
 
 -- 44 
-drop table dbo.LA_Product3rdSub
+sp_rename 'LA_Product3rdSub', 'DEL_LA_Product3rdSub'
 go
 
 -- 50 
-drop table dbo.LA_UserFunction
+sp_rename 'LA_UserFunction', 'DEL_LA_UserFunction'
 go
 
 -- 51 
-drop table dbo.LA_UserParty
+sp_rename 'LA_UserParty', 'DEL_LA_UserParty'
 go
 
 -- 76 
-drop table dbo.OAS_ChargeInfo
+sp_rename 'OAS_ChargeInfo', 'DEL_OAS_ChargeInfo'
 go
 
 -- 77 
-drop table dbo.OAS_ChargeInfoSub
+sp_rename 'OAS_ChargeInfoSub', 'DEL_OAS_ChargeInfoSub'
 go
 
 -- 81 
-drop table dbo.OAS_Party
+sp_rename 'OAS_Party', 'DEL_OAS_Party'
 go
 
 -- 82 
-drop table dbo.OAS_PartyDetail
+sp_rename 'OAS_PartyDetail', 'DEL_OAS_PartyDetail'
 go
 
 
