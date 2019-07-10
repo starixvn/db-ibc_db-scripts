@@ -70,7 +70,7 @@ GO
 	) ON [virtualrate_table]
 	GO
 
-	CREATE NONCLUSTERED INDEX IX_SportLeague ON VRSettingHierarchy(SportType, BetType, VRLeagueGroupID) ON virtualrate_table
+	CREATE NONCLUSTERED INDEX IX_SportLeague ON VRSettingHierarchy(SportType, BetType, VRLeagueGroupID) INCLUDE ([ParentLevelID]) ON virtualrate_table
 
 --Table #6: VRCustSetting
 	CREATE TABLE [dbo].[VRCustSetting](
