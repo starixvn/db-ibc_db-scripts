@@ -8,10 +8,13 @@ GO
 	Task: Re-build tables on DB052.bodb_Licensee
 */
 
--- 28 migrate tables = 28 tables
+
 
 --- Step 1. Rename tables to DEL_XXX
+-- 28 migrate tables + 19 move tables = 47 tables
 
+
+-- 1.1 migrate tables
 -- 13 
 sp_rename 'LA_ChargeInfo_MinFee', 'DEL_LA_ChargeInfo_MinFee'
 go
@@ -125,7 +128,87 @@ sp_rename 'OAS_PartyDetail', 'DEL_OAS_PartyDetail'
 go
 
 
+
+-- 1.2 move tables
+-- 10 
+sp_rename 'LA_AnalysisFile', 'DEL_LA_AnalysisFile'
+go
+
+-- 11 
+sp_rename 'LA_BankInfo', 'DEL_LA_BankInfo'
+go
+
+-- 12 
+sp_rename 'LA_BillerInfo', 'DEL_LA_BillerInfo'
+go
+
+-- 15 
+sp_rename 'LA_CombinedGroup', 'DEL_LA_CombinedGroup'
+go
+
+-- 16 
+sp_rename 'LA_CombinedGroupAssignment', 'DEL_LA_CombinedGroupAssignment'
+go
+
+-- 29 
+sp_rename 'LA_HostingFeesTypes', 'DEL_LA_HostingFeesTypes'
+go
+
+-- 30 
+sp_rename 'LA_InvoiceDetail', 'DEL_LA_InvoiceDetail'
+go
+
+-- 31 
+sp_rename 'LA_InvoiceFile', 'DEL_LA_InvoiceFile'
+go
+
+-- 33 
+sp_rename 'LA_InvoiceItemType', 'DEL_LA_InvoiceItemType'
+go
+
+-- 37 
+sp_rename 'LA_InvoiceType', 'DEL_LA_InvoiceType'
+go
+
+-- 38 
+sp_rename 'LA_InvoiceTypeMapping', 'DEL_LA_InvoiceTypeMapping'
+go
+
+-- 41 
+sp_rename 'LA_OnUser', 'DEL_LA_OnUser'
+go
+
+-- 45 
+sp_rename 'LA_SettingGroupAssignment', 'DEL_LA_SettingGroupAssignment'
+go
+
+-- 46 
+sp_rename 'LA_SettingGroupDetail', 'DEL_LA_SettingGroupDetail'
+go
+
+-- 47 
+sp_rename 'LA_SettingGroupHeader', 'DEL_LA_SettingGroupHeader'
+go
+
+-- 48 
+sp_rename 'LA_SystemSettings', 'DEL_LA_SystemSettings'
+go
+
+-- 49 
+sp_rename 'LA_User', 'DEL_LA_User'
+go
+
+-- 80 
+sp_rename 'OAS_OnUser', 'DEL_OAS_OnUser'
+go
+
+-- 85 
+sp_rename 'OAS_Users', 'DEL_OAS_Users'
+go
+
+
 -- Step 2: create tables
+-- 28 migrate tables = 28 tables
 
 -- 13
 CREATE TABLE [dbo].[LA_ChargeInfo_MinFee](
