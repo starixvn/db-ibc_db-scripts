@@ -46,10 +46,10 @@ DB: DBRPT.bodb_report
 			
 			--- Agent	
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
-			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + d.DownlineCash 
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + dISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
-				INNER JOIN ( 
-							SELECT	c.recommend, SUM (s.OpeningTotalBalance) as DownlineCash
+				LEFT JOIN ( 
+							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -61,10 +61,10 @@ DB: DBRPT.bodb_report
 	
 			-- Master		 
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
-			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + d.DownlineCash
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
-				INNER JOIN ( 
-							SELECT	c.mrecommend, SUM (s.OpeningTotalBalance) as DownlineCash
+				LEFT JOIN ( 
+							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -76,10 +76,10 @@ DB: DBRPT.bodb_report
 			
 			-- Super		 
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
-			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + d.DownlineCash
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
-				INNER JOIN ( 
-							SELECT	c.srecommend, SUM (s.OpeningTotalBalance) as DownlineCash
+				LEFT JOIN ( 
+							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -114,6 +114,11 @@ DB: DBRPT.bodb_report
 					WHEN MATCHED THEN
 					UPDATE SET
 						TARGET.OpeningTotalBalance = SOURCE.OpeningTotalBalance	
+					
+					
+					WHEN NOT MATCHED BY Target THEN
+					INSERT INTO rptStatement_OLD (custid, winlostdate, openingbalance, Openingtotalbalance)
+					VALUES (source.custid, source.winlostdate, source.openingbalance, source.openingtotalbalance) 
 					;
 				END
 			END
