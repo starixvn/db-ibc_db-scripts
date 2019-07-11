@@ -12,7 +12,7 @@ GO
 
 INSERT INTO [dbo].[LA_ChargeInfo_MinFee]([ChargeID],[MinFee],[MinFeeCurrencyID],[WaiveFrom],[WaiveTo])
 SELECT [ChargeID],[MinFee],[MinFeeCurrencyID],[WaiveFrom],[WaiveTo]
-FROM DB052.bodb_Licensee.dbo.LIC_LIC_LA_ChargeInfo_MinFee WITH (NOLOCK)
+FROM DB052.bodb_Licensee.dbo.LIC_LA_ChargeInfo_MinFee WITH (NOLOCK)
 
 INSERT INTO [dbo].[LA_ChargeInfo_SystemMapping]([ChargeID],[SystemID])
 SELECT [ChargeID],[SystemID]
