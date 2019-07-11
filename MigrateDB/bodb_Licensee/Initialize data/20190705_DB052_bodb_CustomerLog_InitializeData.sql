@@ -13,9 +13,11 @@ GO
 DELETE TABLE dbo.LA_UserLog_RunSP WITH (ROWLOCK, UPDLOCK)
 GO
 
+SET IDENTITY_INSERT LA_UserLog_RunSP ON
 INSERT INTO dbo.LA_UserLog_RunSP (LogID,UserID,SPName,Doing,LogDate,CustID,ActionID,TrackingValue,Duration,TrackingValue2)
 SELECT LogID,UserID,SPName,Doing,LogDate,CustID,ActionID,TrackingValue,Duration,TrackingValue2
 FROM bodb_Licensee.dbo.OA_UserLog_RunSP WITH (NOLOCK)
+SET IDENTITY_INSERT LA_UserLog_RunSP OFF
 GO
 
 -- 2
@@ -41,18 +43,22 @@ GO
 DELETE TABLE dbo.OAS_UserLog_RunSP WITH (ROWLOCK, UPDLOCK)
 GO
 
+SET IDENTITY_INSERT OAS_UserLog_RunSP ON
 INSERT INTO dbo.OAS_UserLog_RunSP (LogID,UserID,SPName,Doing,LogDate,CustID,ActionID,TrackingValue,Duration,TrackingValue2)
 SELECT LogID,UserID,SPName,Doing,LogDate,CustID,ActionID,TrackingValue,Duration,TrackingValue2
 FROM bodb_Licensee.dbo.OAS_UserLog_RunSP WITH (NOLOCK)
+SET IDENTITY_INSERT OAS_UserLog_RunSP OFF
 GO
 
 -- 5
 DELETE TABLE dbo.OAS_UserLog_Login WITH (ROWLOCK, UPDLOCK)
 GO
 
+SET IDENTITY_INSERT OAS_UserLog_Login ON
 INSERT INTO dbo.OAS_UserLog_Login (LogID,UserID,IP,LogDate,Doing,DomainName,BrowserName,Platform,CountryCode,Duration)
 SELECT LogID,UserID,IP,LogDate,Doing,DomainName,BrowserName,Platform,CountryCode,Duration
 FROM bodb_Licensee.dbo.OAS_UserLog_Login WITH (NOLOCK)
+SET IDENTITY_INSERT OAS_UserLog_Login OFF
 GO
 
 -- 6
