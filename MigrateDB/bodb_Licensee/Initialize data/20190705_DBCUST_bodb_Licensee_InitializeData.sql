@@ -111,6 +111,7 @@ SET IDENTITY_INSERT [OAS_Party] OFF
 INSERT INTO [dbo].[OAS_PartyDetail]([PartyID],[IsDeposit],[BrandName],[CompanyName],[IsAllowedMemberComm],[StatusId],[AttnName],[Description],[Address1],[Address2],[BaseCurrencyId],[InvoiceLanguage])
 SELECT [PartyID],[IsDeposit],[BrandName],[CompanyName],[IsAllowedMemberComm],[StatusId],[AttnName],[Description],[Address1],[Address2],[BaseCurrencyId],[InvoiceLanguage]
 FROM DB052.bodb_Licensee.dbo.LIC_OAS_PartyDetail WITH (NOLOCK)
+WHERE [PartyID] <> 51
 
 SET IDENTITY_INSERT [LA_InvoiceHeader] ON
 INSERT INTO [dbo].[LA_InvoiceHeader]([InvoiceHeaderId],[BillerId],[PartyId],[RefNo],[CurrencyId],[InvoiceSymbol],[InvoiceNumber],[FromDate],[ToDate],[InvoiceDate],[DueDate],[Amount],[InvoiceType],[StatusId],[Note],[HasSent],[HasDeleted],[CreatedBy],[CreatedDateTime],[UpdatedDateTime],[IsSeparateProduct],[MaxPCU],[RateAmount],[IsWaived],[InvoicePath],[InvoiceData],[Environment],[UpdatedBy],[OfficialInvoiceNo])
@@ -118,9 +119,11 @@ SELECT [InvoiceHeaderId],[BillerId],[PartyId],[RefNo],[CurrencyId],[InvoiceSymbo
 FROM DB052.bodb_Licensee.dbo.LIC_LA_InvoiceHeader WITH (NOLOCK)
 SET IDENTITY_INSERT [LA_InvoiceHeader] OFF
 
+SET IDENTITY_INSERT [LA_InvoiceSetting] ON
 INSERT INTO [dbo].[LA_InvoiceSetting]([FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress])
 SELECT [FromPartyId],[ToPartyId],[ProductId],[InvTypeId],[InvTempId],[BankId],[ActiveAddress]
 FROM DB052.bodb_Licensee.dbo.LIC_LA_InvoiceSetting WITH (NOLOCK)
+SET IDENTITY_INSERT [LA_InvoiceSetting] OFF
 
 SET IDENTITY_INSERT [LA_InvoiceStatement] ON
 INSERT INTO [dbo].[LA_InvoiceStatement]([InvoiceStatementId],[InvoiceHeaderId],[InvItemTypeId],[StatusID],[Description],[Income],[Expense],[RefNo],[RefPartyId],[ProductId])
@@ -245,7 +248,7 @@ SET IDENTITY_INSERT [OAS_OnUser] OFF
 SET IDENTITY_INSERT [OAS_Users] ON
 INSERT INTO [dbo].[OAS_Users]([UserID],[Username],[UserPwd],[DisplayName],[Role],[UserSalt],[IsActive],[Creator],[CreatedDate],[ModifiedDate],[IsTest])
 SELECT [UserID],[Username],[UserPwd],[DisplayName],[Role],[UserSalt],[IsActive],[Creator],[CreatedDate],[ModifiedDate],[IsTest]
-FROM DB052..bodb_Licensee.dbo.LIC_OAS_Users WITH (NOLOCK)
+FROM DB052.bodb_Licensee.dbo.LIC_OAS_Users WITH (NOLOCK)
 SET IDENTITY_INSERT [OAS_Users] OFF
 
 INSERT INTO [dbo].[LA_InvoiceItemType]([SignDB],[GroupDB],[SignSOA],[GroupSOA],[InvItemTypeName],[InvItemTypeId])
