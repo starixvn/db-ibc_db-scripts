@@ -35,7 +35,7 @@ WHERE c.Site = 'CN88' AND g.sporttype = 99
 UPDATE g
 	SET g.MaxTurnOver = c.MaxTurnOver
 FROM dbo.TOControl_GlobalSetting g WITH (ROWLOCK)
-     INNER JOIN #Global_tmp c WITH (NOLOCK) ON g.CustId = c.CustId
+     INNER JOIN #Global_tmp c WITH (NOLOCK) ON g.CustId = c.CustId AND g.sporttype = 99
 
 --------- 3 - Update TOControl_Setting ---------------------------     
 ----Get running match(s)
@@ -86,15 +86,8 @@ END
 SELECT g.MaxTurnOver,currency, g.*
 FROM dbo.TOControl_GlobalSetting g WITH (NOLOCK)
 	 INNER JOIN dbo.Customer c WITH (NOLOCK) ON g.CustId = c.CustId
-WHERE c.Site = 'CN88' 
+WHERE c.Site = 'CN88' and g.sporttype = 99
 ORDER BY g.custID
-
-SELECT g.MaxTurnOver,currency, g.*
-FROM dbo.TOControl_Setting g WITH (NOLOCK)
-	 INNER JOIN dbo.Customer c WITH (NOLOCK) ON g.CustId = c.CustId
-WHERE c.Site = 'CN88' 
-ORDER BY g.custID
-
 
 */
 

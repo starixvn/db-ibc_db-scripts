@@ -35,7 +35,7 @@ WHERE c.Site = 'CN88' AND g.sporttype = 1
 UPDATE g
 	SET g.MaxTurnOver = c.MaxTurnOver
 FROM dbo.TOControl_GlobalSetting g WITH (ROWLOCK)
-     INNER JOIN #Global_tmp c WITH (NOLOCK) ON g.CustId = c.CustId
+     INNER JOIN #Global_tmp c WITH (NOLOCK) ON g.CustId = c.CustId AND g.sporttype = 1
 
 --------- 3 - Update TOControl_Setting ---------------------------     
 ----Get running match(s)
