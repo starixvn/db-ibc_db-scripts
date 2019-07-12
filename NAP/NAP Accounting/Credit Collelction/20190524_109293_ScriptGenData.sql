@@ -48,6 +48,8 @@ DB: DBRPT.bodb_report
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
 			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + dISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 2
 				LEFT JOIN ( 
 							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
@@ -63,6 +65,8 @@ DB: DBRPT.bodb_report
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
 			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 3
 				LEFT JOIN ( 
 							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
@@ -78,6 +82,8 @@ DB: DBRPT.bodb_report
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
 			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 4
 				LEFT JOIN ( 
 							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
