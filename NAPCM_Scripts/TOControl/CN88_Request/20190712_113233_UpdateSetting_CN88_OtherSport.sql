@@ -43,7 +43,7 @@ INSERT INTO #Match_running (Matchid)
 SELECT MatchId 
 FROM OPENQUERY (DBAGE,'SELECT MatchId
 FROM bodb02.dbo.Match WITH (NOLOCK)
-WHERE EventStatus = ''running'' AND SportType = 1')
+WHERE EventStatus = ''running'' AND SportType <> 1 AND sporttype < 100')
     
 CREATE TABLE #TOMatchList
 (
