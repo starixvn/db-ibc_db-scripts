@@ -98,36 +98,25 @@ DB: DBRPT.bodb_report
 			---------------- Correct Opening Total Balance --------------------
 			IF EXISTS (
 				SELECT 1
-				FROM #tmpOpeningTotalBalance SOURCE
-					FULL OUTER JOIN dbo.rptStatement_OLD TARGET WITH (NOLOCK) 
-						ON SOURCE.CustId = TARGET.CustId 
-						and TARGET.WinlostDate = @WinlostDate 
-				WHERE	
-						TARGET.WinlostDate = @WinlostDate 
-						AND (SOURCE.CustId IS NULL
-						OR TARGET.CustId IS NULL				
-						OR TARGET.OpeningBalance 	  <> SOURCE.OpeningBalance				
-						OR TARGET.OpeningTotalBalance <> SOURCE.OpeningTotalBalance	)	
-			)
+				FROM  rptStatement_old r WITH (NOLOCK)
+					INNER JOIN #tmpOpeningTotalBalance t
+							ON	t.CustId		= r.CustId 
+							AND t.WinlostDate	= r.WinlostDate				
+					WHERE  t.OpeningTotalBalance <> r.OpeningTotalBalance
+					)
+			BEGIN
 				BEGIN
- 
-  
-				BEGIN
-					MERGE dbo.rptStatement_OLD AS TARGET
-					USING #tmpOpeningTotalBalance AS SOURCE
-							ON	TARGET.CustId		= SOURCE.CustId 
-							AND TARGET.WinlostDate	= @WinlostDate					
-					WHEN MATCHED THEN
-					UPDATE SET
-						TARGET.OpeningTotalBalance = SOURCE.OpeningTotalBalance	
-					
-					
-					WHEN NOT MATCHED BY Target THEN
-					INSERT INTO rptStatement_OLD (custid, winlostdate, openingbalance, Openingtotalbalance)
-					VALUES (source.custid, source.winlostdate, source.openingbalance, source.openingtotalbalance) 
-					;
+
+					UPDATE r			
+					SET r.OpeningTotalBalance = t.OpeningTotalBalance
+					FROM rptStatement_old r WITH (ROWLOCK)
+					INNER JOIN #tmpOpeningTotalBalance t
+							ON	t.CustId		= r.CustId 
+							AND t.WinlostDate	= r.WinlostDate						
 				END
 			END
+	
+	
 
 		PRINT 'Done ' + CONVERT(VARCHAR(10),@winlostdate) 
 		
@@ -141,7 +130,106 @@ DB: DBRPT.bodb_report
 	WHILE @winlostdate <= @MoveBetsday
 	BEGIN 
 		
-		EXEC Task_DailyRptStatement_CheckData @winlostdate = @winlostdate, @isCheckDataOnly = 0  
+		BEGIN 		
+			IF OBJECT_ID('tempdb..#tmpOpeningTotalBalance') IS NOT NULL
+			BEGIN
+				DROP TABLE #tmpOpeningTotalBalance
+			END
+
+			CREATE TABLE #tmpOpeningTotalBalance (
+				Custid INT
+				,OpeningBalance MONEY
+				,OpeningTotalBalance MONEY
+				)
+
+			------------Calc OpeningTotalBalance----------
+			--- Member
+			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)
+			SELECT	s.CustID, s.OpeningBalance,	s.OpeningBalance
+			FROM 	dbo.rptStatement s WITH (NOLOCK)
+			INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID
+			WHERE   s.WinlostDate = @WinlostDate 
+					AND c.RoleID = 1
+			
+			--- Agent	
+			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + dISNULL(d.DownlineCash,0)
+			FROM 	dbo.rptStatement s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 2
+				LEFT JOIN ( 
+							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
+							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+									ON c.CustID = s.CustID
+							WHERE c.RoleID = 1
+							GROUP BY c.recommend
+							) d
+				ON s.CustID = d.recommend
+			WHERE   s.WinlostDate = @WinlostDate
+	
+			-- Master		 
+			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
+			FROM 	dbo.rptStatement s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 3
+				LEFT JOIN ( 
+							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
+							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+									ON c.CustID = s.CustID
+							WHERE c.RoleID = 2
+							GROUP BY c.mrecommend
+							) d
+				ON s.CustID = d.mrecommend
+			WHERE   s.WinlostDate = @WinlostDate
+			
+			-- Super		 
+			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
+			FROM 	dbo.rptStatement s WITH (NOLOCK)
+				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+					ON c.CustID = s.CustID AND RoleID = 4
+				LEFT JOIN ( 
+							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
+							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
+									ON c.CustID = s.CustID
+							WHERE c.RoleID = 3
+							GROUP BY c.srecommend
+							) d
+				ON s.CustID = d.srecommend
+			WHERE   s.WinlostDate = @WinlostDate
+		
+			---------------- Correct Opening Total Balance --------------------
+			IF EXISTS (
+				SELECT 1
+				FROM  rptStatement r WITH (NOLOCK)
+					INNER JOIN #tmpOpeningTotalBalance t
+							ON	t.CustId		= r.CustId 
+							AND t.WinlostDate	= r.WinlostDate				
+					WHERE  t.OpeningTotalBalance <> r.OpeningTotalBalance
+					)
+			BEGIN
+				BEGIN
+
+					UPDATE r			
+					SET r.OpeningTotalBalance = t.OpeningTotalBalance
+					FROM rptStatement r WITH (ROWLOCK)
+					INNER JOIN #tmpOpeningTotalBalance t
+							ON	t.CustId		= r.CustId 
+							AND t.WinlostDate	= r.WinlostDate						
+				END
+			END
+	
+	
+
+		PRINT 'Done ' + CONVERT(VARCHAR(10),@winlostdate) 
+		
+		SELECT @WinlostDate  =  DATEADD(DD, 1 , @WinlostDate)
+	 END 
 		
 		PRINT 'Done ' + CONVERT(VARCHAR(10),@winlostdate) 		
 		SELECT @WinlostDate  =  DATEADD(DD, 1 , @WinlostDate)
