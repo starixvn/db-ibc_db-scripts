@@ -96,15 +96,7 @@ DB: DBRPT.bodb_report
 			WHERE   s.WinlostDate = @WinlostDate
 		
 			---------------- Correct Opening Total Balance --------------------
-			IF EXISTS (
-				SELECT 1
-				FROM  rptStatement_old r WITH (NOLOCK)
-					INNER JOIN #tmpOpeningTotalBalance t
-							ON	t.CustId		= r.CustId 
-							AND t.WinlostDate	= r.WinlostDate				
-					WHERE  t.OpeningTotalBalance <> r.OpeningTotalBalance
-					)
-			BEGIN
+		
 				BEGIN
 
 					UPDATE r			
@@ -114,7 +106,7 @@ DB: DBRPT.bodb_report
 							ON	t.CustId		= r.CustId 
 							AND t.WinlostDate	= r.WinlostDate						
 				END
-			END
+			
 	
 	
 
@@ -204,15 +196,7 @@ DB: DBRPT.bodb_report
 			WHERE   s.WinlostDate = @WinlostDate
 		
 			---------------- Correct Opening Total Balance --------------------
-			IF EXISTS (
-				SELECT 1
-				FROM  rptStatement r WITH (NOLOCK)
-					INNER JOIN #tmpOpeningTotalBalance t
-							ON	t.CustId		= r.CustId 
-							AND t.WinlostDate	= r.WinlostDate				
-					WHERE  t.OpeningTotalBalance <> r.OpeningTotalBalance
-					)
-			BEGIN
+			
 				BEGIN
 
 					UPDATE r			
@@ -222,7 +206,7 @@ DB: DBRPT.bodb_report
 							ON	t.CustId		= r.CustId 
 							AND t.WinlostDate	= r.WinlostDate						
 				END
-			END
+			
 	
 	
 
