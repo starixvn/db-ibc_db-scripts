@@ -10,6 +10,7 @@
 	5. NAP_Admin_Calculate_MP_9
 	6. NAP_Set_ServerAction
 	7. f_Set_GetGroupBettypes
+	8. NAP_Admin_Parlay_Calculate_3
 
 	4 version UAT1, UAT2, UAT3, UAT4
 */
