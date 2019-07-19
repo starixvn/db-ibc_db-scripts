@@ -38,19 +38,19 @@ GO
 		INSERT INTO [dbo].[VRCustSetting]
 			   ([CustID]
 			   ,[LevelID]
-			   ,[ValueIDNonLIVE]
-			   ,[ValueIDLIVE])
+			   ,[ValueIDLIVE]
+			   ,[ValueIDNonLIVE])
 		SELECT	t.CustID
 				, h.LevelID --Bettype Group Level
-				, CASE WHEN h.VRBetTypeGroupID = 1 THEN t.VRValue_121
-						WHEN h.VRBetTypeGroupID = 2 THEN t.VRValue_123
-						WHEN h.VRBetTypeGroupID = 3 THEN t.VRValue_125
-						WHEN h.VRBetTypeGroupID = 4 THEN t.VRValue_127
-					END
 				, CASE WHEN h.VRBetTypeGroupID = 1 THEN t.VRValue_122
 						WHEN h.VRBetTypeGroupID = 2 THEN t.VRValue_124
 						WHEN h.VRBetTypeGroupID = 3 THEN t.VRValue_126
 						WHEN h.VRBetTypeGroupID = 4 THEN t.VRValue_128
+					END
+				, CASE WHEN h.VRBetTypeGroupID = 1 THEN t.VRValue_121
+						WHEN h.VRBetTypeGroupID = 2 THEN t.VRValue_123
+						WHEN h.VRBetTypeGroupID = 3 THEN t.VRValue_125
+						WHEN h.VRBetTypeGroupID = 4 THEN t.VRValue_127
 					END
 		FROM EsportVR_Temp t
 		CROSS JOIN #LevelID_BettypeGroup h

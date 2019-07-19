@@ -70,6 +70,7 @@ GO
 		GROUP BY VRValue_121,VRValue_122,VRValue_123,VRValue_124,VRValue_125,VRValue_126	
 					,VRValue_127,VRValue_128,HasSameVR
 	) tmp
+	WHERE OrderNo = 1
 
 	--Step 4: Delete super's setting
 	DELETE main

@@ -93,14 +93,14 @@ GO
 							,RoleID
 							,CustID
 					)	
-		SELECT CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 121) END VRValue_121
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 122) END VRValue_122
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 123) END VRValue_123
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 124) END VRValue_124
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 125) END VRValue_125
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 126) END VRValue_126
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 127) END VRValue_127
-				, CASE WHEN c.VirtualMultiplier = 0 AND c.roleid = 1 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 128) END VRValue_128
+		SELECT CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 121) ELSE 1 END VRValue_121
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 122) ELSE 1  END VRValue_122
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 123) ELSE 1  END VRValue_123
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 124) ELSE 1  END VRValue_124
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 125) ELSE 1  END VRValue_125
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 126) ELSE 1  END VRValue_126
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 127) ELSE 1  END VRValue_127
+				, CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 128) ELSE 1  END VRValue_128
 				,c.srecommend
 				,c.mrecommend
 				,c.recommend
@@ -108,29 +108,30 @@ GO
 				,cvs.CustID
 		FROM [dbo].[CustVirtualSetting]  cvs(NOLOCK)	
 		INNER JOIN custInfo c(NOLOCK) ON c.custid = cvs.custid
-		INNER JOIN [dbo].[CustVirtualSetting]  rvs(NOLOCK) ON rvs.custid = c.recommend AND rvs.seqNo=2
+		LEFT JOIN custInfo r(NOLOCK) ON r.custid = c.recommend
+		LEFT JOIN [dbo].[CustVirtualSetting]  rvs(NOLOCK) ON rvs.custid = r.custid AND rvs.seqNo=2
 		WHERE cvs.seqNo=2 AND c.CustID BETWEEN @CustID AND @CustID + 100000	
 			AND c.srecommend NOT IN (SELECT CustID FROM #TerminatedLicSuper)	
 			AND ( c.roleid IN (2,3,4)
 				OR (
 					c.roleid = 1 AND
 					(
-						   CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 121) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 121)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 122) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 122)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 123) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 123)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 124) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 124)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 125) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 125)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 126) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 126)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 127) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 127)
-						OR CASE WHEN c.VirtualMultiplier = 0 THEN 1 ELSE dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 128) END
-							<> dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 128)
+						   CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 121) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 121) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 122) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 122) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 123) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 123) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 124) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 124) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 125) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 125) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 126) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 126) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 127) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 127) ELSE 1 END
+						OR CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 128) ELSE 1 END
+							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 128) ELSE 1 END
 					)
 				)
 			)	
