@@ -46,12 +46,12 @@ DB: DBRPT.bodb_report
 			
 			--- Agent	
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
-			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + dISNULL(d.DownlineCash,0)
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement_old s WITH (NOLOCK)
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 2
 				LEFT JOIN ( 
-							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -68,7 +68,7 @@ DB: DBRPT.bodb_report
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 3
 				LEFT JOIN ( 
-							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -85,7 +85,7 @@ DB: DBRPT.bodb_report
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 4
 				LEFT JOIN ( 
-							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -104,7 +104,7 @@ DB: DBRPT.bodb_report
 					FROM rptStatement_old r WITH (ROWLOCK)
 					INNER JOIN #tmpOpeningTotalBalance t
 							ON	t.CustId		= r.CustId 
-							AND t.WinlostDate	= r.WinlostDate						
+							AND r.WinlostDate	= @WinlostDate			
 				END
 			
 	
@@ -146,12 +146,12 @@ DB: DBRPT.bodb_report
 			
 			--- Agent	
 			INSERT INTO #tmpOpeningTotalBalance (CustID, OpeningBalance, OpeningTotalBalance)	
-			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + dISNULL(d.DownlineCash,0)
+			SELECT  s.CustID, s.OpeningBalance, s.OpeningBalance + ISNULL(d.DownlineCash,0)
 			FROM 	dbo.rptStatement s WITH (NOLOCK)
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 2
 				LEFT JOIN ( 
-							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.recommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -168,7 +168,7 @@ DB: DBRPT.bodb_report
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 3
 				LEFT JOIN ( 
-							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.mrecommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -185,7 +185,7 @@ DB: DBRPT.bodb_report
 				INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 					ON c.CustID = s.CustID AND RoleID = 4
 				LEFT JOIN ( 
-							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance)) as DownlineCash
+							SELECT	c.srecommend, SUM (ISNULL(s.OpeningTotalBalance, 0)) as DownlineCash
 							FROM 	#tmpOpeningTotalBalance s WITH (NOLOCK)
 							INNER JOIN bodb02.dbo.CustInfo c WITH (NOLOCK) 
 									ON c.CustID = s.CustID
@@ -204,7 +204,7 @@ DB: DBRPT.bodb_report
 					FROM rptStatement r WITH (ROWLOCK)
 					INNER JOIN #tmpOpeningTotalBalance t
 							ON	t.CustId		= r.CustId 
-							AND t.WinlostDate	= r.WinlostDate						
+							AND r.WinlostDate	= @WinlostDate
 				END
 			
 	
