@@ -12,13 +12,13 @@ GO
 	SET  main.HasSameVR = 0
 	FROM EsportVR_Temp main
 	WHERE NOT (
-		main.VRValue_121 = main.VRValue_122
-		AND  main.VRValue_121 = main.VRValue_123
-		AND  main.VRValue_121 = main.VRValue_124
+		main.VRValue_121 = main.VRValue_123
 		AND  main.VRValue_121 = main.VRValue_125
-		AND  main.VRValue_121 = main.VRValue_126
 		AND  main.VRValue_121 = main.VRValue_127
-		AND  main.VRValue_121 = main.VRValue_128
+
+		AND  main.VRValue_122 = main.VRValue_124	
+		AND  main.VRValue_122 = main.VRValue_126	
+		AND  main.VRValue_122 = main.VRValue_128
 	)
 
 	--Step 2: Update ValueID
