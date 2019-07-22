@@ -112,7 +112,7 @@ GO
 			AND c.srecommend NOT IN (SELECT CustID FROM #TerminatedLicSuper)	
 			AND ( c.roleid IN (2,3,4)
 				OR (
-					c.roleid = 1 AND
+					c.roleid = 1 AND c.Enabled = 1 AND
 					(
 						   CASE WHEN c.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(cvs.bitmapVirtual, 121) ELSE 1 END
 							<> CASE WHEN r.VirtualMultiplier = 1 THEN dbo.f_GetVirtualSetting(rvs.bitmapVirtual, 121) ELSE 1 END
