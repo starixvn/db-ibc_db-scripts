@@ -21,12 +21,12 @@ declare @winlostdate smalldatetime = @fromdate
 		,@weekday tinyint
 		,@pre_saturday smalldatetime
 
-create table #__statement
-(
-	custid int primary key,roleid tinyint
-	,recommend int,mrecommend int,srecommend int
-	,OpeningBalance money,OpeningTotalBalance money
-)
+create table #__statement (custid int,winlostdate smalldatetime,OpeningBalance money,OpeningTotalBalance money)
+
+create table #__cust (custid int, winlostdate smalldatetime)
+create table #__balanceCust (custid int, winlostdate smalldatetime)
+
+create table #__SMA (custid int, winlostdate smalldatetime)
 
 while @winlostdate <= @todate
 begin
@@ -37,136 +37,189 @@ begin
 		select @weekday = datepart(weekday, @winlostdate)
 		select @pre_saturday = dateadd(day, -datepart(weekday, @winlostdate), @winlostdate)
 
-		-- get transfer cust
+		if @weekday = 7
 		begin
-			select custid
-			into #__transCust
-			from bodb_Archive.dbo.transfer_bk with (nolock)
-			where winlostdate = @winlostdate
-			group by winlostdate, custid
+			-- member
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,r.OpeningBalance
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 1
+				) as c
+			where r.custid = c.custid and r.winlostdate = @winlostdate
+
+			-- agent
+			select c.recommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__agent1
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 1
+			group by c.recommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,r.OpeningBalance + isnull(a.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 2
+				) as c
+				left join #__agent1 a on r.custid = a.custid
+			where r.custid = c.custid and r.winlostdate = @winlostdate
+
+			-- master
+			select c.mrecommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__master1
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 2
+			group by c.mrecommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,r.OpeningBalance + isnull(m.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 3
+				) as c
+				left join #__master1 m on r.custid = m.custid
+			where r.custid = c.custid and r.winlostdate = @winlostdate
+
+			-- super
+			select c.srecommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__super1
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 3
+			group by c.srecommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,r.OpeningBalance + isnull(s.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 4
+				) as c
+				left join #__super1 s on r.custid = s.custid
+			where r.custid = c.custid and r.winlostdate = @winlostdate
+
+			drop table #__agent1
+			drop table #__master1
+			drop table #__super1
 		end
-	
-		-- member
+		else
 		begin
-			if @weekday = 7
-			begin
-				insert into #__statement (custid,roleid,recommend,mrecommend,srecommend,OpeningBalance)
-				select custid,roleid,recommend,mrecommend,srecommend,OpeningBalance
-				from dbo.rptStatement_Old r with (nolock)
-					cross apply (
-						select roleid,recommend,mrecommend,srecommend from bodb02.dbo.custinfo c with (nolock)
-						where r.custid = c.custid and c.roleid = 1
-					) as c
-				where r.winlostdate = @winlostdate
-			end
-			else
-			begin
-				select r.custid,roleid,recommend,mrecommend,srecommend, max(r.winlostdate) as winlostdate
-				into #__tmpData1
-				from dbo.rptStatement_Old r with (nolock)
-					cross apply (
-						select roleid,recommend,mrecommend,srecommend from bodb02.dbo.custinfo c with (nolock)
-						where r.custid = c.custid and c.roleid = 1
-					) as c
-				where r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
-				group by r.custid,roleid,recommend,mrecommend,srecommend
-				option (hash group)
+			-- member
+			select r.custid,max(r.winlostdate) as winlostdate
+			into #__member2
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 1
+				) as c
+			where r.custid = c.custid and r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
+			group by r.custid
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,case when r.winlostdate = @winlostdate then r.OpeningBalance else r.ClosingBalance end
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid, c.winlostdate from #__member2 c
+				) as c
+			where r.custid = c.custid and r.winlostdate = c.winlostdate
+
+			-- agent
+			select r.custid,max(r.winlostdate) as winlostdate
+			into #__agent
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 2
+				) as c
+			where r.custid = c.custid and r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
+			group by r.custid
+
+			select c.recommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__agent2
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 1
+			group by c.recommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,case when r.winlostdate = @winlostdate then r.OpeningBalance else r.ClosingBalance end + isnull(a.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid, c.winlostdate from #__agent c
+				) as c
+				left join #__agent2 a on r.custid = a.custid
+			where r.custid = c.custid and r.winlostdate = c.winlostdate
+
+			-- master
+			select r.custid,max(r.winlostdate) as winlostdate
+			into #__master
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 3
+				) as c
+			where r.custid = c.custid and r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
+			group by r.custid
+
+			select c.mrecommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__master2
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 2
+			group by c.mrecommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,case when r.winlostdate = @winlostdate then r.OpeningBalance else r.ClosingBalance end + isnull(a.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid, c.winlostdate from #__master c
+				) as c
+				left join #__master2 a on r.custid = a.custid
+			where r.custid = c.custid and r.winlostdate = c.winlostdate
 			
-				insert into #__statement (custid,roleid,recommend,mrecommend,srecommend,OpeningBalance)
-				select custid,roleid,recommend,mrecommend,srecommend,ClosingBalance as OpeningBalance
-				from #__tmpData1 c
-					cross apply (
-						select top 1 ClosingBalance from dbo.rptStatement_Old r with (nolock)
-						where r.custid = c.custid and r.winlostdate = c.winlostdate
-						order by winlostdate desc
-					) as r
+			-- super
+			select r.custid,max(r.winlostdate) as winlostdate
+			into #__super
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid from bodb02.dbo.custinfo c with (nolock)
+					where c.roleid = 4
+				) as c
+			where r.custid = c.custid and r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
+			group by r.custid
 
-				drop table #__tmpData1
-			end
+			select c.srecommend as custid, sum(OpeningTotalBalance) as OpeningTotalBalance
+			into #__super2
+			from bodb02.dbo.custinfo c with (nolock)
+				inner join #__statement s on c.custid = s.custid
+			where c.roleid = 3
+			group by c.srecommend
+
+			insert into #__statement(custid,OpeningTotalBalance)
+			select r.custid,case when r.winlostdate = @winlostdate then r.OpeningBalance else r.ClosingBalance end + isnull(a.OpeningTotalBalance, 0)
+			from bodb_Report.dbo.rptStatement_Old r with (nolock)
+				cross apply (
+					select c.custid, c.winlostdate from #__super c
+				) as c
+				left join #__super2 a on r.custid = a.custid
+			where r.custid = c.custid and r.winlostdate = c.winlostdate
+
+			drop table #__agent
+			drop table #__master
+			drop table #__super
+
+			drop table #__agent2
+			drop table #__master2
+			drop table #__super2
 		end
-
-		-- SMA
-		begin
-			select custid,roleid,recommend,mrecommend,srecommend
-			into #__SMA
-			from bodb02.dbo.custInfo c with (nolock)
-			where exists (select 1 from #__transCust t where t.custid = c.custid
-							union all select 1 from #__statement s where c.custid in (s.recommend, s.mrecommend, s.srecommend)
-							)
-				and c.roleid > 1
-
-			if @weekday = 7
-			begin
-				insert into #__statement (custid,roleid,recommend,mrecommend,srecommend,OpeningBalance)
-				select custid,roleid,recommend,mrecommend,srecommend,OpeningBalance
-				from dbo.rptStatement_Old r with (nolock)
-					cross apply (
-						select roleid,recommend,mrecommend,srecommend from #__SMA s
-						where r.custid = s.custid
-					) as c
-				where r.winlostdate = @winlostdate
-			end
-			else
-			begin
-				select r.custid,roleid,recommend,mrecommend,srecommend, max(r.winlostdate) as winlostdate
-				into #__tmpData2
-				from dbo.rptStatement_Old r with (nolock)
-					cross apply (
-						select roleid,recommend,mrecommend,srecommend from #__SMA c
-						where r.custid = c.custid
-					) as c
-				where r.winlostdate >= @pre_saturday and r.winlostdate <= @winlostdate
-				group by r.custid,roleid,recommend,mrecommend,srecommend
-				option (hash group)
-
-				insert into #__statement (custid,roleid,recommend,mrecommend,srecommend,OpeningBalance)
-				select custid,roleid,recommend,mrecommend,srecommend,ClosingBalance as OpeningBalance
-				from #__tmpData2 c
-					cross apply (
-						select top 1 ClosingBalance from dbo.rptStatement_Old r with (nolock)
-						where r.custid = c.custid and r.winlostdate = c.winlostdate
-						order by winlostdate desc
-					) as r
-
-				drop table #__tmpData2
-			end
-
-			drop table #__SMA
-			drop table #__transCust
-		end
-	end
-
-	-- calculate OpeningTotalBalance
-	begin
-		update s1
-		set s1.OpeningTotalBalance = s.OpeningTotalBalance
-		from #__statement s1
-			cross apply (
-				-- super
-				select sum(OpeningBalance) as OpeningTotalBalance from #__statement s where s1.custid = s.srecommend
-				-- master
-				union all
-				select sum(OpeningBalance) as OpeningTotalBalance from #__statement s where s1.custid = s.mrecommend
-				-- agent
-				union all
-				select sum(OpeningBalance) as OpeningTotalBalance from #__statement s where s1.custid = s.recommend
-				-- member
-				union all
-				select OpeningBalance as OpeningTotalBalance from #__statement s where s1.custid = s.custid
-			) as s
 	end
 
 	-- update data
-	begin
-		update r with (rowlock)
-		set r.OpeningTotalBalance = s.OpeningTotalBalance
-		from dbo.rptStatement_Old r
-			cross apply (
-				select s.OpeningTotalBalance from #__statement s where r.custid = s.custid
-			) as s
-		where r.winlostdate = @winlostdate
-	end
-
 	select @errmsg = 'Done ' + convert(varchar(10), @winlostdate, 120)
 	raiserror (@errmsg, 1, 1) with nowait
 
