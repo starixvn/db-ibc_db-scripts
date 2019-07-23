@@ -25,7 +25,7 @@ DECLARE @taskId INT
 		,@ErrCode INT
 		,@ErrMsg VARCHAR(100)
 
-SET @Emails = 'kathy.nguyen@starixsoft.com'
+SET @Emails = 'dbaadmin@starixsoft.com'
 
 -- Insert Task
 INSERT INTO dbo.DBA_Tasks (RuleId, command) 
@@ -43,8 +43,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = @schedulename
  ,@FrequenceInterval = 1 -- every xx days
  ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
  ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
- ,@ActiveStartDate = '2019-07-17' 
- ,@ActiveEndDate =  '2019-08-15' 
+ ,@ActiveStartDate = '2019-08-08' 
+ ,@ActiveEndDate =  '2019-08-21' 
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = '23:59'
  ,@NotifyLevelEmail = 2
