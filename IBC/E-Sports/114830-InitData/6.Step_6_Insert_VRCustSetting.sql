@@ -1,8 +1,9 @@
 /*
 	Task: Insert VRCustSetting - Redmine: 114830
 		Step 1: Prepare LevelID
-		Step 2: Insert setting at sport level
-		Step 3: Insert setting at bettype group level
+		Step 2: Delete VRCustSetting
+		Step 3: Insert setting at sport level
+		Step 4: Insert setting at bettype group level
 	Creator: Dominic@20190718
 	Run at: CustDB@DBCUST 
 */
@@ -22,25 +23,43 @@ GO
 					)
 		AND BetType = -1
 		AND SportType = 43
+	
+	--Step 2: Delete VRCustSetting
+	WHILE (1=1)
+	BEGIN
+		DELETE TOP (5000) [VRCustSetting]
 
-	--Step 2: Insert setting at sport level
+		IF @@ROWCOUNT < 5000
+			BREAK
+	END
+
+	--Step 3: Insert setting at sport level
+	WHILE (1=1)
+	BEGIN
 		INSERT INTO [dbo].[VRCustSetting]
 			   ([CustID]
 			   ,[LevelID]
 			   ,[ValueIDLIVE]
 			   ,[ValueIDNonLIVE])
-		SELECT t.CustID, @SportLevel
+		SELECT TOP (5000) t.CustID, @SportLevel
 				, t.VRValue_121, t.VRValue_121
 		FROM EsportVR_Temp t
 		WHERE t.HasSameVR = 1
+			AND t.CustID NOT IN (SELECT CustID FROM [dbo].[VRCustSetting])
 
-	--Step 3: Insert setting at bettype group level
+		IF @@ROWCOUNT < 5000
+			BREAK
+	END
+
+	--Step 4: Insert setting at bettype group level
+	WHILE (1=1)
+	BEGIN
 		INSERT INTO [dbo].[VRCustSetting]
 			   ([CustID]
 			   ,[LevelID]
 			   ,[ValueIDLIVE]
 			   ,[ValueIDNonLIVE])
-		SELECT	t.CustID
+		SELECT	TOP (5000) t.CustID
 				, h.LevelID --Bettype Group Level
 				, CASE WHEN h.VRBetTypeGroupID = 1 THEN t.VRValue_122
 						WHEN h.VRBetTypeGroupID = 2 THEN t.VRValue_124
@@ -55,3 +74,8 @@ GO
 		FROM EsportVR_Temp t
 		CROSS JOIN #LevelID_BettypeGroup h
 		WHERE t.HasSameVR = 0
+			AND t.CustID NOT IN (SELECT CustID FROM [dbo].[VRCustSetting])
+		
+		IF @@ROWCOUNT < 5000
+			BREAK
+	END
