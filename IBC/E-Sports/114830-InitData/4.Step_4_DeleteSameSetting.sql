@@ -89,20 +89,11 @@ GO
 							,CustID
 							,RoleID
 					)	
-	SELECT VRValue_121,VRValue_122,VRValue_123,VRValue_124,VRValue_125
-							,VRValue_126,VRValue_127,VRValue_128
-							,HasSameVR
+	SELECT 0.15 VRValue_121, 0.15 VRValue_122, 0.15 VRValue_123, 0.15 VRValue_124, 0.15 VRValue_125
+							,0.15 VRValue_126, 0.15 VRValue_127, 0.15 VRValue_128
+							,1 HasSameVR
 							,0 CustID
 							,5 RoleID
-	FROM (
-		SELECT VRValue_121,VRValue_122,VRValue_123,VRValue_124,VRValue_125,VRValue_126	
-					,VRValue_127,VRValue_128, HasSameVR, ROW_NUMBER() OVER(ORDER BY COUNT(1) desc) OrderNo
-		FROM EsportVR_Temp
-		WHERE RoleID=4
-		GROUP BY VRValue_121,VRValue_122,VRValue_123,VRValue_124,VRValue_125,VRValue_126	
-					,VRValue_127,VRValue_128,HasSameVR
-	) tmp
-	WHERE OrderNo = 1
 
 	--Step 5: Delete super's setting
 	DELETE main
