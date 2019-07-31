@@ -147,6 +147,7 @@ BEGIN
 	WHERE b.winlostdate = @winlostdate
 	   AND b.statusid NOT IN (101, 102, 103, 121)  
 	   AND b.ruben = 1
+	   AND b.currency <> 20
 	   AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
     GROUP BY b.custid, b.bettype, b.liveindicator, 
 			 CASE WHEN ISNULL(m.Sporttype, 0) <> 0 THEN m.Sporttype ELSE 0 END
@@ -375,6 +376,7 @@ BEGIN
 		   AND b.statusid NOT IN (101, 102, 103, 121)
 		   AND s.ProductID <> 1
 		   AND b.ruben = 1
+		   AND b.currency <> 20
 		   AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
 		GROUP BY b.srecommend,	      
 			   s.ProductId 
@@ -437,7 +439,8 @@ BEGIN
 		WHERE   b.winlostdate = @winlostdate
 			AND b.statusid NOT IN (101, 102, 103, 121)
 			AND s.ProductID = 1 	
-			AND b.ruben = 1			
+			AND b.ruben = 1
+			AND b.currency <> 20	
 			AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
 		GROUP BY b.srecommend,
 			   CASE WHEN ISNULL(m.Sporttype, 0) <> 0 THEN m.Sporttype ELSE 0 END,

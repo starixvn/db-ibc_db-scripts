@@ -145,7 +145,8 @@ BEGIN
 	FROM dbo.bettrans14 b WITH(NOLOCK)	 
 	LEFT JOIN dbo.Match14 m WITH (NOLOCK) ON m.MatchId = b.MatchId AND m.eventdate = @winlostdate AND m.Sporttype = 44
 	WHERE b.winlostdate = @winlostdate
-	   AND b.statusid NOT IN (101, 102, 103, 121)  
+	   AND b.statusid NOT IN (101, 102, 103, 121) 
+	   AND b.currency <> 20
 	   AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
     GROUP BY b.custid, b.bettype, b.liveindicator, 
 			 CASE WHEN ISNULL(m.Sporttype, 0) <> 0 THEN m.Sporttype ELSE 0 END
@@ -373,6 +374,7 @@ BEGIN
 		WHERE  b.winlostdate = @winlostdate
 		   AND b.statusid NOT IN (101, 102, 103, 121)
 		   AND s.ProductID <> 1
+		   AND b.currency <> 20
 		   AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
 		GROUP BY b.srecommend,	      
 			   s.ProductId 
@@ -434,7 +436,8 @@ BEGIN
 		LEFT JOIN dbo.Match14 m WITH (NOLOCK) ON m.MatchId = b.MatchId AND m.eventdate = @Winlostdate AND m.Sporttype = 44
 		WHERE   b.winlostdate = @winlostdate
 			AND b.statusid NOT IN (101, 102, 103, 121)
-			AND s.ProductID = 1 		
+			AND s.ProductID = 1
+			AND b.currency <> 20
 			AND EXISTS (SELECT 1 FROM CS_CustSuper cs WITH (NOLOCK) WHERE cs.custID = b.srecommend)
 		GROUP BY b.srecommend,
 			   CASE WHEN ISNULL(m.Sporttype, 0) <> 0 THEN m.Sporttype ELSE 0 END,
