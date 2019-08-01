@@ -12,68 +12,11 @@ GO
 	CREATE TABLE #TerminatedLicSuper (CustID INT)
 
 	INSERT INTO #TerminatedLicSuper(CustID)
-	SELECT CustID 
-	FROM dep_custsuper (NOLOCK)
-	WHERE Site IN  
-	(
-		'VCAsia'
-		,'SHABAING'
-		,'CQ11'
-		,'i668bet'
-		,'RYB95'
-		,'Kasking88'
-		,'Allbetclub'
-		,'67BET'
-		,'Bwinning'
-		,'TooBet'
-		,'GooBet'
-		,'Winner99'
-		,'Doctorgame'
-		,'Mgm88'
-		,'SLC88'
-		,'Bet2day'
-		,'King10'
-		,'DUOLE'
-		,'MarvelDH'
-		,'Saloncs'
-		,'THBET'
-		,'Hbobet'
-		,'Indowin'
-		,'Leon'
-		,'Empire555'
-		,'Inbet'
-		,'21Cash'
-		,'BuyWin'
-		,'Emmyo'
-		,'DAYWIN'
-		,'ABB688'
-		,'28BET'
-		,'99UU'
-		,'TCL'
-		,'LongBao'
-		,'AK318'
-		,'Wuming'
-		,'Asianbet'
-		,'WM8888'
-		,'Platinum'
-		,'Star99'
-		,'VGS'
-		,'K8'
-		,'10BET'
-		,'666VIP'
-		,'Holey'
-		,'Aragon88'
-		,'Lexibet'
-		,'GDC'
-		,'Baobet'
-		,'May88'
-		,'LZYQ'
-		,'YHY1980'
-		,'108bet'
-		,'Haoying'
-		,'Jinmangguo'
-		,'Sbcbet'
-	)
+	SELECT ds.custid
+	FROM custInfo ci with (nolock)
+	INNER JOIN Dep_CustSuper ds with (nolock) on ds.custid = ci.custid
+	INNER JOIN DBLIC.bodb_licensee.dbo.Licensees l with (nolock) on ds.site = l.LicenseeName
+	WHERE l.IsActive = 0
 
 	CREATE UNIQUE CLUSTERED INDEX CIX_CustID ON #TerminatedLicSuper(CustID)
 
