@@ -42,7 +42,7 @@ GO
 			   ,[ValueIDLIVE]
 			   ,[ValueIDNonLIVE])
 		SELECT TOP (5000) t.CustID, @SportLevel
-				, t.VRValue_121, t.VRValue_121
+				, t.VRValue_122, t.VRValue_121
 		FROM EsportVR_Temp t
 		WHERE t.HasSameVR = 1
 			AND t.CustID NOT IN (SELECT CustID FROM [dbo].[VRCustSetting])

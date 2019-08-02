@@ -26,7 +26,7 @@ GO
 	BEGIN
 		DELETE TOP (20000)  c
 		FROM EsportVR_Temp c
-		INNER JOIN EsportVR_Temp m ON c.mrecommend = m.CustID AND m.RoleID = 2
+		INNER JOIN EsportVR_Temp m ON c.recommend = m.CustID AND m.RoleID = 2
 		WHERE c.RoleID=1
 			AND c.VRValue_121 = m.VRValue_121
 			AND c.VRValue_122 = m.VRValue_122
