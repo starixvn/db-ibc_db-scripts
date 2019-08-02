@@ -14,7 +14,7 @@ GO
 	SELECT ds.custid
 	FROM custInfo ci with (nolock)
 	INNER JOIN Dep_CustSuper ds with (nolock) on ds.custid = ci.custid
-	INNER JOIN DBLIC.bodb_licensee.dbo.Licensees l with (nolock) on ds.site = l.LicenseeName
+	INNER JOIN bodb_licensee.dbo.Licensees l with (nolock) on ds.site = l.LicenseeName
 	WHERE l.IsActive = 0
 
 	CREATE UNIQUE CLUSTERED INDEX CIX_CustID ON #TerminatedLicSuper(CustID)
