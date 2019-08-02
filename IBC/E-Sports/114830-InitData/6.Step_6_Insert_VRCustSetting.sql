@@ -49,6 +49,8 @@ GO
 
 		IF @@ROWCOUNT < 5000
 			BREAK
+
+		WAITFOR DELAY '00:00:03'
 	END
 
 	--Step 4: Insert setting at bettype group level
@@ -78,4 +80,6 @@ GO
 		
 		IF @@ROWCOUNT < 5000
 			BREAK
+
+		WAITFOR DELAY '00:00:03'
 	END
