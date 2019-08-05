@@ -3,7 +3,7 @@ GO
 
 -- Create: 201907008@Sophia
 ---DB: DBPRO.bodb02
--- Task: Add PH4B [Redmine: 115866]
+-- Task: Add PH4B [Redmine: 115231]
 
 
 
