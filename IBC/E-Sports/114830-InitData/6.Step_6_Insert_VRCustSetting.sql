@@ -76,7 +76,11 @@ GO
 		FROM EsportVR_Temp t
 		CROSS JOIN #LevelID_BettypeGroup h
 		WHERE t.HasSameVR = 0
-			AND t.CustID NOT IN (SELECT CustID FROM [dbo].[VRCustSetting])
+			AND NOT EXISTS (	SELECT 1 
+									FROM [dbo].[VRCustSetting] vr
+									WHERE vr.CustID = t.CustID
+										AND vr.LevelID = h.LevelID
+								)
 		
 		IF @@ROWCOUNT < 5000
 			BREAK
