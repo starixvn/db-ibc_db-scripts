@@ -17,9 +17,11 @@ WHERE	SportType = 1
 UPDATE dbo.SettlementSpecialBettypeProfile WITH(ROWLOCK, UPDLOCK)
 	SET pfID = 424
 		,OrdNo = 1
+		,OddsType = 1
 WHERE bettype = 424
 
 UPDATE dbo.SettlementSpecialBettypeProfile WITH(ROWLOCK, UPDLOCK)
 	SET pfID = 424
 		,OrdNo = 2
+		,OddsType = 1
 WHERE bettype = 455
