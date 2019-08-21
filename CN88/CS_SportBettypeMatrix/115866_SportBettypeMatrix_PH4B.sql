@@ -5,8 +5,9 @@ GO
 ---DB: DBPRO.bodb02
 -- Task: Add PH4B [Redmine: 115231]
 
-delete CS_sportbettypematrix with (rowlock, updlock)
-where bettype in (11, 199)
+delete dbo.CS_SportBettypeMatrix with (rowlock, updlock)
+where SubProduct in ('SS', 'BetRadar')
+	or BetType IN (38, 480, 502)
 
 insert into CS_sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable, SporttypeGroup, BettypeGroup) values (1,470,0,1,1,0,1,'',0,1,194)
 insert into CS_sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable, SporttypeGroup, BettypeGroup) values (1,470,1,1,1,0,1,'',0,1,194)
