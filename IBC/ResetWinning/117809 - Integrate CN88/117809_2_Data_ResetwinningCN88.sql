@@ -5,12 +5,10 @@ GO
 Created: 20190801@Sophia
 Task: Reset winning - add CN88 [redmine: 117809]
 */
-
-ALTER TABLE Acc_DWLList DROP CONSTRAINT  PK_Acc_DWLList 
+ 
 
 
 INSERT INTO Acc_DWLList (custid,product,seq,ProductId,IsDeleted)
-
 VALUES 
 (37639217, 'CN88 SPL', 101, 1, 0),
 (37639217, 'CN88 SPNL', 102, 1, 0),
@@ -24,8 +22,7 @@ VALUES
 (37639217, 'CN88 Lottery', 116, 28, 0)
 
 --------------------------------
-
-ALTER TABLE Acc_DWLList_xtest DROP CONSTRAINT  PK_Acc_DWLList_xtest 
+ 
 
 INSERT INTO Acc_DWLList_xtest (custid,product,seq,ProductId,IsDeleted)
 VALUES 
