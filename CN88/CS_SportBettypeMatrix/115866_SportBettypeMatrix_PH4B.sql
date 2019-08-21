@@ -7,7 +7,7 @@ GO
 
 delete dbo.CS_SportBettypeMatrix with (rowlock, updlock)
 where SubProduct in ('SS', 'BetRadar')
-	or BetType IN (38, 480, 502)
+	or BetType IN (11, 38, 480, 502)
 
 insert into CS_sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable, SporttypeGroup, BettypeGroup) values (1,470,0,1,1,0,1,'',0,1,194)
 insert into CS_sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable, SporttypeGroup, BettypeGroup) values (1,470,1,1,1,0,1,'',0,1,194)
