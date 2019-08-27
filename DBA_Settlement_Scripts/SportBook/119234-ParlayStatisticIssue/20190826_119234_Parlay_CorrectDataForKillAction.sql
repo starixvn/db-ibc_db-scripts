@@ -56,7 +56,10 @@ FROM DBTXN.bodb02.dbo.bettrans b WITH (NOLOCK)
 	INNER JOIN #temp_bettrans_29 s ON b.transid = s.transid
 			
 UPDATE b
-	SET SettlementTime =  s.SettlementTime 
+	SET SettlementTime =  CASE 
+								WHEN s.statusID <> 0 AND (b.winlost <> s.winlost OR b.statusID <> s.statusID) THEN s.SettlementTime 
+								ELSE b.SettlementTime 
+						END
 	,statusID  = s.statusID
 	,[status]  = s.[status]
 	,winlostdate = s.winlostdate 
@@ -71,7 +74,7 @@ UPDATE b
 	,comm = s.comm
 	,acomm = s.acomm
 	,scomm = s.scomm
-FROM bettrans b WITH (NOLOCK)	
+FROM bettrans b WITH (ROWLOCK)	
 	INNER JOIN #bettrans_tmp s
 		ON b.transid = s.transid
 
