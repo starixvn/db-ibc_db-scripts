@@ -1,11 +1,11 @@
-use [bodb_Licensee]
-go
 
 /*
 	Created: 20190605@Percy
 	DB: DB052.bodb_Licensee
 	Task: Un-used SPs - Rename to DEL_
 */
+use [bodb_Licensee] -- DB052
+go
 
 sp_rename 'IMS_LicenseeBillingInfoSel', 'DEL_IMS_LicenseeBillingInfoSel'
 go
@@ -27,6 +27,11 @@ sp_rename 'LA_Rpt_MacauWinloss', 'DEL_LA_Rpt_MacauWinloss'
 go
 sp_rename 'LA_UserPartyIns', 'DEL_LA_UserPartyIns'
 go
+
+
+
+
+
 sp_rename 'LA_Rpt_3rdPartyProductWinloss', 'DEL_LA_Rpt_3rdPartyProductWinloss'
 go
 sp_rename 'LA_Rpt_GetTotalTicket', 'DEL_LA_Rpt_GetTotalTicket'
@@ -37,7 +42,12 @@ sp_rename 'LA_Rpt_LicWinloss_Details', 'DEL_LA_Rpt_LicWinloss_Details'
 go
 sp_rename 'LA_Rpt_ThirdPartyProductWinloss', 'DEL_LA_Rpt_ThirdPartyProductWinloss'
 go
-sp_rename 'Lrf_BetList_MobileReport_SelWinloss_Mem', 'DEL_Lrf_BetList_MobileReport_SelWinloss_Mem'
-go
 sp_rename 'Lrf_Rpt_MobileWinlossDetail_Ag', 'DEL_Lrf_Rpt_MobileWinlossDetail_Ag'
+go
+
+
+
+use bodb02 -- DB053
+go
+sp_rename 'Lrf_BetList_MobileReport_SelWinloss_Mem', 'DEL_Lrf_BetList_MobileReport_SelWinloss_Mem'
 go
