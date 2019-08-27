@@ -1,0 +1,42 @@
+/*	
+	Created: 20190827@Sol
+	Task: CN88 - Recover bet ticket within 7 days [Redmine:#115376]
+	DB: DBTXN/bodb02
+*/
+
+USE [bodb02]
+
+GO
+
+CREATE TABLE [dbo].TicketVoiding_RoutineTasks(
+	Id INT IDENTITY (1,1) NOT FOR REPLICATION NOT NULL,
+	RequestID INT NOT NULL,
+	StepNo TINYINT NOT NULL,
+	[Action] VARCHAR(MAX) NOT NULL, 
+	[Status] TINYINT NOT NULL, 
+	ExecutedDate DATETIME NOT NULL, 
+	CreatedDate DATETIME NOT NULL, 
+	Duration INT NOT NULL, 
+	AffectedList VARCHAR(MAX) NOT NULL, 
+	ExecuteType TINYINT NOT NULL
+	CONSTRAINT [PK_TicketVoiding_RoutineTasks_Id] PRIMARY KEY NONCLUSTERED 
+	(
+		Id ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA,
+	CONSTRAINT [PK_TicketVoiding_RoutineTasks_RequestID_StepNo] UNIQUE CLUSTERED
+	(
+		RequestID ASC,
+		StepNo ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON DATA
+
+) ON DATA
+
+GO
+
+ALTER TABLE TicketVoiding_RequestDetail ADD TransIds VARCHAR(MAX) NULL;
+
+GO
+
+ALTER TABLE TicketVoiding_VoidingHistory ADD TransIds VARCHAR(MAX) NULL; 
+
+GO
