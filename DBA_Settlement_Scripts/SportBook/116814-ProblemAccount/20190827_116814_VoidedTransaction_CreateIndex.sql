@@ -10,4 +10,5 @@ CREATE NONCLUSTERED INDEX [IX_CustID_createdDate] ON dbo.TicketVoiding_VoidedTra
 	CustID ASC,
 	CreatedDate ASC
 )
+INCLUDE (IssueTypeId,SubIssueTypeId)
 GO
