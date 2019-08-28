@@ -157,8 +157,6 @@ sp_rename 'LA_LaunchLicensee_PartyIns', 'DEL_LA_LaunchLicensee_PartyIns'
 go
 sp_rename 'LA_LaunchLicensee_Rollback', 'DEL_LA_LaunchLicensee_Rollback'
 go
-sp_rename 'LA_LicPerformanceAnalysisStatusSel', 'DEL_LA_LicPerformanceAnalysisStatusSel'
-go
 sp_rename 'LA_LicPerformanceAnalysisStatusUpd', 'DEL_LA_LicPerformanceAnalysisStatusUpd'
 go
 sp_rename 'LA_MinFeeSettingDel', 'DEL_LA_MinFeeSettingDel'

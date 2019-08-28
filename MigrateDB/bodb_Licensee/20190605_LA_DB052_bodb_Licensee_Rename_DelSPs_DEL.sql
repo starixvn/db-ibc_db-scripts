@@ -29,8 +29,8 @@ sp_rename 'LA_UserPartyIns', 'DEL_LA_UserPartyIns'
 go
 
 
-
-
+use bodb02 -- DB052
+go
 
 sp_rename 'LA_Rpt_3rdPartyProductWinloss', 'DEL_LA_Rpt_3rdPartyProductWinloss'
 go
@@ -39,8 +39,6 @@ go
 sp_rename 'LA_Rpt_LicWinloss', 'DEL_LA_Rpt_LicWinloss'
 go
 sp_rename 'LA_Rpt_LicWinloss_Details', 'DEL_LA_Rpt_LicWinloss_Details'
-go
-sp_rename 'LA_Rpt_ThirdPartyProductWinloss', 'DEL_LA_Rpt_ThirdPartyProductWinloss'
 go
 sp_rename 'Lrf_Rpt_MobileWinlossDetail_Ag', 'DEL_Lrf_Rpt_MobileWinlossDetail_Ag'
 go
