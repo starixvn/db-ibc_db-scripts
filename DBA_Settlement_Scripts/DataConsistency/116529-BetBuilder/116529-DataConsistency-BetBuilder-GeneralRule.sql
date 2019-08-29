@@ -31,7 +31,7 @@ BEGIN
 	 ,@FrequenceInterval = 1 -- every xx days
 	 ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
 	 ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
-	 ,@ActiveStartDate = '2019-07-25' 
+	 ,@ActiveStartDate = '2019-08-29' 
 	 ,@ActiveEndDate = NULL
 	 ,@ActiveStartTime  = '00:00'
 	 ,@ActiveEndTime = NULL
@@ -58,7 +58,7 @@ BEGIN
 	 ,@FrequenceInterval = 1 -- every xx days
 	 ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
 	 ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
-	 ,@ActiveStartDate = '2019-07-25' 
+	 ,@ActiveStartDate = '2019-08-29' 
 	 ,@ActiveEndDate = NULL
 	 ,@ActiveStartTime  = '00:00'
 	 ,@ActiveEndTime = NULL
@@ -86,7 +86,7 @@ BEGIN
 	 ,@FrequenceInterval = 1 -- every xx days
 	 ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
 	 ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
-	 ,@ActiveStartDate = '2019-07-25' 
+	 ,@ActiveStartDate = '2019-08-29'  
 	 ,@ActiveEndDate = NULL
 	 ,@ActiveStartTime  = '00:00'
 	 ,@ActiveEndTime = NULL
@@ -114,7 +114,7 @@ BEGIN
 	 ,@FrequenceInterval = 1 -- every xx days
 	 ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
 	 ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
-	 ,@ActiveStartDate = '2019-07-25' 
+	 ,@ActiveStartDate = '2019-08-29'  
 	 ,@ActiveEndDate = NULL
 	 ,@ActiveStartTime  = '00:00'
 	 ,@ActiveEndTime = NULL
@@ -143,7 +143,7 @@ BEGIN
 	 ,@FrequenceInterval = 1 -- every xx days
 	 ,@FrequenceSubDayType = 1 -- specified time: 1, second: 2, min: 4, hour: 8
 	 ,@FrequenceSubDayInterval = 0 -- specified time: 0; <> 0: every FrequenceSubDayType
-	 ,@ActiveStartDate = '2019-07-25' 
+	 ,@ActiveStartDate = '2019-08-29' 
 	 ,@ActiveEndDate = NULL
 	 ,@ActiveStartTime  = '01:30'
 	 ,@ActiveEndTime = NULL
