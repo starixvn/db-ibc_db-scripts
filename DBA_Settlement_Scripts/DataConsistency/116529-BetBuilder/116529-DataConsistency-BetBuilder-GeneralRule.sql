@@ -13,7 +13,7 @@ DECLARE @taskId INT
 		,@ErrCode INT
 		,@ErrMsg VARCHAR(100)
 
-SET @Emails = 'kathy.nguyen@starixsoft.com'
+SET @Emails = 'dbaadmin@starixsoft.com'
 
 -- check discount
 BEGIN

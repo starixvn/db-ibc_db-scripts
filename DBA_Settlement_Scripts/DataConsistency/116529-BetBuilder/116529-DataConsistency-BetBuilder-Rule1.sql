@@ -14,7 +14,7 @@ DECLARE @ruleId INT
 		,@ErrCode INT
 		,@ErrMsg VARCHAR(100)
 
-SET @Emails = 'kathy.nguyen@starixsoft.com'
+SET @Emails = 'dbaadmin@starixsoft.com'
 
 -- Insert Rule
 INSERT INTO dbo.DBA_Rules (Name, Description, SeverityLevel) 
