@@ -82,3 +82,30 @@ BEGIN
 END
 GO	
 
+CREATE FUNCTION [dbo].[f_Set_OddsTypeBettypes] ()
+RETURNS TABLE
+WITH SCHEMABINDING
+AS
+
+/*
+    Created: 20190715@Helen
+    Task:  Recover/Void tickets in Bet14
+    DB: DBTXN/bodb02
+    
+    Revisions:
+		- 20190715@Helen: Recover/Void tickets in Bet 14 [Redmine:115377]
+	
+    Parameters Explanation:    
+		- oddsType
+			+ 1: Decimal Odds
+*/
+
+RETURN (
+    
+	SELECT	
+			CONVERT(SMALLINT, 4) AS BetType
+			, CONVERT(SMALLINT, 1) AS OddsType
+	
+	)
+
+GO
