@@ -14,7 +14,7 @@ AS
 	DB: DBTRANS/BODB02
 	
 	Revisions:
-		- 20190715@Helen: Recover/Void tickets in Bet 14 - Single Tickets - [Redmine:115377]
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
 		
 	Param's Explanation:  
 					
@@ -33,7 +33,7 @@ AS
 	DB: DBTRANS/BODB02
 	
 	Revisions:
-		- 20190715@Helen: Recover/Void tickets in Bet 14 - Sub Parlay Tickets - [Redmine:115377]
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
 		
 	Param's Explanation:  
 					
@@ -52,7 +52,7 @@ AS
 	DB: DBTRANS/BODB02
 	
 	Revisions:
-		- 20190715@Helen: Recover/Void tickets in Bet 14 - Main Parlay Tickets - [Redmine:115377]
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
 		
 	Param's Explanation:  
 					
@@ -61,8 +61,67 @@ BEGIN
 	
 	SET NOCOUNT ON
 END
-GO	
+GO
 
+CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_MP_Bet14]
+AS
+/*
+	Created by: 20190715@Helen
+	Task: Settlement  
+	DB: DBTRANS/BODB02
+	
+	Revisions:
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
+		
+	Param's Explanation:  
+					
+*/
+BEGIN
+	
+	SET NOCOUNT ON
+END
+GO
+
+
+CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_MP_Bet14_PreCal_29]
+AS
+/*
+	Created by: 20190715@Helen
+	Task: Settlement  
+	DB: DBTRANS/BODB02
+	
+	Revisions:
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
+		
+	Param's Explanation:  
+					
+*/
+BEGIN
+	
+	SET NOCOUNT ON
+END
+GO
+
+
+CREATE PROCEDURE [dbo].[NAP_Admin_Calculate_MP_Bet14_29]
+AS
+/*
+	Created by: 20190715@Helen
+	Task: Settlement  
+	DB: DBTRANS/BODB02
+	
+	Revisions:
+		- 20190715@Helen: Recover/Void tickets in Bet 14 - [Redmine:115377]
+		
+	Param's Explanation:  
+					
+*/
+BEGIN
+	
+	SET NOCOUNT ON
+END
+GO
+	
 CREATE PROCEDURE [dbo].[TicketVoiding_Admin_Voiding14TransId] 
 AS
 /*
