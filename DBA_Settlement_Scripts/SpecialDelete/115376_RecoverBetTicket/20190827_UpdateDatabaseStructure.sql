@@ -12,13 +12,13 @@ CREATE TABLE [dbo].TicketVoiding_RoutineTasks(
 	Id INT IDENTITY (1,1) NOT FOR REPLICATION NOT NULL,
 	RequestID INT NOT NULL,
 	StepNo TINYINT NOT NULL,
-	[Action] VARCHAR(MAX) NOT NULL, 
-	[Status] TINYINT NOT NULL, 
-	ExecutedDate DATETIME NOT NULL, 
-	CreatedDate DATETIME NOT NULL, 
-	Duration INT NOT NULL, 
-	AffectedList VARCHAR(MAX) NOT NULL, 
-	ExecuteType TINYINT NOT NULL
+	[Action] VARCHAR(MAX) NULL, 
+	[Status] TINYINT NULL, 
+	ExecutedDate DATETIME NULL, 
+	CreatedDate DATETIME NULL, 
+	Duration INT NULL, 
+	AffectedList VARCHAR(MAX) NULL, 
+	ExecuteType TINYINT NULL
 	CONSTRAINT [PK_TicketVoiding_RoutineTasks_Id] PRIMARY KEY NONCLUSTERED 
 	(
 		Id ASC
