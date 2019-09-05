@@ -32,11 +32,3 @@ CREATE TABLE [dbo].TicketVoiding_RoutineTasks(
 ) ON DATA
 
 GO
-
-ALTER TABLE TicketVoiding_RequestDetail ADD TransIds VARCHAR(MAX) NULL;
-
-GO
-
-ALTER TABLE TicketVoiding_VoidingHistory ADD TransIds VARCHAR(MAX) NULL; 
-
-GO
