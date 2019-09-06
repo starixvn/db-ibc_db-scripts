@@ -109,13 +109,21 @@ BEGIN
 		RETURN
 	END
 
-	SELECT @winlost = CASE  WHEN @statusID IN (0, 1, 113) THEN 0
-							WHEN @statusID IN (111, 102, 101, 103) THEN @stake
-							ELSE @stake*1.9
-						END
-	SELECT	@awinlost = @apositiontaking*@winlost,
-			@mwinlost = @mpositiontaking*@winlost,
-			@swinlost = @spositiontaking*@winlost
+	SELECT	@winlost	= CASE  WHEN @statusID IN (0, 1, 113) THEN 0
+								WHEN @statusID IN (111, 102, 101, 103) THEN @stake
+								ELSE @stake*1.9 END
+			,@awinlost	= CASE  WHEN @statusID IN (0, 1, 111, 102, 101, 103) THEN 0
+								WHEN @statusID = 112 THEN -1
+								ELSE 1 END
+							* @apositiontaking*@stake*1.9
+			,@mwinlost	= CASE  WHEN @statusID IN (0, 1, 111, 102, 101, 103) THEN 0
+								WHEN @statusID = 112 THEN -1
+								ELSE 1 END
+							* @mpositiontaking*@stake*1.9
+			,@swinlost	= CASE  WHEN @statusID IN (0, 1, 111, 102, 101, 103) THEN 0
+								WHEN @statusID = 112 THEN -1
+								ELSE 1 END
+							* @spositiontaking*@stake*1.9
 
 	IF @status = 'LOSE'
 		SELECT	@playercomm = @stake*@playerdiscount,
