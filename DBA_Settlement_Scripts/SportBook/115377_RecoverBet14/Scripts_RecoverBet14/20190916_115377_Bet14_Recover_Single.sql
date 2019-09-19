@@ -4,13 +4,13 @@
 	DB: DBTRANS/bodb02
 	
 	Notes:
-	
 		Single Tickets: TicketVoiding_RecoverHistorical_Single_Update
 */
 USE bodb02
 GO
 DECLARE @TransIds			VARCHAR(MAX)
 		,@UserId			INT
+		,@IP				VARCHAR (50)
 		,@ErrCode			INT				= 0		
 		,@ErrMsg			VARCHAR(1000)	= ''	
 		,@transid_temp		VARCHAR(MAX) = ''
@@ -18,8 +18,9 @@ CREATE TABLE #tmpInputTransId (TransId BIGINT)
 
 CREATE TABLE #tmpInputTransId_temp (TransId BIGINT)
 
-	
 SET @TransIds = xxx --'112, 345, 66,77,88,99'
+SET @IP = XXX
+SET @UserId = XXX
 
 INSERT INTO #tmpInputTransId (TransId)
 SELECT	DISTINCT val
@@ -51,7 +52,7 @@ BEGIN
 	
 	RAISERROR (@msg, 0, 1,@index, @transid_temp) WITH NOWAIT
 	
-	EXEC dbo.TicketVoiding_RecoverHistorical_Single_Update @Transids = @transid_temp, @UserId = @UserId, @ErrCode = @ErrCode OUT, @ErrMsg = @ErrMsg OUT
+	EXEC dbo.TicketVoiding_RecoverHistorical_Single_Update @Transids = @transid_temp, @UserId = @UserId, @IP = @IP, @ErrCode = @ErrCode OUT, @ErrMsg = @ErrMsg OUT
 	
 	IF @ErrCode <> 0
 	BEGIN
