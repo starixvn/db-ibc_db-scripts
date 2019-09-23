@@ -16,3 +16,8 @@ CREATE TABLE [dbo].[CS_SettlementCommand](
 
 GO
 
+ALTER TABLE [dbo].[CS_SettlementCommand] ADD  CONSTRAINT [DF_CS_SettlementCommand_CreatedDate]  DEFAULT (getdate()) FOR [createddate]
+GO
+
+ALTER TABLE [dbo].[CS_SettlementCommand] ADD  CONSTRAINT [DF_CS_SettlementCommand_isCalculating]  DEFAULT ((0)) FOR [isCalculating]
+GO
