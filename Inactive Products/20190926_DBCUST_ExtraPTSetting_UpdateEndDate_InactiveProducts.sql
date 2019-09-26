@@ -10,7 +10,7 @@ go
 declare @Products table (ProductId tinyint, EndOfSupportDate date)
 insert into @Products (ProductId, EndOfSupportDate)
 select ProductId, EndOfSupportDate from DBPRO.bodb02.dbo.Products with (nolock)
-where ProductId in (2,4,7,9,13,15,17,19,26,30,33)
+where ProductId in (2,4,7,9,13,14,15,17,19,26,30,33)
 	and EndOfSupportDate is not null
 
 -- 1. Acc_GroupExtraPT_Product
