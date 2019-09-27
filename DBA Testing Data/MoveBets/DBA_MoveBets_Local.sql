@@ -692,10 +692,14 @@ begin
 	--commit transaction
 	-- end move data
 
-	-- rptStatement
 	declare @custids varchar(max)
-	select  @custids = coalesce(@custids + ',', '') + custid from (select distinct custid from @bettrans) as b
+	select  @custids = coalesce(@custids + ',', '') + convert(varchar(20), custid) from (select distinct custid from @bettrans) as b
 
+	-- rptStatement
 	exec dbrpt.bodb_report.dbo.Task_rptStatement_14 @winlostdate = @winlostdate, @custids = @custids
+
+	-- cs_sumwinloss/cs_sumcancelled
+	exec dbsum.bodb_summary.dbo.Task_CS_SumWinloss_14 @winlostdate = @winlostdate, @custids = @custids
+	exec dbsum.bodb_summary.dbo.Task_CS_SumCancelled_14 @winlostdate = @winlostdate, @custids = @custids
 end
 go
