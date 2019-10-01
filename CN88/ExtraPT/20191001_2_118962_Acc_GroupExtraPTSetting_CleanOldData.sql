@@ -8,8 +8,21 @@ DB: DBUCST.CUSTDB
 
 ---Clean data ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss', 'MG-SuperLive')
 
-Select count (*)  from Acc_GroupExtraPTSetting  Where SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss', 'MG-SuperLive')
+SELECT COUNT (*) FROM Acc_GroupExtraPT_Product WITH (NOLOCK) WHERE SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss')
+SELECT COUNT (*) FROM Acc_GroupExtraPTSetting  WITH (NOLOCK) WHERE SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss')
 
-Select count (*)  from Acc_GroupExtraPT_Product  Where SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss', 'MG-SuperLive')
+
+--- 177 rows
+DELETE FROM Acc_GroupExtraPT_Product WITH (ROWLOCK)  WHERE SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss')
 
  
+---42040 rows
+WHILE (1=1)
+BEGIN
+	DELETE TOP (1000) FROM Acc_GroupExtraPTSetting WITH (ROWLOCK) WHERE SubProduct IN ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss') 
+
+	IF @@ROWCOUNT = 0 
+		BREAK;
+END
+GO
+  
