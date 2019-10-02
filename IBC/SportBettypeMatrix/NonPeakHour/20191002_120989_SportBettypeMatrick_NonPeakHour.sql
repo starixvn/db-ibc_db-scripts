@@ -3,6 +3,7 @@ GO
 /*
 Created: 20191002@Sophia
 Task: NPH Promotion [redmine:# 120989]
+DB: DBPRO.bodb02
 
 
 */
