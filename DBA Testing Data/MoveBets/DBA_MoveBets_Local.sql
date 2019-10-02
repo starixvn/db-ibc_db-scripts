@@ -192,7 +192,7 @@ begin
 			)
 			select
 				matchid,leagueid,homeid,awayid,@winlostdate,eventstatus,betstatus,livehomescore,liveawayscore
-				,finalhomescore,finalawayscore,creator,matchcode,kickofftime,closedtime,showtime
+				,finalhomescore,finalawayscore,creator,matchcode,dateadd(day, -datediff(day, @winlostdate, kickofftime), kickofftime),closedtime,showtime
 				,hthomescore,htawayscore,ruben,multiple,yenbet,exrisk,sporttype,tstamp,homeid2,awayid2
 				,DisplayMode,LeaguePatternID,HomeDisplayPatternID,AwayDisplayPatternID,IsNeutral,GoalRecord
 				,settletime,globalshowtime,ParentID,IsAutoPayout,AutoSetting,ShowTimeDT,ChildMatchType
@@ -285,8 +285,8 @@ begin
 			)
 			select
 				transid,custid,transdate,oddsid,hdp1,hdp2,odds,stake,status,winlost,livehomescore,liveawayscore,liveindicator,betteam
-				,creator,refno,comstatus,winlostdate,betfrom,betcheck,checktime,oddsspread,apositiontaking,mpositiontaking,tpositiontaking
-				,awinlost,mwinlost,playerdiscount,discount,adiscount,playercomm,comm,acomm,actualrate,matchid,matchdate,finalodds,isfinish,statuswinlost
+				,creator,refno,comstatus,@winlostdate,betfrom,betcheck,checktime,oddsspread,apositiontaking,mpositiontaking,tpositiontaking
+				,awinlost,mwinlost,playerdiscount,discount,adiscount,playercomm,comm,acomm,actualrate,matchid,@winlostdate as matchdate,finalodds,isfinish,statuswinlost
 				,ruben,bettype,spositiontaking,swinlost,sdiscount,scomm,statusID,recommdate,transdesc,SecAcceptFlag,SecAcceptTime,LiveBetAcceptTime
 			from dbo.bettransm with (nolock)
 			where transid in (select transid from @bettransm)
@@ -695,11 +695,22 @@ begin
 	declare @custids varchar(max)
 	select  @custids = coalesce(@custids + ',', '') + convert(varchar(20), custid) from (select distinct custid from @bettrans) as b
 
+	declare @wld varchar(10)
+	select  @wld = convert(varchar(10), @winlostdate, 120)
+
+	declare @sql varchar(max)
+
 	-- rptStatement
-	exec dbrpt.bodb_report.dbo.Task_rptStatement_14 @winlostdate = @winlostdate, @custids = @custids
+	select @sql = 'exec bodb_report.dbo.Task_rptStatement_14 @winlostdate = ''' + @wld + ''', @custids = ''' + @custids + ''''
+	exec (@sql) at dbrpt
 
 	-- cs_sumwinloss/cs_sumcancelled
-	exec dbsum.bodb_summary.dbo.Task_CS_SumWinloss_14 @winlostdate = @winlostdate, @custids = @custids
-	exec dbsum.bodb_summary.dbo.Task_CS_SumCancelled_14 @winlostdate = @winlostdate, @custids = @custids
+	select @sql = 'exec bodb_summary.dbo.Task_CS_SumCancelled_14 @winlostdate = ''' + @wld + ''', @custids = ''' + @custids + ''''
+	exec (@sql) at dbage
+	exec (@sql) at dbext
+
+	select @sql = 'exec bodb_summary.dbo.Task_CS_SumWinloss_14 @winlostdate = ''' + @wld + ''', @custids = ''' + @custids + ''''
+	exec (@sql) at dbage
+	exec (@sql) at dbext
 end
 go
