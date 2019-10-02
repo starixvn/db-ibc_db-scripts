@@ -71,8 +71,6 @@ EXEC sp_rename 'Acc_Rpt_WinlostHR_OpenTote_BK', 'DEL_Acc_Rpt_WinlostHR_OpenTote_
 EXEC sp_rename 'Acc_Rpt_WinlostHR_OpenTote_Details', 'DEL_Acc_Rpt_WinlostHR_OpenTote_Details'
 EXEC sp_rename 'Acc_Rpt_WinlostHR_OpenTote_Details14', 'DEL_Acc_Rpt_WinlostHR_OpenTote_Details14'
 EXEC sp_rename 'Acc_Rpt_WinlostHR_OpenTote14', 'DEL_Acc_Rpt_WinlostHR_OpenTote14'
-EXEC sp_rename 'Acc_Rpt_WinlostHR12BET_BetList_Details', 'DEL_Acc_Rpt_WinlostHR12BET_BetList_Details'
-EXEC sp_rename 'Acc_Rpt_WinlostHR12BET_BetList_Details14', 'DEL_Acc_Rpt_WinlostHR12BET_BetList_Details14'
 EXEC sp_rename 'Acc_Rpt_WinlostHRAB88_BetList_Details', 'DEL_Acc_Rpt_WinlostHRAB88_BetList_Details'
 EXEC sp_rename 'Acc_Rpt_WinlostHRAB88_BetList_Details14', 'DEL_Acc_Rpt_WinlostHRAB88_BetList_Details14'
 EXEC sp_rename 'Acc_Rpt_WinlostHRAB88_Details', 'DEL_Acc_Rpt_WinlostHRAB88_Details'
