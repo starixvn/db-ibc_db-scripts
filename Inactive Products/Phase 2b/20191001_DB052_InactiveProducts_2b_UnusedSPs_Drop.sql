@@ -73,7 +73,11 @@ select 'Agw_Rpt_WinlossDetail_MAg' union all
 select 'Agw_Rpt_WinlossDetail_SAg' union all
 select 'Agw_Rpt_WinlossTotal_Ag' union all
 select 'Agw_Rpt_WinlossTotal_MAg' union all
-select 'Agw_Rpt_WinlossTotal_SAg'
+select 'Agw_Rpt_WinlossTotal_SAg' union all
+select 'Age_Statement_Mem_BetSummary' union all
+select 'Age_Statement_Rpt_SAg' union all
+select 'Age_Statement_Rpt_MAg' union all
+select 'Age_Statement_Rpt_Ag'
 
 update @sp set spname = 'DEL_' + spname
 

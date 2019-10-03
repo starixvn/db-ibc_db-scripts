@@ -82,7 +82,11 @@ select 'EAS_Rpt_WinLossDetailPokerGames_Ag' union all
 select 'EAS_Rpt_WinLossDetailPokerGames_Com' union all
 select 'EAS_Rpt_WinLossDetailPokerGames_Com_Viet' union all
 select 'EAS_Rpt_WinLossDetailPokerGames_MAg' union all
-select 'EAS_Rpt_WinLossDetailPokerGames_SAg'
+select 'EAS_Rpt_WinLossDetailPokerGames_SAg' union all
+select 'Age_Statement_Mem_BetSummary' union all
+select 'Age_Statement_Rpt_SAg' union all
+select 'Age_Statement_Rpt_MAg' union all
+select 'Age_Statement_Rpt_Ag'
 
 declare @sql varchar(max) = ''
 select  @sql = @sql + 'sp_rename ''' + name + ''', ''DEL_' + name + '''' + char(10) + 'go' + char(10)
