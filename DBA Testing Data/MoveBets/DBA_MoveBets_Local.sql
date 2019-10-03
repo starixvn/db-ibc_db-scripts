@@ -2,10 +2,11 @@ use bodb02
 go
 
 alter procedure dbo.DBA_MoveBets_Local
-	@matchid		int
-	,@productid		int = 0 -- for product with none match
-	,@eventtable	varchar(100) = 'match' -- match, outright, VSOutright, none
-	,@winlostdate	smalldatetime -- input date from bettrans14: exec dbage.bodb02.dbo.Age_SelBalanceUpDay
+	@matchid				int
+	,@productid				int = 0 -- for product with none match
+	,@eventtable			varchar(100) = 'match' -- match, outright, VSOutright, none
+	,@winlostdate			smalldatetime -- input date from bettrans14: exec dbage.bodb02.dbo.Age_SelBalanceUpDay
+	,@mainParlay_transids	varchar(max) = ''
 as
 
 /*
@@ -131,13 +132,14 @@ begin
 		return
 	end
 
-	declare @bettransm table (transid bigint, custid int, winlostdate smalldatetime, errmsg varchar(1000))
+	declare @bettransm table (transid bigint, refno bigint, custid int, winlostdate smalldatetime, errmsg varchar(1000))
 
 	if @eventtype = 1
 	begin
-		insert into @bettransm (transid, custid, winlostdate, errmsg)
+		insert into @bettransm (transid, refno, custid, winlostdate, errmsg)
 		select
 			b.transid
+			,b.refno
 			,b.custid
 			,b.winlostdate
 			,case	when bt.bettype is null then 'invalid bettype of this match'
@@ -162,6 +164,44 @@ begin
 			raiserror ('bettransm <==> This match have some tickets with diff winlostdate', 16, 1)
 			return
 		end
+	end
+
+	declare @tmpParlay table (transid bigint, custid int, winlostdate smalldatetime, errmsg varchar(1000))
+	
+	if isnull(@mainParlay_transids , '') <> ''
+	begin
+		insert into @tmpParlay (transid, custid, winlostdate, errmsg)
+		select b.transid, b.custid, b.winlostdate
+			,case	when b.bettype is null then 'invalid main ticket'
+					when b.bettype <> 29 then 'wrong bettype (29)'
+					when b.matchid <> 29 then 'wrong matchid (29)'
+					when b.statusid in (0, 1) then 'running ticket'
+					when b.bmtransid is null then 'no sub ticket on this match'
+					when b.c_custid is null then 'invalid custid'
+					when b.recommend <> b.c_recommend or b.mrecommend <> b.c_mrecommend or b.srecommend <> b.c_srecommend then 'invalid SMA'
+					when b.currency <> b.c_currency then 'invalid currency'
+					else '' end
+		from dbo.strSplit(@mainParlay_transids, ',') f
+			outer apply (
+				select b.transid, b.bettype, b.winlostdate, b.matchid, b.statusid, bm.transid as bmtransid
+						,b.custid, b.recommend, b.mrecommend, b.srecommend, b.currency
+						,c.custid as c_custid, c.recommend as c_recommend, c.mrecommend as c_mrecommend, c.srecommend as c_srecommend, c.currency as c_currency
+				from dbo.bettrans b with (nolock)
+					left join @bettransm bm on b.refno = bm.refno
+					left join custdb.dbo.custinfo c with (nolock) on b.custid = c.custid and c.roleid = 1
+				 where b.transid = f.val
+			) b
+		
+		if exists (select 1 from @tmpParlay where errmsg <> '')
+		begin
+			select @errmsg = 'main parlay transids <==> '
+			select @errmsg = @errmsg + 'transid: ' + convert(varchar(100), transid) + ' - ' +  errmsg + char(10) + char(13) from @tmpParlay where errmsg <> ''
+			raiserror (@errmsg, 16, 1)
+			return
+		end
+
+		insert into @bettrans (transid, custid, winlostdate)
+		select transid, custid, winlostdate from @tmpParlay
 	end
 
 	if exists (select 1 from @bettrans having count(1) > 2000)
