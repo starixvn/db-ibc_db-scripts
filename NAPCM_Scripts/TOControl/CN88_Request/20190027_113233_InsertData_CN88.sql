@@ -56,4 +56,4 @@ VALUES
 ,(19,95,0,329)
 ,(20,100,1,329)
 -- CHECK DATA
-SELECT * FROM Tocontrol_LevelSetting WITHH (NOLOCK)
+SELECT * FROM Tocontrol_LevelSetting WITH (NOLOCK)
