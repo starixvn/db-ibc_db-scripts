@@ -113,12 +113,6 @@ begin
 			left join custdb.dbo.custinfo c with (nolock) on b.custid = c.custid and c.roleid = 1
 		where matchid = @matchid
 
-	if @@rowcount = 0
-	begin
-		raiserror ('This match/product does not ticket', 16, 1)
-		return
-	end
-
 	if exists (select 1 from @bettrans where errmsg <> '')
 	begin
 		select @errmsg = @errmsg + 'transid: ' + convert(varchar(100), transid) + ' - ' +  errmsg + char(10) + char(13) from @bettrans where errmsg <> ''
@@ -164,6 +158,12 @@ begin
 			raiserror ('bettransm <==> This match have some tickets with diff winlostdate', 16, 1)
 			return
 		end
+	end
+
+	if not exists (select 1 from @bettrans) and not exists (select 1 from @bettransm)
+	begin
+		raiserror ('This match/product does not ticket on bettrans/bettransm', 16, 1)
+		return
 	end
 
 	declare @tmpParlay table (transid bigint, custid int, winlostdate smalldatetime, errmsg varchar(1000))
