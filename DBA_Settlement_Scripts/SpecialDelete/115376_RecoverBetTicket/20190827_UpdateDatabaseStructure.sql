@@ -18,7 +18,8 @@ CREATE TABLE [dbo].TicketVoiding_RoutineTasks(
 	CreatedDate DATETIME NULL, 
 	Duration INT NULL, 
 	AffectedList VARCHAR(MAX) NULL, 
-	ExecuteType TINYINT NULL
+	ExecuteType TINYINT NULL,
+	Remark VARCHAR(1000)
 	CONSTRAINT [PK_TicketVoiding_RoutineTasks_Id] PRIMARY KEY NONCLUSTERED 
 	(
 		Id ASC
