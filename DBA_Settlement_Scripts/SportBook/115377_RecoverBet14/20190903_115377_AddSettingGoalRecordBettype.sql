@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Created: 20191002@Helen
 	Task: Recover Bet14
 	DB: DBTRANS/bodb02

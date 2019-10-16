@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Created: 20190916@Helen
 	Task: Script for recover Bet14 tickets - Sub Parlay [Redmine:115376]
 	DB: DBTRANS/bodb02
