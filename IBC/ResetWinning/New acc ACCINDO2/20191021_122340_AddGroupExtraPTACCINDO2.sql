@@ -4,6 +4,7 @@ GO
 /*
 Create : 20191021@Sophia
 Task : Add new group ExtraPT ACCINDO2 [redmine: #122340]
+DB: DBACC.bodb_Acc
 */
 
 INSERT INTO [Acc_DWLList_ExtraPT] 
