@@ -47,7 +47,7 @@ SELECT	winlostdate AS rptDate
 		,TicketType
 		,StatusID
 		, COUNT(DISTINCT refno) TotalTrans
-		, 0 TurnOver
+		, CONVERT(MONEY, 0) TurnOver
 		, SUM(CASE WHEN (winlost - actual_stake ) < 0 AND statusID = 112 THEN 0
 				ELSE CASE WHEN bmbettype IN (18004,18005,18006) THEN bmWinlost - bmstake ELSE 0 END
 				END) AS WinningPrize
