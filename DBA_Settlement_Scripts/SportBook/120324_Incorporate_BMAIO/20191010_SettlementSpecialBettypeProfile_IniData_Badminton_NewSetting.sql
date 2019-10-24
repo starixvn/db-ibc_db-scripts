@@ -365,5 +365,8 @@ INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], 
 INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (714,714,9,804,'0104','MNL','SP',4,804,NULL)
 INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (714,714,9,805,'0105','MNL','SP',5,805,NULL)
 INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (20,20,9,0,'00','MNL','FT',99,0,NULL)
+INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (1,1,9,0,'00','MNL','FT',99,0,NULL)
+INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (3,3,9,0,'00','MNL','FT',99,0,NULL)
+INSERT [dbo].[SettlementSpecialBettypeProfile] ([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) VALUES (2,2,9,0,'00','MNL','FT',99,0,NULL)
 
 GO
