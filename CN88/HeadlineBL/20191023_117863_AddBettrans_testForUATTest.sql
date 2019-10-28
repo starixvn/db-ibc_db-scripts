@@ -194,5 +194,64 @@ GO
 
 ALTER TABLE [dbo].[bettrans_test] ADD  CONSTRAINT [DF_bettrans_test_epositiontaking]  DEFAULT ((0)) FOR [epositiontaking]
 GO
+---------------------------- 
+----Cluster Index------
+
+USE [bodb02]
+GO
+
+/***** Object:  Index [CIX_matchid_bettype]    Script Date: 10/28/2019 11:16:46 AM *****/
+CREATE CLUSTERED INDEX [CIX_matchid_bettype] ON [dbo].[bettrans_test]
+(
+	[matchid] ASC,
+	[custid] ASC,
+	[bettype] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 100) ON [Bettrans_table]
+GO
+------------------------
+------ Non Cluster Index
+USE [bodb02]
+GO
+
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [IX_Report]    Script Date: 10/28/2019 11:17:52 AM ******/
+CREATE NONCLUSTERED INDEX [IX_Report] ON [dbo].[bettrans_test]
+(
+	[winlostdate] ASC,
+	[bettype] ASC,
+	[ruben] ASC,
+	[statusID] ASC,
+	[matchid] ASC
+)
+INCLUDE ( 	[winlost],
+	[awinlost],
+	[mwinlost],
+	[liveindicator],
+	[actualrate],
+	[actual_stake],
+	[scomm],
+	[swinlost],
+	[virtualrate],
+	[tpositiontaking],
+	[oddsspread],
+	[odds],
+	[transid],
+	[srecommend],
+	[betid],
+	[stake],
+	[playercomm],
+	[apositiontaking],
+	[mpositiontaking],
+	[betteam],
+	[currency],
+	[spositiontaking],
+	[hdp2],
+	[modds],
+	[transid2],
+	[recommend],
+	[betfrom]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [Bettrans_table]
+GO
 
 
