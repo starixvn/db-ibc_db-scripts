@@ -5,6 +5,7 @@
 */
 
 --- bodb_Licensee
+/*
 declare @sp table (spname varchar(1000))
 insert into @sp (spname)
 select 'Task_BATransaction_Copy_Ticket'
@@ -27,4 +28,11 @@ from (
 ) as t
 
 select cast(@sql as xml)
+go
+*/
+
+use bodb_licensee
+go
+
+drop procedure DEL_Task_BATransaction_Copy_Ticket
 go

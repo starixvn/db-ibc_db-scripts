@@ -5,6 +5,7 @@
 */
 
 --- bodb02
+/*
 declare @sp table (spname varchar(1000))
 insert into @sp (spname)
 select 'DBA_rptDepWL_GENData_Bettrans' union all
@@ -31,4 +32,46 @@ from (
 ) as t
 
 select cast(@sql as xml)
+go
+*/
+
+-- DB06
+use bodb02
+go
+sp_rename 'DBA_rptDepWL_GENData_Bettrans', 'DEL_DBA_rptDepWL_GENData_Bettrans'
+go
+sp_rename 'DBA_rptDepWL_GENData_Bettrans14', 'DEL_DBA_rptDepWL_GENData_Bettrans14'
+go
+sp_rename 'DBA_rptDepWL_GENData_BettransBK', 'DEL_DBA_rptDepWL_GENData_BettransBK'
+go
+sp_rename 'Task_BATransaction_Check', 'DEL_Task_BATransaction_Check'
+go
+sp_rename 'Task_DailySummary_Cust', 'DEL_Task_DailySummary_Cust'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK', 'DEL_Task_DOT_dep_DailySummary_BettransBK'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK', 'DEL_Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK_xpre', 'DEL_Task_DOT_dep_DailySummary_BettransBK_xpre'
+go
+
+
+-- DB061
+use bodb02
+go
+sp_rename 'DBA_rptDepWL_GENData_Bettrans', 'DEL_DBA_rptDepWL_GENData_Bettrans'
+go
+sp_rename 'DBA_rptDepWL_GENData_Bettrans14', 'DEL_DBA_rptDepWL_GENData_Bettrans14'
+go
+sp_rename 'DBA_rptDepWL_GENData_BettransBK', 'DEL_DBA_rptDepWL_GENData_BettransBK'
+go
+sp_rename 'Task_BATransaction_Check', 'DEL_Task_BATransaction_Check'
+go
+sp_rename 'Task_DailySummary_Cust', 'DEL_Task_DailySummary_Cust'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK', 'DEL_Task_DOT_dep_DailySummary_BettransBK'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK', 'DEL_Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK'
+go
+sp_rename 'Task_DOT_dep_DailySummary_BettransBK_xpre', 'DEL_Task_DOT_dep_DailySummary_BettransBK_xpre'
 go

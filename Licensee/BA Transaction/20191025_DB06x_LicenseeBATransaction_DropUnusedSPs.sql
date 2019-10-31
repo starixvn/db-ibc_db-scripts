@@ -5,6 +5,7 @@
 */
 
 --- bodb02
+/*
 declare @sp table (spname varchar(1000))
 insert into @sp (spname)
 select 'DBA_rptDepWL_GENData_Bettrans' union all
@@ -18,7 +19,7 @@ select 'Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK'
 update @sp set spname = 'DEL_' + spname
 
 declare @sql varchar(max) = ''
-select  @sql = @sql + 'drop procedure ' + name + char(10) + 'go' + char(10)
+select  @sql = @sql + 'drop procedure DEL_' + name + char(10) + 'go' + char(10)
 from (
 	select distinct o.name
 	from @sp sp
@@ -33,4 +34,46 @@ from (
 ) as t
 
 select cast(@sql as xml)
+go
+*/
+
+-- DB06
+use bodb02
+go
+drop procedure DEL_DBA_rptDepWL_GENData_Bettrans
+go
+drop procedure DEL_DBA_rptDepWL_GENData_Bettrans14
+go
+drop procedure DEL_DBA_rptDepWL_GENData_BettransBK
+go
+drop procedure DEL_Task_BATransaction_Check
+go
+drop procedure DEL_Task_DailySummary_Cust
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK_xpre
+go
+
+
+-- DB061
+use bodb02
+go
+drop procedure DEL_DBA_rptDepWL_GENData_Bettrans
+go
+drop procedure DEL_DBA_rptDepWL_GENData_Bettrans14
+go
+drop procedure DEL_DBA_rptDepWL_GENData_BettransBK
+go
+drop procedure DEL_Task_BATransaction_Check
+go
+drop procedure DEL_Task_DailySummary_Cust
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK_DepWinlost_BK
+go
+drop procedure DEL_Task_DOT_dep_DailySummary_BettransBK_xpre
 go
