@@ -1,6 +1,7 @@
 /*
 	Created: 20191031@Helen
 	Task: New rules for VS, NG, Happy 5 - [Redmine:122716]
+	DB: DBCONSISTENCY-bodb_Consistency
 Rule: 
 Rule
 23 (30p)- Check all today tickets running > 30 minutes must be settled
@@ -22,6 +23,8 @@ select * from DBA_Schedules with (nolock)
 
 
 */
+USE bodb_Consistency
+GO
 
 DECLARE @ruleId_g9 INT	,@taskId_g9 INT
 DECLARE @ruleId_s4 INT	,@taskId_s4 INT
