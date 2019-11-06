@@ -1,4 +1,6 @@
 /*
+	Created: 20191031@Helen
+	Task: New rules for VS, NG, Happy 5 - [Redmine:122716]
 Rule: 
 Rule
 23 (30p)- Check all today tickets running > 30 minutes must be settled
@@ -54,13 +56,13 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check all today tickets running > 
  ,@FrequenceInterval = 1 -- every xx days
  ,@FrequenceSubDayType = 4 -- specified time: 1, second: 2, min: 4, hour: 8
  ,@FrequenceSubDayInterval = 30 -- specified time: 0; <> 0: every FrequenceSubDayType
- ,@ActiveStartDate = '2019-10-30' 
+ ,@ActiveStartDate = '2019-11-06' 
  ,@ActiveEndDate = NULL
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
-  ,@Emails = 'gary.vu@starixsoft.com,helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+  --,@Emails = 'gary.vu@starixsoft.com,helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
@@ -74,13 +76,13 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Detect Yesterday pending matches f
  ,@FrequenceInterval = 1 -- every xx days
  ,@FrequenceSubDayType = 1 -- specified time: 1, second: 2, min: 4, hour: 8
  ,@FrequenceSubDayInterval = 0 -- specified time: 0; <> 0: every FrequenceSubDayType
- ,@ActiveStartDate = '2019-10-30' 
+ ,@ActiveStartDate = '2019-11-06' 
  ,@ActiveEndDate = NULL
  ,@ActiveStartTime  = '01:30'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'gary.vu@starixsoft.com,helen.do@starixsoft.com'
--- ,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'gary.vu@starixsoft.com,helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
