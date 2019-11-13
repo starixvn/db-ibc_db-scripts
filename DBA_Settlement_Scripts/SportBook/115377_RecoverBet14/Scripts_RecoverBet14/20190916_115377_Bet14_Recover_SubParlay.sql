@@ -25,8 +25,8 @@ CREATE TABLE #tmpInputTransId_temp (TransId BIGINT)
 SET @MatchId  = xxx -- matchid of SubTickets 1234
 SET @TransIds = xxx -- MainTransid of subtickets '112, 345, 66,77,88,99'
 
-SET @IP = XXX
-SET @UserId = XXX
+SET @IP = '125.227.140.97'
+SET @UserId = 10278938
 
 INSERT INTO #tmpInputTransId (TransId)
 SELECT	DISTINCT val
