@@ -26,7 +26,6 @@ select 'Acc_LiveCS_SelGameByID' union all
 select 'Acc_Rpt_MAMonitor_BettypeSel' union all
 select 'Acc_Rpt_MAMonitor_SportSel' union all
 select 'Acc_Rpt_MixParlayWon' union all
-select 'Acc_SelHRAllowedCurrency' union all
 select 'Acc_SMATurnoverLeagueSel' union all
 select 'Acc_SMATurnoverMatchSel' union all
 select 'Acc_SportTypeSel'
