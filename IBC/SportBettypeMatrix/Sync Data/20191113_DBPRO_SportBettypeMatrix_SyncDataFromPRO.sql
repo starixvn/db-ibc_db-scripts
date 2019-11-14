@@ -143,4 +143,4 @@ select 163, 1402, 0, 33, 1, 0, 0, '', 0 union all
 select 163, 1403, 0, 33, 1, 0, 0, '', 0 union all
 select 163, 1404, 0, 33, 1, 0, 0, '', 0 union all
 select 163, 1405, 0, 33, 1, 0, 0, '', 0 union all
-select 163, 1499, 0, 33, 1, 0, 0, '', 0 union all
+select 163, 1499, 0, 33, 1, 0, 0, '', 0
