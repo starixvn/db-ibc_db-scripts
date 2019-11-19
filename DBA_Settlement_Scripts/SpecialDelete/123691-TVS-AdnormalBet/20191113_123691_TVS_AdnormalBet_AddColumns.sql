@@ -8,9 +8,9 @@ GO
 
 ALTER TABLE TicketVoiding_Request ADD IsTest BIT NULL
 GO
-
+ALTER TABLE TicketVoiding_Request ADD IssueTypeId TINYINT NULL
+GO
 ALTER TABLE TicketVoiding_RequestDetail ADD TransIds VARCHAR(MAX) NULL
 GO
-
 ALTER TABLE TicketVoiding_VoidingHistory ADD TransIds VARCHAR(MAX) NULL
 GO
