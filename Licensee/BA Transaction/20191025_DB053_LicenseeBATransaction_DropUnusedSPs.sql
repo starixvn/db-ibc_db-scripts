@@ -1,0 +1,54 @@
+/*
+	Created: 20191025@Percy
+	DB: DB053
+	Task: LicenseeBATransaction - Drop unused SPs
+*/
+
+use bodb_LicenseeReport
+go
+
+drop procedure DEL_Task_CustomerActive_GenDataFromBettrans
+go
+drop procedure DEL_Task_CustomerActive_GenDataFromBettrans14
+go
+drop procedure DEL_Task_rptCustomerTurnOver_Bettrans_20180627_bk
+go
+
+
+
+use bodb02
+go
+drop procedure DEL_DEL_Lrf_BetList_MobileReport_SelWinloss_Mem
+go
+drop procedure DEL_Lrf_Rpt_MatchWinloss_ExportExcel
+go
+drop procedure DEL_Lrf_Rpt_MatchWinLoss_ExportExcel_UAT3
+go
+drop procedure DEL_Lrf_Rpt_MatchWinLoss_support
+go
+drop procedure DEL_Lrf_Rpt_MatchWinLossDetail_support
+go
+drop procedure DEL_Lrf_Rpt_MobileWinloss_dontest
+go
+drop procedure DEL_Lrf_Rpt_Outstanding
+go
+drop procedure DEL_Lrf_Rpt_Outstanding_UAT1
+go
+drop procedure DEL_Lrf_Rpt_Outstanding_UAT3
+go
+drop procedure DEL_Lrf_Rpt_Outstanding_xpre
+go
+drop procedure DEL_Lrf_Rpt_Outstanding_xtest
+go
+drop procedure DEL_OA_Rpt_LicenseeCurrencyWinloss
+go
+drop procedure DEL_OA_Rpt_LicenseeCurrencyWinloss_UAT1
+go
+drop procedure DEL_OA_Rpt_LicenseeCurrencyWinloss_UAT4
+go
+drop procedure DEL_Task_BATransaction_Check
+go
+drop procedure DEL_Task_DailyRptLicWinloss
+go
+drop procedure DEL_Task_DailyRptLicWinloss_xtest
+go
