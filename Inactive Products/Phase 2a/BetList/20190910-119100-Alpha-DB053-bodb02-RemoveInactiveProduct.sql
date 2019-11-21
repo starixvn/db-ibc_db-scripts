@@ -1,0 +1,177 @@
+/*
+	Created by: Kos
+	Date: 20190916
+	Task: Alpha - Remove inactive products [Redmine ID: #119100]
+	DB: DB053.bodb02
+*/
+
+USE [bodb02]
+GO
+
+EXEC sp_rename 'dbo.Age_BetList_SelAllByDateHR_Ag', 'DEL_Age_BetList_SelAllByDateHR_Ag'
+EXEC sp_rename 'dbo.Age_BetList_SelAllByDateHR_MAg', 'DEL_Age_BetList_SelAllByDateHR_MAg'
+EXEC sp_rename 'dbo.Age_BetList_SelAllByDateHR_SAg', 'DEL_Age_BetList_SelAllByDateHR_SAg'
+EXEC sp_rename 'dbo.Age_BetList_SelMatchResultFinance', 'DEL_Age_BetList_SelMatchResultFinance'
+EXEC sp_rename 'dbo.Age_BetList_SelMatchResultParlay', 'DEL_Age_BetList_SelMatchResultParlay'
+EXEC sp_rename 'dbo.Age_BetList_SelMatchResultSS', 'DEL_Age_BetList_SelMatchResultSS'
+EXEC sp_rename 'dbo.Age_BetList_SelParlayDetail', 'DEL_Age_BetList_SelParlayDetail'
+EXEC sp_rename 'dbo.Age_BetList_SelRunning_API', 'DEL_Age_BetList_SelRunning_API'
+EXEC sp_rename 'dbo.Age_BetList_SelRunning_Mem', 'DEL_Age_BetList_SelRunning_Mem'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningAll_API', 'DEL_Age_BetList_SelRunningAll_API'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettype_Ag', 'DEL_Age_BetList_SelRunningByBettype_Ag'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettype_MAg', 'DEL_Age_BetList_SelRunningByBettype_MAg'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettype_SAg', 'DEL_Age_BetList_SelRunningByBettype_SAg'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettypeMatch_Ag', 'DEL_Age_BetList_SelRunningByBettypeMatch_Ag'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettypeMatch_MAg', 'DEL_Age_BetList_SelRunningByBettypeMatch_MAg'
+EXEC sp_rename 'dbo.Age_BetList_SelRunningByBettypeMatch_SAg', 'DEL_Age_BetList_SelRunningByBettypeMatch_SAg'
+EXEC sp_rename 'dbo.Age_BetList_SelWinlossByBettypeMatch_Ag', 'DEL_Age_BetList_SelWinlossByBettypeMatch_Ag'
+EXEC sp_rename 'dbo.Age_BetList_SelWinlossByBettypeMatch_MAg', 'DEL_Age_BetList_SelWinlossByBettypeMatch_MAg'
+EXEC sp_rename 'dbo.Age_BetList_SelWinlossByBettypeMatch_SAg', 'DEL_Age_BetList_SelWinlossByBettypeMatch_SAg'
+EXEC sp_rename 'dbo.Age_BetList_TotalBets_BF_Ag', 'DEL_Age_BetList_TotalBets_BF_Ag'
+EXEC sp_rename 'dbo.Age_BetList_TotalBets_BF_MAg', 'DEL_Age_BetList_TotalBets_BF_MAg'
+EXEC sp_rename 'dbo.Age_BetList_TotalBets_BF_SAg', 'DEL_Age_BetList_TotalBets_BF_SAg'
+EXEC sp_rename 'dbo.Age_Result_MatchSelGoalHistory', 'DEL_Age_Result_MatchSelGoalHistory'
+EXEC sp_rename 'dbo.Age_Result_RaceSelByMeeting', 'DEL_Age_Result_RaceSelByMeeting'
+EXEC sp_rename 'dbo.Age_Result_RaceSelHRSCR', 'DEL_Age_Result_RaceSelHRSCR'
+EXEC sp_rename 'dbo.Age_Result_RBRaceSelByMeeting', 'DEL_Age_Result_RBRaceSelByMeeting'
+EXEC sp_rename 'dbo.Age_Result_SelAvaiDate', 'DEL_Age_Result_SelAvaiDate'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSel', 'DEL_Age_Monitor_BetlistSel'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSel_Ag_AllBettypes', 'DEL_Age_Monitor_BetlistSel_Ag_AllBettypes'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSel_Ag_HDP', 'DEL_Age_Monitor_BetlistSel_Ag_HDP'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes', 'DEL_Age_Monitor_BetlistSel_Ag_OtherBettypes'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSel_Ag_OU', 'DEL_Age_Monitor_BetlistSel_Ag_OU'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSelAllSports', 'DEL_Age_Monitor_BetlistSelAllSports'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSelByOtherSports', 'DEL_Age_Monitor_BetlistSelByOtherSports'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSelBySoccer', 'DEL_Age_Monitor_BetlistSelBySoccer'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSoccerSel_Ag_AllBettypes', 'DEL_Age_Monitor_BetlistSoccerSel_Ag_AllBettypes'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSoccerSel_Ag_HDP', 'DEL_Age_Monitor_BetlistSoccerSel_Ag_HDP'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSoccerSel_Ag_OtherBettypes', 'DEL_Age_Monitor_BetlistSoccerSel_Ag_OtherBettypes'
+EXEC sp_rename 'dbo.Age_Monitor_BetlistSoccerSel_Ag_OU', 'DEL_Age_Monitor_BetlistSoccerSel_Ag_OU'
+EXEC sp_rename 'dbo.Age_Monitor_LeagueSelByGroup', 'DEL_Age_Monitor_LeagueSelByGroup'
+EXEC sp_rename 'dbo.Age_Monitor_LeagueSelBySport', 'DEL_Age_Monitor_LeagueSelBySport'
+EXEC sp_rename 'dbo.Age_Monitor_MatchSel', 'DEL_Age_Monitor_MatchSel'
+EXEC sp_rename 'dbo.Age_Monitor_MatchSelByID', 'DEL_Age_Monitor_MatchSelByID'
+EXEC sp_rename 'dbo.Age_Monitor_OutrightSel', 'DEL_Age_Monitor_OutrightSel'
+EXEC sp_rename 'dbo.Age_Monitor_SportSel', 'DEL_Age_Monitor_SportSel'
+EXEC sp_rename 'dbo.Age_BettransSelBetSlip', 'DEL_Age_BettransSelBetSlip'
+EXEC sp_rename 'dbo.Agw_Rpt_ResultSelDate', 'DEL_Agw_Rpt_ResultSelDate'
+EXEC sp_rename 'dbo.Agw_Rpt_ResultSelMatch', 'DEL_Agw_Rpt_ResultSelMatch'
+
+
+GO
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_Ag_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_Ag_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_MAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_MAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_SAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelAllByDateHR_SAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelByDayAll_Mem_Viet;
+DROP PROCEDURE dbo.Age_BetList_SelDeleted_test;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultParlay_UAT1;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultParlay_UAT2;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultParlay_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultParlay_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultParlay_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultSS_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelMatchResultSS_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelParlayDetail_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelParlayDetail_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelParlayDetail_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunning_API_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunning_Mem_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelRunning_Mem_UAT4;
+DROP PROCEDURE dbo.Age_BetList_SelRunning_Mem_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningAll_API_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningAll_API_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_Ag_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_Ag_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_MAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_MAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_SAg_UAT2;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_SAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_SAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettype_SAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_Ag_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_Ag_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_Ag_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_MAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_MAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_MAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_SAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByBettypeMatch_SAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByDate_Mem_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByDate_Mem_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelRunningByDate_Mem_xtest_backup;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_Ag_UAT1;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_Ag_UAT2;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_Ag_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_Ag_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_Ag_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_MAg_UAT1;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_MAg_UAT2;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_MAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_MAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_MAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_UAT1;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_UAT2;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_UAT3;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_UAT4;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossByBettypeMatch_SAg_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelWinLossByDate_Mem_Old_xtest;
+DROP PROCEDURE dbo.Age_BetList_SelWinlossHR_MAg_lukas;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_Ag_UAT1;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_Ag_xpre;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_MAg_UAT1;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_MAg_xpre;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_SAg_UAT1;
+DROP PROCEDURE dbo.Age_BetList_TotalBets_BF_SAg_xpre;
+DROP PROCEDURE dbo.Age_Result_MatchSelByLeague_lukas;
+DROP PROCEDURE dbo.Age_Result_RaceSelByMeeting_xpre;
+DROP PROCEDURE dbo.Age_Result_RaceSelByMeeting_xtest;
+DROP PROCEDURE dbo.Age_Result_RaceSelHRSCR_xpre;
+DROP PROCEDURE dbo.Age_Result_RBRaceSelByMeeting_xtest;
+DROP PROCEDURE dbo.Age_Result_SelAvaiDate_xpre;
+DROP PROCEDURE dbo.Age_Result_SelAvaiDate_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_UAT2;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_UAT4;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_xpre;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_AllBettypes_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_HDP_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_HDP_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_HDP_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes_UAT2;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes_xpre;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OtherBettypes_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OU_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OU_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_Ag_OU_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_xpre;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSel_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_AllBettypes_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_AllBettypes_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_AllBettypes_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_HDP_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_HDP_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_HDP_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OtherBettypes_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OtherBettypes_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OtherBettypes_xtest;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OU_UAT1;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OU_UAT3;
+DROP PROCEDURE dbo.Age_Monitor_BetlistSoccerSel_Ag_OU_xtest;
+DROP PROCEDURE dbo.Age_Monitor_MatchSel_UAT2;
+DROP PROCEDURE dbo.Age_Monitor_MatchSel_xtest;
+DROP PROCEDURE dbo.Age_Monitor_MatchSelByID_xtest;
+DROP PROCEDURE dbo.Age_Monitor_OutrightSel_xpre;
+DROP PROCEDURE dbo.Age_Monitor_OutrightSel_xtest;
+DROP PROCEDURE dbo.Age_BettransSelBetSlip_xpre;
+DROP PROCEDURE dbo.Age_BettransSelBetSlip_xtest;
+DROP PROCEDURE dbo.Agw_Rpt_ResultSelDate_xpre;
+DROP PROCEDURE dbo.Agw_Rpt_ResultSelDate_xtest;
+DROP PROCEDURE dbo.Agw_Rpt_ResultSelMatch_xpre;
+DROP PROCEDURE dbo.Agw_Rpt_ResultSelMatch_xtest;

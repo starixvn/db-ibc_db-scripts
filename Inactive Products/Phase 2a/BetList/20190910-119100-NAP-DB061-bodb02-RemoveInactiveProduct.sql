@@ -1,0 +1,75 @@
+/*
+	Created by: Kos
+	Date: 20190916
+	Task: NAP - Remove inactive products [Redmine ID: #119100]
+	DB: DB061.bodb02
+*/
+
+USE [bodb02]
+GO
+
+EXEC sp_rename 'dbo.Acc_BetList_Lucky3_Detail', 'DEL_Acc_BetList_Lucky3_Detail'
+EXEC sp_rename 'dbo.Acc_BetList_SelMatchResult2', 'DEL_Acc_BetList_SelMatchResult2'
+EXEC sp_rename 'dbo.Acc_BetList_SelWinloss_Mem', 'DEL_Acc_BetList_SelWinloss_Mem'
+EXEC sp_rename 'dbo.Acc_BetListByDayAll', 'DEL_Acc_BetListByDayAll'
+EXEC sp_rename 'dbo.Acc_BetsSelBetList', 'DEL_Acc_BetsSelBetList'
+EXEC sp_rename 'dbo.Acc_BetsSelBetList_Archive', 'DEL_Acc_BetsSelBetList_Archive'
+EXEC sp_rename 'dbo.Acc_BetsSelBetList_Old', 'DEL_Acc_BetsSelBetList_Old'
+EXEC sp_rename 'dbo.Acc_BetsSelBetCheckM', 'DEL_Acc_BetsSelBetCheckM'
+
+
+GO
+DROP PROCEDURE dbo._DEL_Acc_BetListByDayAllIP;
+DROP PROCEDURE dbo.Acc_BetList_Lucky3_Detail_xtest;
+DROP PROCEDURE dbo.Acc_BetList_SelBettype_xtest;
+DROP PROCEDURE dbo.Acc_BetList_SelMatchResult2_UAT2;
+DROP PROCEDURE dbo.Acc_BetList_SelMatchResult2_xpre;
+DROP PROCEDURE dbo.Acc_BetList_SelMatchResult2_xtest;
+DROP PROCEDURE dbo.Acc_BetList_SelWinloss_Mem_xtest;
+DROP PROCEDURE dbo.Acc_BetListByDayAll_xtest;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacing_Tote_BetList;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacing_Tote_BetList_xtest;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacing_Tote_BetList14;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacing_Tote_BetList14_xtest;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacingLicensee_BetList_Details;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacingLicensee_BetList_Details_xtest;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacingLicensee_BetList_Details14;
+DROP PROCEDURE dbo._delete_Acc_Rpt_WinlostRacingLicensee_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_BetsSelBetList_ByTransID_xtest;
+DROP PROCEDURE dbo.Acc_BetsSelBetList_Old_xtest;
+DROP PROCEDURE dbo.Acc_BetsSelBetList_xtest;
+DROP PROCEDURE dbo.Acc_BetsSelBetCheckM_History_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR12BET_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR12BET_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR12BET_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHR12BET_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRAB88_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRAB88_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRAB88_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRAB88_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRMS88_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRMS88_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRMS88_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostFOddsHRMS88_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_OpenTote_BetList_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_OpenTote_BetList_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_OpenTote_BetList14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR_OpenTote_BetList14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR12BET_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR12BET_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR12BET_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHR12BET_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRAB88_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRAB88_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRAB88_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRAB88_BetList_Details14_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRMS88_BetList_Details_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRMS88_BetList_Details_xtest;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRMS88_BetList_Details14_xpre;
+DROP PROCEDURE dbo.Acc_Rpt_WinlostHRMS88_BetList_Details14_xtest;
