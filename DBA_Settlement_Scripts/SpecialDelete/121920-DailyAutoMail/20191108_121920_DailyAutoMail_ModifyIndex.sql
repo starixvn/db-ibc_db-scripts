@@ -6,7 +6,7 @@
 
 DROP INDEX TicketVoiding_VoidedTransaction.[IX_CustID_createdDate]
 GO
-CREATE NONCLUSTERED INDEX [IX_createdDate_custID] ON [dbo].[TicketVoiding_VoidedTransaction]
+CREATE NONCLUSTERED INDEX [IX_IssueTypeID_CreatedDate_CustID] ON [dbo].[TicketVoiding_VoidedTransaction]
 (
 	[IssueTypeID],[CreatedDate],[CustID] 
 )
