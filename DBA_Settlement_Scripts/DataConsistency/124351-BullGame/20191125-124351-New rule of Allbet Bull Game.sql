@@ -14,7 +14,7 @@ GO
 DECLARE @ruleId_s23 INT	,@taskId_s23 INT
 DECLARE @ruleId_s24 INT	,@taskId_s24 INT
 
--- S23 - Check all today tickets running > 30 minutes must be settled
+-- S23 - Check actualstake = stake * 5
 INSERT [dbo].[DBA_Rules] ([Name], [Description], [SeverityLevel]) 
 VALUES (N'With betchoice Double, check actual_stake = stake * 5', N'With betchoice Double, check actual_stake = stake * 5', N'High')
 
@@ -33,13 +33,13 @@ SET @ruleId_s24 = SCOPE_IDENTITY()
 
 
 INSERT [dbo].[DBA_Tasks] ([RuleId], [command]) 
-VALUES (@ruleId_s24, N'EXEC dbo.DBA_Consistency_SpecificRulesChecking @ProductId = 211, @Rule = ''BulllGame_NetStake'', @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT  ')
+VALUES (@ruleId_s24, N'EXEC dbo.DBA_Consistency_SpecificRulesChecking @ProductId = 211, @Rule = ''BullGame_NetStake'', @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT  ')
 
 SET @taskId_s24 = SCOPE_IDENTITY()
 
 --------- SCHEDULE ---------------
 DECLARE @ErrCode INT, @ErrMsg VARCHAR(100)
---Status checking - every 30p
+-- Stake, Actualstake checking - daily at 00:15
 EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'With betchoice Double, check actual_stake = stake * 5'
  ,@TaskId = @taskId_s23
  ,@IsEnable  = 1
@@ -59,7 +59,7 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'With betchoice Double, check actua
 
 SELECT 'With betchoice Double, check actual_stake = stake * 5' AS RuleChecking, @ErrCode, @ErrMsg
  
--- Pending match checking - daily
+-- Netstake checking - daily at 00:15
 EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check Netstake <= Stake'
  ,@TaskId = @taskId_s24
  ,@IsEnable  = 1
