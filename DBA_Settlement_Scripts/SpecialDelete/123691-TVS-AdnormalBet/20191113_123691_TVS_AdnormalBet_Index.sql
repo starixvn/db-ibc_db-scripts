@@ -5,6 +5,6 @@
 */
 USE bodb02
 GO
-CREATE NONCLUSTERED INDEX ix_RequestID ON TicketVoiding_VoidingHistory (RequestId)
+CREATE NONCLUSTERED INDEX IX_TicketVoiding_VoidingHistory_RequestID ON TicketVoiding_VoidingHistory (RequestId)
 INCLUDE (UserId,CreatedDate,StatusID)
 
