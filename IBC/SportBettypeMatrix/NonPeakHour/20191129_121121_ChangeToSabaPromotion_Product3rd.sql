@@ -2,7 +2,7 @@
 /*
 Created : 20191129@Sophia
 DB: DBCUST.bodb_Licensee
-Task: Update Non pea khour to Saba Promotion [redmine: 121121 ]
+Task: Update Non peak hour to Saba Promotion [redmine: 121121 ]
 */
 
 

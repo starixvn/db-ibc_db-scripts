@@ -3,7 +3,7 @@ GO
 /*
 Created : 20191129@Sophia
 DB: DBPRO.bodb02
-Task: Update Non pea khour to Saba Promotion [redmine: 121121]
+Task: Update Non peak hour to Saba Promotion [redmine: 121121]
 */
 
 DELETE Products WHERE ProductID = 37
