@@ -9,7 +9,7 @@ GO
 UPDATE ts
 	SET SubIssueTypeNameCS = N'机械投注'
 FROM TicketVoiding_SubIssueType ts WITH (ROWLOCK)
-WHERE ts.SubIssueTypeId = 36
+WHERE ts.SubIssueTypeId = 36 AND ts.IssueTypeID = 11 AND ts.SubIssueTypeName = 'Robot Betting'
 
 GO
 
