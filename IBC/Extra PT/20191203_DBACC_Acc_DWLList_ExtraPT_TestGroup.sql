@@ -8,8 +8,8 @@ go
 */
 
 insert into dbo.Acc_DWLList_ExtraPT (CustId,GroupId,GroupName,IsDisabled)
-select 24971691, 50, 'ACCTEST', 0
+select 11973923, 50, 'ACCTEST', 0
 go
 
 insert into dbo.Acc_DWLList_ExtraPT_xtest (CustId,GroupId,GroupName,IsDisabled)
-select 24972614, 50, 'ACCTEST', 0
+select 11973927, 50, 'ACCTEST', 0
