@@ -9,3 +9,7 @@ go
 
 drop table DEL_Cust_FollowBet
 go
+drop table DEL_Cust_FollowBet_bk
+go
+drop table DEL_Cust_FollowBet_xtest
+go
