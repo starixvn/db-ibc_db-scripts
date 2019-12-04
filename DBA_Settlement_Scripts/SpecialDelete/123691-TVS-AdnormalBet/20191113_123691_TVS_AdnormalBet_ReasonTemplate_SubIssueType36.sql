@@ -7,8 +7,6 @@ USE bodb02
 GO
 
 INSERT INTO TicketVoiding_ReasonTemplate (Sporttype, SubIssueTypeId, ReasonEnglish, ReasonChineseSimplified)
-SELECT 0, SubIssueTypeId, 'Abnormal bet',N'由于非正常投注'  
-FROM TicketVoiding_SubIssueType WITH (NOLOCK)
-WHERE IssueTypeId = 11 AND SubIssueTypeId = 36 AND SubIssueTypeName = 'Robot Betting'
+SELECT 0, 36, 'Abnormal bet',N'由于非正常投注'  
 
 GO
