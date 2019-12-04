@@ -1,19 +1,17 @@
-use CustDB
-go
-
 /*
 	Created: 20191112@Percy
-	DB: DBCUST.CustDB
+	DB: DBCUST
 	Task: Bet Follow - Rename SPs (SIT)
 */
+
+use CustDB
+go
 
 sp_rename 'Acc_AutoFollowBetCustomerChecking', 'DEL_Acc_AutoFollowBetCustomerChecking'
 go
 sp_rename 'Acc_AutoFollowBetCustomerChecking_xtest', 'DEL_Acc_AutoFollowBetCustomerChecking_xtest'
 go
 sp_rename 'Acc_AutoFollowBetDelCustomer', 'DEL_Acc_AutoFollowBetDelCustomer'
-go
-sp_rename 'Acc_AutoFollowBetDelCustomer_xpre', 'DEL_Acc_AutoFollowBetDelCustomer_xpre'
 go
 sp_rename 'Acc_AutoFollowBetDelCustomer_xtest', 'DEL_Acc_AutoFollowBetDelCustomer_xtest'
 go
@@ -33,8 +31,6 @@ sp_rename 'Acc_AutoFollowBetInsCustomer_xtest', 'DEL_Acc_AutoFollowBetInsCustome
 go
 sp_rename 'Acc_AutoFollowBetInsMultipleCustomer', 'DEL_Acc_AutoFollowBetInsMultipleCustomer'
 go
-sp_rename 'Acc_AutoFollowBetInsMultipleCustomer_xpre', 'DEL_Acc_AutoFollowBetInsMultipleCustomer_xpre'
-go
 sp_rename 'Acc_AutoFollowBetInsMultipleCustomer_xtest', 'DEL_Acc_AutoFollowBetInsMultipleCustomer_xtest'
 go
 sp_rename 'Acc_AutoFollowBetSelBACustomer', 'DEL_Acc_AutoFollowBetSelBACustomer'
@@ -47,13 +43,11 @@ sp_rename 'Acc_AutoFollowBetSelBACustomer_xtest', 'DEL_Acc_AutoFollowBetSelBACus
 go
 sp_rename 'Acc_AutoFollowBetSelCustomer', 'DEL_Acc_AutoFollowBetSelCustomer'
 go
-sp_rename 'Acc_AutoFollowBetSelCustomer_xpre', 'DEL_Acc_AutoFollowBetSelCustomer_xpre'
-go
 sp_rename 'Acc_AutoFollowBetSelCustomer_xtest', 'DEL_Acc_AutoFollowBetSelCustomer_xtest'
 go
 sp_rename 'Acc_AutoFollowBetUpdRate', 'DEL_Acc_AutoFollowBetUpdRate'
 go
-sp_rename 'Acc_AutoFollowBetUpdRate_xpre', 'DEL_Acc_AutoFollowBetUpdRate_xpre'
-go
 sp_rename 'Acc_AutoFollowBetUpdRate_xtest', 'DEL_Acc_AutoFollowBetUpdRate_xtest'
+go
+sp_rename 'Convert_CustFollow_Bet', 'DEL_Convert_CustFollow_Bet'
 go

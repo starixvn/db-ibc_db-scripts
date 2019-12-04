@@ -1,19 +1,17 @@
-use CustDB
-go
-
 /*
 	Created: 20191112@Percy
-	DB: DBCUST.CustDB
+	DB: DBCUST
 	Task: Bet Follow - Drop SPs (SIT)
 */
+
+use CustDB
+go
 
 drop procedure DEL_Acc_AutoFollowBetCustomerChecking
 go
 drop procedure DEL_Acc_AutoFollowBetCustomerChecking_xtest
 go
 drop procedure DEL_Acc_AutoFollowBetDelCustomer
-go
-drop procedure DEL_Acc_AutoFollowBetDelCustomer_xpre
 go
 drop procedure DEL_Acc_AutoFollowBetDelCustomer_xtest
 go
@@ -33,8 +31,6 @@ drop procedure DEL_Acc_AutoFollowBetInsCustomer_xtest
 go
 drop procedure DEL_Acc_AutoFollowBetInsMultipleCustomer
 go
-drop procedure DEL_Acc_AutoFollowBetInsMultipleCustomer_xpre
-go
 drop procedure DEL_Acc_AutoFollowBetInsMultipleCustomer_xtest
 go
 drop procedure DEL_Acc_AutoFollowBetSelBACustomer
@@ -47,13 +43,11 @@ drop procedure DEL_Acc_AutoFollowBetSelBACustomer_xtest
 go
 drop procedure DEL_Acc_AutoFollowBetSelCustomer
 go
-drop procedure DEL_Acc_AutoFollowBetSelCustomer_xpre
-go
 drop procedure DEL_Acc_AutoFollowBetSelCustomer_xtest
 go
 drop procedure DEL_Acc_AutoFollowBetUpdRate
 go
-drop procedure DEL_Acc_AutoFollowBetUpdRate_xpre
-go
 drop procedure DEL_Acc_AutoFollowBetUpdRate_xtest
+go
+drop procedure DEL_Convert_CustFollow_Bet
 go
