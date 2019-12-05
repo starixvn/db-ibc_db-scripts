@@ -51,5 +51,3 @@ drop procedure DEL_Acc_AutoFollowBetUpdRate_xtest
 go
 drop procedure DEL_Convert_CustFollow_Bet
 go
-drop view DEL_syncobj_0x3945363544423842
-go

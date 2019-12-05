@@ -52,5 +52,3 @@ sp_rename 'Acc_AutoFollowBetUpdRate_xtest', 'DEL_Acc_AutoFollowBetUpdRate_xtest'
 go
 sp_rename 'Convert_CustFollow_Bet', 'DEL_Convert_CustFollow_Bet'
 go
-sp_rename 'syncobj_0x3945363544423842', 'DEL_syncobj_0x3945363544423842'
-go
