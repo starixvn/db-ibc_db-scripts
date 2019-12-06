@@ -53,8 +53,7 @@ BEGIN
 		
 		RAISERROR (@msg, 0, 1,@start, @matchIDs) WITH NOWAIT
 		
-		INSERT INTO dbo.TOControl_Setting_bk (CustID, matchid, MaxTurnOver, TotalTurnOver, IsNotified, HouseTurnover, PercentLevel, IsGroupHeadLine)
-		EXEC DBCUST.CUSTDB.dbo.Task_Archive_TOControl_Copy @matchIDs
+		EXEC DBCUST.CUSTDB.dbo.Task_Archive_TOControl_Delete @matchIDs
 		
 	END	
 	
