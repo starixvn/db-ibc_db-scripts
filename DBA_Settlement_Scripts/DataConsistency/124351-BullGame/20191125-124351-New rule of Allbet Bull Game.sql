@@ -33,13 +33,13 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'With betchoice Double, check actua
  ,@FrequenceInterval = 1 -- every xx days
  ,@FrequenceSubDayType = 1 -- specified time: 1, second: 2, min: 4, hour: 8
  ,@FrequenceSubDayInterval = 0 -- specified time: 0; <> 0: every FrequenceSubDayType
- ,@ActiveStartDate = '2019-11-25' 
+ ,@ActiveStartDate = '2019-12-09' 
  ,@ActiveEndDate = NULL
  ,@ActiveStartTime  = '00:15'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
-  ,@Emails = 'max.tran@starixsoft.com,helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+  --,@Emails = 'max.tran@starixsoft.com,helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
