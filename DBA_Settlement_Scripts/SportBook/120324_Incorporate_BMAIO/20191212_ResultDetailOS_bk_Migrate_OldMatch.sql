@@ -23,6 +23,7 @@ SELECT eventstatus, finalhomescore, finalawayscore, ISNULL(betstatus,'') AS bets
 	INTO #tmp_match
 FROM bodb02.dbo.match14 m WITH(NOLOCK)
 WHERE sporttype = 9 
+		AND eventdate BETWEEN '20191129' AND '20191205'
 
 --Insert final data to table temp
 SELECT ROW_NUMBER() OVER(ORDER BY m.matchid, s.ResourceId) AS RowNumber, m.matchid
