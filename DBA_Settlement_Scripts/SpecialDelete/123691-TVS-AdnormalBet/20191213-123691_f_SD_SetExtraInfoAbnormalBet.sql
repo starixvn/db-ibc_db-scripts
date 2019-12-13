@@ -1,7 +1,7 @@
 /*
 	Created: 20191213@Helen
 	Task: TVS Abnormalbet - https://nexdev.net/issues/125415
-	DB: run on bodb02 of all replicated server of publication named "DBTrans_ExecRep"
+	DB: @KBT/@MNL - run on bodb02 of all replicated server of publication named "DBTrans_ExecRep"
 	
 */
 USE [bodb02]
