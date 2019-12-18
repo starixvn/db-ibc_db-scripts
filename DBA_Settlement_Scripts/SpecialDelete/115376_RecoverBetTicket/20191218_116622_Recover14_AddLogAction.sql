@@ -1,6 +1,7 @@
 /*
 	Created: 20191218@Helen
 	Task: Recover ticket 7 days - insert log action 
+	DB: dblog/bodb_CustomerLog
 */
 USE bodb_CustomerLog
 GO
