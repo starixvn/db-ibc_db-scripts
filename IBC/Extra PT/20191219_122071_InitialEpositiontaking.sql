@@ -20,7 +20,7 @@ DB: DBTXN.bodb02
 	DECLARE @i INT = 1 
 	 
 	----Non sportsbook
-	--WHILE @i <> 0 
+	WHILE @i <> 0 
 	BEGIN 
 		;WITH wl AS (
 				SELECT  TOP (1000) b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.Bettype, b.winlostdate, b.TransID
@@ -52,6 +52,7 @@ DB: DBTXN.bodb02
 										AND w.Sporttype = s.Sporttype  
 								) E ON E.TransID = B.TransID 
 		SELECT @i = @@ROWCOUNT
+		WAIT FOR DELAY ''
 	END
 
 
@@ -79,7 +80,7 @@ DB: DBTXN.bodb02
 				 
 				)
 			,   ept AS (
-					SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT as ExtraPT, w.TransID as  TransID 
+					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 					FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 					WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 						  AND s.ProductID = 1
@@ -89,7 +90,7 @@ DB: DBTXN.bodb02
 		SET epositiontaking = E.ExtraPT
 		FROM Bettrans B WITH (ROWLOCK)
 		INNER JOIN  (
-								SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT  as ExtraPT ,  w.TransID as  TransID 
+								SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT  as ExtraPT, w.TransID as  TransID 
 								FROM wl w
 								INNER JOIN ept s WITH (NOLOCK)
 										ON w.srecommend = s.SuperId
