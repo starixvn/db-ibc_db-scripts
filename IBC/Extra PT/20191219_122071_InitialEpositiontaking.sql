@@ -87,8 +87,7 @@ DECLARE
 					ON s.BetType = b.bettype
 				LEFT JOIN bodb02.dbo.match m WITH(NOLOCK)
 					ON m.matchid = b.matchid AND m.eventdate = b.winlostdate AND m.sporttype = 44 -- MuayThai
-				WHERE  b.winlostdate >=  @Winlostdate
-					AND b.ruben = 1
+				WHERE  b.winlostdate >=  @Winlostdate					
 					AND b.statusid NOT IN (101, 102, 103, 121)
 					AND b.bettype < 19001
 					AND s.productID = 1 
