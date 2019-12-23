@@ -7,12 +7,12 @@ Task: Update Epositiontaking [Redmind: #122071]
 DB: DBTXN.bodb02
 */
 
-	DECLARE @Winlostdate SMALLDATETIME = '2019-12-25' 
+	DECLARE @Winlostdate SMALLDATETIME = '2019-12-26' 
 	 
 	
-	DECLARE @SportBettype TABLE(ProductID INT, Bettype INT,SubProduct VARCHAR(500))
+	DECLARE @SportBettype TABLE(ProductID INT, Bettype INT,SubProduct VARCHAR(500), RefTable SMALLINT)
 	INSERT INTO @SportBettype
-	SELECT ProductID, Bettype, SubProduct FROM bodb02.dbo.f_SportBettypeMatrix_Sel (0, 0, 0, 2, '', '', 1)
+	SELECT DISTINCT ProductID, Bettype, SubProduct, RefTable  FROM bodb02.dbo.f_SportBettypeMatrix_Sel (0, 0, 0, 2, '', '', 1)
 
 	DELETE @SportBettype WHERE ProductId NOT IN (SELECT DISTINCT ProductID FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting WITH(NOLOCK))
  
@@ -30,7 +30,8 @@ DB: DBTXN.bodb02
 				WHERE b.winlostdate >=  @Winlostdate
 					AND s.ProductID <> 1  				
 					AND b.bettype < 19001
-					AND epositiontaking IS NULL 
+					AND ISNULL(epositiontaking,0) = 0 
+					
 				)
 		,   ept AS (
 					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
@@ -51,8 +52,11 @@ DB: DBTXN.bodb02
 										AND w.SubProduct = s.SubProduct
 										AND w.Sporttype = s.Sporttype  
 								) E ON E.TransID = B.TransID 
+		WHERE epositiontaking <> E.ExtraPT
+		
 		SELECT @i = @@ROWCOUNT
-		WAIT FOR DELAY ''
+		WAITFOR DELAY '00:00:03'
+		
 	END
 
 
@@ -76,8 +80,8 @@ DB: DBTXN.bodb02
 				WHERE  b.winlostdate >=  @Winlostdate			
 					AND b.bettype < 19001
 					AND s.productID = 1 
-					AND epositiontaking IS NULL 
-				 
+					AND ISNULL(epositiontaking,0) = 0 
+									 
 				)
 			,   ept AS (
 					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
@@ -98,8 +102,139 @@ DB: DBTXN.bodb02
 										AND w.SubProduct = s.SubProduct
 										AND w.Sporttype = s.Sporttype  
 								) E ON E.TransID = B.TransID 
-
+		WHERE epositiontaking <> E.ExtraPT
+		
 		SELECT @i = @@ROWCOUNT
+		WAITFOR DELAY '00:00:03'
 	END
 
 
+	----- translog 
+	SELECT @i = 1
+
+	WHILE @i <> 0 
+	BEGIN 
+		;WITH wl AS (
+				SELECT  TOP (1000) b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.TransID
+				FROM translog b WITH(NOLOCK)
+				INNER JOIN  @SportBettype s
+					ON b.gameID = s.bettype
+				WHERE b.winlostdate >=  @Winlostdate
+					AND s.ProductID <> 1  									
+					AND ISNULL(epositiontaking,0) = 0 
+					AND s.RefTable = 3
+					
+				)
+		,   ept AS (
+					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+					FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+					WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
+						  AND s.ProductID <> 1
+					GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
+					)
+		UPDATE B
+		SET epositiontaking = E.ExtraPT
+		FROM translog B WITH (ROWLOCK)
+		INNER JOIN  (
+								SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT as ExtraPT ,  w.TransID as  TransID 
+								FROM wl w
+								INNER JOIN ept s WITH (NOLOCK)
+										ON w.srecommend = s.SuperId
+										AND w.ProductId = s.ProductId
+										AND w.SubProduct = s.SubProduct
+										AND w.Sporttype = s.Sporttype  
+								) E ON E.TransID = B.TransID 
+		WHERE epositiontaking <> E.ExtraPT
+		
+		SELECT @i = @@ROWCOUNT
+		WAITFOR DELAY '00:00:03'
+		
+	END
+
+
+----- BettransRNG 
+
+	SELECT @i = 1
+
+	WHILE @i <> 0 
+	BEGIN 
+		;WITH wl AS (
+				SELECT  TOP (1000) b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.TransID
+				FROM BettransRNG b WITH(NOLOCK)
+				INNER JOIN  @SportBettype s
+					ON b.gameID = s.bettype
+				WHERE b.winlostdate >=  @Winlostdate
+					AND s.ProductID <> 1  									
+					AND ISNULL(epositiontaking,0) = 0 
+					AND s.RefTable = 1
+					
+				)
+		,   ept AS (
+					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+					FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+					WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
+						  AND s.ProductID <> 1
+					GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
+					)
+		UPDATE B
+		SET epositiontaking = E.ExtraPT
+		FROM BettransRNG B WITH (ROWLOCK)
+		INNER JOIN  (
+								SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT as ExtraPT ,  w.TransID as  TransID 
+								FROM wl w
+								INNER JOIN ept s WITH (NOLOCK)
+										ON w.srecommend = s.SuperId
+										AND w.ProductId = s.ProductId
+										AND w.SubProduct = s.SubProduct
+										AND w.Sporttype = s.Sporttype  
+								) E ON E.TransID = B.TransID 
+		WHERE epositiontaking <> E.ExtraPT
+		
+		SELECT @i = @@ROWCOUNT
+		WAITFOR DELAY '00:00:03'
+		
+	END
+	
+	
+----- BettransLC
+
+	SELECT @i = 1
+
+	WHILE @i <> 0 
+	BEGIN 
+		;WITH wl AS (
+				SELECT  TOP (1000) b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.TransID
+				FROM BettransLC b WITH(NOLOCK)
+				INNER JOIN  @SportBettype s
+					ON b.gameID = s.bettype
+				WHERE b.winlostdate >=  @Winlostdate
+					AND s.ProductID <> 1  									
+					AND ISNULL(epositiontaking,0) = 0 
+					AND s.RefTable = 2
+					
+				)
+		,   ept AS (
+					SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+					FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+					WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
+						  AND s.ProductID <> 1
+					GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
+					)
+		UPDATE B
+		SET epositiontaking = E.ExtraPT
+		FROM BettransLC B WITH (ROWLOCK)
+		INNER JOIN  (
+								SELECT w.ProductID, w.Sporttype, w.SubProduct, s.ExtraPT as ExtraPT ,  w.TransID as  TransID 
+								FROM wl w
+								INNER JOIN ept s WITH (NOLOCK)
+										ON w.srecommend = s.SuperId
+										AND w.ProductId = s.ProductId
+										AND w.SubProduct = s.SubProduct
+										AND w.Sporttype = s.Sporttype  
+								) E ON E.TransID = B.TransID 
+		WHERE epositiontaking <> E.ExtraPT
+		
+		SELECT @i = @@ROWCOUNT
+		WAITFOR DELAY '00:00:03'
+		
+	END
