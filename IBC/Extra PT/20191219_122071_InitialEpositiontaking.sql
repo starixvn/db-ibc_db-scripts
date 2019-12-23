@@ -11,16 +11,12 @@ DB: DBTXN.bodb02
 
 	CREATE TABLE #Date (ID INT IDENTITY (1,1), Winlostdate SMALLDATETIME)
 
-	DECLARE @MoveBetsDay SMALLDATETIME 
-	SELECT 	@MoveBetsDay = max(eventdate) 
-	FROM    match14 WITH(NOLOCK)
- 
 
 	INSERT INTO #Date(Winlostdate)	
 	SELECT DISTINCT WINLOSTDATE
 	FROM Bettrans WITH (NOLOCK) 
 	WHERE ISNULL(epositiontaking ,0) = 0
-	AND Winlostdate > @MoveBetsDay
+	AND Winlostdate >= '2019-12-26'
 	AND bettype < 19001  
 
 	 
