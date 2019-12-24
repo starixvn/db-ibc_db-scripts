@@ -223,8 +223,8 @@ DB: DBTXN.bodb02
 			SET B.epositiontaking = ISNULL(E.ExtraPT,0)
 			FROM Bettrans B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.TransID
-			WHERE B.epositiontaking <> E.ExtraPT
-			AND E.Reftable = 0 
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				AND E.Reftable = 0 
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
@@ -245,8 +245,8 @@ DB: DBTXN.bodb02
 			SET B.epositiontaking = E.ExtraPT
 			FROM Translog B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.translogid
-			WHERE B.epositiontaking <> E.ExtraPT
-			AND E.Reftable = 3 
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				AND E.Reftable = 3 
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
@@ -262,8 +262,8 @@ DB: DBTXN.bodb02
 			SET B.epositiontaking = E.ExtraPT
 			FROM bettransRNG B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.TransID
-			WHERE B.epositiontaking <> E.ExtraPT
-			AND E.Reftable = 1 
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				AND E.Reftable = 1 
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
@@ -279,8 +279,8 @@ DB: DBTXN.bodb02
 			SET B.epositiontaking = E.ExtraPT
 			FROM bettransLC B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.TransID
-			WHERE B.epositiontaking <> E.ExtraPT
-			AND E.Reftable = 1 
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				AND E.Reftable = 1 
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
