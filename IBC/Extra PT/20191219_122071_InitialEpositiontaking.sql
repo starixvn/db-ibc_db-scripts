@@ -1,4 +1,4 @@
-USE bodb02
+ USE bodb02
 GO 
 
 /*
@@ -44,33 +44,31 @@ DB: DBTXN.bodb02
 		----Non sportsbook	
 		BEGIN 
 			;WITH wl AS (
-					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.Bettype, b.winlostdate, b.TransID, b.EPositiontaking
+					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.Bettype, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, b.Epositiontaking
 					FROM bettrans b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON s.BetType = b.bettype
-					WHERE b.winlostdate =  @Winlostdate
+					WHERE b.winlostdate = @Winlostdate
 						AND s.ProductID <> 1  				
 						AND b.bettype < 19001
-						AND ISNULL(epositiontaking,0) = 0 
-					
+						AND ISNULL(epositiontaking,0) = 0 					
 					)
-			,   ept AS (
-						SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
-						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
-						)		
-
 			INSERT INTO #T
-			SELECT epositiontaking, s.ExtraPT, TransID, 0
+			SELECT epositiontaking, SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID, 0
 			FROM wl w
-			INNER JOIN ept s WITH (NOLOCK)
-					ON w.srecommend = s.SuperId
-					AND w.ProductId = s.ProductId
-					AND w.SubProduct = s.SubProduct
-					AND w.Sporttype = s.Sporttype  
-			WHERE EPositiontaking <> ExtraPT	
+			LEFT JOIN (
+						SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM(s.ExtraPT) as ExtraPT
+						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						WHERE  s.ProductID <> 1
+						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
+						) s 
+						ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
+							AND w.srecommend = s.SuperId
+							AND w.ProductId = s.ProductId
+							AND w.SubProduct = s.SubProduct
+							AND w.Sporttype = s.Sporttype 
+			GROUP BY epositiontaking, TransID
+			HAVING w.Epositiontaking <> SUM(ISNULL(s.ExtraPT,0)) OR w.Epositiontaking IS NULL
 		
 		END
 
@@ -80,7 +78,8 @@ DB: DBTXN.bodb02
 			;WITH wl AS (
 					SELECT	b.srecommend, 1 AS ProductID, 
 							CASE WHEN ISNULL(m.matchid, 0) <> 0 THEN m.Sporttype ELSE 0 END AS Sporttype, 
-							CASE WHEN s.SubProduct IN ('MG-SuperLive', 'BT-Sold','BT-Bought','BT-Comm','BT-Winloss','Bet Builder') THEN s.SubProduct ELSE '' END AS SubProduct,					
+							CASE WHEN s.SubProduct IN ('MG-SuperLive', 'BT-Sold','BT-Bought','BT-Comm','BT-Winloss','Bet Builder') THEN s.SubProduct ELSE '' END AS SubProduct,	
+							CAST(b.TransDate AS DATE) as TransDate, 
 							b.winlostdate, b.TransID  , b.epositiontaking
 					FROM bettrans b WITH (NOLOCK)
 					INNER JOIN  @SportBettype s
@@ -90,26 +89,25 @@ DB: DBTXN.bodb02
 					WHERE  b.winlostdate =  @Winlostdate			
 						AND b.bettype < 19001
 						AND s.productID = 1 
-						AND ISNULL(epositiontaking,0) = 0 
-									 
-					)
-				,   ept AS (
-						SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID = 1
-						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype
-						)		 
+						AND ISNULL(epositiontaking,0) = 0 									 
+					)				
 							   
 			INSERT INTO #T
-			SELECT epositiontaking, s.ExtraPT, TransID, 0
+			SELECT epositiontaking,  SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID, 0
 			FROM wl w
-			INNER JOIN ept s WITH (NOLOCK)
-					ON w.srecommend = s.SuperId
-					AND w.ProductId = s.ProductId
-					AND w.SubProduct = s.SubProduct
-					AND w.Sporttype = s.Sporttype  
-			WHERE EPositiontaking <> ExtraPT
+			LEFT JOIN  (
+						SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						WHERE s.ProductID = 1
+						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
+						) s
+					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
+							AND w.srecommend = s.SuperId
+							AND w.ProductId = s.ProductId
+							AND w.SubProduct = s.SubProduct
+							AND w.Sporttype = s.Sporttype 
+			GROUP BY epositiontaking, TransID
+			HAVING w.Epositiontaking <> SUM(ISNULL(s.ExtraPT,0)) OR w.Epositiontaking IS NULL
 		END
 
 
@@ -117,33 +115,32 @@ DB: DBTXN.bodb02
 
 		BEGIN 
 			;WITH wl AS (
-					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.translogid, b.epositiontaking
+					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.translogid, b.epositiontaking
 					FROM translog b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate =  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
-						AND s.RefTable = 3
-					
-					)
-			,   ept AS (
-						SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+						AND s.RefTable = 3					
+					)			
+
+			INSERT INTO #T
+			SELECT epositiontaking,  SUM(ISNULL(s.ExtraPT,0)) as ExtraPT , translogid  ,3 as Reftable
+			FROM wl w
+			LEFT JOIN (SELECT s.SuperId,  s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
-						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
-						)
-
-			INSERT INTO #T
-			SELECT epositiontaking, s.ExtraPT, translogid  as translogid ,3 as Reftable
-			FROM wl w
-			INNER JOIN ept s WITH (NOLOCK)
-					ON w.srecommend = s.SuperId
-					AND w.ProductId = s.ProductId
-					AND w.SubProduct = s.SubProduct
-					AND w.Sporttype = s.Sporttype  
-			WHERE EPositiontaking <> ExtraPT
+						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
+						) s
+					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
+							AND w.srecommend = s.SuperId
+							AND w.ProductId = s.ProductId
+							AND w.SubProduct = s.SubProduct
+							AND w.Sporttype = s.Sporttype 
+			GROUP BY epositiontaking, translogid
+			HAVING w.Epositiontaking <> SUM(ISNULL(s.ExtraPT,0)) OR w.Epositiontaking IS NULL
 		
 		END
 
@@ -152,32 +149,31 @@ DB: DBTXN.bodb02
 
 		BEGIN 
 			;WITH wl AS (
-					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.TransID, epositiontaking
+					SELECT  b.srecommend, s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, epositiontaking
 					FROM BettransRNG b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate =  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
-						AND s.RefTable = 1
-					
+						AND s.RefTable = 1					
 					)
-			,   ept AS (
-						SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+			INSERT INTO #T
+			SELECT epositiontaking, SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID , 1 as Reftable
+			FROM wl w
+			LEFT JOIN (SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
-						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
-						)
-			INSERT INTO #T
-			SELECT epositiontaking, s.ExtraPT, TransID  as translogid ,1 as Reftable
-			FROM wl w
-			INNER JOIN ept s WITH (NOLOCK)
-					ON w.srecommend = s.SuperId
-					AND w.ProductId = s.ProductId
-					AND w.SubProduct = s.SubProduct
-					AND w.Sporttype = s.Sporttype  
-			WHERE EPositiontaking <> ExtraPT
+						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
+					  ) s
+					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
+							AND w.srecommend = s.SuperId
+							AND w.ProductId = s.ProductId
+							AND w.SubProduct = s.SubProduct
+							AND w.Sporttype = s.Sporttype 
+			GROUP BY epositiontaking, TransID
+			HAVING w.Epositiontaking <> SUM(ISNULL(s.ExtraPT,0)) OR w.Epositiontaking IS NULL
 				
 		END
 	
@@ -187,32 +183,31 @@ DB: DBTXN.bodb02
 
 		BEGIN 
 			;WITH wl AS (
-					SELECT  b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, b.winlostdate, b.TransID, epositiontaking
+					SELECT  b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, epositiontaking
 					FROM BettransLC b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate =  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
-						AND s.RefTable = 2
-					
+						AND s.RefTable = 2					
 					)
-			,   ept AS (
-						SELECT s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
+			INSERT INTO #T
+			SELECT epositiontaking,  SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID, 2 as Reftable
+			FROM wl w
+			LEFT JOIN 	(SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
-						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype 
-						)
-			INSERT INTO #T
-			SELECT epositiontaking, s.ExtraPT, TransID  as translogid ,2 as Reftable
-			FROM wl w
-			INNER JOIN ept s WITH (NOLOCK)
-					ON w.srecommend = s.SuperId
-					AND w.ProductId = s.ProductId
-					AND w.SubProduct = s.SubProduct
-					AND w.Sporttype = s.Sporttype  
-			WHERE EPositiontaking <> ExtraPT
+						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
+						) s 
+					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
+							AND w.srecommend = s.SuperId
+							AND w.ProductId = s.ProductId
+							AND w.SubProduct = s.SubProduct
+							AND w.Sporttype = s.Sporttype 
+			GROUP BY epositiontaking, TransID
+			HAVING w.Epositiontaking <> SUM(ISNULL(s.ExtraPT,0)) OR w.Epositiontaking IS NULL
 
 		 
 		END
@@ -225,7 +220,7 @@ DB: DBTXN.bodb02
 		WHILE @i <> 0 
 		BEGIN  
 			UPDATE TOP (1000) B
-			SET B.epositiontaking = E.ExtraPT
+			SET B.epositiontaking = ISNULL(E.ExtraPT,0)
 			FROM Bettrans B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.TransID
 			WHERE B.epositiontaking <> E.ExtraPT
@@ -233,6 +228,10 @@ DB: DBTXN.bodb02
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
+
+			 
+
+
 		END 
 
 		
@@ -293,4 +292,3 @@ DB: DBTXN.bodb02
 	END 
 	
 	DROP TABLE #DATE
-	
