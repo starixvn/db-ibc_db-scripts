@@ -280,7 +280,7 @@ DB: DBTXN.bodb02
 			FROM bettransLC B WITH (ROWLOCK)
 			INNER JOIN #T E ON E.TransID = B.TransID
 			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
-				AND E.Reftable = 1 
+				AND E.Reftable = 2 
 		
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
