@@ -25,7 +25,7 @@ DB: DBTXN.bodb02
 	INSERT INTO @SportBettype
 	SELECT DISTINCT ProductID, Bettype, SubProduct, RefTable  FROM bodb02.dbo.f_SportBettypeMatrix_Sel (0, 0, 0, 2, '', '', 1)
 
-	DELETE @SportBettype WHERE ProductId NOT IN (SELECT DISTINCT ProductID FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting WITH(NOLOCK))
+	DELETE @SportBettype WHERE ProductId NOT IN (SELECT DISTINCT ProductID FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting WITH(NOLOCK))
  
 	CREATE TABLE  #T (epositiontaking MONEY , ExtraPT MONEY, transID BIGINT, Reftable Smallint)
  
@@ -58,7 +58,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN (
 						SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM(s.ExtraPT) as ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE  s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
 						) s 
@@ -97,7 +97,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN  (
 						SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE s.ProductID = 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
 						) s
@@ -129,7 +129,7 @@ DB: DBTXN.bodb02
 			SELECT epositiontaking,  SUM(ISNULL(s.ExtraPT,0)) as ExtraPT , translogid  ,3 as Reftable
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId,  s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
@@ -162,7 +162,7 @@ DB: DBTXN.bodb02
 			SELECT epositiontaking, SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID , 1 as Reftable
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
@@ -196,7 +196,7 @@ DB: DBTXN.bodb02
 			SELECT epositiontaking,  SUM(ISNULL(s.ExtraPT,0)) as ExtraPT, TransID, 2 as Reftable
 			FROM wl w
 			LEFT JOIN 	(SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
-						FROM DBCUST.CUSTDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
+						FROM CheckCustDB.dbo.Acc_GroupExtraPTSetting s WITH (NOLOCK)
 						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
 							  AND s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
