@@ -7,7 +7,7 @@ Task: Update Epositiontaking [Redmind: #122071]
 DB: DBTXN.bodb02
 */
 
-	DECLARE @Winlostdate SMALLDATETIME 
+	DECLARE @Winlostdate SMALLDATETIME  = '2019-12-26'
 
 	--CREATE TABLE #Date (ID INT IDENTITY (1,1), Winlostdate SMALLDATETIME)
 
