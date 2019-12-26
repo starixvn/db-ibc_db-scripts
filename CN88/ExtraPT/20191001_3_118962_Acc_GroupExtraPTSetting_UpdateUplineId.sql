@@ -1,4 +1,3 @@
-
 /*
 Create: 20191001@Sophia
 Task: Update UplineId [redmine: #118962]
@@ -17,7 +16,7 @@ BEGIN
 	FROM Acc_GroupExtraPTSetting e WITH (ROWLOCK)
 	INNER JOIN CustSuper c WITH (NOLOCK) 
 		ON c.CustID = e.SuperId
-	WHERE c.uplineID IS NOT NULL
+	WHERE c.uplineID IS NULL
 
 	IF @@ROWCOUNT = 0 
 		BREAK;
