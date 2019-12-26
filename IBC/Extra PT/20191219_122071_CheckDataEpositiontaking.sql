@@ -3,8 +3,8 @@ GO
 
 /*
 Create: 20191219@Sophia
-Task: Update Epositiontaking [Redmind: #122071]
-DB: DBTXN.bodb02
+Task: Check data Epositiontaking [Redmind: #122071]
+DB: DBACC.bodb02
 */
 
 	DECLARE @Winlostdate SMALLDATETIME  = '2019-12-25'
