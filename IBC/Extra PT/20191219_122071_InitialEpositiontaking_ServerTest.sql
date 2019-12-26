@@ -177,8 +177,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId,  s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
 						) s
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
@@ -210,8 +209,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
 					  ) s
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
@@ -244,8 +242,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN 	(SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
 						) s 
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	

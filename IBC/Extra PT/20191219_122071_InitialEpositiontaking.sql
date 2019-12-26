@@ -9,15 +9,15 @@ DB: DBTXN.bodb02
 
 	DECLARE @Winlostdate SMALLDATETIME 
 
-	CREATE TABLE #Date (ID INT IDENTITY (1,1), Winlostdate SMALLDATETIME)
+	--CREATE TABLE #Date (ID INT IDENTITY (1,1), Winlostdate SMALLDATETIME)
 
 
-	INSERT INTO #Date(Winlostdate)	
-	SELECT DISTINCT WINLOSTDATE
-	FROM Bettrans WITH (NOLOCK) 
-	WHERE ISNULL(epositiontaking ,0) = 0
-	AND Winlostdate >= '2019-12-26'
-	AND bettype < 19001  
+	--INSERT INTO #Date(Winlostdate)	
+	--SELECT DISTINCT WINLOSTDATE
+	--FROM Bettrans WITH (NOLOCK) 
+	--WHERE ISNULL(epositiontaking ,0) = 0
+	--AND Winlostdate >= '2019-12-26'
+	--AND bettype < 19001  
  
 	
 	CREATE TABLE #Acc_GroupExtraPTSetting (
@@ -77,16 +77,8 @@ DB: DBTXN.bodb02
  
 	CREATE TABLE  #T (epositiontaking MONEY , ExtraPT MONEY, transID BIGINT, Reftable Smallint)
  
-	DECLARE @RowId INT = 1, @i INT  =1, @MaxRowID INT 
+	DECLARE @i INT = 1 
 
-	SELECT @MaxRowID = MAX(ID) FROM #Date
-
-	WHILE @RowId < @MaxRowID
-	BEGIN 
-
-		SELECT @Winlostdate = Winlostdate
-		FROM #Date 
-		WHERE ID = @RowId
 	 
 		---------------------------------Select data -------------------------
 		----Non sportsbook	
@@ -96,7 +88,7 @@ DB: DBTXN.bodb02
 					FROM bettrans b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON s.BetType = b.bettype
-					WHERE b.winlostdate = @Winlostdate
+					WHERE b.winlostdate >= @Winlostdate
 						AND s.ProductID <> 1  				
 						AND b.bettype < 19001
 						AND ISNULL(epositiontaking,0) = 0 					
@@ -134,7 +126,7 @@ DB: DBTXN.bodb02
 						ON s.BetType = b.bettype
 					LEFT JOIN bodb02.dbo.match m WITH(NOLOCK)
 						ON m.matchid = b.matchid AND m.eventdate = b.winlostdate AND m.sporttype = 44 -- MuayThai
-					WHERE  b.winlostdate =  @Winlostdate			
+					WHERE  b.winlostdate >=  @Winlostdate			
 						AND b.bettype < 19001
 						AND s.productID = 1 
 						AND ISNULL(epositiontaking,0) = 0 									 
@@ -167,7 +159,7 @@ DB: DBTXN.bodb02
 					FROM translog b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
-					WHERE b.winlostdate =  @Winlostdate
+					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
 						AND s.RefTable = 3					
@@ -178,8 +170,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId,  s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate
 						) s
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
@@ -201,7 +192,7 @@ DB: DBTXN.bodb02
 					FROM BettransRNG b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
-					WHERE b.winlostdate =  @Winlostdate
+					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
 						AND s.RefTable = 1					
@@ -211,8 +202,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN (SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
 					  ) s
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
@@ -235,7 +225,7 @@ DB: DBTXN.bodb02
 					FROM BettransLC b WITH(NOLOCK)
 					INNER JOIN  @SportBettype s
 						ON b.gameID = s.bettype
-					WHERE b.winlostdate =  @Winlostdate
+					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
 						AND ISNULL(epositiontaking,0) = 0 
 						AND s.RefTable = 2					
@@ -245,8 +235,7 @@ DB: DBTXN.bodb02
 			FROM wl w
 			LEFT JOIN 	(SELECT s.SuperId, s.Fromdate, s.Todate, s.ProductId, s.SubProduct, s.Sporttype, SUM (s.ExtraPT) AS ExtraPT
 						FROM #Acc_GroupExtraPTSetting s WITH (NOLOCK)
-						WHERE @Winlostdate BETWEEN s.FromDate AND s.ToDate	 
-							  AND s.ProductID <> 1
+						WHERE  s.ProductID <> 1
 						GROUP BY s.SuperId, s.ProductId, s.SubProduct, s.Sporttype, s.Fromdate, s.Todate 
 						) s 
 					ON	w.TransDate BETWEEN s.FromDate AND s.ToDate	
@@ -277,13 +266,8 @@ DB: DBTXN.bodb02
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
 
-			 
-
-
 		END 
-
-		
-	 
+			 
 		--- translog
 		SELECT @i = 1 
 
@@ -299,7 +283,6 @@ DB: DBTXN.bodb02
 			SELECT @i = @@ROWCOUNT
 			WAITFOR DELAY '00:00:03'
 		END 
-
 
 		--- bettransRNG
 		SELECT @i = 1 
@@ -334,9 +317,5 @@ DB: DBTXN.bodb02
 			WAITFOR DELAY '00:00:03'
 		END 
 
-	TRUNCATE TABLE #T
-
-	SELECT @RowId = @RowId + 1 
-	END 
-	
-	DROP TABLE #DATE
+	DROP TABLE #T 
+	 
