@@ -75,7 +75,7 @@ DB: DBTXN.bodb02
 	
 	
  
-	CREATE TABLE  #T (epositiontaking MONEY , ExtraPT MONEY, transID BIGINT, Reftable Smallint)
+	CREATE TABLE  #T (epositiontaking smallmoney , ExtraPT [decimal](9, 8), transID BIGINT, Reftable Smallint)
  
 	DECLARE @i INT = 1 
 
@@ -250,7 +250,7 @@ DB: DBTXN.bodb02
 		END
 
 		--------------------------------Update table --------------------
-
+/*
 		SELECT @i = 1 
 	 
 		----Bettrans
@@ -318,4 +318,111 @@ DB: DBTXN.bodb02
 		END 
 
 	DROP TABLE #T 
+	*/
+	
+	--------------------Update data --------------
+ 
+	CREATE TABLE #TransID (TransID BIGINT, ExtraPT decimal (9,8))
+	
+	 ----Bettrans	 
 	 
+		----Bettrans
+		WHILE @i <> 0 
+		BEGIN  
+		    TRUNCATE TABLE #TransID
+			
+			DELETE TOP (1000) 
+			FROM #T  
+			OUTPUT DELETED.TransID , DELETED.ExtraPT
+			INTO #TransID
+			WHERE  Reftable = 0 
+			
+			SELECT @i = @@ROWCOUNT
+	 
+			UPDATE  B
+			SET B.epositiontaking = ISNULL(E.ExtraPT,0)
+			FROM Bettrans B WITH (ROWLOCK)
+			INNER JOIN #TransID E ON E.TransID = B.TransID
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				
+		 	WAITFOR DELAY '00:00:03'
+
+		END 
+			 
+		--- translog
+		SELECT @i = 1 
+
+		WHILE @i <> 0 
+		BEGIN  
+		
+			TRUNCATE TABLE #TransID
+		
+			DELETE TOP (1000) 
+			FROM #T  
+			OUTPUT DELETED.TransID , DELETED.ExtraPT
+			INTO #TransID
+			WHERE  Reftable = 3 
+			
+			SELECT @i = @@ROWCOUNT
+			
+			
+			UPDATE B
+			SET B.epositiontaking = E.ExtraPT
+			FROM Translog B WITH (ROWLOCK)
+			INNER JOIN #TransID E ON E.TransID = B.translogid
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+						 
+			WAITFOR DELAY '00:00:03'
+		END 
+
+		--- bettransRNG
+		SELECT @i = 1 
+
+		WHILE @i <> 0 
+		BEGIN  		
+			TRUNCATE TABLE #TransID
+		
+			DELETE TOP (1000) 
+			FROM #T  
+			OUTPUT DELETED.TransID , DELETED.ExtraPT
+			INTO #TransID
+			WHERE  Reftable = 1 
+			
+			SELECT @i = @@ROWCOUNT
+			
+			UPDATE B
+			SET B.epositiontaking = E.ExtraPT
+			FROM bettransRNG B WITH (ROWLOCK)
+			INNER JOIN #TransID E ON E.TransID = B.TransID
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+				 
+		 
+			WAITFOR DELAY '00:00:03'
+		END 
+
+	
+		--- bettransLC
+		SELECT @i = 1 
+
+		WHILE @i <> 0 
+		BEGIN  
+			TRUNCATE TABLE #TransID
+			
+			DELETE TOP (1000) 
+			FROM #T  
+			OUTPUT DELETED.TransID , DELETED.ExtraPT
+			INTO #TransID
+			WHERE  Reftable =  2 
+			
+			SELECT @i = @@ROWCOUNT
+			
+			UPDATE B
+			SET B.epositiontaking = E.ExtraPT
+			FROM bettransLC B WITH (ROWLOCK)
+			INNER JOIN #TransID E ON E.TransID = B.TransID
+			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
+			  
+			WAITFOR DELAY '00:00:03'
+		END 
+
+	DROP TABLE #T 
