@@ -345,7 +345,7 @@ DB: DBTXN.bodb02
 			INNER JOIN #TransID E ON E.TransID = B.TransID
 			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
 				
-		 	WAITFOR DELAY '00:00:03'
+		 	WAITFOR DELAY '00:00:01'
 
 		END 
 			 
@@ -372,7 +372,7 @@ DB: DBTXN.bodb02
 			INNER JOIN #TransID E ON E.TransID = B.translogid
 			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
 						 
-			WAITFOR DELAY '00:00:03'
+			WAITFOR DELAY '00:00:01'
 		END 
 
 		--- bettransRNG
@@ -397,7 +397,7 @@ DB: DBTXN.bodb02
 			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
 				 
 		 
-			WAITFOR DELAY '00:00:03'
+			WAITFOR DELAY '00:00:01'
 		END 
 
 	
@@ -422,7 +422,7 @@ DB: DBTXN.bodb02
 			INNER JOIN #TransID E ON E.TransID = B.TransID
 			WHERE (B.epositiontaking <> E.ExtraPT OR B.epositiontaking IS NULL)
 			  
-			WAITFOR DELAY '00:00:03'
+			WAITFOR DELAY '00:00:01'
 		END 
 
 	DROP TABLE #T 
