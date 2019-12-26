@@ -7,17 +7,7 @@ Task: Update Epositiontaking [Redmind: #122071]
 DB: DBTXN.bodb02
 */
 
-	DECLARE @Winlostdate SMALLDATETIME  = '2019-12-26'
-
-	--CREATE TABLE #Date (ID INT IDENTITY (1,1), Winlostdate SMALLDATETIME)
-
-
-	--INSERT INTO #Date(Winlostdate)	
-	--SELECT DISTINCT WINLOSTDATE
-	--FROM Bettrans WITH (NOLOCK) 
-	--WHERE ISNULL(epositiontaking ,0) = 0
-	--AND Winlostdate >= '2019-12-26'
-	--AND bettype < 19001  
+	DECLARE @Winlostdate SMALLDATETIME  = '2019-12-25'
  
 	
 	CREATE TABLE #Acc_GroupExtraPTSetting (
@@ -426,3 +416,4 @@ DB: DBTXN.bodb02
 		END 
 
 	DROP TABLE #T 
+	 
