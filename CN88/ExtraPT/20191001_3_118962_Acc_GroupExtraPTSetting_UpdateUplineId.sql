@@ -14,12 +14,14 @@ BEGIN
 	UPDATE TOP (1000) e
 	SET e.UplineId = c.UplineId
 	FROM Acc_GroupExtraPTSetting e WITH (ROWLOCK)
-	INNER JOIN CustSuper c WITH (NOLOCK) 
-		ON c.CustID = e.SuperId
-	WHERE c.uplineID IS NULL
+	    INNER JOIN CustSuper c WITH (NOLOCK) ON c.CustID = e.SuperId
+	WHERE c.uplineID IS NOT NULL
+	    AND e.uplineID IS NULL
 
 	IF @@ROWCOUNT = 0 
-		BREAK;
+		BREAK
+	
+	WAITFOR DELAY '00:00:00.280'
 END
 GO
   
