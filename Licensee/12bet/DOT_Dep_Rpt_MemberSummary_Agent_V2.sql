@@ -1,11 +1,11 @@
-/*<info serverAlias="DB06-bodb02" executers="Dot_Admin,Dot_Member" viewers="" isFunction="0" isNested="0"></info>*/
 USE [bodb02]
 GO
-/****** Object:  StoredProcedure [dbo].[DOT_Dep_Rpt_MemberSummary_Agent_V2]    Script Date: 2019/3/13 ¤W¤È 11:22:08 ******/
+/****** Object:  StoredProcedure [dbo].[DOT_Dep_Rpt_MemberSummary_Agent_V2]    Script Date: 2019/12/27 ?? 06:06:38 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 ALTER PROCEDURE [dbo].[DOT_Dep_Rpt_MemberSummary_Agent_V2]
 	@fromDate smalldatetime,
 	@toDate smalldatetime,
@@ -49,7 +49,11 @@ Revisions:
 --20180905@Benson(DB06.bodb02): Add mini game(SportType:209) in RNG relate column
 --20190111@Angus(DB06.bodb02): Add Happy5(SportType:164) Report Data
 --20190303@JamesChu(DB06.bodb02): Add IMone Report Data
---20190319@Angus(DB06) :Add BTi Report Data [redmind: #110748]
+--20190319@Angus(DB06) :Add BTi Report Data
+--20190716@JamesChu(DB06.bodb02): Add VRLottery Report Data
+--20190916@Rong(DB06.bodb02): Add Sapphire Report Data
+--20191218@Benson: Add select promotion column
+--20191227@Benson: hotfix column of promotion not aligned
 */
 BEGIN
 	SET NOCOUNT ON
@@ -79,10 +83,10 @@ BEGIN
 		VS2Draw money default(0), VS2TOver money default(0), VS2WL money default(0), --BetRadar Virtual Sports
 		H5Draw money default(0), H5TOver money default(0), H5WL money default(0), --Happy5
 		Winloss money default(0), ClosingBalance money default(0), Transfer3rd money default(0), DrawGame money default(0),
-		recommend int, mrecommend int, srecommend int, actualrate float, Transfer3rd_Opus money default(0), Transfer3rd_HoGaing money default(0),
+		recommend int, mrecommend int, srecommend int, actualrate float, Promotion money, Transfer3rd_Opus money default(0), Transfer3rd_HoGaing money default(0),
 		Transfer3rd_AG money default(0), Transfer3rd_GD money default(0), Transfer3rd_VB money default(0),Transfer3rd_CRYSTAL money default(0),Transfer3rd_LBKeno money default(0),
 		Transfer3rd_Opal money default(0), Transfer3rd_BetSoft money default(0), Transfer3rd_iSoftBet money default(0), Transfer3rd_CitiBet money default(0), Transfer3rd_Topaz money default(0),
-		Transfer3rd_IMone money default(0), Transfer3rd_BTi money default(0))
+		Transfer3rd_IMone money default(0), Transfer3rd_BTi money default(0), Transfer3rd_VRLottery money default(0), Transfer3rd_Sapphire money default(0))
 		
 	DECLARE @WinlostTmp TABLE (
 		winlostdate datetime, custid int, currency int, OpeningBalance money default(0), Deposit money default(0), Aff2MemTransfer money default(0),
@@ -105,12 +109,12 @@ BEGIN
 		VS2Draw money default(0), VS2TOver money default(0), VS2WL money default(0), --BetRadar Virtual Sports
 		H5Draw money default(0), H5TOver money default(0), H5WL money default(0), --Happy5
 		Winloss money default(0), ClosingBalance money default(0), Transfer3rd money default(0), DrawGame money default(0),
-		recommend int, mrecommend int, srecommend int, actualrate float)
+		recommend int, mrecommend int, srecommend int, actualrate float, Promotion money)
 
 	--Get Transfer 3rd Winlost data
 	DECLARE @WinlostTransfer3rd TABLE(CustId int , winlostdate datetime, Transfer3rd_Opus money, Transfer3rd_HoGaming money, Transfer3rd_AG money, Transfer3rd_GD money, Transfer3rd_VB money ,
 		Transfer3rd_CRYSTAL money, Transfer3rd_LBKeno money, Transfer3rd_Opal money, Transfer3rd_BetSoft money, Transfer3rd_iSoftBet money, Transfer3rd_CitiBet money, Transfer3rd_Topaz money,
-		Transfer3rd_IMone money, Transfer3rd_BTi money)
+		Transfer3rd_IMone money, Transfer3rd_BTi money, Transfer3rd_VRLottery money, Transfer3rd_Sapphire money)
 		
 	IF (@fromDate < @CutDate) OR (@toDate < @CutDate)
 	BEGIN
@@ -135,7 +139,7 @@ BEGIN
 			   ISNULL(p1.VS2Draw, 0) AS VS2Draw, ISNULL(p1.VS2TOver, 0) AS VS2TOver, ISNULL(p1.VS2WL, 0) AS VS2WL, --BetRadar Virtual Sports
 			   ISNULL(p1.H5Draw, 0) AS H5Draw, ISNULL(p1.H5TOver, 0) AS H5TOver, ISNULL(p1.H5WL, 0) AS H5WL, --Happy5
 			   b.Winloss, b.ClosingBalance, b.Transfer3rd, b.DrawGame,
-			   b.recommend, b.mrecommend, b.srecommend, b.actualrate
+			   b.recommend, b.mrecommend, b.srecommend, b.actualrate, b.Promotion
 		FROM bodb_Report.dbo.rptDepWinlost_bk b WITH(NOLOCK)
 			LEFT JOIN (
 						SELECT p.winlostdate, p.custid, 
@@ -203,7 +207,7 @@ BEGIN
 
 		INSERT INTO @WinlostTransfer3rd (CustId, winlostdate, Transfer3rd_Opus, Transfer3rd_HoGaming, Transfer3rd_AG, Transfer3rd_GD, Transfer3rd_VB ,
 			Transfer3rd_CRYSTAL, Transfer3rd_LBKeno, Transfer3rd_Opal, Transfer3rd_BetSoft, Transfer3rd_iSoftBet, Transfer3rd_CitiBet, Transfer3rd_Topaz,
-			Transfer3rd_IMone, Transfer3rd_BTi)
+			Transfer3rd_IMone, Transfer3rd_BTi, Transfer3rd_VRLottery, Transfer3rd_Sapphire)
 		SELECT custid, winlostdate, 
 			SUM(CASE PartnerId WHEN 2 THEN TransferAmount ELSE 0 END), -- oops
 			SUM(CASE PartnerId WHEN 1 THEN TransferAmount ELSE 0 END), -- HoGaming
@@ -218,7 +222,9 @@ BEGIN
 			SUM(CASE PartnerId WHEN 12 THEN TransferAmount ELSE 0 END), -- CitiBet(Exchange)
 			SUM(CASE PartnerId WHEN 13 THEN TransferAmount ELSE 0 END), -- Topaz(FG)
 			SUM(CASE PartnerId WHEN 14 THEN TransferAmount ELSE 0 END), -- IMone
-			SUM(CASE PartnerId WHEN 15 THEN TransferAmount ELSE 0 END)  -- BTi
+			SUM(CASE PartnerId WHEN 15 THEN TransferAmount ELSE 0 END), -- BTi
+			SUM(CASE PartnerId WHEN 16 THEN TransferAmount ELSE 0 END), -- VRLottery
+			SUM(CASE PartnerId WHEN 17 THEN TransferAmount ELSE 0 END)  -- Sapphire
 		FROM bodb_Report.dbo.rptDepWinlost_Transfer3rdOthers_bk  WITH (NOLOCK) 
 		WHERE  (winlostdate BETWEEN @fromDate AND @toDate) AND custid = @Custid AND recommend IN (SELECT val FROM strSplit(@agentid,','))  
 		GROUP BY winlostdate,CustId
@@ -248,7 +254,7 @@ BEGIN
 			   ISNULL(p1.VS2Draw, 0) AS VS2Draw, ISNULL(p1.VS2TOver, 0) AS VS2TOver, ISNULL(p1.VS2WL, 0) AS VS2WL, --BetRadar Virtual Sports
 			   ISNULL(p1.H5Draw, 0) AS H5Draw, ISNULL(p1.H5TOver, 0) AS H5TOver, ISNULL(p1.H5WL, 0) AS H5WL, --Happy5
 			   b.Winloss, b.ClosingBalance, b.Transfer3rd, b.DrawGame,
-			   b.recommend, b.mrecommend, b.srecommend, b.actualrate
+			   b.recommend, b.mrecommend, b.srecommend, b.actualrate, b.Promotion
 		FROM bodb_Report.dbo.rptDepWinlost b WITH(NOLOCK)
 			LEFT JOIN (
 						SELECT p.winlostdate, p.custid, 
@@ -316,7 +322,7 @@ BEGIN
 
 		INSERT INTO @WinlostTransfer3rd (CustId, winlostdate, Transfer3rd_Opus, Transfer3rd_HoGaming, Transfer3rd_AG, Transfer3rd_GD, Transfer3rd_VB,
 			Transfer3rd_CRYSTAL, Transfer3rd_LBKeno, Transfer3rd_Opal, Transfer3rd_BetSoft, Transfer3rd_iSoftBet, Transfer3rd_CitiBet, Transfer3rd_Topaz,
-			Transfer3rd_IMone, Transfer3rd_BTi)
+			Transfer3rd_IMone, Transfer3rd_BTi, Transfer3rd_VRLottery, Transfer3rd_Sapphire)
 		SELECT custid, winlostdate, 
 			SUM(CASE PartnerId WHEN 2 THEN TransferAmount ELSE 0 END), -- oops
 			SUM(CASE PartnerId WHEN 1 THEN TransferAmount ELSE 0 END), -- HoGaming
@@ -331,8 +337,10 @@ BEGIN
 			SUM(CASE PartnerId WHEN 12 THEN TransferAmount ELSE 0 END), -- CitiBet(Exchange)
 			SUM(CASE PartnerId WHEN 13 THEN TransferAmount ELSE 0 END), -- Topaz(FG)
 			SUM(CASE PartnerId WHEN 14 THEN TransferAmount ELSE 0 END), -- IMone
-			SUM(CASE PartnerId WHEN 15 THEN TransferAmount ELSE 0 END)  -- BTi
-		FROM bodb_Report.dbo.rptDepWinlost_Transfer3rdOthers  WITH (NOLOCK) 
+			SUM(CASE PartnerId WHEN 15 THEN TransferAmount ELSE 0 END), -- BTi
+			SUM(CASE PartnerId WHEN 16 THEN TransferAmount ELSE 0 END), -- VRLottery
+			SUM(CASE PartnerId WHEN 17 THEN TransferAmount ELSE 0 END)  -- Sapphire
+		FROM bodb_Report.dbo.rptDepWinlost_Transfer3rdOthers  WITH(NOLOCK) 
 		WHERE  (winlostdate BETWEEN @fromDate AND @toDate) AND winlostdate <> @dbtodaydate AND custid = @Custid AND recommend IN (SELECT val FROM strSplit(@agentid,','))  
 		GROUP BY winlostdate,CustId
 
@@ -350,7 +358,8 @@ BEGIN
 			Transfer3rd, Turnover, DrawGame, Outstanding, Winloss, Transfer3rd_Opus, 
 			Transfer3rd_HoGaing, Transfer3rd_AG, Transfer3rd_GD, Transfer3rd_VB,
 			Transfer3rd_CRYSTAL, Transfer3rd_LBKeno, Transfer3rd_Opal, Transfer3rd_BetSoft,
-			Transfer3rd_iSoftBet, Transfer3rd_CitiBet, Transfer3rd_Topaz, Transfer3rd_IMone, Transfer3rd_BTi)
+			Transfer3rd_iSoftBet, Transfer3rd_CitiBet, Transfer3rd_Topaz, Transfer3rd_IMone,
+			Transfer3rd_BTi, Transfer3rd_VRLottery, Transfer3rd_Sapphire, Promotion)
 		SELECT b.custid, b.currency, b.recommend, b.mrecommend, b.srecommend,
 			   @TodayOpeningBalance, -- OpeningBalance
 			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype = 22001 THEN winlost-actual_stake ELSE 0 END), -- Deposit
@@ -376,14 +385,17 @@ BEGIN
 			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22030,22031) THEN winlost-actual_stake ELSE 0 END),  -- Transfer3rd CitiBet(Exchange)
 			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22032,22033) THEN winlost-actual_stake ELSE 0 END),  -- Transfer3rd Topaz(FG)
 			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22034,22035) THEN winlost-actual_stake ELSE 0 END),  -- Transfer3rd IMone
-			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22036,22037) THEN winlost-actual_stake ELSE 0 END)   -- Transfer3rd BTi
+			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22036,22037) THEN winlost-actual_stake ELSE 0 END),   -- Transfer3rd BTi
+			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22038,22039) THEN winlost-actual_stake ELSE 0 END),   -- Transfer3rd VRLottery
+			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype IN (22040,22041) THEN winlost-actual_stake ELSE 0 END),   -- Transfer3rd Sapphire
+			   SUM(CASE WHEN winlostdate = @dbtodaydate AND bettype = 17000 THEN winlost-actual_stake ELSE 0 END)	-- Promotion
 		FROM bodb02.dbo.bettrans b WITH(NOLOCK)
 		WHERE b.custid = @CustId 
 			AND b.recommend IN (SELECT val FROM strSplit(@agentid,','))	
 		GROUP BY b.custid, b.currency, b.recommend, b.mrecommend, b.srecommend
 		
 		UPDATE d
-		SET ClosingBalance = OpeningBalance + Deposit + Aff2MemTransfer - Withdrawal + Bonus + Adjustment - Outstanding + Winloss + Transfer3rd + Transfer3rd_HoGaing + Transfer3rd_Opus + Transfer3rd_AG + Transfer3rd_GD + Transfer3rd_VB + Transfer3rd_CRYSTAL + Transfer3rd_LBKeno + Transfer3rd_Opal + Transfer3rd_BetSoft + Transfer3rd_iSoftBet + Transfer3rd_CitiBet + Transfer3rd_Topaz + Transfer3rd_IMone + Transfer3rd_BTi,
+		SET ClosingBalance = OpeningBalance + Deposit + Aff2MemTransfer - Withdrawal + Bonus + Adjustment - Outstanding + Winloss + Transfer3rd + Transfer3rd_HoGaing + Transfer3rd_Opus + Transfer3rd_AG + Transfer3rd_GD + Transfer3rd_VB + Transfer3rd_CRYSTAL + Transfer3rd_LBKeno + Transfer3rd_Opal + Transfer3rd_BetSoft + Transfer3rd_iSoftBet + Transfer3rd_CitiBet + Transfer3rd_Topaz + Transfer3rd_IMone + Transfer3rd_BTi + Transfer3rd_VRLottery + Transfer3rd_Sapphire + Promotion,
 			actualrate = e.ActualRate
 		FROM @TodayData d 
 			INNER JOIN exchangedailyoanda e WITH(NOLOCK) ON d.currency = e.ExchangeId
@@ -475,7 +487,9 @@ BEGIN
 		   ISNULL(o.Transfer3rd_CitiBet, 0) AS Transfer3rd_CitiBet,
 		   ISNULL(o.Transfer3rd_Topaz, 0) AS Transfer3rd_Topaz,
 		   ISNULL(o.Transfer3rd_IMone, 0) AS Transfer3rd_IMone,
-		   ISNULL(o.Transfer3rd_BTi, 0) AS Transfer3rd_BTi
+		   ISNULL(o.Transfer3rd_BTi, 0) AS Transfer3rd_BTi,
+		   ISNULL(o.Transfer3rd_VRLottery, 0) AS Transfer3rd_VRLottery,
+		   ISNULL(o.Transfer3rd_Sapphire, 0) AS Transfer3rd_Sapphire
 	FROM @WinlostTmp b
 		LEFT JOIN @WinlostTransfer3rd o ON b.winlostdate = o.winlostdate
 	UNION
