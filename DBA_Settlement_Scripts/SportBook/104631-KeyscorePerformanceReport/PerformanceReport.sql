@@ -67,7 +67,7 @@ CREATE TABLE #Result_tmp(
 	[Duration] [int] NULL
 )
 
-SELECT @maxdate = MAX(CreatedDate)
+SELECT @maxdate = MAX(Starttime)
 FROM	dbo.SettlementPerformanceLog WITH (NOLOCK)
 
 IF @maxdate IS NULL
