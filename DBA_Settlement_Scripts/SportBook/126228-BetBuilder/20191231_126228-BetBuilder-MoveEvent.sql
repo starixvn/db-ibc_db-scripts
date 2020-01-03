@@ -33,7 +33,7 @@ SET @IsExistsBBTicket = (SELECT TOP (1) 1
 			
 SET @IsValidMatchid	= (SELECT COUNT(DISTINCT matchid) 
 						FROM DBPRO.bodb02.dbo.VendorStatus WITH (NOLOCK) 
-						WHERE matchid IN (@MatchID,@NewMatchID)
+						WHERE matchid IN (@MatchID,@NewMatchID) AND vendorid = 34
 						)		
 
 IF @IsValidMatchid = 2 AND @IsExistsBBTicket = 1	
