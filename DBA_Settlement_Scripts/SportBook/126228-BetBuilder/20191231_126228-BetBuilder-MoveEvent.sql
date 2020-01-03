@@ -4,6 +4,9 @@
 	Task: Moving Betbuilder to new match 
 	DB: DBTXN/BODB02 
 	
+	Assumptions:
+		- @MatchID & @NewMatchID existed in table VendorStatus
+		- There is at least one BB ticket in match for curent matchID
 */
 USE bodb02
 GO
@@ -21,7 +24,7 @@ DECLARE @MatchID		INT
 SET @IP = '125.227.140.97'
 SET @AdminId = 10278938
 
-SET @MatchID = XXX -- old match
+SET @MatchID = XXX -- current matchid
 SET @NewMatchID = XXX -- NEW matchid
 
 SET @IsExistsBBTicket = (SELECT TOP (1) 1
@@ -39,6 +42,6 @@ BEGIN
 END
 ELSE
 BEGIN
-	SET	@ErrMsg = 'Wrong Matchid or not exists betbuilder tickets'
+	SET	@ErrMsg = 'Wrong Matchid or not exists betbuilder tickets.'
 END	
 SELECT @ErrCode, @ErrMsg
