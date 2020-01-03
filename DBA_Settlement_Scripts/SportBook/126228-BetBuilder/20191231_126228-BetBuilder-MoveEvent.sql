@@ -16,7 +16,7 @@ DECLARE @MatchID		INT
 	, @AdminId		INT
 	, @IP varchar(15) = ''
 	, @IsExistsBBTicket BIT = 0
-	, @IsValidMatchid	BIT = 0
+	, @ValidBBMatchid	TINYINT = 0
 	, @ErrCode		INT = 0
 	, @ErrMsg		NVARCHAR(100)='' 
 	
@@ -31,12 +31,12 @@ SET @IsExistsBBTicket = (SELECT TOP (1) 1
 						FROM dbo.bettrans WITH (NOLOCK)
 						WHERE matchid = @MatchID AND bettype = 38)
 			
-SET @IsValidMatchid	= (SELECT COUNT(DISTINCT matchid) 
+SET @ValidBBMatchid	= (SELECT COUNT(DISTINCT matchid) 
 						FROM DBPRO.bodb02.dbo.VendorStatus WITH (NOLOCK) 
 						WHERE matchid IN (@MatchID,@NewMatchID) AND vendorid = 34
 						)		
 
-IF @IsValidMatchid = 2 AND @IsExistsBBTicket = 1	
+IF @ValidBBMatchid = 2 AND @IsExistsBBTicket = 1	
 BEGIN
 	EXEC dbo.NAP_Admin_Settlement_BetBuilder_MoveEvent @MatchID = @MatchID, @NewMatchID = @NewMatchID, @AdminId = @AdminId,@IP = @IP,@ErrCode= @ErrCode OUT, @ErrMsg = @ErrMsg OUT
 END
