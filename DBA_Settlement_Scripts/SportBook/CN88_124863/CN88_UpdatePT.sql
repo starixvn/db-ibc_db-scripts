@@ -991,7 +991,7 @@ set correctPT = correctPT / 100, wrongPT = wrongPT / 100
 delete #re
 where sporttype <>1
 or correctPT = wrongPT
-select * from #re where sporttype = 1 and correctPT <> wrongPT
+--select * from #re where sporttype = 1 and correctPT <> wrongPT
 
 select b.recommend, productid, b.bettype, transiD, r.correctPT, b.mpositiontaking wrongPT, * from bettrans b with (nolock)
 join #re r on r.recommend = b.recommend and r.correctPT <> b.mpositiontaking
