@@ -19,7 +19,7 @@ SELECT t.TransID, CASE WHEN ot.oddstype = 1 THEN 1 ELSE 0 END AS isDecimalOdd, s
 FROM Viet_C8_CorrectPT_20200105 t WITH (NOLOCK)
 	INNER LOOP JOIN dbo.bettrans bt	WITH (NOLOCK) ON bt.transid = t.transid
 	LEFT JOIN dbo.f_Set_OddsTypeBettypes() AS ot ON ot.bettype = bt.bettype
-WHERE bt.statuswinlost IS NOT NULL
+WHERE bt.statuswinlost IS NOT NULL AND bt.statusID NOT IN (101,102)
 	 
 -- update if bettype belongs to the CN88 site or not
 UPDATE tmp
