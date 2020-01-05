@@ -14,15 +14,6 @@ DECLARE  @commWinRate		SMALLMONEY
 		,@stake				MONEY
 		,@m_PT				SMALLMONEY
 
--- update PT
-UPDATE b
-	SET 
-		@m_PT = b1.m2_correct
-		, mpositiontaking = @m_PT
-		, tpositiontaking = b.apositiontaking + @m_PT + b.spositiontaking
-FROM bettrans b WITH (NOLOCK)
-	INNER JOIN Viet_C8_CorrectPT_20200105 b1 ON b.transid = b1.transid
-			
 INSERT INTO @tempTrans(TransID, isDecimalOdd, srecommend, bettype)
 SELECT t.TransID, CASE WHEN ot.oddstype = 1 THEN 1 ELSE 0 END AS isDecimalOdd, srecommend, bt.bettype
 FROM Viet_C8_CorrectPT_20200105 t WITH (NOLOCK)
