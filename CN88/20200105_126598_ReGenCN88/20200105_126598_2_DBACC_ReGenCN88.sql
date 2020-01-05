@@ -14,17 +14,7 @@ BEGIN
 
 	EXEC dbo.Task_CS_HeadlineBalance
 	   @Winlostdate = @Winlostdate,
-	   @IsCheckDataOnly = 0
-   
-	 EXEC dbo.Task_ResetWinning_Non3rdParty
-		@fromdate = @WinlostDate,
-		@todate = @WinlostDate,
-		@mode =1
-
-	EXEC dbo.Task_ResetWinning_ExtraPT
-		@FromDate= @WinlostDate,
-		@ToDate = @WinlostDate,
-		@mode =1
+	   @IsCheckDataOnly = 0   
 	
 	SELECT @WinlostDate = DATEADD (DD, 1, @WinlostDate)   
 	
