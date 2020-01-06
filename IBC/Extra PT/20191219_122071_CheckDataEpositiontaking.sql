@@ -1,4 +1,4 @@
- USE bodb02
+																	  USE bodb02
 GO 
 
 /*
@@ -7,7 +7,7 @@ Task: Check data Epositiontaking [Redmind: #122071]
 DB: DBACC.bodb02
 */
 
-	DECLARE @Winlostdate SMALLDATETIME  = '2019-12-25'
+	DECLARE @Winlostdate SMALLDATETIME  = '2010-01-05'
  
 	
 	CREATE TABLE #Acc_GroupExtraPTSetting (
@@ -56,11 +56,11 @@ DB: DBACC.bodb02
 	) 
 	
 	
-	DECLARE @SportBettype TABLE(ProductID INT, Bettype INT,SubProduct VARCHAR(500), RefTable SMALLINT)
-	INSERT INTO @SportBettype
+	CREATE TABLE  #SportBettype (ProductID INT, Bettype INT,SubProduct VARCHAR(500), RefTable SMALLINT)
+	INSERT INTO #SportBettype
 	SELECT DISTINCT ProductID, Bettype, SubProduct, RefTable  FROM bodb02.dbo.f_SportBettypeMatrix_Sel (0, 0, 0, 2, '', '', 1)
 
-	DELETE @SportBettype WHERE ProductId NOT IN (SELECT DISTINCT ProductID FROM #Acc_GroupExtraPTSetting WITH(NOLOCK))
+	DELETE #SportBettype WHERE ProductId NOT IN (SELECT DISTINCT ProductID FROM #Acc_GroupExtraPTSetting WITH(NOLOCK))
 	
 	
 	
@@ -76,7 +76,7 @@ DB: DBACC.bodb02
 			;WITH wl AS (
 					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.Bettype, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, b.Epositiontaking
 					FROM bettrans b WITH(NOLOCK)
-					INNER JOIN  @SportBettype s
+					INNER JOIN  #SportBettype s
 						ON s.BetType = b.bettype
 					WHERE b.winlostdate >= @Winlostdate
 						AND s.ProductID <> 1  				
@@ -112,7 +112,7 @@ DB: DBACC.bodb02
 							CAST(b.TransDate AS DATE) as TransDate, 
 							b.winlostdate, b.TransID  , b.epositiontaking
 					FROM bettrans b WITH (NOLOCK)
-					INNER JOIN  @SportBettype s
+					INNER JOIN  #SportBettype s
 						ON s.BetType = b.bettype
 					LEFT JOIN bodb02.dbo.match m WITH(NOLOCK)
 						ON m.matchid = b.matchid AND m.eventdate = b.winlostdate AND m.sporttype = 44 -- MuayThai
@@ -147,7 +147,7 @@ DB: DBACC.bodb02
 			;WITH wl AS (
 					SELECT   b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.translogid, b.epositiontaking
 					FROM translog b WITH(NOLOCK)
-					INNER JOIN  @SportBettype s
+					INNER JOIN  #SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
@@ -180,7 +180,7 @@ DB: DBACC.bodb02
 			;WITH wl AS (
 					SELECT  b.srecommend, s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, epositiontaking
 					FROM BettransRNG b WITH(NOLOCK)
-					INNER JOIN  @SportBettype s
+					INNER JOIN  #SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
@@ -213,7 +213,7 @@ DB: DBACC.bodb02
 			;WITH wl AS (
 					SELECT  b.srecommend , s.ProductID, 0 AS Sporttype, '' AS SubProduct, b.gameID, CAST(b.TransDate AS DATE) as TransDate, b.winlostdate, b.TransID, epositiontaking
 					FROM BettransLC b WITH(NOLOCK)
-					INNER JOIN  @SportBettype s
+					INNER JOIN  #SportBettype s
 						ON b.gameID = s.bettype
 					WHERE b.winlostdate >=  @Winlostdate
 						AND s.ProductID <> 1  									
@@ -239,20 +239,22 @@ DB: DBACC.bodb02
 		 
 		END
 		
+
+	DROP TABLE #Acc_GroupExtraPTSetting 			
 		
 --- DIFF table
 	Select * from #T 
 		
 --- Bettrans 		
-	Select b.epositiontaking ,t.ExtraPT, b.bettype,  * from Bettrans b INNER JOIn #T T  ON T.TransID = b.TransID  WHERE b.epositiontaking <> t.ExtraPT
+	Select b.epositiontaking ,t.ExtraPT, b.bettype,  * from Bettrans b INNER JOIn #T T  ON T.TransID = b.TransID  WHERE b.epositiontaking <> t.ExtraPT  AND B.bettype IN (Select BEttype from #SportBettype where Reftable = 0  )
 
 
 --- BettransRNG 
-	Select b.epositiontaking  ,t.ExtraPT,b.gameID,   * from BettransRNG b INNER JOIn #T T  ON T.TransID = b.TransID WHERE b.epositiontaking <> t.ExtraPT
+	Select b.epositiontaking  ,t.ExtraPT,b.gameID,   * from BettransRNG b INNER JOIn #T T  ON T.TransID = b.TransID WHERE b.epositiontaking <> t.ExtraPT  AND B.gameID IN (Select BEttype from #SportBettype where Reftable = 1  )
 
 	
 ---BettransLC
-	Select b.epositiontaking , t.ExtraPT, b.gameID,  * from BettransLC b INNER JOIn #T T  ON T.TransID = b.TransID WHERE b.epositiontaking <> t.ExtraPT
+	Select b.epositiontaking , t.ExtraPT, b.gameID,  * from BettransLC b INNER JOIn #T T  ON T.TransID = b.TransID WHERE b.epositiontaking <> t.ExtraPT	  AND B.gameID IN (Select BEttype from #SportBettype where Reftable = 2 )
 	 	
 ---TransLog
-	Select b.epositiontaking , t.ExtraPT,b.gameID,   * from TransLog b INNER JOIn #T T  ON T.TransID = b.translogid WHERE b.epositiontaking <> t.ExtraPT
+	Select b.epositiontaking , t.ExtraPT,b.gameID,   * from TransLog b INNER JOIn #T T  ON T.TransID = b.translogid WHERE b.epositiontaking <> t.ExtraPT   AND B.gameID IN (Select BEttype from #SportBettype where Reftable = 3  )
