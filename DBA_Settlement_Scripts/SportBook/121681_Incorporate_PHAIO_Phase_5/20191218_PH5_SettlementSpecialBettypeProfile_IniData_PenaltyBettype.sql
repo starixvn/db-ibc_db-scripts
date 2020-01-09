@@ -8,6 +8,7 @@ USE bodb02
 
 GO 
 
+-- Affected rows = 169
 INSERT [dbo].[SettlementSpecialBettypeProfile] 
 	([pfID], [BetType], [SportType], [BetID], [ResourceID], [SettleType], [GroupType], [OrdNo], [RoundID], [OddsType]) 
 VALUES 
