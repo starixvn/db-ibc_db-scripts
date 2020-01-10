@@ -5,7 +5,7 @@
 */
 USE CustDB
 GO
-CREATE TABLE #DefaultValue (ProfileID SMALLINT, Sporttype SMALLINT,Site NVARCHAR(50), MaxTurnover Money, ToCurrency INT )
+CREATE TABLE #DefaultValue (ProfileID SMALLINT, Sporttype SMALLINT,Site NVARCHAR(50), MaxTurnover MONEY, ToCurrency INT )
 /* STEP 1: Initial Default Value */
 INSERT INTO #DefaultValue (ProfileID, Sporttype ,Site, MaxTurnover, ToCurrency)
 SELECT 1  ProfileID, 1 Sporttype, '789y'  Site, 60000  MaxTurnover, 3  ToCurrency
@@ -95,29 +95,23 @@ UNION ALL
 SELECT 20  ProfileID, 99 Sporttype, ''  Site, 30000  MaxTurnover, 2  ToCurrency
 
 
-/* STEP 4: Insert new default setting into ToControl_GlobalSetting */
+/* STEP 2: Insert new default setting into ToControl_GlobalSetting */
 INSERT INTO TOControl_GlobalSetting(CustID, Sporttype, IsGroupHeadLine, MaxTurnOver, ProfileID)
-SELECT 
-	
-	tmp.custid
+SELECT tmp.custid
 	,tmp.Sporttype
 	,IsGroupHeadLine
 	,CASE 
 		WHEN df.ToCurrency = 2 THEN CONVERT(MONEY, df.MaxTurnover/ex.actualrate) 
-		ELSE CONVERT(money, df.MaxTurnover * ex2.actualrate/ ex.actualrate) 
+		ELSE CONVERT(MONEY, df.MaxTurnover * ex2.actualrate/ ex.actualrate) 
 		END AS MaxTurnover
-	,pf.ProfileID
-	
+	,pf.ProfileID	
 FROM TOControl_GlobalSetting_temp tmp WITH (NOLOCK)
   INNER JOIN dbo.Customer ci WITH (NOLOCK) ON tmp.CustID = ci.custid AND ci.currency NOT IN (20, 27 , 28)
-   INNER JOIN dbo.exchange ex WITH (NOLOCK) ON ci.currency =  ex.exchangeid
-  INNER JOIN #DefaultValue df WITH (NOLOCK) ON tmp.Sporttype = df.Sporttype AND df.Site = CASE WHEN ci.site in ('789y', 'CN88') AND df.Sporttype = 1 THEN ci.site ELSE '' END 
-  
+  INNER JOIN dbo.exchange ex WITH (NOLOCK) ON ci.currency =  ex.exchangeid
+  INNER JOIN #DefaultValue df WITH (NOLOCK) ON tmp.Sporttype = df.Sporttype AND df.Site = CASE WHEN ci.site IN ('789y', 'CN88') AND df.Sporttype = 1 THEN ci.site ELSE '' END  
   INNER JOIN dbo.exchange ex2 WITH (NOLOCK) ON df.ToCurrency = ex2.exchangeid
-  
   INNER JOIN dbo.TOControl_Profile  pf WITH (NOLOCK) ON pf.Sporttype = df.Sporttype AND pf.ProfileID = df.ProfileID
 
 DROP TABLE #DefaultValue
 
 GO
---SELECT * FROM TOControl_GlobalSetting_temp WITH (NOLOCK)

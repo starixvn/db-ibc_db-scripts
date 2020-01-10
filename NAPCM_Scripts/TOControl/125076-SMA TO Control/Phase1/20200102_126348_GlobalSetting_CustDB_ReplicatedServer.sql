@@ -5,17 +5,13 @@
 */
 USE CustDB
 GO
+
 TRUNCATE TABLE TOControl_GlobalSetting
 GO
 ALTER TABLE TOControl_GlobalSetting DROP COLUMN ProfileID
 GO
 ALTER TABLE [dbo].TOControl_GlobalSetting ADD ProfileID SMALLINT NOT NULL
-
 GO
 
-ALTER TABLE [dbo].[TOControl_GlobalSetting] 
-DROP CONSTRAINT  [PK_TO_ControlglobalSetting]
-
-ALTER TABLE [dbo].[TOControl_GlobalSetting] 
-ADD CONSTRAINT [PK_TO_ControlglobalSetting] 
-PRIMARY KEY ([CustID],[Sporttype],[IsGroupHeadLine],[ProfileID]) 
+ALTER TABLE [dbo].[TOControl_GlobalSetting] DROP CONSTRAINT  [PK_TO_ControlglobalSetting]
+ALTER TABLE [dbo].[TOControl_GlobalSetting] ADD CONSTRAINT [PK_TO_ControlglobalSetting] PRIMARY KEY ([CustID],[Sporttype],[IsGroupHeadLine],[ProfileID]) 
