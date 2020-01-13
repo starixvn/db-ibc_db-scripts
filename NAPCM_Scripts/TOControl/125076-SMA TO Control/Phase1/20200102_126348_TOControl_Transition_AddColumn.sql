@@ -6,5 +6,5 @@
 USE bodb02
 GO
 
-ALTER TABLE [dbo].[TOControl_Transition]  ADD liveindicator  BIT NULL, bettypeID SMALLINT NULL
+ALTER TABLE [dbo].[TOControl_Transition]  ADD liveindicator  BIT NULL, bettype SMALLINT NULL
 GO
