@@ -7,12 +7,14 @@
 USE bodb02
 GO
 -- update PT
-DECLARE @m_PT SMALLMONEY
+DECLARE @a_PT SMALLMONEY
+
+SET @a_PT = 0.15
 
 UPDATE b
 	SET 
-		apositiontaking = 0.15
-		, tpositiontaking = 0.15 + b.mpositiontaking + b.spositiontaking
+		apositiontaking = @a_PT
+		, tpositiontaking = @a_PT + b.mpositiontaking + b.spositiontaking
 FROM bettrans b WITH (ROWLOCK)
 WHERE b.transid IN (108348245117,108348523249,108347181624,108347184263,108346308348
 				,108346323808,108348001645,108348932451,108348494114,108347050701
