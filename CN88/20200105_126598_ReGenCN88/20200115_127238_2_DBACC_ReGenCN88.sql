@@ -5,7 +5,7 @@ Task: ReGen Sum data on 2020-01-14 [Redmine: #127238]
 
 */
  ------------------------------------
- -----#2. DBACC.bodb02
+ -----#2. DB061.bodb02 only
 
 DECLARE @WinlostDate SMALLDATETIME = '2020-01-14'
  
