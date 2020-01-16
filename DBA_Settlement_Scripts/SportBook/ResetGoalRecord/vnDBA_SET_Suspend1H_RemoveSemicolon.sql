@@ -20,7 +20,6 @@ ALTER PROCEDURE [dbo].[vnDBA_SET_Suspend1H_RemoveSemicolon]
 AS
 BEGIN
 	DECLARE @sporttype INT = 1
-		, @childmatchtype SMALLINT = 0
 		, @hthomescore_GR SMALLINT = 0
 		, @htawayscore_GR SMALLINT = 0
 		, @hthomescore_tmp SMALLINT = 0
@@ -28,7 +27,6 @@ BEGIN
 		, @validSemicolon VARCHAR(1)=''
 
 	SELECT @sporttype = sporttype
-		, @childmatchtype = ChildMatchType
 		, @hthomescore_GR = LEN(GoalRecord) - LEN(REPLACE(GoalRecord, 'H', ''))
 		, @htawayscore_GR = LEN(GoalRecord) - LEN(REPLACE(GoalRecord, 'A', ''))
 		, @hthomescore_tmp = hthomescore

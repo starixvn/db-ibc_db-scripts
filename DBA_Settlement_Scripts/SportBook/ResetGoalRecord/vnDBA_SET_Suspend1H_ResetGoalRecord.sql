@@ -1,5 +1,5 @@
 /*<info serverAlias="DBPRO-bodb02" executers="" viewers="" isFunction="0"></info>*/
-ALTER PROCEDURE [dbo].[vnDBA_SET_HalfTime_ResetGoalRecord]
+ALTER PROCEDURE [dbo].[vnDBA_SET_Suspend1H_ResetGoalRecord]
 (
 	@MatchID   INT
 	,@creator  INT = 10278938 -- starixIT
