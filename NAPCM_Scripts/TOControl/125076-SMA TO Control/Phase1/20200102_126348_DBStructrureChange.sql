@@ -10,7 +10,8 @@ GO
 CREATE TABLE [dbo].[TOControl_Profile](
 	ProfileID SMALLINT IDENTITY (1,1),
 	ProfileName NVARCHAR(50) NULL,
-	Sporttype SMALLINT
+	Sporttype SMALLINT,
+	GroupName NVARCHAR(100) NULL
  CONSTRAINT [PK_TOControl_Profile] PRIMARY KEY CLUSTERED 
 (
 	[ProfileID] ASC
