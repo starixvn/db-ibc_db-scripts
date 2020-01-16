@@ -7,8 +7,6 @@ USE bodb02
 GO
 TRUNCATE TABLE TOControl_GlobalSetting
 GO
-ALTER TABLE TOControl_GlobalSetting DROP COLUMN ProfileID
-GO
 ALTER TABLE [dbo].TOControl_GlobalSetting ADD ProfileID SMALLINT NOT NULL
 GO
 
