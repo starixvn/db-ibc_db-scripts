@@ -11,6 +11,7 @@
 USE bodb02
 GO
 
-INSERT INTO dbo.SystemSettings (VName, VValue)
-VALUES ('CutOffDate_ExtraPT', '2020-01-12')
+UPDATE dbo.SystemSettings WITH (ROWLOCK)
+SET VValue = '2020-01-12'
+WHERE VName = 'CutOffDate_ExtraPT'
 GO
