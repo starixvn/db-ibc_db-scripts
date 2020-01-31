@@ -22,7 +22,7 @@ DECLARE @MatchID		INT,
 		@MatchID_ClearStake INT,
 		@Refno_StakeUpd BIGINT
 		
-SET @MatchID_ClearStake = 34352128
+SET @MatchID_ClearStake = 34367878
 SET @Refno_StakeUpd = 101570782876
 
 SET @NewMatchID = XXX
@@ -38,7 +38,7 @@ WHERE	b.matchid = @MatchID
 -- Reset stake = 0 for matchid 34367878
 UPDATE	b
 	SET	stake = 0  
-FROM	bettransm b  WITH (ROWLOCK)
+FROM	bettransm14 b  WITH (ROWLOCK)
 WHERE	b.refno = @Refno_StakeUpd AND b.matchid = @MatchID_ClearStake
 
 -- Update new stake for new matchid
