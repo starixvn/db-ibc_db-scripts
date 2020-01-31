@@ -33,13 +33,12 @@ CREATE TABLE [dbo].[TOControl_ProfileSetting](
 )ON DATA
 ) ON DATA
 GO
-CREATE NONCLUSTERED INDEX ix_Sporttype_Bettype_liveindicator ON TOControl_ProfileSetting
+CREATE NONCLUSTERED INDEX [ix_Sporttype_Bettype_liveindicator] ON [dbo].[TOControl_ProfileSetting] 
 (
-	[Sporttype],
-	[Bettype],
-	[liveindicator]
-	
-)
+	[Sporttype] ASC,
+	[Bettype] ASC,
+	[liveindicator] ASC
+) INCLUDE (ProfileID)
 GO
 
 ALTER TABLE [dbo].[TOControl_Setting] DROP CONSTRAINT  [PK_TOControl_Setting]
