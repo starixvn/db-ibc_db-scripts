@@ -18,9 +18,10 @@ GO
 DECLARE @MatchID		INT,
 		@NewMatchID		INT,
 		@NewOddsid		INT
-	
-SET @NewMatchID = XXX
-SET @NewOddsid = XXX
+
+SET @MatchID = 	34352128
+SET @NewMatchID = 34468342
+SET @NewOddsid = 237759838
 
 ---- Update new matchid and oddsid
 UPDATE	b

@@ -19,7 +19,7 @@ DECLARE @MatchID		INT,
 		@NewMatchID		INT
 
 SET @MatchID = 34352128
-SET @NewMatchID = --XXX
+SET @NewMatchID = 34468342
 
 UPDATE p
 	SET matchid = @NewMatchID
