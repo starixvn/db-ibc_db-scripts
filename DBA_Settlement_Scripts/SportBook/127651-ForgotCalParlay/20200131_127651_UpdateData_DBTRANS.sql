@@ -18,9 +18,6 @@ GO
 DECLARE @MatchID		INT,
 		@NewMatchID		INT,
 		@NewOddsid		INT,
-		-- for update stake
-		@MatchID_ClearStake INT,
-		@Refno_StakeUpd BIGINT
 		
 SET @MatchID_ClearStake = 34367878
 SET @Refno_StakeUpd = 101570782876
@@ -35,15 +32,40 @@ UPDATE	b
 FROM	bettransm b  WITH (ROWLOCK)
 WHERE	b.matchid = @MatchID 
 
--- Reset stake = 0 for matchid 34367878
-UPDATE	b
-	SET	stake = 0  
-FROM	bettransm14 b  WITH (ROWLOCK)
-WHERE	b.refno = @Refno_StakeUpd AND b.matchid = @MatchID_ClearStake
+--- fix stake for 8 refno 
+CREATE TABLE #RefnoList (refno BIGINT, matchid INT)
+CREATE TABLE #Refno_Stake (refno BIGINT, stake MONEY)
 
--- Update new stake for new matchid
-UPDATE	b
-	SET	stake = 1058 
-FROM	bettransm b  WITH (ROWLOCK)
-WHERE	b.refno = @Refno_StakeUpd AND b.matchid = @NewMatchID
-		
+INSERT INTO #RefnoList (refno, matchid)
+VALUES 
+(101570422667,34356428),
+(101570438742,34359125),
+(101570466698,34362667),
+(101570567456,34365813),
+(101570569410,34365813),
+(101570697656,34360818),
+(101570706295,34361897),
+(101570782876,34367878)
+
+INSERT INTO #Refno_Stake (refno,stake)
+SELECT b.refno, stake
+from bettransm14 b WITH (NOLOCK)
+	INNER JOIN #RefnoList T on b.matchid = t.matchid AND b.refno = t.refno
+
+------ update stake ---------
+UPDATE b
+	SET stake = s.stake
+FROM bettransm b WITH (ROWLOCK)
+	INNER JOIN #Refno_Stake s ON b.refno = s.refno 
+WHERE b.matchid = @NewMatchID
+
+UPDATE b
+	SET stake = 0
+FROM bettransm14 b WITH (ROWLOCK)
+	INNER JOIN #RefnoList s ON b.refno = s.refno AND b.matchid = s.matchid
+
+GO	
+
+	
+
+	
