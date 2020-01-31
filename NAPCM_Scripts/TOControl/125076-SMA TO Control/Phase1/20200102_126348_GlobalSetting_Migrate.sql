@@ -6,9 +6,9 @@
 USE CustDB
 GO
 
-CREATE TABLE #DefaultValue (ProfileID SMALLINT, Sporttype SMALLINT,Site NVARCHAR(50), ExchangeID SMALLINT,MaxTurnover Money, ToCurrency INT )
+CREATE TABLE #DefaultValue (ProfileID SMALLINT, Sporttype SMALLINT, Site NVARCHAR(50), ExchangeID SMALLINT, MaxTurnover MONEY, ToCurrency INT )
 /* STEP 1: Initial Default Value */
-INSERT INTO #DefaultValue (ProfileID, Sporttype ,Site,ExchangeID, MaxTurnover, ToCurrency)
+INSERT INTO #DefaultValue (ProfileID, Sporttype, Site, ExchangeID, MaxTurnover, ToCurrency)
 SELECT 1  ProfileID, 1  Sporttype, '789y'   Site,0  ExchangeID, 60000  MaxTurnover,3   ToCurrency
 UNION ALL
 SELECT 2  ProfileID, 1 Sporttype, '789y'  Site,0 ExchangeID, 60000  MaxTurnover, 3  ToCurrency
