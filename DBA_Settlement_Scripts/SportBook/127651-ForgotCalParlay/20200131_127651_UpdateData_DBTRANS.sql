@@ -17,11 +17,8 @@ USE bodb02
 GO
 DECLARE @MatchID		INT,
 		@NewMatchID		INT,
-		@NewOddsid		INT,
-		
-SET @MatchID_ClearStake = 34367878
-SET @Refno_StakeUpd = 101570782876
-
+		@NewOddsid		INT
+	
 SET @NewMatchID = XXX
 SET @NewOddsid = XXX
 
@@ -29,7 +26,7 @@ SET @NewOddsid = XXX
 UPDATE	b
 	SET	matchid		= @NewMatchID
 		, oddsid = @NewOddsid  
-FROM	bettransm b  WITH (ROWLOCK)
+FROM	dbo.bettransm b  WITH (ROWLOCK)
 WHERE	b.matchid = @MatchID 
 
 --- fix stake for 8 refno 
@@ -49,19 +46,19 @@ VALUES
 
 INSERT INTO #Refno_Stake (refno,stake)
 SELECT b.refno, stake
-from bettransm14 b WITH (NOLOCK)
-	INNER JOIN #RefnoList T on b.matchid = t.matchid AND b.refno = t.refno
+from dbo.bettransm14 b WITH (NOLOCK)
+	INNER JOIN #RefnoList T ON b.matchid = t.matchid AND b.refno = t.refno
 
 ------ update stake ---------
 UPDATE b
 	SET stake = s.stake
-FROM bettransm b WITH (ROWLOCK)
+FROM dbo.bettransm b WITH (ROWLOCK)
 	INNER JOIN #Refno_Stake s ON b.refno = s.refno 
 WHERE b.matchid = @NewMatchID
 
 UPDATE b
 	SET stake = 0
-FROM bettransm14 b WITH (ROWLOCK)
+FROM dbo.bettransm14 b WITH (ROWLOCK)
 	INNER JOIN #RefnoList s ON b.refno = s.refno AND b.matchid = s.matchid
 
 GO	
