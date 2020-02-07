@@ -69,18 +69,18 @@ BEGIN
         IF (@isTest = 0)
         BEGIN
             INSERT INTO tracking(username,dtime,tp,sqltext,hostname,affectedRows,transid,matchid)   
-            SELECT 'SPVN\helen.do', GETDATE(), 'S', 'BACKUP DATABASE @name TO DISK = @fileName  WITH INIT, SKIP, COMPRESSION', @serverName, NULL, NULL, NULL  
+            SELECT 'SPVN\helen.do', GETDATE(), 'S', 'RESTORE DATABASE ' + @name + 'FROM DISK = ' + @fileName, @serverName, NULL, NULL, NULL  
               
-            --BACKUP DATABASE @name TO DISK = @fileName  WITH INIT, SKIP, COMPRESSION    
+            RESTORE DATABASE @name FROM DISK = @fileName 
   
             INSERT INTO tracking(username,dtime,tp,sqltext,hostname,affectedRows,transid,matchid)   
-            SELECT 'SPVN\helen.do', GETDATE(), 'F', 'BACKUP DATABASE @name TO DISK = @fileName  WITH INIT, SKIP, COMPRESSION', @serverName, NULL, NULL, NULL
+            SELECT 'SPVN\helen.do', GETDATE(), 'F', 'RESTORE DATABASE ' + @name + 'FROM DISK = ' + @fileName, @serverName, NULL, NULL, NULL
         END
         ELSE 
         BEGIN  
             SELECT @fileName  
             INSERT INTO tracking(username,dtime,tp,sqltext,hostname,affectedRows,transid,matchid)   
-            SELECT 'SPVN\helen.do', GETDATE(), 'F', 'BACKUP DATABASE @name TO DISK = @fileName  WITH INIT, SKIP, COMPRESSION', @serverName, NULL, NULL, NULL  
+            SELECT 'SPVN\helen.do', GETDATE(), 'F', 'RESTORE DATABASE ' + @name + 'FROM DISK = ' + @fileName, @serverName, NULL, NULL, NULL  
         END
 
         FETCH NEXT FROM db_cursor INTO @name

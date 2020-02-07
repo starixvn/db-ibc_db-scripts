@@ -11,7 +11,7 @@ EXEC  msdb.dbo.sp_add_job @job_name=N'DBA - LocalManagement - Database Backup',
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 select @jobId
 GO
-EXEC msdb.dbo.sp_add_jobserver @job_name=N'DBA - LocalManagement - Database Backup', @server_name = N'DB230'
+EXEC msdb.dbo.sp_add_jobserver @job_name=N'DBA - LocalManagement - Database Backup', @server_name = N'DB206'
 GO
 USE [msdb]
 GO
@@ -24,8 +24,8 @@ EXEC msdb.dbo.sp_add_jobstep @job_name=N'DBA - LocalManagement - Database Backup
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'EXEC DBA_Task_LocalDatabaseBackup
-                        @filePath = ''\\nas\bk_db\db230\'',
-                        @listDatabases = ''bodb02'',
+                        @filePath = ''\\nas\bk_db\db206\'',
+                        @listDatabases = ''bodb02,CustDB'',
                         @isTest = 0', 
 		@database_name=N'bodb02', 
 		@flags=0
