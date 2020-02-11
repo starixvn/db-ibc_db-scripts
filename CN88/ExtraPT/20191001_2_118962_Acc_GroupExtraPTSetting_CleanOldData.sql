@@ -37,5 +37,7 @@ begin
 	from CustDB.dbo.Acc_GroupExtraPTSetting s
 		inner join @runningSuper r on s.SuperId = r.SuperId
 	where ProductId = 1 and Sporttype = 0 and SubProduct in ('BT-Comm', 'BT-Bought','BT-Sold', 'BT-Winloss')
+	
+	waitfor delay '00:00:00:100'
 end
   
