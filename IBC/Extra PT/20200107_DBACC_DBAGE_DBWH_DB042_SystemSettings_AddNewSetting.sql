@@ -12,6 +12,6 @@ USE bodb02
 GO
 
 UPDATE dbo.SystemSettings WITH (ROWLOCK)
-SET VValue = '2020-02-11'
+SET VValue = '2020-02-13'
 WHERE VName = 'CutOffDate_ExtraPT'
 GO
