@@ -4,7 +4,7 @@ GO
 /*
 	Created: 20200212@Malcolm
 	DB: DBPRO.bodb02
-	Task: New bettype: Collor ball
+	Task: New bettype: Collor ball [Redmine : #128101]
 */
 
 
