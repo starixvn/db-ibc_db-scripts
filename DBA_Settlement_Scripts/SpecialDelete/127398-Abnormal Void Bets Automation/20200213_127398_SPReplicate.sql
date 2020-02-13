@@ -6,7 +6,7 @@
 USE bodb02
 GO
 
-CREATE PROCEDURE [dbo].[TicketVoiding_ReCal_Single_Update]
+CREATE PROCEDURE [dbo].[TicketVoiding_ReCalculate_Single_Update]
 (
 	@TransIds			VARCHAR(MAX)
 	,@UserId			INT
