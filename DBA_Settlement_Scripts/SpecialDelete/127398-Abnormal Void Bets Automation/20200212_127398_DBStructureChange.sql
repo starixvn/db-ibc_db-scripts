@@ -13,6 +13,7 @@ CREATE TABLE [dbo].[TicketVoiding_AutoUnmarkSetting]
 	, Bettype SMALLINT
 	, IsConfirm BIT
 	, CreatedDate DATETIME
+	, UserId INT
 	
  CONSTRAINT [PK_TicketVoiding_AutoUnmarkSetting_ID] PRIMARY KEY NONCLUSTERED 
 (
