@@ -64,9 +64,6 @@ GO
 
 ALTER TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue] ADD  CONSTRAINT [DF_TicketVoiding_AutoVoidRequest_Queue_Duration]  DEFAULT ((0)) FOR [Duration]
 GO
-ALTER TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue] ADD  CONSTRAINT [DF_TicketVoiding_AutoVoidRequest_Queue_TryCount]  DEFAULT ((0)) FOR [TryCount]
-GO
-
 CREATE TABLE Ticketvoiding_VoidBetAutomation_Service 
 (
 	ID INT IDENTITY(1,1)
