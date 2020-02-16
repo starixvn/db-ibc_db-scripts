@@ -89,4 +89,5 @@ CREATE NONCLUSTERED INDEX IX_Ticketvoiding_VoidBetAutomation_Service_StatusID ON
 GO
 ALTER TABLE [dbo].[Ticketvoiding_VoidBetAutomation_Service] ADD  CONSTRAINT [DF_Ticketvoiding_VoidBetAutomation_Service_createdDate]  DEFAULT ((GETDATE())) FOR [createdDate]
 GO
-
+CREATE NONCLUSTERED INDEX IX_Ticketvoiding_VoidBetAutomation_Service_matchID ON Ticketvoiding_VoidBetAutomation_Service (matchID)
+GO
