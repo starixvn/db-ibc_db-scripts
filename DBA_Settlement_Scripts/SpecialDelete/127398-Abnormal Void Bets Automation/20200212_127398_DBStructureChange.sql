@@ -82,7 +82,8 @@ CREATE TABLE Ticketvoiding_VoidBetAutomation_Service
 ) ON [DATA]
 
 GO
-CREATE NONCLUSTERED INDEX IX_Ticketvoiding_VoidBetAutomation_Service_StatusID ON Ticketvoiding_VoidBetAutomation_Service (statusID)
+
+CREATE NONCLUSTERED INDEX IX_Ticketvoiding_VoidBetAutomation_Service_Session_StatusID ON Ticketvoiding_VoidBetAutomation_Service (SessionID, statusID)
 GO
 ALTER TABLE [dbo].[Ticketvoiding_VoidBetAutomation_Service] ADD  CONSTRAINT [DF_Ticketvoiding_VoidBetAutomation_Service_createdDate]  DEFAULT ((GETDATE())) FOR [createdDate]
 GO
