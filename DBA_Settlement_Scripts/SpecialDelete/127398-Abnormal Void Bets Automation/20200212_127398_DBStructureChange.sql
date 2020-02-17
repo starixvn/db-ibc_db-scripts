@@ -52,18 +52,22 @@ CREATE TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue](
 	[Duration] [int] NULL,
 	[IP] [varchar](50) NULL,
 	[ErrMsg] [varchar](300) NULL
+	
+	CONSTRAINT [TicketVoiding_AutoVoidRequest_Queue_QueueId] PRIMARY KEY NONCLUSTERED 
+(
+	QueueId ASC
+	
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [DATA]
 ) ON [DATA]
-
 GO
-GO
-CREATE NONCLUSTERED INDEX IX_TicketVoiding_AutoVoidRequest_Queue_StatusID ON TicketVoiding_AutoVoidRequest_Queue (statusID)
 
+CREATE NONCLUSTERED INDEX IX_TicketVoiding_AutoVoidRequest_Queue_MatchId_StatusID ON TicketVoiding_AutoVoidRequest_Queue (MatchId, statusID)
 GO
 ALTER TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue] ADD  CONSTRAINT [DF_TicketVoiding_AutoVoidRequest_Queue_Starttime]  DEFAULT (getdate()) FOR [Starttime]
 GO
-
 ALTER TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue] ADD  CONSTRAINT [DF_TicketVoiding_AutoVoidRequest_Queue_Duration]  DEFAULT ((0)) FOR [Duration]
 GO
+
 CREATE TABLE Ticketvoiding_VoidBetAutomation_Service 
 (
 	ID INT IDENTITY(1,1)
