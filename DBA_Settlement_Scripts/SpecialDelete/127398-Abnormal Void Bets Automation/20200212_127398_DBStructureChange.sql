@@ -53,7 +53,7 @@ CREATE TABLE [dbo].[TicketVoiding_AutoVoidRequest_Queue](
 	[IP] [varchar](50) NULL,
 	[ErrMsg] [varchar](300) NULL
 	
-	CONSTRAINT [TicketVoiding_AutoVoidRequest_Queue_QueueId] PRIMARY KEY NONCLUSTERED 
+	CONSTRAINT [TicketVoiding_AutoVoidRequest_Queue_QueueId] PRIMARY KEY CLUSTERED 
 (
 	QueueId ASC
 	
