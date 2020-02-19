@@ -9,14 +9,14 @@ GO
 INSERT INTO dbo.LogAction (ActionID,SPName,ActionNameEN,ActionNameCH,ActionNameCS,ActionNameJP,ActionNameTH,ActionNameKO,IsInternal,ActionNameVI)
 VALUES 
 (90503,'TicketVoiding_ReCalculate_Single_Update'
-		,'Resettle Marked Ticket'
-		,'Resettle Marked Ticket'
-		,'Resettle Marked Ticket'
-		,'Resettle Marked Ticket'
-		,'Resettle Marked Ticket'
-		,'Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
 		,0
-		,'Resettle Marked Ticket'
+		,'Auto Unmark: Resettle Marked Ticket'
 		)
 ,(90504,'TicketVoiding_AutoVoid_Update'
 		,'Void Bets Automation'
