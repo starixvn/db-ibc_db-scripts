@@ -1,7 +1,7 @@
 /*
 	Created by: Kos
 	Date: 20200226
-	Task: GRANT PERMISSION to access Performance Tab of Dashboard for test user
+	Task: GRANT PERMISSION to access Performance Tab of Dashboard for test user [Redmine ID: #119915]
 	DB: DBCUST.SiteConfig
 */
 
