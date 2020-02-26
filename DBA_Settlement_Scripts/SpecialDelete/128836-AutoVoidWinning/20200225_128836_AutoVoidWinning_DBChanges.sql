@@ -21,3 +21,5 @@ ALTER TABLE TicketVoiding_RequestDetail ADD RequestType TINYINT
 GO
 ALTER TABLE TicketVoiding_RequestDetail ADD  CONSTRAINT [DF_TicketVoiding_RequestDetail_RequestType]  DEFAULT (0) FOR [RequestType]
 GO
+ALTER TABLE TicketVoiding_AutoVoidRequest_Queue ADD sporttype SMALLINT
+GO
