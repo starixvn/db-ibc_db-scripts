@@ -5,8 +5,8 @@
 	
 	MarkType:
 		+ 0: mark by mark/unmark
-		+ 1: mark by add abnormal request
-		+ 2: mark by auto, system
+		+ 1: mark by add abnormal request (auto)
+		+ 2: mark by auto voiding winning system
 	
 	RequestType:
 		+ 1: Create by add new request
