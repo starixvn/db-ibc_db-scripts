@@ -186,17 +186,17 @@ SELECT 20  ProfileID, 99 Sporttype, ''  Site,20 ExchangeID, 24000  MaxTurnover, 
 /* STEP 2: Insert new default setting into ToControl_GlobalSetting */
 INSERT INTO TOControl_GlobalSetting(CustID, Sporttype, IsGroupHeadLine, MaxTurnOver, ProfileID)
 SELECT gl.CustID
-    , CASE 
+	, TO_tmp.Sporttype
+	, 0
+	, CASE 
 		-- currency RM in default Setting
 		WHEN TO_tmp.TOCurrency = 2 THEN CONVERT(MONEY,TO_tmp.MaxTurnOver / E1.actualrate) 
 		-- NOT currency RM in default Setting
 		ELSE  CONVERT(MONEY,(TO_tmp.MaxTurnOver * E.actualrate)/E1.actualrate)
 		END AS MaxTurnOver
-	, TO_tmp.Sporttype
-	, 0
 	, TO_tmp.ProfileID
 	            
-FROM dbo.TOControl_GlobalSetting gl WITH(NOLOCK)
+FROM TOControl_GlobalSetting_temp gl WITH(NOLOCK)
 	INNER JOIN  dbo.Customer ci WITH (NOLOCK) ON gl.CustID = ci.custid	
 	CROSS APPLY
 		(        
