@@ -187,7 +187,7 @@ SELECT 20  ProfileID, 99 Sporttype, ''  Site,20 ExchangeID, 24000  MaxTurnover, 
 INSERT INTO TOControl_GlobalSetting(CustID, Sporttype, IsGroupHeadLine, MaxTurnOver, ProfileID)
 SELECT gl.CustID
 	, TO_tmp.Sporttype
-	, 0
+	, gl.IsGroupHeadLine
 	, CASE 
 		-- currency RM in default Setting
 		WHEN TO_tmp.TOCurrency = 2 THEN CONVERT(MONEY,TO_tmp.MaxTurnOver / E1.actualrate) 
