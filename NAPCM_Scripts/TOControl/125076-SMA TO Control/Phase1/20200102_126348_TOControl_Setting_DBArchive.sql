@@ -10,6 +10,6 @@ ALTER TABLE [dbo].[TOControl_Setting_bk] DROP CONSTRAINT  [PK_TOControl_Setting_
 GO
 ALTER TABLE [dbo].[TOControl_Setting_bk]  ADD ProfileID  SMALLINT NULL
 GO
-CREATE CLUSTERED INDEX ix_CustID_MatchID_IsGroupHeadLine_ProfileID_bk
+CREATE CLUSTERED INDEX CIX_TOControl_Setting_bk
 ON [dbo].[TOControl_Setting_bk](CustID, MatchID, IsGroupHeadLine, ProfileID)
 GO
