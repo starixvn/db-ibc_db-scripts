@@ -6,11 +6,14 @@
 */
 USE bodb02
 GO
-DROP INDEX MarkedTransaction.IX_MarkedTransaction_MatchId
-GO
-CREATE NONCLUSTERED INDEX [IX_MarkedTransaction_MatchId] ON [dbo].[MarkedTransaction]
+CREATE NONCLUSTERED INDEX [IX_MarkedTransaction_CustID_MarkType] ON [dbo].[MarkedTransaction]
 (
-	[MatchId] ASC,
-	[bettype] ASC
+	MarkType,
+	CustID
 )
-INCLUDE (MarkType)
+GO
+CREATE NONCLUSTERED INDEX IX_TicketVoiding_AutoMarkService_AutoSetting ON TicketVoiding_AutoMarkService_AutoSetting
+(
+	MatchID
+)
+GO
