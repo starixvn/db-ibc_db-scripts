@@ -12,6 +12,6 @@ WHERE  LicenseeName = 'N8B'
 
 UPDATE Licensees 
 SET	   BrandName = 'Goal123'
-WHERE  LicenseeName = 'N8G '
+WHERE  LicenseeName = 'N8G'
 
  
