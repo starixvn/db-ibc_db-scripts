@@ -16,10 +16,10 @@
 
 -- input information
 declare @productcode varchar(2) = 'GD' -- AG, GD, BX
-		,@fromdate	smalldatetime = '2019-06-01'
-		,@todate	smalldatetime = '2019-06-30'
-		,@currency	int = 61
-		,@site		varchar(50) = '12bet'
+		,@fromdate	smalldatetime = '2020-02-27'
+		,@todate	smalldatetime = '2020-02-27'
+		,@currency	int = 0
+		,@site		varchar(50) = 'Macaubet'
 -- end input information
 
 
@@ -38,12 +38,12 @@ select  @sporttype  = case @productcode when 'AG' then 250 when 'GD' then 255 wh
 		,@productid = case @productcode when 'AG' then 10 when 'GD' then 11 when 'BX' then 31 end
 select  @siteid = licenseeid from bodb_licensee.dbo.licensees with (nolock) where licenseename = @site
 
-create table #__NAP			(winlostdate smalldatetime, superBalance money)
-create table #__LA			(winlostdate smalldatetime, superBalance money)
-create table #__rawData		(winlostdate smalldatetime, superBalance money)
-create table #__Adjustment	(winlostdate smalldatetime, superBalance money)
+create table #__NAP			(winlostdate smalldatetime, currency int, superBalance money)
+create table #__LA			(winlostdate smalldatetime, currency int, superBalance money)
+create table #__rawData		(winlostdate smalldatetime, currency int, superBalance money)
+create table #__Adjustment	(winlostdate smalldatetime, currency int, superBalance money)
 
-declare @rawData table (winlostdate smalldatetime, bettype int, memberWL money, memberComm money,LicenseeComm money)
+declare @rawData table (winlostdate smalldatetime, currency int, bettype int, memberWL money, memberComm money,LicenseeComm money)
 
 declare @balanceupday smalldatetime, @movebetsday smalldatetime
 declare @mbbu table (balanceupday smalldatetime, movebetsday smalldatetime)
@@ -56,12 +56,10 @@ select @balanceupday = balanceupday, @movebetsday = movebetsday from @mbbu
 declare @endofmonth smalldatetime
 select  @endofmonth = dateadd(day, -1, dateadd(month, datediff(month, 0, @ToDate) + 1, 0))
 
-declare @adj_endmonth money
-
 declare @tmpfromdate smalldatetime, @tmptodate smalldatetime
 declare @tmpAdjustment table
 (
-	custid int,bettype int,superBalance money,transdesc varchar(300)
+	custid int,currency int,bettype int,superBalance money,transdesc varchar(300)
 	,winlostdate smalldatetime,bt_winlostdate smalldatetime
 )
 
@@ -76,11 +74,12 @@ from bodb_licensee.dbo.la_f_chargeinfo(@partyid,@fromdate,@todate,@productcode, 
 where di_rate > 0 and licenseeid = @siteid
 
 -- 3rd dummy account
-declare @dummyCustId int
-select  @dummyCustId = custid
+declare @dummyAccount table (dummyCustId int, currency int)
+insert into @dummyAccount
+select custid, currency
 from bodb02.dbo.vw_customer with (nolock)
 where mrecommend IN (select custid from bodb02.dbo.vw_customer with (nolock) 
-					where username like '%acc%' and roleid = 3 and site = @site and currency = @currency)
+					where username like '%acc%' and roleid = 3 and site = @site and (@currency = 0 or currency = @currency))
 	and username like '%dummy3rd%'
 	and roleid = 1
 
@@ -89,88 +88,89 @@ where mrecommend IN (select custid from bodb02.dbo.vw_customer with (nolock)
 -- get data
 	-- NAP Report
 	insert into #__NAP
-	select winlostdate, -sum(isnull(b.swinlost, 0) + isnull(b.mwinlost, 0) + isnull(b.awinlost, 0) + isnull(b.winlost, 0) + isnull(b.scomm, 0)) as superBalance
+	select winlostdate, Currency, -sum(isnull(b.swinlost, 0) + isnull(b.mwinlost, 0) + isnull(b.awinlost, 0) + isnull(b.winlost, 0) + isnull(b.scomm, 0)) as superBalance
 	from bodb_LicenseeReport.dbo.rptLicWinloss2 b with (nolock)
 	where winlostdate between @fromdate and @todate
 		and sporttype = @sporttype
 		and roleid = 4
 		and statusid in (111,112,113,114,115)
-		and Currency = @currency
+		and (@currency = 0 or Currency = @currency)
 		and exists (select 1 from bodb02.dbo.Dep_CustSuper c with (nolock) where b.custid = c.custid and c.site = @site)
-	group by winlostdate
-	order by winlostdate
+	group by winlostdate, Currency
+	order by winlostdate, Currency
 
 	-- LA
 	insert into #__LA
-	select rptDate as winlostdate, sum(-(b.MemberWL + b.CommissionP + b.CommissionA - b.MemberWL * (1 - p.Rate))) as superBalance
+	select rptDate as winlostdate, CurrencyId as Currency, sum(-(b.MemberWL + b.CommissionP + b.CommissionA - b.MemberWL * (1 - p.Rate))) as superBalance
 	from bodb_LicenseeReport.dbo.rpt_BettingByProduct b with (nolock)
 		inner join @chargeinfo p on b.rptdate between p.fromdate and p.todate and p.bettype = b.bettype
 	where rptDate between @fromdate and @todate
 		and ProductID = @productid
 		and statusid not in (-1, 101, 102, 103)
-		and CurrencyId = @currency
+		and (@currency = 0 or CurrencyId = @currency)
 		and SiteID = @siteid
 		and CustomerCategory not in (27,28)
-	group by rptDate
-	order by rptDate
+	group by rptDate, CurrencyId
+	order by rptDate, CurrencyId
 
 	-- raw data
 	if @productcode = 'AG'
 	begin
 		insert into @rawData
-		select winlostdate, -1, sum((abs(winlost) - abs(stake))) as memberWL, 0, 0
+		select winlostdate, Currency, -1, sum((abs(winlost) - abs(stake))) as memberWL, 0, 0
 		from bodb_PlaytechCS.dbo.bettrans_AGCasino b with (nolock)
 		where winlostdate between @fromdate and @todate
 			and statusid in (111,112,113)
-			and Currency = @currency
+			and (@currency = 0 or Currency = @currency)
 			and exists (select 1 from bodb02.dbo.Dep_CustSuper c with (nolock) where b.srecommend = c.custid and c.site = @site)
-		group by winlostdate
+		group by winlostdate, Currency
 	end
 	else if @productcode = 'GD'
 	begin
 		insert into @rawData
-		select winlostdate,bettype, sum(MemberWL) as MemberWL, 0, 0
+		select winlostdate, Currency, bettype, sum(MemberWL) as MemberWL, 0, 0
 		from (
-			select winlostdate, -1 as bettype, sum((abs(winlost) - abs(stake))) as MemberWL
+			select winlostdate, Currency, -1 as bettype, sum((abs(winlost) - abs(stake))) as MemberWL
 			from bodb_PlaytechCS.dbo.bettrans_GoldDeluxe b with (nolock)
 			where winlostdate between @fromdate and @todate
 				and statusid in (111,112,113)
-				and Currency = @currency
+				and (@currency = 0 or Currency = @currency)
 				and exists (select 1 from bodb02.dbo.Dep_CustSuper c with (nolock) where b.srecommend = c.custid and c.site = @site)
-			group by winlostdate
+			group by winlostdate, Currency
 
 			union all
-			select winlostdate, 1706, -sum(abs(Amount)) as MemberWL
+			select winlostdate, Currency, 1706, -sum(abs(Amount)) as MemberWL
 			from bodb_PlaytechCS.dbo.GoldDeluxe_Tip b with (nolock)
 			where winlostdate between @fromdate and @todate
-				and Currency = @currency
+				and (@currency = 0 or Currency = @currency)
 				and exists (select 1 from bodb02.dbo.Dep_CustSuper c with (nolock) where b.srecommend = c.custid and c.site = @site)
-			group by winlostdate
+			group by winlostdate, Currency
 		) as a
-		group by winlostdate, bettype
+		group by winlostdate, Currency, bettype
 	end
 	else if @productcode = 'BX'
 	begin
 		insert into @rawData
 		select convert(date, settledDate) as winlostdate,
+				Currency,
 				-1 as bettype,
 				sum(marketTotal/ExVirtualRate) as MemberWL,
 				sum(commission/ExVirtualRate) as MemberComm,
 				sum(agentCommission/ExVirtualRate) as LicenseeComm
 		from bodb_3rdProduct.dbo.Sum_winloss_Exchange s with (nolock)
 		where settledDate >= @fromdate and settledDate < dateadd(day, 1, @todate)
-			and Currency = @currency
+			and (@currency = 0 or Currency = @currency)
 			and exists (select 1 from bodb02.dbo.Dep_CustSuper dc with (nolock)
 							inner join bodb02.dbo.CustInfo c with (nolock) on dc.custid = c.srecommend
 						where s.custid = c.custid and dc.site = @site)
-		group by convert(date, settledDate)
+		group by convert(date, settledDate), Currency
 	end
 
 	insert into #__rawData
-	select winlostdate, -sum(r.memberWL + r.memberComm -r.memberWL*(1-c.rate) + r.licenseeComm) as superBalance
+	select winlostdate, Currency, -sum(r.memberWL + r.memberComm -r.memberWL*(1-c.rate) + r.licenseeComm) as superBalance
 	from @rawData r
 		inner join @chargeinfo c on r.winlostdate between c.fromdate and c.todate and r.bettype = c.bettype
-	group by winlostdate
+	group by winlostdate, Currency
 
 	-- data adjustment on bettrans
 	if @endofmonth = @todate
@@ -181,33 +181,33 @@ where mrecommend IN (select custid from bodb02.dbo.vw_customer with (nolock)
 		-- bettrans_bk
 		if @tmpfromdate < @balanceupday
 		begin
-			insert into @tmpAdjustment (bt_winlostdate,custid, bettype, transdesc, superBalance)
-			select winlostdate,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
-			from dbarc.bodb_archive.dbo.bettrans_bk with (nolock)
+			insert into @tmpAdjustment (bt_winlostdate,currency,custid, bettype, transdesc, superBalance)
+			select winlostdate,currency,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
+			from dbarc.bodb_archive.dbo.bettrans_bk b with (nolock)
 			where winlostdate between @tmpfromdate and @balanceupday
-				and custid = @dummyCustId
+				and exists (select 1 from @dummyAccount d where b.custid = d.dummyCustId and b.currency = d.currency)
 				and matchid = 0 and transdesc like '% Adjustment - Date: %'
 		end
 
 		-- bettrans14
 		if @tmpfromdate <= @movebetsday
 		begin
-			insert into @tmpAdjustment (bt_winlostdate,custid, bettype, transdesc, superBalance)
-			select winlostdate,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
-			from bodb02.dbo.bettrans14 with (nolock)
+			insert into @tmpAdjustment (bt_winlostdate,currency,custid, bettype, transdesc, superBalance)
+			select winlostdate,currency,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
+			from bodb02.dbo.bettrans14 b with (nolock)
 			where winlostdate between @balanceupday and @movebetsday
-				and custid = @dummyCustId
+				and exists (select 1 from @dummyAccount d where b.custid = d.dummyCustId and b.currency = d.currency)
 				and matchid = 0 and transdesc like '% Adjustment - Date: %'
 		end
 
 		-- bettrans
 		if @tmptodate > @movebetsday
 		begin
-			insert into @tmpAdjustment (bt_winlostdate,custid, bettype, transdesc, superBalance)
-			select winlostdate,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
-			from bodb02.dbo.bettrans with (nolock)
+			insert into @tmpAdjustment (bt_winlostdate,currency,custid, bettype, transdesc, superBalance)
+			select winlostdate,currency,custid, bettype, transdesc, -(winlost-actual_stake+swinlost+mwinlost+awinlost+scomm) as superBalance
+			from bodb02.dbo.bettrans b with (nolock)
 			where winlostdate between @movebetsday and @tmptodate
-				and custid = @dummyCustId
+				and exists (select 1 from @dummyAccount d where b.custid = d.dummyCustId and b.currency = d.currency)
 				and matchid = 0 and transdesc like '% Adjustment - Date: %'
 		end
 
@@ -222,30 +222,26 @@ where mrecommend IN (select custid from bodb02.dbo.vw_customer with (nolock)
 
 		if exists (select 1 from @tmpAdjustment)
 		begin
-			
-
 			update @tmpAdjustment
 			set winlostdate = substring(transdesc, charindex('date: ', transdesc, 0) + 6, 10)
 
 			insert into #__Adjustment
-			select winlostdate, sum(superBalance)
+			select winlostdate, currency, sum(superBalance)
 			from (
 				-- adjust last month
-				select bt_winlostdate as winlostdate, -sum(superBalance) as superBalance
+				select bt_winlostdate as winlostdate, currency, -sum(superBalance) as superBalance
 				from @tmpAdjustment
 				where bt_winlostdate between @fromdate and @todate
-				group by bt_winlostdate
+				group by bt_winlostdate, currency
 
 				-- adjust this month
 				union all
-				select winlostdate, sum(superBalance)
+				select winlostdate, currency, sum(superBalance)
 				from @tmpAdjustment
 				where winlostdate between @fromdate and @todate
-				group by winlostdate
+				group by winlostdate, currency
 			) as a
-			group by winlostdate
-
-			select @adj_endmonth = sum(superBalance) from #__Adjustment where winlostdate = @endofmonth
+			group by winlostdate, currency
 		end
 	end
 -- end get data
@@ -253,6 +249,7 @@ where mrecommend IN (select custid from bodb02.dbo.vw_customer with (nolock)
 -- return result
 select
 	isnull(isnull(isnull(n.winlostdate, l.winlostdate), r.winlostdate), a.winlostdate) as winlostdate
+	,isnull(isnull(isnull(n.currency, l.currency), r.currency), a.currency) as currency
 	,isnull(n.superBalance, 0) as NAP_superBalance
 	,isnull(l.superBalance, 0) as LA_superBalance
 	,isnull(r.superBalance, 0) as rawData_superBalance
@@ -265,20 +262,23 @@ from #__NAP n
 	full outer join #__LA l on n.winlostdate = l.winlostdate
 	full outer join #__rawData r on n.winlostdate = r.winlostdate
 	full outer join #__Adjustment a on n.winlostdate = a.winlostdate
+order by winlostdate, currency
 
 -- Total
 select
 	'Total' as Total
+	,currency
 	,sum(rawData_superBalance)	as rawData_superBalance
 	,sum(LA_superBalance)		as LA_superBalance
 	,sum(NAP_superBalance)		as NAP_superBalance
 	,sum(Adj_superBalance)		as Adj_superBalance
 	,sum(LA_superBalance - NAP_superBalance - Adj_superBalance) as Diff
 from #__Details
+group by currency
 
 select *
 from #__Details
-order by winlostdate
+order by winlostdate, currency
 
 -- end return result
 
