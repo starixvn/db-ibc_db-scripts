@@ -259,9 +259,9 @@ select
 	,round(isnull(n.superBalance, 0) + isnull(a.superBalance, 0)  - isnull(r.superBalance, 0), 4) as diff_superBalance
 into #__Details
 from #__NAP n
-	full outer join #__LA l on n.winlostdate = l.winlostdate
-	full outer join #__rawData r on n.winlostdate = r.winlostdate
-	full outer join #__Adjustment a on n.winlostdate = a.winlostdate
+	full outer join #__LA l on n.winlostdate = l.winlostdate and n.currency = l.currency
+	full outer join #__rawData r on n.winlostdate = r.winlostdate and n.currency = r.currency
+	full outer join #__Adjustment a on n.winlostdate = a.winlostdate and n.currency = a.currency
 order by winlostdate, currency
 
 -- Total
