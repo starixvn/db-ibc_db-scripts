@@ -1,0 +1,280 @@
+use [bodb_Licensee]
+go
+
+/*
+	Created: 20190605@Percy
+	DB: DB052.bodb_Licensee
+	Task: Drop SPs marked DEL_
+*/
+
+drop procedure DEL_LA_AnalysisFileIns
+go
+drop procedure DEL_LA_AnalysisFileSel
+go
+drop procedure DEL_LA_AnalysisFileStatusSel
+go
+drop procedure DEL_LA_AnalysisFileUpd
+go
+drop procedure DEL_LA_BankInfoSel
+go
+drop procedure DEL_LA_BillerDel
+go
+drop procedure DEL_LA_BillerInfoSel
+go
+drop procedure DEL_LA_BillerListSel
+go
+drop procedure DEL_LA_BillerLogoSel
+go
+drop procedure DEL_LA_BillerLogoUpd
+go
+drop procedure DEL_LA_BillerModify
+go
+drop procedure DEL_LA_ChargeRateGroupChange
+go
+drop procedure DEL_LA_ChargeRateSettingDel
+go
+drop procedure DEL_LA_ChargeRateSettingModify
+go
+drop procedure DEL_LA_ChargeRateValidate
+go
+drop procedure DEL_LA_CreateUser
+go
+drop procedure DEL_LA_CumulativeRebateGroupInfoSel
+go
+drop procedure DEL_LA_Discount_HasBilling
+go
+drop procedure DEL_LA_Discount_PartyHasBillingSel
+go
+drop procedure DEL_LA_Discount_ValidatePayerAssignment
+go
+drop procedure DEL_LA_DiscountAssignmentSettingDel
+go
+drop procedure DEL_LA_DiscountDel
+go
+drop procedure DEL_LA_DiscountGroupDel
+go
+drop procedure DEL_LA_DiscountIns
+go
+drop procedure DEL_LA_DiscountModify
+go
+drop procedure DEL_LA_DiscountUpd
+go
+drop procedure DEL_LA_FunctionGroupIns
+go
+drop procedure DEL_LA_FunctionGroupSel
+go
+drop procedure DEL_LA_FunctionIns
+go
+drop procedure DEL_LA_FunctionPartiesPermission
+go
+drop procedure DEL_LA_FunctionPartysModify
+go
+drop procedure DEL_LA_FunctionSel
+go
+drop procedure DEL_LA_FunctionSelByGroup
+go
+drop procedure DEL_LA_FunctionSelByUser
+go
+drop procedure DEL_LA_FunctionUpd
+go
+drop procedure DEL_LA_FunctionUpdIsActive
+go
+drop procedure DEL_LA_GroupSel
+go
+drop procedure DEL_LA_HostingFeesChargeRateIns
+go
+drop procedure DEL_LA_HostingFeesChargeRateSel
+go
+drop procedure DEL_LA_HostingFeesDel
+go
+drop procedure DEL_LA_HostingFeesIns
+go
+drop procedure DEL_LA_HostingFeesPayerSettingsDel
+go
+drop procedure DEL_LA_HostingFeesPayerSettingsSel
+go
+drop procedure DEL_LA_HostingFeesSel
+go
+drop procedure DEL_LA_HostingFeesUpd
+go
+drop procedure DEL_LA_Inv_AmfPartySel
+go
+drop procedure DEL_LA_Inv_BankInfoGet
+go
+drop procedure DEL_LA_Inv_ChargeRateInfoGet
+go
+drop procedure DEL_LA_Inv_HostingFeeSettlement
+go
+drop procedure DEL_LA_Inv_InvoiceBillerInfoGet
+go
+drop procedure DEL_LA_Inv_InvoiceFileGet
+go
+drop procedure DEL_LA_Inv_InvoiceFileIns
+go
+drop procedure DEL_LA_Inv_InvoiceInfoDel
+go
+drop procedure DEL_LA_Inv_InvoiceInfoGet
+go
+drop procedure DEL_LA_Inv_InvoiceInfoInsert
+go
+drop procedure DEL_LA_Inv_InvoiceListGet
+go
+drop procedure DEL_LA_Inv_InvoiceMetadataSel
+go
+drop procedure DEL_LA_Inv_InvoiceMetadataUpd
+go
+drop procedure DEL_LA_Inv_InvoicePathSel
+go
+drop procedure DEL_LA_Inv_InvoiceReferenceGet
+go
+drop procedure DEL_LA_Inv_InvoiceStatusUpd
+go
+drop procedure DEL_LA_Inv_InvoiceTypeGet
+go
+drop procedure DEL_LA_Inv_InvoiceTypeInfoGet
+go
+drop procedure DEL_LA_Inv_PrepaidPartySel
+go
+drop procedure DEL_LA_Inv_TransferAmfAmount
+go
+drop procedure DEL_LA_InvoiceSettingDel
+go
+drop procedure DEL_LA_InvoiceSettingModify
+go
+drop procedure DEL_LA_InvoiceSettingSel
+go
+drop procedure DEL_LA_InvoiceTemplateListSel
+go
+drop procedure DEL_LA_InvoiceTypeListSel
+go
+drop procedure DEL_LA_LaunchLicensee
+go
+drop procedure DEL_LA_LaunchLicensee_ChargeInfoIns
+go
+drop procedure DEL_LA_LaunchLicensee_MinFeeIns
+go
+drop procedure DEL_LA_LaunchLicensee_PartyIns
+go
+drop procedure DEL_LA_LaunchLicensee_Rollback
+go
+drop procedure DEL_LA_LicPerformanceAnalysisStatusUpd
+go
+drop procedure DEL_LA_MinFeeSettingDel
+go
+drop procedure DEL_LA_MinFeeSettingModify
+go
+drop procedure DEL_LA_PayerDiscountAssignmentModify
+go
+drop procedure DEL_LA_PayerGroupAssignmentModify
+go
+drop procedure DEL_LA_PayerGroupDel
+go
+drop procedure DEL_LA_PayerGroupModify
+go
+drop procedure DEL_LA_PayerInfoSel
+go
+drop procedure DEL_LA_PayerListSel
+go
+drop procedure DEL_LA_PayerModify
+go
+drop procedure DEL_LA_PayerNonOfficialIns
+go
+drop procedure DEL_LA_PayerSettingDel
+go
+drop procedure DEL_LA_PayerSettingModify
+go
+drop procedure DEL_LA_Rebate_HasBilling
+go
+drop procedure DEL_LA_RebateDel
+go
+drop procedure DEL_LA_RebateGet
+go
+drop procedure DEL_LA_RebateIns
+go
+drop procedure DEL_LA_RebateSel
+go
+drop procedure DEL_LA_RebateUpd
+go
+drop procedure DEL_LA_Rpt_AGPrepaymentSummary
+go
+drop procedure DEL_LA_Rpt_AmfSummary
+go
+drop procedure DEL_LA_Rpt_CumulativeSBRebateSettlement
+go
+drop procedure DEL_LA_SystemSettingsBriefSel
+go
+drop procedure DEL_LA_SystemSettingsGet
+go
+drop procedure DEL_LA_SystemSettingsUpd
+go
+drop procedure DEL_LA_UpdateUser
+go
+drop procedure DEL_LA_User_ReCheckIn
+go
+drop procedure DEL_LA_UserCheckIn
+go
+drop procedure DEL_LA_UserFunctionModify
+go
+drop procedure DEL_LA_UserLogin
+go
+drop procedure DEL_LA_UserLogout
+go
+drop procedure DEL_LA_UserModify
+go
+drop procedure DEL_LA_UserPartyModify
+go
+drop procedure DEL_LA_UserPasswordUpd
+go
+drop procedure DEL_LA_UserPwdReset
+go
+drop procedure DEL_LA_UserSaltGet
+go
+drop procedure DEL_LA_UserSelAll
+go
+drop procedure DEL_LA_UserSelByUserID
+go
+drop procedure DEL_LA_UserSelByUserName
+go
+drop procedure DEL_LA_UsersSelByUserID
+go
+drop procedure DEL_LA_UsersSelByUserName
+go
+drop procedure DEL_LA_UserUpdIsActive
+go
+drop procedure DEL_IMS_LicenseeBillingInfoSel
+go
+drop procedure DEL_LA_Discount_PartyListSel
+go
+drop procedure DEL_LA_DiscountGroupEditSel
+go
+drop procedure DEL_LA_DiscountGroupInfoSel
+go
+drop procedure DEL_LA_DiscountGroupListSel
+go
+drop procedure DEL_LA_DiscountGroupValidListSel
+go
+drop procedure DEL_LA_FunctionPartyIns
+go
+drop procedure DEL_LA_Rpt_CockFightingWinLoss
+go
+drop procedure DEL_LA_Rpt_MacauWinloss
+go
+drop procedure DEL_LA_UserPartyIns
+go
+
+
+
+
+use bodb02
+go
+
+drop procedure DEL_LA_Rpt_3rdPartyProductWinloss
+go
+drop procedure DEL_LA_Rpt_GetTotalTicket
+go
+drop procedure DEL_LA_Rpt_LicWinloss
+go
+drop procedure DEL_LA_Rpt_LicWinloss_Details
+go
+drop procedure DEL_Lrf_Rpt_MobileWinlossDetail_Ag
+go
