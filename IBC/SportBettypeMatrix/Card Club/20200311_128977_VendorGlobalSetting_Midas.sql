@@ -24,8 +24,8 @@ WHERE	VendorId = 33
 AND		VName = '3rdCreditWLShareRate' 
   
 INSERT INTO VendorGlobalSetting (VendorId,VName,NumberValue,sporttype,bettype)
-VALUES (33,'3rdCashWLShareRate', 0.035, 165, 1902),
-(33,'3rdCreditWLShareRate', 0.035, 165, 1902) 
+VALUES (33,'3rdCashWLShareRateTX', 0.035, 165, 1902),
+(33,'3rdCreditWLShareRateTX', 0.035, 165, 1902) 
 
 
 select * from VendorGlobalSetting
