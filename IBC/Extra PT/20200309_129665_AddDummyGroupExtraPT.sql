@@ -3,7 +3,7 @@
  GO 
  /*
  Created: 20200309@Sophia
- Task: Add dummy acc CN88_40 ..CN88_55 [Redmidn: #129665]
+ Task: Add dummy acc CN88_40 ..CN88_55 [Redmind: #129665]
  
  */
 
