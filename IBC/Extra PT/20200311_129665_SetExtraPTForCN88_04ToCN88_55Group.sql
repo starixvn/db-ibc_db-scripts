@@ -8,7 +8,7 @@ DB: DBCUST.CustDB
 
 */
 
-DECLARE @EffectiveDate DATETIME = '2020-03-23'
+DECLARE @EffectiveDate DATETIME = '2020-03-11'
 ,@EndDate DATETIME= '9999-12-31'
 ,@UserId INT = 10278938 -- -StarixIT  
 
