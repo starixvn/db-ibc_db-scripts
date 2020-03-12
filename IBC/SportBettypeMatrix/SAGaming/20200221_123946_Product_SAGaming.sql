@@ -26,10 +26,7 @@ INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,
 
 
 --------------Ref Resource---------------------------------------
----4
-UPDATE RefResource 
-SET	  Resource_en = 'SLI Live Casino'
-WHERE RefId = 'Product' AND ResourceId = 4
+
 
 ---41
 INSERT INTO RefResource (RefId,ResourceId,Resource_en,Resource_ch,Resource_cs,Resource_jp,Resource_it,Resource_th,Resource_ko,Resource_es,Sort1,Sort2,
@@ -38,6 +35,11 @@ INSERT INTO RefResource (RefId,ResourceId,Resource_en,Resource_ch,Resource_cs,Re
 SELECT RefId, 41 AS ResourceId,Resource_en,Resource_ch,Resource_cs,Resource_jp,Resource_it,Resource_th,Resource_ko,Resource_es,Sort1,Sort2,
 	   Resource_el,Resource_vn,Resource_pl,Resource_id,Resource_hi,Resource_mm,Resource_fr,Resource_ru,Resource_pt,Resource_de
 FROM RefResource 
+WHERE RefId = 'Product' AND ResourceId = 4
+
+---4
+UPDATE RefResource 
+SET	  Resource_en = 'SLI Live Casino'
 WHERE RefId = 'Product' AND ResourceId = 4
  
   
