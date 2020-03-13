@@ -10,8 +10,6 @@ GO
 
 UPDATE dbo.Match WITH(ROWLOCK)
 	SET GoalRecord = 'AA;'
-		, hthomescore = 0
-		, htawayscore = 2
 WHERE matchid = 35111513
 
 go
