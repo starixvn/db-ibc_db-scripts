@@ -157,15 +157,17 @@ SELECT t.transid
 FROM #tickets_Final t
 	INNER JOIN dbo.bettrans b WITH (NOLOCK) ON t.transid = b.transid
 	INNER JOIN #Ticket_OldValue_BackupForCompare c ON c.transid = t.transid
-	
-*/
+
 
 DROP TABLE #Match_Final
 DROP TABLE #input_Master
 DROP TABLE #input_Super
 DROP TABLE #tickets_Final
 DROP TABLE #tickets_tmp
-DROP TABLE #tmp_recommend	
+DROP TABLE #tmp_recommend
+DROP TABLE #Ticket_OldValue_BackupForCompare	
+	
+*/
 
 
 		
