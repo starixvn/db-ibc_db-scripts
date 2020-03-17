@@ -140,7 +140,7 @@ BEGIN
 				, sdiscount = 0
 		FROM dbo.bettrans b WITH (ROWLOCK)
 			INNER JOIN @ClearcommByBatch_tmp c ON b.transid = c.transid
-		WHERE b.statusID IN (0,1)
+		WHERE b.statusID IN (0,1,102)
 			AND b.matchid = @matchid
 	
 	END
