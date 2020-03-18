@@ -95,7 +95,7 @@ SELECT t.transid
 	, ISNULL(b.sdiscount,tl.sdiscount) AS sdiscount
 FROM #tickets_tmp t
 	LEFT JOIN dbo.bettrans b WITH (NOLOCK) ON t.transid = b.transid AND t.IsBettrans = 1
-	LEFT JOIN dbo.translog tl WITH (NOLOCK) ON tl.translogid = b.transid AND t.IsTranslog = 1
+	LEFT JOIN dbo.translog tl WITH (NOLOCK) ON tl.translogid = t.transid AND t.IsTranslog = 1
 
 ------------ STARTING clear comm ----------------------------
 DECLARE  @start INT  = 1
