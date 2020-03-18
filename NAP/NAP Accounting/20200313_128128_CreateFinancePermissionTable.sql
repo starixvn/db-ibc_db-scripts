@@ -9,13 +9,13 @@ GO
 
 CREATE TABLE [dbo].[Acc_FinancePermission](
 	[GroupId] [smallint] NOT NULL,
-	[FinanceCode] [varchar](50) NOT NULL,
+	[CustId] [INT] NOT NULL,
 	[RoleId] [tinyint] NULL,
 	[IsView] [bit] NOT NULL,
  CONSTRAINT [PK_Acc_FinancePermission] PRIMARY KEY CLUSTERED 
 (
 	[GroupId] ASC,
-	[FinanceCode] ASC
+	[CustId] ASC
 )
 ) ON [DATA]
 GO
