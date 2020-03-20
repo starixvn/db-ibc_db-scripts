@@ -9,7 +9,7 @@ GO
 
 CREATE TABLE [dbo].[Acc_FinancePermission](
 	[GroupId] [smallint] NOT NULL,
-	[CustId] [INT] NOT NULL,
+	[FinanceCode] varchar(50) NOT NULL,
 	[RoleId] [tinyint] NULL,
 	[IsView] [bit] NOT NULL,
  CONSTRAINT [PK_Acc_FinancePermission] PRIMARY KEY CLUSTERED 
