@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[Acc_FinancePermission](
  CONSTRAINT [PK_Acc_FinancePermission] PRIMARY KEY CLUSTERED 
 (
 	[GroupId] ASC,
-	[CustId] ASC
+	[FinanceCode] ASC
 )
 ) ON [DATA]
 GO
