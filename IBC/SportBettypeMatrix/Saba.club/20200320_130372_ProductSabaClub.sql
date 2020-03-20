@@ -13,6 +13,7 @@ INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,
 
 
 INSERT INTO  Sports  (Sporttype,SportName)VALUES (200,N'Saba.club')
+
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1620, 'Game 9',  1620,1620,'Game 9'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1621, 'Game 10',  1621,1621,'Game 10'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1622, 'Game 11',  1622,1622,'Game 11'
@@ -96,7 +97,7 @@ INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc ) 
 
 
 
-insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (200,1611,0,42,1,0,0,'',1)
+ 
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (200,1612,0,42,1,0,0,'',1)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (200,1613,0,42,1,0,0,'',1)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (200,1614,0,42,1,0,0,'',1)
