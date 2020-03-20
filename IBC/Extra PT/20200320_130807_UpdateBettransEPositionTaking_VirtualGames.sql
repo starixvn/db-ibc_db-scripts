@@ -37,3 +37,23 @@ INNER JOIN #Data t
 ON t.TransID = b.TransID
 
 
+--------------
+
+CREATE TABLE #Datatranslog (TranslogID BIGINT, ExtraPT decimal (9,8))
+INSERT INTO #Datatranslog (TranslogID, e.ExtraPT)
+SELECT b.TranslogID, e.ExtraPT
+FROM translog b WITH (NOLOCK) 
+INNER JOIN Sportbettypematrix s WITH (NOLOCK) 
+	ON s.Bettype = b.gameID
+INNER JOIN #Extra e
+	ON e.SuperID = b.srecommend
+WHERE s.ProductID = 38
+	and b.epositiontaking = 0
+	and b.currency <> 20
+	
+	
+UPDATE b
+SET b.epositiontaking = t.ExtraPT
+FROM translog b WITH (ROWLOCK)
+INNER JOIN #Datatranslog t 
+ON t.TranslogID = b.TranslogID
