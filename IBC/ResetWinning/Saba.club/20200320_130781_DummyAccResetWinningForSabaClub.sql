@@ -15,7 +15,7 @@ BEGIN
 	VALUES(42339463, 'Saba.club', 45, 42, 0)
 	
 	INSERT INTO dbo.ACC_DWLList_xtest(Custid,product,seq,Productid, IsDeleted)
-	VALUES(42339463, 'Saba.club', 45, 42, 0)
+	VALUES(42339520, 'Saba.club', 45, 42, 0)
 	
 END
 GO
