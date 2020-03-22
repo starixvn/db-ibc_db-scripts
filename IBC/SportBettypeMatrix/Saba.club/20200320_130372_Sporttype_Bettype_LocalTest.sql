@@ -12,9 +12,11 @@ go
 INSERT INTO  Sports  (Sporttype,SportName)VALUES (200,N'Saba.club')
 
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1611, 'Saba.club',  1611,1611,'Saba.club'
-INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1612, 'Game 1',  1612,1612,'Game 1'
-INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1613, 'Game 2',  1613,1613,'Game 2'
-INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1614, 'Game 3',  1614,1614,'Game 3'
+
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1612, 'Sicbo',  1612,1612,'Sicbo'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1613, 'XocDia',  1613,1613,'XocDia'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1614, 'Fish Prawn Crab',  1614,1614,'Fish Prawn Crab'
+
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1615, 'Game 4',  1615,1615,'Game 4'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1616, 'Game 5',  1616,1616,'Game 5'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1617, 'Game 6',  1617,1617,'Game 6'
