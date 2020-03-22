@@ -14,6 +14,15 @@ INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,
 
 INSERT INTO  Sports  (Sporttype,SportName)VALUES (200,N'Saba.club')
 
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1611, 'Saba.club',  1611,1611,'Saba.club'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1612, 'Game 1',  1612,1612,'Game 1'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1613, 'Game 2',  1613,1613,'Game 2'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1614, 'Game 3',  1614,1614,'Game 3'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1615, 'Game 4',  1615,1615,'Game 4'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1616, 'Game 5',  1616,1616,'Game 5'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1617, 'Game 6',  1617,1617,'Game 6'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1618, 'Game 7',  1618,1618,'Game 7'
+INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1619, 'Game 8',  1619,1619,'Game 8'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1620, 'Game 9',  1620,1620,'Game 9'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1621, 'Game 10',  1621,1621,'Game 10'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1622, 'Game 11',  1622,1622,'Game 11'
@@ -94,7 +103,6 @@ INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc ) 
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1697, 'Game 86',  1697,1697,'Game 86'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1698, 'Game 87',  1698,1698,'Game 87'
 INSERT INTO Bettype (TypeId, TypeNamee,ParentTypeid, DisplayedTypeID,typedesc )   select 1699, 'Game 88',  1699,1699,'Game 88'
-
 
 
  
@@ -188,12 +196,7 @@ insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istes
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (200,1699,0,42,1,0,0,'',1)
 
 
-/*	
-	Creator: Elodie
-	Date: 20180703
-	Task: Insert data into RefResource for Card Club
-	DB: DBPRO/bodb02
-*/
+ 
 USE bodb02
 GO
 
