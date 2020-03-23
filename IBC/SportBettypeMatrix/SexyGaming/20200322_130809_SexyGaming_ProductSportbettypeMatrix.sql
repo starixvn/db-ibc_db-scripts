@@ -6,7 +6,7 @@
 USE bodb02
 GO 
 
-INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (45,'Sexy Gaming','Sexy Gaming','',1,3,NULL,0,2,0,45)
+INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (45,'Sexy Gaming','Sexy Gaming','SXG',1,3,NULL,0,2,0,45)
 
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (243,3101,0,45,1,0,0,'',2)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (243,3102,0,45,1,0,0,'',2)
