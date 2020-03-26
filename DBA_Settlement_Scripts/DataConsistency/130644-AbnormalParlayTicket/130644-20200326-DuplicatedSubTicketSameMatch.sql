@@ -39,8 +39,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Not allow parlay ticket that have 
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
-  --,@Emails = 'max.tran@starixsoft.com,helen.do@starixsoft.com'
- ,@Emails = 'dbaadmin@starixsoft.com'
+ ,@Emails = 'max.tran@starixsoft.com'--,helen.do@starixsoft.com'
+ --,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
