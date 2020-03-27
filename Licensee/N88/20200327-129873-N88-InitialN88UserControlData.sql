@@ -2,7 +2,7 @@
 	Created by: Quinn
 	Date: 20200327
 	Task: Initialize data for N88_UserControl [RedmineID: #129873]
-	DB: DBCUST.bodb_N88Log
+	DB: DBCUST.N88_UserControl
 */
 
 USE [N88_UserControl]
