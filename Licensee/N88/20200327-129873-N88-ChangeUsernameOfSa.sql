@@ -10,4 +10,4 @@ GO
 
 UPDATE [dbo].[N88_Users] WITH (ROWLOCK, UPDLOCK)
 SET Username = 'starix1'
-WHERE UserID = 1
+WHERE UserID = 1000001
