@@ -9,6 +9,8 @@ DB: DBPRO.bodb02
 
 
 INSERT INTO sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) VALUES (165,1902,0,34,1,0,0,'',1)
+insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (165,1903,0,34,1,0,0,'',1)
+
 
 UPDATE Products
 SET VendorID = 33
