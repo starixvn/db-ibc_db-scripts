@@ -9,6 +9,7 @@ DB: DBPRO.bodb02
 
 
 INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (40,'Table Games','Table Games','TG',1,4,NULL,0,0,0,40)
+INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (44,'RNG Lottery','RNG Lottery','LT2',1,NULL,NULL,1,0,0,NULL)
 
 
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (222,4901,0,40,1,0,0,'',3)
@@ -55,6 +56,38 @@ DECLARE @RefId		VARCHAR(20)		= 'Product',
 	@Resource_ru	NVARCHAR(50)	= 'Table Games',
 	@Resource_pt	NVARCHAR(50)	= 'Table Games',
 	@Resource_de	NVARCHAR(50)	= 'Table Games'
+							   
+INSERT INTO RefResource (RefId, ResourceId, Resource_en, Resource_ch, Resource_cs, Resource_jp, Resource_it, Resource_th, Resource_ko, Resource_es, Sort1, Sort2, Resource_el, Resource_vn, Resource_pl, Resource_id, Resource_hi, Resource_mm, Resource_fr, Resource_ru, Resource_pt, Resource_de)
+SELECT @RefId, @ResourceId, @Resource_en, @Resource_ch, @Resource_cs, @Resource_jp, @Resource_it, @Resource_th, @Resource_ko, @Resource_es, @Sort1, @Sort2, @Resource_el, @Resource_vn, @Resource_pl, @Resource_id, @Resource_hi, @Resource_mm, @Resource_fr, @Resource_ru, @Resource_pt, @Resource_de
+
+SELECT * FROM RefResource WHERE RefId = 'Product'
+GO
+
+
+-----------------------------------------------------------
+--Insert Remoting ref Product
+DECLARE @RefId		VARCHAR(20)		= 'Product',
+	@ResourceId		VARCHAR(20)		= 44,
+	@Resource_en	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_ch	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_cs	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_jp	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_it	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_th	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_ko	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_es	NVARCHAR(50)	= 'RNG Lottery',
+	@Sort1			INT				= NULL,
+	@Sort2			INT				= NULL,
+	@Resource_el	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_vn	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_pl	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_id	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_hi	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_mm	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_fr	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_ru	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_pt	NVARCHAR(50)	= 'RNG Lottery',
+	@Resource_de	NVARCHAR(50)	= 'RNG Lottery'
 							   
 INSERT INTO RefResource (RefId, ResourceId, Resource_en, Resource_ch, Resource_cs, Resource_jp, Resource_it, Resource_th, Resource_ko, Resource_es, Sort1, Sort2, Resource_el, Resource_vn, Resource_pl, Resource_id, Resource_hi, Resource_mm, Resource_fr, Resource_ru, Resource_pt, Resource_de)
 SELECT @RefId, @ResourceId, @Resource_en, @Resource_ch, @Resource_cs, @Resource_jp, @Resource_it, @Resource_th, @Resource_ko, @Resource_es, @Sort1, @Sort2, @Resource_el, @Resource_vn, @Resource_pl, @Resource_id, @Resource_hi, @Resource_mm, @Resource_fr, @Resource_ru, @Resource_pt, @Resource_de
