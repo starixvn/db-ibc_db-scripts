@@ -29,8 +29,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check Discount value'
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
@@ -55,8 +55,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check PT value'
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
@@ -81,8 +81,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check Stake >0 for dedicated betty
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
@@ -107,8 +107,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check Valid IP'
  ,@ActiveStartTime  = '00:00'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
@@ -133,8 +133,8 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check all yesterday tickets must b
  ,@ActiveStartTime  = '01:30'
  ,@ActiveEndTime = NULL
  ,@NotifyLevelEmail = 2
- ,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- --,@Emails = 'dbaadmin@starixsoft.com'
+ --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
+ ,@Emails = 'dbaadmin@starixsoft.com'
  ,@ErrCode  = @ErrCode OUTPUT
  ,@ErrMsg = @ErrMsg OUTPUT
 
