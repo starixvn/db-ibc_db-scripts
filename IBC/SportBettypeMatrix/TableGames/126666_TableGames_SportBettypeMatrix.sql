@@ -11,8 +11,7 @@ DB: DBPRO.bodb02
 INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (40,'Table Games','Table Games','TG',1,4,NULL,0,0,0,40)
 INSERT INTO  Products  (ProductID,ProductName,Description,ProductPrefix,Enabled,BalanceType,SubProductBalanceType, GroupType,CasinoType,IsOfferPlayForFun, VendorId) VALUES (44,'RNG Lottery','RNG Lottery','LT2',1,NULL,NULL,1,0,0,NULL)
 
-
-insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (222,4901,0,40,1,0,0,'',3)
+ 
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (222,4902,0,40,1,0,0,'',3)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (222,4903,0,40,1,0,0,'',3)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (222,4904,0,40,1,0,0,'',3)
