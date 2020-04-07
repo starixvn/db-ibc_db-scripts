@@ -148,7 +148,7 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Running ticket with transdate + 3 
 
 SELECT 'Running ticket with transdate + 3 minutes > current time' AS RuleChecking, @ErrCode, @ErrMsg
 
-----S16 - Settled tickets in translog but not having in bettrans
+----S16 - Wrong discount or comm value
 INSERT [dbo].[DBA_Rules] ([Name], [Description], [SeverityLevel]) 
 VALUES (N'Wrong discount or comm value', N'Wrong discount or comm value', N'High')
 

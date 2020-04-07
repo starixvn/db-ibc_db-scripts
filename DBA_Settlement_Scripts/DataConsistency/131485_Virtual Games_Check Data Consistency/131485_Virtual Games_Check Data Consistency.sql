@@ -122,7 +122,7 @@ EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Settled tickets in translog but no
 
 SELECT 'Settled tickets in translog but not having in bettrans' AS RuleChecking, @ErrCode, @ErrMsg
 
-----S16 - Settled tickets in translog but not having in bettrans
+----S16 - Wrong discount or comm value
 INSERT [dbo].[DBA_Rules] ([Name], [Description], [SeverityLevel]) 
 VALUES (N'Wrong discount or comm value', N'Wrong discount or comm value', N'High')
 
