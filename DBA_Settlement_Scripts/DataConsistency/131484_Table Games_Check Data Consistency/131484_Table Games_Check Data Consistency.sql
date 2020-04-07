@@ -12,31 +12,6 @@ DECLARE @taskId_g1 INT, @taskId_g2 INT, @taskId_g3 INT, @taskId_g4 INT, @taskId_
 		@ruleId_s16 INT	,@taskId_s16 INT
 
 DECLARE @ErrCode INT, @ErrMsg VARCHAR(100)
--- G1 - Check Discount value
-INSERT [dbo].[DBA_Tasks] ([RuleId], [command]) 
-VALUES (1, N'EXEC dbo.DBA_Consistency_DiscountChecking @ProductId = 222, @ErrCode = @ErrCode OUTPUT, @ErrMsg = @ErrMsg OUTPUT, @SampleData = @SampleData OUTPUT ')
-
-SET @taskId_g1 = SCOPE_IDENTITY()
-
---------- SCHEDULE ---------------
-EXEC dbo.DBA_Consistency_ScheduleIns @Name = 'Check Discount value'
- ,@TaskId = @taskId_g1
- ,@IsEnable  = 1
- ,@FrequenceType = 4 -- daily = 4, weekly = 8
- ,@FrequenceInterval = 1 -- every xx days
- ,@FrequenceSubDayType = 8 -- specified time: 1, second: 2, min: 4, hour: 8
- ,@FrequenceSubDayInterval = 1 -- specified time: 0; <> 0: every FrequenceSubDayType
- ,@ActiveStartDate = '2020-04-06' 
- ,@ActiveEndDate = NULL
- ,@ActiveStartTime  = '00:00'
- ,@ActiveEndTime = NULL
- ,@NotifyLevelEmail = 2
- --,@Emails = 'max.tran@starixsoft.com;helen.do@starixsoft.com'
- ,@Emails = 'dbaadmin@starixsoft.com'
- ,@ErrCode  = @ErrCode OUTPUT
- ,@ErrMsg = @ErrMsg OUTPUT
-
-SELECT 'Check Discount value' AS RuleChecking, @ErrCode, @ErrMsg
 
 --G2 - Check PT value
 INSERT [dbo].[DBA_Tasks] ([RuleId], [command]) 
