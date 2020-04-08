@@ -6,8 +6,10 @@
  
  
  
- INSERT INTO Acc_DWLList (ProductId, Product, Seq,IsDeleted, CustId) 
- VALUES ('40','Table Games','48','0','42612749')	 
  
- INSERT INTO Acc_DWLList (ProductId, Product, Seq,IsDeleted, CustId)   
- VALUES ('40','Table Games','48','0','42614981')
+ 
+ INSERT INTO Acc_DWLList (ProductId, Product, Seq,IsDeleted, CustId) 
+ VALUES ('40','Table Games',48,0,42612749)	 
+ 
+ INSERT INTO Acc_DWLList_xtest (ProductId, Product, Seq,IsDeleted, CustId)   
+ VALUES ('40','Table Games',48,0,42614981)
