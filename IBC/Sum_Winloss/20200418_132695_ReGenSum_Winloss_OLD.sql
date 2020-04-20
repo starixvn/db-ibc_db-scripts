@@ -361,6 +361,7 @@ winlostdate	datetime
 	AND t.srecommend = s.srecommend
 	AND t.mrecommend = s.mrecommend
 	AND t.recommend = s.recommend
+	AND t.CustID = s.CustID
 	AND t.roleid = s.roleid
 	AND t.sporttype = s.sporttype
 	AND t.bettype = s.bettype 
