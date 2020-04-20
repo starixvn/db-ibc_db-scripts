@@ -14,7 +14,7 @@ CREATE TABLE #SportBettype (ProductID INT, Bettype INT, SportType INT)
 
 INSERT INTO #SportBettype (ProductID, Bettype, SportType)
 SELECT  ProductID, Bettype, SportType
-FROM	bodb02.dbo.SportbettypeMatrix WITH (NOLOCK) WHERE ProductID IN (39, 45)   -- SA Gaming, Sexy Gaming 
+FROM DBEXT.bodb02.dbo.SportbettypeMatrix WITH (NOLOCK) WHERE ProductID IN (39, 45)   -- SA Gaming, Sexy Gaming 
  
 CREATE TABLE #Sum_Winloss 
 (
