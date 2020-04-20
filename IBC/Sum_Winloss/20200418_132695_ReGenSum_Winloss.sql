@@ -43,7 +43,7 @@ winlostdate	datetime
 
   
 INSERT INTO @MBU
-EXEC DBAGE.bodb02.dbo.AGE_SelBalanceUpday
+EXEC bodb02.dbo.AGE_SelBalanceUpday
 
 SELECT @BalanceUpDay = BalanceUpDay, @MovebetsDay = MovebetsDay
 FROM @MBU
@@ -323,6 +323,7 @@ BEGIN
 	AND t.srecommend = s.srecommend
 	AND t.mrecommend = s.mrecommend
 	AND t.recommend = s.recommend
+	AND t.custid = s.custid
 	AND t.roleid = s.roleid
 	AND t.sporttype = s.sporttype
 	AND t.bettype = s.bettype 
