@@ -14,7 +14,7 @@ CREATE TABLE #SportBettype (ProductID INT, Bettype INT, SportType INT)
 
 INSERT INTO #SportBettype (ProductID, Bettype, SportType)
 SELECT  ProductID, Bettype, SportType
-FROM DBEXT.bodb02.dbo.SportbettypeMatrix WITH (NOLOCK) WHERE ProductID IN (39, 45)   -- SA Gaming, Sexy Gaming 
+FROM bodb02.dbo.SportbettypeMatrix WITH (NOLOCK) WHERE ProductID IN (39, 45)   -- SA Gaming, Sexy Gaming 
  
 CREATE TABLE #Sum_Winloss 
 (
@@ -43,7 +43,7 @@ winlostdate	datetime
 
   
 INSERT INTO @MBU
-EXEC bodb02.dbo.AGE_SelBalanceUpday
+EXEC DBEXT.bodb02.dbo.AGE_SelBalanceUpday
 
 SELECT @BalanceUpDay = BalanceUpDay, @MovebetsDay = MovebetsDay
 FROM @MBU
