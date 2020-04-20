@@ -45,4 +45,15 @@ FROM #temp_MajorLeague188Bet a
 	) b 
 ORDER BY a.eventdate, a.MatchId
 
+SELECT COUNT(1) AS TotalRow188Bet
+FROM #temp_MajorLeague188Bet
+
+SELECT COUNT(1) AS TotalRowSBO
+FROM ProviderResultDetail_bk m1 WITH (NOLOCK)																									
+	INNER JOIN match_bk m3 WITH (NOLOCK) ON m3.matchid = m1.MatchId	
+	INNER JOIN bodb02.dbo.league l with (NOLOCK) ON l.leagueid = m3.leagueid AND l.istest = 0 AND ISNULL(l.[Group],'') NOT IN ('Specials')	
+	INNER JOIN bodb02.dbo.team h WITH (NOLOCK) ON m3.homeid = h.teamid
+	INNER JOIN bodb02.dbo.team a WITH (NOLOCK) ON m3.awayid = a.teamid
+WHERE m1.TypeId IN (1,2) AND m1.CreatedDate >=  '2020-01-01' AND m1.SourceId = 1 -- sbo
+
 DROP TABLE #temp_MajorLeague188Bet
