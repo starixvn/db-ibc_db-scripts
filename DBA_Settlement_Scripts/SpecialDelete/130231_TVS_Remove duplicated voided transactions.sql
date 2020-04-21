@@ -10,6 +10,7 @@ BEGIN
 
 	SELECT t.TransId INTO #tmp
 	FROM dbo.TicketVoiding_VoidedTransaction t WITH (NOLOCK)
+	WHERE t.IssueTypeID = 11
 	GROUP BY t.TransId
 	HAVING COUNT(1) > 1
 
