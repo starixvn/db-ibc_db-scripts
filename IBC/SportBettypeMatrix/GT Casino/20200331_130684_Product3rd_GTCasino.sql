@@ -8,5 +8,6 @@ DB: DBCUST.bodb_Licensee
 */
 
 
-INSERT INTO  Product3rd  (ProductID,ProductName,Description,ProductPrefix,OfferSingle,ApplyDCS ) VALUES (46,'GT Casino','GT Casino','GTC','1',1) 
+INSERT INTO  Product3rd  (ProductID,ProductName,Description,ProductPrefix,OfferSingle,ApplyDCS ) 
+VALUES (46,'IBCBet Live Casino','IBCBet Live Casino','IBCLC','1',1) 
  
