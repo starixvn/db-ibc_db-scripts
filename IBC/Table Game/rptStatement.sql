@@ -1,0 +1,319 @@
+USE bodb_Report
+GO
+
+-- Gen data for rptStatement
+
+-- 1. from bettrans_bk
+BEGIN
+	DECLARE @Winlostdate SMALLDATETIME = '2020-04-16'
+	
+	CREATE TABLE #rptStatementTable (
+		Custid				INT PRIMARY KEY
+		,OpeningBalance		MONEY	NULL
+		,VoidAmt			MONEY	NULL
+		,Turnover			MONEY	NULL
+		,netTurnover		MONEY	NULL
+		,TransferAmt		MONEY	NULL
+		,Winlost			MONEY	NULL
+		,Comm				MONEY	NULL
+		,ClosingBalance		MONEY	NULL
+		,BetCount			INT		DEFAULT 0
+		,TransCount			INT		DEFAULT 0
+		,VoidCount			INT		DEFAULT 0
+		,GrandPrize			MONEY	NULL
+		,OpeningTotalBalance DECIMAL(37,4)	NULL
+	)
+
+	CREATE TABLE #bettrans_temp (
+		custid INT 
+		,recommend INT
+		,mrecommend INT
+		,srecommend INT
+		,transIndicator INT
+		,roleID INT
+		,stake MONEY
+		,winlost MONEY
+		,playercomm MONEY
+		,comm MONEY
+		,acomm MONEY
+		,scomm MONEY
+		,awinlost MONEY
+		,mwinlost MONEY
+		,swinlost MONEY
+		,anet_stake MONEY
+		,mnet_stake MONEY
+		,snet_stake MONEY
+	)
+	CREATE CLUSTERED INDEX CIX_CustID_TransIndicator ON #bettrans_temp (custid, transIndicator)
+
+	-- bet tickets
+	INSERT INTO #bettrans_temp
+	SELECT
+		b.custid
+		,b.recommend
+		,b.mrecommend
+		,b.srecommend
+		,bet.transIndicator
+		,1 AS roleID
+		,SUM(bet.stake) AS stake
+		,SUM(bet.winlost) as winlost
+		,SUM(b.playercomm) AS playercomm
+		,SUM(b.comm) AS comm
+		,SUM(b.acomm) AS acomm
+		,SUM(b.scomm) AS scomm
+		,SUM(b.awinlost) AS awinlost
+		,SUM(b.mwinlost) AS mwinlost
+		,SUM(b.swinlost) AS swinlost
+		,SUM(bet.stake*b.apositiontaking) AS anet_stake
+		,SUM(bet.stake*b.mpositiontaking) AS mnet_stake
+		,SUM(bet.stake*b.spositiontaking) AS snet_stake
+	FROM bodb_Archive.dbo.bettrans_bk b WITH (NOLOCK)
+		OUTER APPLY
+		(
+			SELECT 
+				CASE
+					WHEN b.statusID = 103 THEN 0 -- Refund
+					ELSE ABS(b.stake)
+					END AS stake
+				,(winlost - actual_stake) AS winlost
+				,CASE 
+					WHEN b.statusID IN (101, 102) AND b.bettype NOT IN (903, 500, 913, 914) THEN POWER(2*1, 2) --> void bet
+					WHEN b.b.statusID NOT IN (101,102) THEN POWER(2*1, 3) --> normal bet
+					ELSE 0
+					END AS transIndicator
+		) AS bet
+	WHERE b.winlostdate = '2020-04-16'
+		AND bet.transIndicator > 0
+	GROUP BY
+		b.custid
+		,b.recommend
+		,b.mrecommend
+		,b.srecommend
+		,bet.transIndicator
+
+	INSERT INTO #rptStatementTable(
+		Custid
+		,BetCount
+		,Turnover
+		,netTurnover
+		,Winlost
+		,Comm
+		,VoidCount
+		,VoidAmt
+		,TransCount
+		,TransferAmt
+	)
+	SELECT
+		c.custid
+		,SUM(bet.betIndicator) AS BetCount
+		,SUM(b.stake * bet.betIndicator) AS Turnover
+		,SUM(c.net_stake * bet.betIndicator) AS netTurnover
+		,SUM(c.winlost * bet.betIndicator) AS winlost
+		,SUM(c.comm * bet.betIndicator) AS comm
+		,SUM(c.voidIndicator) AS VoidCount
+		,SUM(b.stake * c.voidIndicator) AS VoidAmt
+		,SUM(c.IsOwner * bet.transferIndicator) AS TransCount
+		,SUM(c.IsOwner * b.winlost * bet.transferIndicator) AS TransferAmt
+	FROM
+		#bettrans_temp b
+	OUTER APPLY (
+		SELECT CAST(b.transIndicator & 2 AS BIT)/1 AS transferIndicator
+			,CAST(b.transIndicator & 4 AS BIT)/1 AS voidIndicator
+			,CAST(b.transIndicator & 8 AS BIT)/1 AS betIndicator
+			,POWER(2*1,b.roleID) AS ownerIndicator
+	) AS bet
+	OUTER APPLY (
+		SELECT b.custid						AS custid
+			, 0								AS net_stake
+			, b.winlost						AS winlost
+			, b.playercomm					AS comm
+			, bet.voidIndicator				AS voidIndicator
+			, 1								AS levelID
+			, CAST(bet.ownerIndicator & 2 AS BIT)/1	AS IsOwner
+		UNION ALL
+		SELECT b.recommend, anet_stake, awinlost, comm - playercomm, 0, 2, CAST(bet.ownerIndicator & 4 AS BIT)/1
+		UNION ALL
+		SELECT b.mrecommend, mnet_stake, mwinlost, acomm - comm, 0, 3, CAST(bet.ownerIndicator & 8 AS BIT)/1
+		UNION ALL
+		SELECT b.srecommend, snet_stake, swinlost, scomm -acomm, 0, 4, CAST(bet.ownerIndicator & 16 AS BIT)/1
+	) AS c
+	WHERE c.levelID >= b.roleID
+		AND c.custid > 0
+	GROUP BY
+		c.custid
+
+	-- 2. SUM Grand Prize
+	;
+	WITH CTE_GrandPrize	AS (
+		SELECT custid
+			,SUM(WinAmount) AS GrandPrize
+		FROM
+			DBACC.bodb02.dbo.PayoutTrans WITH(NOLOCK) 
+		WHERE
+			winlostdate = @_Winlostdate			
+			AND PayoutStatusId IN (4, 5)  ----- 'Completed', 'Expired'
+
+		GROUP BY custid
+	)
+	MERGE #rptStatementTable AS TGR
+	USING CTE_GrandPrize AS SRC
+	ON TGR.custid = SRC.custid
+	WHEN MATCHED THEN
+		UPDATE 
+		SET GrandPrize = SRC.GrandPrize
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT (custid, GrandPrize)
+		VALUES (
+			SRC.custid
+			, SRC.GrandPrize
+		)
+	;
+
+	-- 3. SUM OPENNING [balance & total balance]
+	;
+	WITH CTE_Winlost (custid, winlost) AS
+	(
+		SELECT custid, ClosingBalance
+		FROM (
+			SELECT rpt.custid, rpt.ClosingBalance
+				, ROW_NUMBER() OVER (PARTITION BY rpt.CustID ORDER BY rpt.Winlostdate DESC) as Num
+			FROM dbo.rptStatement rpt WITH(NOLOCK)
+			WHERE rpt.winlostdate >= @_Saturday AND  rpt.winlostdate < @_Winlostdate
+		) AS tmp 
+		WHERE tmp.Num = 1
+	),
+	CTE_Balance (custid, OpeningBalance, OpeningTotalBalance) AS
+	(
+		SELECT bal.custid
+			, SUM(bal.winlost)
+			, SUM(bal.totalWinlost)
+		FROM CTE_Winlost wl
+		INNER JOIN bodb02.dbo.custinfo ci WITH(NOLOCK) ON wl.custid = ci.custid
+		CROSS APPLY (
+			SELECT POWER(2*1, ci.roleid) AS ownerIndicator
+		) AS bet
+		CROSS APPLY (
+			SELECT wl.custid, 1 AS levelID, winlost, winlost AS totalWinlost
+			UNION ALL
+			SELECT ci.recommend, 2, winlost * CAST(bet.ownerIndicator & 4 AS BIT)/1, winlost
+			UNION ALL
+			SELECT ci.mrecommend, 3, winlost * CAST(bet.ownerIndicator & 8 AS BIT)/1, winlost
+			UNION ALL
+			SELECT ci.srecommend, 4, winlost * CAST(bet.ownerIndicator & 16 AS BIT)/1, winlost
+		) AS bal
+		WHERE bal.levelID >= ci.roleID
+			AND bal.custid > 0
+		GROUP BY bal.custid
+	)
+	MERGE #rptStatementTable AS TGR
+	USING CTE_Balance AS SRC
+	ON TGR.custid = SRC.custid
+	WHEN MATCHED THEN
+		UPDATE 
+		SET OpeningBalance = SRC.OpeningBalance
+		,OpeningTotalBalance = SRC.OpeningTotalBalance
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT (custid, OpeningBalance, OpeningTotalBalance)
+		VALUES (SRC.custid, SRC.OpeningBalance, SRC.OpeningTotalBalance)
+	;
+
+	--5. Headline - Openning total balance
+	;
+	WITH CTE_HeadlineTotalBalance AS 
+	(
+		SELECT e.UplineId, SUM(ISNULL(tmp.OpeningTotalBalance, 0)) AS OpeningTotalBalance
+		FROM #rptStatementTable tmp
+			CROSS APPLY (
+				SELECT TOP (1) ag.UplineId
+				FROM bodb02.dbo.Acc_GroupExtraPTSetting ag WITH (NOLOCK)
+				WHERE tmp.Custid = ag.SuperId
+					AND @Winlostdate BETWEEN ag.FromDate AND ag.ToDate
+			) e
+		GROUP BY e.UplineId
+	)
+	UPDATE tmp
+	SET tmp.OpeningTotalBalance = ISNULL(tmp.OpeningTotalBalance, 0) + ISNULL(bal.OpeningTotalBalance, 0)
+	FROM #rptStatementTable tmp
+	INNER JOIN CTE_HeadlineTotalBalance bal ON tmp.Custid = bal.UplineId
+	
+	-- 6.INSERT into rptStatement
+	;
+	WITH CTE_rptStatement AS (
+		SELECT 
+			@_Winlostdate AS Winlostdate
+			,tmp.Custid
+			,(ISNULL(tmp.Openingbalance, 0)) AS [OpeningBalance]
+			,(CASE WHEN tmp.BetCount > 0 THEN tmp.Turnover ELSE NULL END) AS [Turnover]
+			,(CASE WHEN tmp.BetCount > 0 THEN tmp.NetTurnover ELSE NULL END) AS [NetTurnover]
+			,(CASE WHEN tmp.BetCount > 0 THEN tmp.Winlost ELSE NULL END) AS [Winlost]
+			,(CASE WHEN tmp.BetCount > 0 THEN tmp.Comm ELSE NULL END) AS [Comm]
+			,(CASE WHEN tmp.VoidCount > 0 THEN tmp.Voidamt ELSE NULL END) AS [VoidAmt]
+			,(CASE WHEN tmp.TransCount > 0 THEN tmp.TransferAmt ELSE NULL END) AS [TransferAmt]
+			,(tmp.GrandPrize) AS GrandPrize
+			,(ISNULL(tmp.Openingbalance, 0) + ISNULL(tmp.[Winlost], 0) + ISNULL(tmp.[Comm], 0) + ISNULL(tmp.[TransferAmt], 0)) AS ClosingBalance
+			,(ISNULL(OpeningTotalBalance,0)) AS OpeningTotalBalance
+		FROM 
+			#rptStatementTable tmp
+		WHERE 
+			DATEPART(DW, @_Winlostdate) = 7
+			OR (
+				(ISNULL(tmp.VoidCount, 0)) <> 0
+				OR (ISNULL(tmp.BetCount, 0)) <> 0
+				OR (ISNULL(tmp.TransCount, 0)) <> 0
+				OR (ISNULL(tmp.GrandPrize, 0)) <> 0
+			)
+	)
+	MERGE INTO dbo.rptStatement AS TGR
+	USING CTE_rptStatement AS SRC
+	ON TGR.Winlostdate = SRC.Winlostdate AND TGR.Custid = SRC.Custid
+	WHEN MATCHED AND TGR.Winlostdate = @_Winlostdate THEN
+	UPDATE 
+		SET OpeningBalance = SRC.OpeningBalance
+			,VoidAmt = SRC.VoidAmt
+			,Turnover = SRC.Turnover
+			,NetTurnover = SRC.NetTurnover
+			,TransferAmt = SRC.TransferAmt
+			,Winlost = SRC.Winlost
+			,Comm = SRC.Comm
+			,ClosingBalance = SRC.ClosingBalance
+			,GrandPrize = SRC.GrandPrize
+			,OpeningTotalBalance = SRC.OpeningTotalBalance
+
+	WHEN NOT MATCHED BY TARGET THEN
+	INSERT (
+			Winlostdate
+			,Custid
+			,OpeningBalance
+			,VoidAmt
+			,Turnover
+			,NetTurnover
+			,TransferAmt
+			,Winlost
+			,Comm
+			,ClosingBalance
+			,GrandPrize
+			,OpeningTotalBalance
+		)
+		VALUES (
+			@_Winlostdate
+			,SRC.Custid
+			,SRC.OpeningBalance
+			,SRC.VoidAmt
+			,SRC.Turnover
+			,SRC.NetTurnover
+			,SRC.TransferAmt
+			,SRC.Winlost
+			,SRC.Comm
+			,SRC.ClosingBalance
+			,SRC.GrandPrize
+			,SRC.OpeningTotalBalance
+		) 
+				
+	WHEN NOT MATCHED BY SOURCE AND TGR.Winlostdate = @_Winlostdate THEN
+		DELETE
+	;
+
+	DROP TABLE #bettrans_temp
+	DROP TABLE #rptStatementTable
+END
+GO
