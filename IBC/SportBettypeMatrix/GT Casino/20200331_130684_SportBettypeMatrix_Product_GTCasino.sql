@@ -14,8 +14,7 @@ insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istes
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3202,0,46,1,0,0,'',2)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3203,0,46,1,0,0,'',2)
 insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3204,0,46,1,0,0,'',2)
-insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3205,0,46,1,0,0,'',2)
-insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3206,0,46,1,0,0,'',2)
+insert into sportbettypematrix (sporttype,bettype,islive,productid,enabled,istest,eventtype,subproduct,RefTable) values (242,3205,0,46,1,0,0,'',2) 
 
 
 /*	
