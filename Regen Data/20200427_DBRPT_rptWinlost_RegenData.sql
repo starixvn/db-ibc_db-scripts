@@ -1,12 +1,12 @@
 USE bodb_Report
 GO
 
-DECLARE @winlostdate SMALLDATETIME = '2020-04-16' 
-
 /*
 	Created: 20200427@Percy
 	DB: DBRPT.bodb_Report
-	Task: rptWinlost - Correct data on bettrans_bk range
+	Task: rptWinlost - Correct data on bettrans_bk & bettrans14 range
+		bettrans_bk:	2020-04-16
+		bettrans14:		2020-04-17 --> 2020-04-19
 */
 
 BEGIN	
@@ -14,7 +14,8 @@ BEGIN
 	BEGIN
 		CREATE TABLE #tmpRptWinlost
 		(
-			matchid				INT
+			winlostdate			SMALLDATETIME
+			,matchid			INT
 			,bettype			SMALLINT
 			,liveindicator		BIT
 			,Status				NVARCHAR(10)
@@ -35,7 +36,8 @@ BEGIN
 	BEGIN
 		INSERT INTO #tmpRptWinlost
 		(
-			matchid
+			winlostdate
+			,matchid
 			,bettype
 			,liveindicator
 			,Status
@@ -51,7 +53,8 @@ BEGIN
 			,exrisk
 		)
 		SELECT
-			b.matchid
+			b.winlostdate
+			,b.matchid
 			,b.bettype
 			,b.liveindicator
 			,CASE
@@ -70,12 +73,70 @@ BEGIN
 			,222 AS SportType
 			,0 AS exrisk
 		FROM bodb_Archive.dbo.bettrans_bk b WITH (NOLOCK)
-		WHERE b.winlostdate = @winlostdate
+		WHERE b.winlostdate = '2020-04-16'
 			AND b.statusID IN (111, 112, 113)
 			AND b.currency <> 20
 			AND b.bettype BETWEEN 4901 AND 4999 -- Table Game
 		GROUP BY
-			b.matchid
+			b.winlostdate
+			,b.matchid
+			,b.bettype
+			,b.liveindicator
+			,CASE
+				WHEN StatusID = 111 THEN 'DRAW'
+				WHEN StatusID = 112 THEN 'WON'
+				WHEN StatusID = 113 THEN 'LOSE'
+				END
+	END
+
+	-- bettrans14
+	BEGIN
+		INSERT INTO #tmpRptWinlost
+		(
+			winlostdate
+			,matchid
+			,bettype
+			,liveindicator
+			,Status
+			,IBC
+			,RealTurnover
+			,RealWinLost
+			,RealPosition
+			,RealCommission
+			,RealLineTotal
+			,VirtualTurnover
+			,VirtualLineTotal
+			,SportType
+			,exrisk
+		)
+		SELECT
+			b.winlostdate
+			,b.matchid
+			,b.bettype
+			,b.liveindicator
+			,CASE
+				WHEN StatusID = 111 THEN 'DRAW'
+				WHEN StatusID = 112 THEN 'WON'
+				WHEN StatusID = 113 THEN 'LOSE'
+				END AS Status
+			,0 AS IBC
+			,SUM((1-tpositiontaking) * stake * actualrate)			AS realturnover
+			,SUM((winlost-actual_stake) * actualrate)				AS realWinlost
+			,SUM((awinlost+mwinlost+swinlost) * actualrate)			AS realPos
+			,SUM(scomm * actualrate)								AS realComm
+			,SUM((winlost-actual_stake+awinlost+mwinlost+swinlost+scomm) * actualrate)	AS realLineTotal
+			,SUM((1-tpositiontaking) * stake * virtualrate)			AS virtualTurnover
+			,SUM((winlost-actual_stake+awinlost+mwinlost+swinlost+scomm) * virtualrate) AS virtualLineTotal
+			,222 AS SportType
+			,0 AS exrisk
+		FROM bodb02.dbo.bettrans14 b WITH (NOLOCK)
+		WHERE b.winlostdate BETWEEN '2020-04-17' AND '2020-04-19'
+			AND b.statusID IN (111, 112, 113)
+			AND b.currency <> 20
+			AND b.bettype BETWEEN 4901 AND 4999 -- Table Game
+		GROUP BY
+			b.winlostdate
+			,b.matchid
 			,b.bettype
 			,b.liveindicator
 			,CASE
@@ -90,6 +151,7 @@ BEGIN
 		CREATE TABLE #tmpResult
 		(
 			ModifiedType		INT
+			,winlostdate		SMALLDATETIME
 			,matchid			INT
 			,bettype			SMALLINT
 			,liveindicator		BIT
@@ -109,7 +171,7 @@ BEGIN
 		;WITH CTE_Target AS
 		(
 			SELECT
-				matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
+				winlostdate,matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
 				,SUM(RealTurnover) RealTurnover
 				,SUM(RealWinLost) RealWinLost
 				,SUM(RealPosition) RealPosition
@@ -118,14 +180,14 @@ BEGIN
 				,SUM(VirtualTurnover) VirtualTurnover
 				,SUM(VirtualLineTotal) VirtualLineTotal
 			FROM dbo.rptWinLost WITH (NOLOCK)
-			WHERE winlostdate = @winlostdate
+			WHERE winlostdate BETWEEN '2020-04-16' AND '2020-04-19'
 				AND SportType = 222 -- Table Game
-			GROUP BY matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
+			GROUP BY winlostdate,matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
 		)
 		, CTE_Source AS
 		(
 			SELECT
-				matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
+				winlostdate,matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
 				,SUM(RealTurnover) RealTurnover
 				,SUM(RealWinLost) RealWinLost
 				,SUM(RealPosition) RealPosition
@@ -134,11 +196,12 @@ BEGIN
 				,SUM(VirtualTurnover) VirtualTurnover
 				,SUM(VirtualLineTotal) VirtualLineTotal
 			FROM #tmpRptWinlost
-		GROUP BY matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
+			GROUP BY winlostdate,matchid,bettype,liveindicator,Status,IBC,SportType,exrisk
 		)
 		INSERT INTO #tmpResult
 		(
 			ModifiedType
+			,winlostdate
 			,matchid
 			,bettype
 			,liveindicator
@@ -156,10 +219,11 @@ BEGIN
 		)
 		SELECT
 			CASE
-				WHEN s.SportType IS NULL THEN -1 -- delete
-				WHEN t.SportType IS NULL THEN 1 -- insert
+				WHEN s.winlostdate IS NULL THEN -1 -- delete
+				WHEN t.winlostdate IS NULL THEN 1 -- insert
 				ELSE 0 -- update
 				END AS ModifiedType
+			,ISNULL(s.winlostdate, t.winlostdate)
 			,ISNULL(s.matchid, t.matchid)
 			,ISNULL(s.bettype, t.bettype)
 			,ISNULL(s.liveindicator, t.liveindicator)
@@ -176,15 +240,16 @@ BEGIN
 			,ISNULL(s.exrisk, t.exrisk)
 		FROM CTE_Target t
 			FULL OUTER JOIN CTE_Source s
-				ON s.SportType = t.SportType
+				ON s.winlostdate = t.winlostdate
+					AND s.SportType = t.SportType
 					AND s.bettype = t.bettype
 					AND s.liveindicator = t.liveindicator
 					AND s.Status = t.Status
 					AND s.exrisk = t.exrisk
 					AND s.matchid = t.matchid
 					AND s.IBC = t.IBC
-		WHERE (s.SportType IS NULL
-			OR t.SportType IS NULL
+		WHERE (s.winlostdate IS NULL
+			OR t.winlostdate IS NULL
 			OR ROUND(ABS(ISNULL(s.RealTurnover, 0) - ISNULL(t.RealTurnover, 0)),2) > 0.0
 			OR ROUND(ABS(ISNULL(s.RealWinLost, 0) - ISNULL(t.RealWinLost, 0)),2) > 0.0
 			OR ROUND(ABS(ISNULL(s.RealPosition, 0) - ISNULL(t.RealPosition, 0)),2) > 0.0
@@ -201,7 +266,7 @@ BEGIN
 			DELETE r WITH (NOLOCK, UPDLOCK)
 			FROM dbo.rptWinLost r
 				INNER JOIN #tmpResult t
-					ON r.winlostdate = @WinlostDate
+					ON r.winlostdate = t.winlostdate
 						AND r.SportType = t.SportType
 						AND r.bettype = t.bettype
 						AND r.liveindicator = t.liveindicator
@@ -222,7 +287,7 @@ BEGIN
 				,r.VirtualLineTotal = t.VirtualLineTotal
 			FROM dbo.rptWinLost r
 				INNER JOIN #tmpResult t
-					ON r.winlostdate = @WinlostDate
+					ON r.winlostdate = t.winlostdate
 						AND r.SportType = t.SportType
 						AND r.bettype = t.bettype
 						AND r.liveindicator = t.liveindicator
@@ -239,7 +304,7 @@ BEGIN
 				,RealCommission,RealLineTotal,VirtualTurnover,VirtualLineTotal,SportType,exrisk
 			)
 			SELECT
-				@winlostdate,matchid,bettype,liveindicator,Status,IBC,RealTurnover,RealWinLost,RealPosition
+				winlostdate,matchid,bettype,liveindicator,Status,IBC,RealTurnover,RealWinLost,RealPosition
 				,RealCommission,RealLineTotal,VirtualTurnover,VirtualLineTotal,SportType,exrisk
 			FROM #tmpResult
 			WHERE ModifiedType = 1
