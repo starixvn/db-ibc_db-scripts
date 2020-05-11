@@ -3,6 +3,7 @@ Use bodb_Acc
  /*
  Create : 20200511@Sophia
  Task: add ExtraPT group IBCIndo [redmine:#133867]
+ DB: DBACC/bodb_Acc
  */
 
 INSERT INTO Acc_DWLList_ExtraPT (CustId,GroupId,GroupName,IsDisabled)
