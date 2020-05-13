@@ -9,6 +9,7 @@ UPDATE SettlementSpecialBettypeProfile WITH(ROWLOCK, UPDLOCK)
 	SET OrdNo = OrdNo + (RoundID%100)*100 - 100
 WHERE SportType = 43
 AND RoundID > 801
+AND SettleType <> 'MNL'
 
 INSERT INTO SettlementSpecialBettypeProfile (pfID, BetType, SportType, BetID, ResourceID, SettleType, GroupType, RoundID, OrdNo, OddsType)
 VALUES (102, 9087,43,801,908701,'EAR','SP',801, 0, 0)
