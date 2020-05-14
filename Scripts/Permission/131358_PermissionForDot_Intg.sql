@@ -1,4 +1,4 @@
-/*<info serverAlias="DBAGE-bodb02"*/
+/*<info serverAlias="DBTXN-bodb02"></info>*/
 
 USE [CustDB]
 
