@@ -1,3 +1,5 @@
+/*<info serverAlias="DBAGE-bodb02"*/
+
 USE [CustDB]
 
 /*
