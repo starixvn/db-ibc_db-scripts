@@ -21,7 +21,7 @@ BEGIN
 		WHERE b.matchid = 36050775 AND VoidingHistoryId = 9671
 			AND b.TransId IN (SELECT val FROM #tmp)
 	)
-	DELETE FROM CTE
+	DELETE TOP(105) FROM CTE
 	WHERE Rn <> 1
 
 	--TicketVoiding_VoidedTransaction
@@ -31,11 +31,11 @@ BEGIN
 		FROM dbo.TicketVoiding_VoidedTransaction tv WITH (NOLOCK)
 		WHERE tv.TransId IN (SELECT val FROM #tmp)
 	)
-	DELETE FROM CTE2
+	DELETE TOP(417) FROM CTE2
 	WHERE Rn <> 1
 
 	--TicketVoiding_VoidingHistory
-	UPDATE Dbo.TicketVoiding_VoidingHistory WITH (ROWLOCK, UPDLOCK)
+	UPDATE TOP(2) dbo.TicketVoiding_VoidingHistory WITH (ROWLOCK, UPDLOCK)
 		SET TransIds = (SELECT STUFF((SELECT ',' + CAST(val AS VARCHAR(50)) FROM #tmp FOR XML PATH('')),1,1,''))
 		WHERE RequestID = 12897 AND VoidingHistoryId = 9671
 
