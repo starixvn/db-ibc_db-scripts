@@ -36,8 +36,8 @@ BEGIN
 	AND s.BetType = 9087
 END
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM SettlementSpecialBettypeProfile WITH(NOLOCK) WHERE sporttype = 43 AND BetType = 4)
+IF NOT EXISTS (SELECT TOP 1 1 FROM SettlementSpecialBettypeProfile WITH(NOLOCK) WHERE sporttype = 43 AND BetType = 9088)
 BEGIN
 	INSERT INTO SettlementSpecialBettypeProfile (pfID, BetType, SportType, BetID, ResourceID, SettleType, GroupType, RoundID, OrdNo, OddsType)
-	VALUES (4, 4,43,0,'00','MNL','FT','00', 99, 1)
+	VALUES (9088, 9088,43,0,'00','MNL','FT','00', 99, 1)
 END
