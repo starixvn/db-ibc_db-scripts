@@ -13,3 +13,4 @@ SET t.Resource_ch = N'娛樂城',
 	t.Resource_th = N'คาสิโน'
 FROM RefResource t
 WHERE RefId = 'Product' AND ResourceId = 53
+
