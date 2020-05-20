@@ -1,4 +1,4 @@
-
+/*<info serverAlias="DBCUST-bodb_Licensee" step="2"></info>*/
 use bodb_Licensee
 GO 
 

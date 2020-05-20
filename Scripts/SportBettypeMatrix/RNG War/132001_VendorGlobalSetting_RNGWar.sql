@@ -1,4 +1,4 @@
-
+/*<info serverAlias="DBCUST-CUSTDB" step="3"></info>*/
 use CUSTDB
 GO 
 
