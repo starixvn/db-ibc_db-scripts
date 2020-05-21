@@ -1,6 +1,6 @@
 /*
-	Created: 20200312@Max
-	Task: Support Quarter X, Y, Z on Auto Unmark Page [Redmine: #130205]
+	Created: 20200521@Max
+	Task: [TVS] Apply new policy into Void Abnormal Bet rules [Redmine: #133705]
 	DB: DBTRANS/bodb02
 		
 */
