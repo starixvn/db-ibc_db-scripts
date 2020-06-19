@@ -163,10 +163,10 @@ CREATE PARTITION SCHEME [PS_sum_winloss_Extra_Monthly] AS PARTITION [PF_sum_winl
 GO
 
 CREATE TABLE [dbo].[sum_winloss_extra](
-	WinlostDate		DATETIME,
-	CustId			INT,
-	ProductId       SMALLINT,
-	Bettype			SMALLINT DEFAULT(0),
+	WinlostDate		DATETIME NOT NULL,
+	CustId			INT	NOT NULL,
+	ProductId       SMALLINT NOT NULL,
+	Bettype			SMALLINT DEFAULT(0) NOT NULL,
 	RoleId			INT,
 	Recommend		INT,
 	MRecommend		INT,
