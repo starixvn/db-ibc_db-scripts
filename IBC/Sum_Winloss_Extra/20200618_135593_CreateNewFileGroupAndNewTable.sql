@@ -187,6 +187,6 @@ CREATE TABLE [dbo].[sum_winloss_extra](
 	ExtraComm		MONEY,
 	GrossComm		MONEY
 
- CONSTRAINT [PK_sum_winloss] PRIMARY KEY CLUSTERED (WinlostDate,CustId,ProductId,Bettype)ON [PS_sum_winloss_Extra_Monthly]
+ CONSTRAINT [PK_sum_winloss] PRIMARY KEY CLUSTERED (WinlostDate,CustId,ProductId,Bettype)ON [PS_sum_winloss_Extra_Monthly](WinlostDate)
 ) ON [PS_sum_winloss_Extra_Monthly](WinlostDate)
 
