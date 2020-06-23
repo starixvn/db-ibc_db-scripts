@@ -84,7 +84,7 @@ ALTER DATABASE bodb_Summary ADD FILE (NAME = sum_winloss_Extra_MAX   , FILENAME 
 GO
 
 -- Create partition function
-CREATE PARTITION FUNCTION [PF_sum_winloss_Extra_Monthly] (DATETIME) AS 
+CREATE PARTITION FUNCTION [PF_sum_winloss_Extra_Monthly] (SMALLDATETIME) AS 
 RANGE LEFT FOR VALUES 
 (
 	N'2020-05-31',
@@ -163,7 +163,7 @@ CREATE PARTITION SCHEME [PS_sum_winloss_Extra_Monthly] AS PARTITION [PF_sum_winl
 GO
 
 CREATE TABLE [dbo].[sum_winloss_extra](
-	WinlostDate		DATETIME NOT NULL,
+	WinlostDate		SMALLDATETIME NOT NULL,
 	CustId			INT	NOT NULL,
 	ProductId       SMALLINT NOT NULL,
 	Bettype			SMALLINT DEFAULT(0) NOT NULL,
