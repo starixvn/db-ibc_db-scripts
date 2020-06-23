@@ -166,12 +166,12 @@ CREATE TABLE [dbo].[Sum_Winloss_Extra](
 	WinlostDate		SMALLDATETIME NOT NULL,
 	CustId			INT	NOT NULL,
 	ProductId       SMALLINT NOT NULL,
-	Bettype			SMALLINT DEFAULT(0) NOT NULL,
-	RoleId			INT,
+	Bettype			SMALLINT NOT NULL,
+	RoleId			TINYINT,
 	Recommend		INT,
 	MRecommend		INT,
 	SRecommend		INT,
-	BetCount		INT	DEFAULT(0),
+	BetCount		INT,
 	Turnover		MONEY,
 	NetTurnover		MONEY,
 	TurnoverNoDraw	MONEY,
@@ -187,6 +187,14 @@ CREATE TABLE [dbo].[Sum_Winloss_Extra](
 	ExtraComm		MONEY,
 	GrossComm		MONEY
 
- CONSTRAINT [PK_sum_winloss] PRIMARY KEY CLUSTERED (WinlostDate,CustId,ProductId,Bettype)ON [PS_Sum_Winloss_Extra_Monthly](WinlostDate)
+ CONSTRAINT [PK_Sum_Winloss] PRIMARY KEY CLUSTERED (WinlostDate,CustId,ProductId,Bettype)ON [PS_Sum_Winloss_Extra_Monthly](WinlostDate)
 ) ON [PS_Sum_Winloss_Extra_Monthly](WinlostDate)
+
+GO 
+
+ALTER TABLE [dbo].[Sum_Winloss_Extra] ADD  CONSTRAINT [DF_Sum_Winloss_Extra_BetCount]  DEFAULT ((0)) FOR [BetCount]
+GO
+
+ALTER TABLE [dbo].[Sum_Winloss_Extra] ADD  CONSTRAINT [DF_Sum_Winloss_Extra_bettype]  DEFAULT ((0)) FOR [Bettype]
+GO
 
