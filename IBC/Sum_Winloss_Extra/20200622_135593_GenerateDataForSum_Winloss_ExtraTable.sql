@@ -88,7 +88,7 @@ BEGIN
 			WinlostDate, 
 			custid,
 			b.ProductId,
-			CASE WHEN bt.bettype IN (71, 72) THEN bt.bettype ELSE  0 END Bettype,
+			0 AS Bettype,
 			1,
 		    recommend,
 		    mrecommend,
@@ -117,10 +117,8 @@ BEGIN
 		FROM dbo.bettrans_bk bt WITH(NOLOCK)
 			INNER JOIN #Bettype b ON bt.bettype = b.TypeId
 		WHERE bt.winlostdate  >= @WinlostDate 
-			AND bt.statusID NOT IN (0,1,102,101,103)
-			AND bt.bettype < 19000
-		GROUP BY winlostdate ,custid, recommend, mrecommend, srecommend, b.ProductId,
-				CASE WHEN bettype IN (71, 72) THEN bettype ELSE 0 END
+			AND bt.statusID NOT IN (102,101,103)
+		GROUP BY winlostdate ,custid, recommend, mrecommend, srecommend, b.ProductId
 	END
 	-- for agent, roleid = 2
 	BEGIN
