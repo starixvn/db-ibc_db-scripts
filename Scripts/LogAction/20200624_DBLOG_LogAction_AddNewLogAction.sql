@@ -21,7 +21,7 @@ VALUES
 	(95012,4,	'Acc_Product_Upd',N'Update products',1),																			
 	(95013,4,	'Acc_SportBettypeMatrix_Ins',N'Insert into SportBettypeMatrix table',1),																			
 	(95014,4,	'Acc_SportBettypeMatrix_Upd',N'Update SportBettypeMatrix table',1),																			
-	(95015,4,	'Acc_SportBettypeMatrix_Del',N'delete a row of SportBettypeMatrix table',1)																			
+	(95015,4,	'Acc_SportBettypeMatrix_Del',N'Delete a row of SportBettypeMatrix table',1)																			
 
 INSERT INTO dbo.LogAction
 (
