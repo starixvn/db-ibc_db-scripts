@@ -16,14 +16,7 @@ CREATE TABLE #TmpAction
 )
 INSERT INTO #TmpAction (ActionID,ActionTypeID,SPName,ActionNameEN,IsInternal)
 VALUES
-    (662,4,'Acc_CustGroupUpdPrimaryExtraPTGroup',N'Change Primary Extra PT Group',1),
-	(95002,4,	'CS_ReportPermission_Upd',N'Update view all periods',1),																			
-	(95003,4,	'Acc_FinancePermissionIns',N'Insert Admin / finance code',1),																			
-	(95004,4,	'Acc_FinancePermissionDel',N'Delete Admin / finance code',1),
-	(95005,4,	'Acc_Bettype_Ins',N'Insert new bettypes',1),																			
-	(95006,4,	'Acc_Bettype_Upd',N'Update bettypes',1),																			
-	(95007,4,	'Acc_Sporttype_Ins',N'Insert new Sports',1),																			
-	(95008,4,	'Acc_Sporttype_Upd',N'Update Sports',1),																				
+    (662,4,'Acc_CustGroupUpdPrimaryExtraPTGroup',N'Change Primary Extra PT Group',1),																																																						
 	(95011,4,	'Acc_Product_Ins',N'Insert new products',1),																			
 	(95012,4,	'Acc_Product_Upd',N'Update products',1),																			
 	(95013,4,	'Acc_SportBettypeMatrix_Ins',N'Insert into SportBettypeMatrix table',1),																			
@@ -45,7 +38,9 @@ SELECT
 	t.ActionNameEN,
 	t.IsInternal	
 FROM #TmpAction t
-WHERE NOT EXISTS(
-	SELECT 1 FROM dbo.LogAction WHERE ActionID = t.ActionID)
+
+UPDATE  dbo.LogAction
+SET IsInternal = 1
+WHERE ActionID IN (95003,95004,95005,95006,95007,95008)
 
 DROP TABLE #TmpAction
