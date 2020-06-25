@@ -5,6 +5,36 @@
 	Task: the script to create data from 2020-05-01 [Redmine: #135593]
 	DB: DBARC.bodb_Archive
 */
+
+/*create physical table*/
+
+CREATE TABLE dbo.Sum_Winloss_Extra_Tmp
+(
+		WinlostDate			DATETIME,
+		CustId				INT,
+		ProductId			SMALLINT,
+		Bettype				SMALLINT,
+		RoleID				INT,
+		Recommend			INT,
+		MRecommend			INT,
+		SRecommend			INT,
+		BetCount			INT,
+		Turnover			MONEY,
+		NetTurnover			MONEY,
+		TurnoverNoDraw		MONEY,
+		WinLoss				MONEY,
+		AgWinLoss			MONEY,
+		MAgWinLoss			MONEY,
+		SAgWinLoss			MONEY,
+		ExtraWinloss		MONEY,
+		PlayerComm			MONEY,
+		AgComm				MONEY,
+		MAgComm				MONEY,
+		SAgComm				MONEY,
+		ExtraComm			MONEY,
+		GrossComm			MONEY
+)
+
 DECLARE @WinlostDate SMALLDATETIME = '20200501',@BalanceUpDay SMALLDATETIME
 
 SELECT TOP 1 @BalanceUpDay = winlostdate
@@ -37,39 +67,7 @@ CREATE TABLE #Sum_Winloss_Extra
 		NetTurnoverAg		MONEY,
 		NetTurnoverMAg		MONEY,
 		NetTurnoverSAg		MONEY,
-		TunroverNoDraw		MONEY,
-		WinLoss				MONEY,
-		AgWinLoss			MONEY,
-		MAgWinLoss			MONEY,
-		SAgWinLoss			MONEY,
-		ExtraWinloss		MONEY,
-		PlayerComm			MONEY,
-		AgComm				MONEY,
-		MAgComm				MONEY,
-		SAgComm				MONEY,
-		ExtraComm			MONEY,
-		GrossComm			MONEY,
-		GrossCommAg			MONEY,
-		GrossCommMAg		MONEY,
-		GrossCommSAg		MONEY
-	)
-CREATE TABLE #Sum_Winloss_Extra_Tmp
-	(
-		WinlostDate			DATETIME,
-		CustId				INT,
-		ProductId			SMALLINT,
-		Bettype				SMALLINT,
-		RoleID				INT,
-		Recommend			INT,
-		MRecommend			INT,
-		SRecommend			INT,
-		BetCount			INT,
-		Turnover			MONEY,
-		NetTurnover			MONEY,
-		NetTurnoverAg		MONEY,
-		NetTurnoverMAg		MONEY,
-		NetTurnoverSAg		MONEY,
-		TunroverNoDraw		MONEY,
+		TurnoverNoDraw		MONEY,
 		WinLoss				MONEY,
 		AgWinLoss			MONEY,
 		MAgWinLoss			MONEY,
@@ -104,7 +102,7 @@ BEGIN
 			NetTurnoverAg,
 			NetTurnoverMAg,
 			NetTurnoverSAg,
-			TunroverNoDraw,
+			TurnoverNoDraw,
 			WinLoss,
 			AgWinLoss,		
 			MAgWinLoss,
@@ -173,7 +171,7 @@ INSERT INTO #Sum_Winloss_Extra
 	BetCount,
 	Turnover,
 	NetTurnover,
-	TunroverNoDraw,
+	TurnoverNoDraw,
 	WinLoss,
 	AgWinLoss,		
 	MAgWinLoss,
@@ -198,7 +196,7 @@ SELECT
 	SUM(BetCount),
 	SUM(Turnover),
 	SUM(NetTurnoverAg),
-	SUM(TunroverNoDraw),
+	SUM(TurnoverNoDraw),
 	SUM(WinLoss),
 	SUM(AgWinLoss),		
 	SUM(MAgWinLoss),
@@ -229,7 +227,7 @@ INSERT INTO #Sum_Winloss_Extra
 	BetCount,
 	Turnover,
 	NetTurnover,
-	TunroverNoDraw,
+	TurnoverNoDraw,
 	WinLoss,
 	AgWinLoss,		
 	MAgWinLoss,
@@ -254,7 +252,7 @@ SELECT
 	SUM(BetCount),
 	SUM(Turnover),
 	SUM(NetTurnoverMAg),
-	SUM(TunroverNoDraw),
+	SUM(TurnoverNoDraw),
 	SUM(WinLoss),
 	SUM(AgWinLoss),		
 	SUM(MAgWinLoss),
@@ -285,7 +283,7 @@ INSERT INTO #Sum_Winloss_Extra
 	BetCount,
 	Turnover,
 	NetTurnover,
-	TunroverNoDraw,
+	TurnoverNoDraw,
 	WinLoss,
 	AgWinLoss,		
 	MAgWinLoss,
@@ -310,7 +308,7 @@ SELECT
 	SUM(BetCount),
 	SUM(Turnover),
 	SUM(NetTurnoverSAg),
-	SUM(TunroverNoDraw),
+	SUM(TurnoverNoDraw),
 	SUM(WinLoss),
 	SUM(AgWinLoss),		
 	SUM(MAgWinLoss),
@@ -336,7 +334,7 @@ BEGIN
 	IF  @@ROWCOUNT = 0
 		BREAK
 
-	INSERT INTO DBSUM.bodb_Summary.dbo.Sum_winloss_extra
+	INSERT INTO dbo.Sum_Winloss_Extra_Tmp
 		(
 			WinlostDate,
 			CustId,
@@ -349,7 +347,7 @@ BEGIN
 			BetCount,
 			Turnover,
 			NetTurnover,
-			TunroverNoDraw,
+			TurnoverNoDraw,
 			WinLoss,
 			AgWinLoss,		
 			MAgWinLoss,
@@ -373,7 +371,7 @@ BEGIN
 			BetCount,
 			Turnover,
 			NetTurnover,
-			TunroverNoDraw,
+			TurnoverNoDraw,
 			WinLoss,
 			AgWinLoss,		
 			MAgWinLoss,
@@ -385,8 +383,8 @@ BEGIN
 			SAgComm,
 			ExtraComm,
 			GrossComm
-	FROM #Sum_Winloss_Extra_Tmp
+	FROM #Sum_Winloss_Extra
 
 END
 
-DROP TABLE #Bettype, #Sum_Winloss_Extra,#Sum_Winloss_Extra_Tmp
+DROP TABLE #Bettype, #Sum_Winloss_Extra
