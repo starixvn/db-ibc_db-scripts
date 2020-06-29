@@ -3,7 +3,7 @@
 /*
 	Created: 20200618@Malcolm
 	Task: the script to create data from 2020-05-01 [Redmine: #135593]
-	DB: DBARC.bodb_Archive
+	DB: DBSUM.bodb_Summary
 */
 
 USE bodb_Summary
