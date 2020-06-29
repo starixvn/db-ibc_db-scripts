@@ -7,6 +7,8 @@
 
 
 */
+USE bodb_Summary
+GO
 
 GRANT SELECT ON dbo.Sum_Winloss_Extra TO bodbExtAccNet;  
 GO  
