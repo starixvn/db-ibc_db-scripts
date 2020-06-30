@@ -9,39 +9,56 @@
 USE bodb_Summary
 GO
 
-DECLARE @MinDate SMALLDATETIME, @MaxDate SMALLDATETIME
-
-SELECT @MinDate = MIN(WinlostDate),@MaxDate = MAX(WinlostDate)
-FROM DBARC.Archive.dbo.Sum_Winloss_Extra_Tmp
-
-WHILE @MinDate <= @MaxDate
-BEGIN
-	INSERT INTO dbo.Sum_Winloss_Extra
-	(
-		    WinlostDate,
-			CustId,
-			ProductId,
-			Bettype,
-			RoleID,
-			Recommend,
-			MRecommend,
-			SRecommend,
-			BetCount,
-			Turnover,
-			NetTurnover,
-			TurnoverNoDraw,
-			WinLoss,
-			AgWinLoss,		
-			MAgWinLoss,
-			SAgWinLoss,
-			ExtraWinloss,
-			PlayerComm,
-			AgComm,
-			MAgComm,
-			SAgComm,
-			ExtraComm,
-			GrossComm
-	)
+INSERT INTO dbo.Sum_Winloss_Extra
+(
+	    WinlostDate,
+		CustId,
+		ProductId,
+		Bettype,
+		RoleID,
+		Recommend,
+		MRecommend,
+		SRecommend,
+		BetCount,
+		Turnover,
+		NetTurnover,
+		TurnoverNoDraw,
+		WinLoss,
+		AgWinLoss,		
+		MAgWinLoss,
+		SAgWinLoss,
+		ExtraWinloss,
+		PlayerComm,
+		AgComm,
+		MAgComm,
+		SAgComm,
+		ExtraComm,
+		GrossComm
+)
+SELECT	WinlostDate,
+		CustId,
+		ProductId,
+		Bettype,
+		RoleID,
+		Recommend,
+		MRecommend,
+		SRecommend,
+		BetCount,
+		Turnover,
+		NetTurnover,
+		TurnoverNoDraw,
+		WinLoss,
+		AgWinLoss,		
+		MAgWinLoss,
+		SAgWinLoss,
+		ExtraWinloss,
+		PlayerComm,
+		AgComm,
+		MAgComm,
+		SAgComm,
+		ExtraComm,
+		GrossComm
+FROM OPENQUERY(DBARC, '
    SELECT	WinlostDate,
 			CustId,
 			ProductId,
@@ -65,9 +82,6 @@ BEGIN
 			SAgComm,
 			ExtraComm,
 			GrossComm
-   FROM DBARC.Archive.dbo.Sum_Winloss_Extra_Tmp
-   WHERE WinlostDate = @MinDate
+   FROM Archive.dbo.Sum_Winloss_Extra_Tmp')
 
-   SET @MinDate = DATEADD(DAY,1,@MinDate)	
-END
 
