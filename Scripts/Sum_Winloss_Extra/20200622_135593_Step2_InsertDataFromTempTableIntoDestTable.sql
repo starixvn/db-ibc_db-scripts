@@ -82,6 +82,6 @@ FROM OPENQUERY(DBARC, '
 			SAgComm,
 			ExtraComm,
 			GrossComm
-   FROM Archive.dbo.Sum_Winloss_Extra_Tmp')
+   FROM bodb_Archive.dbo.Sum_Winloss_Extra_Tmp')
 
 

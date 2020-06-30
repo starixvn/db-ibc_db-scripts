@@ -185,7 +185,7 @@ INSERT INTO #Sum_Winloss_Extra
 	GrossComm
 )
 SELECT 
-	@WinlostDate,
+	WinlostDate,
 	Recommend,
 	ProductId,
 	Bettype,
@@ -241,7 +241,7 @@ INSERT INTO #Sum_Winloss_Extra
 	GrossComm
 )
 SELECT 
-	@WinlostDate,
+	WinlostDate,
 	Mrecommend,
 	ProductId,
 	Bettype,
