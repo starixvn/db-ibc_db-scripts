@@ -459,7 +459,7 @@ BEGIN
 			SAgComm,
 			ExtraComm,
 			GrossComm
-	FROM #Sum_Winloss_Extra
+	FROM #Sum_Winloss_Extra_tmp
 
 END
 
