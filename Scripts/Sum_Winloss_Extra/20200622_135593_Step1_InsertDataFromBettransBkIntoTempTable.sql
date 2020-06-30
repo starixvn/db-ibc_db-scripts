@@ -84,6 +84,34 @@ CREATE TABLE #Sum_Winloss_Extra
 		GrossCommSAg		MONEY
 	)
 
+CREATE TABLE #Sum_Winloss_Extra_tmp
+(
+		WinlostDate			DATETIME,
+		CustId				INT,
+		ProductId			SMALLINT,
+		Bettype				SMALLINT,
+		RoleID				INT,
+		Recommend			INT,
+		MRecommend			INT,
+		SRecommend			INT,
+		BetCount			INT,
+		Turnover			MONEY,
+		NetTurnover			MONEY,
+		TurnoverNoDraw		MONEY,
+		WinLoss				MONEY,
+		AgWinLoss			MONEY,
+		MAgWinLoss			MONEY,
+		SAgWinLoss			MONEY,
+		ExtraWinloss		MONEY,
+		PlayerComm			MONEY,
+		AgComm				MONEY,
+		MAgComm				MONEY,
+		SAgComm				MONEY,
+		ExtraComm			MONEY,
+		GrossComm			MONEY
+)
+
+
 WHILE  @WinlostDate <= @BalanceUpDay
 BEGIN
 	INSERT INTO #Sum_Winloss_Extra
@@ -329,7 +357,55 @@ BEGIN
 	DELETE #Sum_Winloss_Extra_tmp
 
 	DELETE TOP(2000) FROM #Sum_Winloss_Extra
-	OUTPUT deleted.* INTO #Sum_Winloss_Extra_tmp
+	OUTPUT	deleted.WinlostDate,
+			deleted.CustId,
+			deleted.ProductId,
+			deleted.Bettype,
+			deleted.RoleID,
+			deleted.Recommend,
+			deleted.MRecommend,
+			deleted.SRecommend,
+			deleted.BetCount,
+			deleted.Turnover,
+			deleted.NetTurnover,
+			deleted.TurnoverNoDraw,
+			deleted.WinLoss,
+			deleted.AgWinLoss,		
+			deleted.MAgWinLoss,
+			deleted.SAgWinLoss,
+			deleted.ExtraWinloss,
+			deleted.PlayerComm,
+			deleted.AgComm,
+			deleted.MAgComm,
+			deleted.SAgComm,
+			deleted.ExtraComm,
+			deleted.GrossComm
+	INTO #Sum_Winloss_Extra_tmp
+	(
+		WinlostDate,
+		CustId,
+		ProductId,
+		Bettype,
+		RoleID,
+		Recommend,
+		MRecommend,
+		SRecommend,
+		BetCount,
+		Turnover,
+		NetTurnover,
+		TurnoverNoDraw,
+		WinLoss,
+		AgWinLoss,		
+		MAgWinLoss,
+		SAgWinLoss,
+		ExtraWinloss,
+		PlayerComm,
+		AgComm,
+		MAgComm,
+		SAgComm,
+		ExtraComm,
+		GrossComm
+	)
 
 	IF  @@ROWCOUNT = 0
 		BREAK
@@ -387,4 +463,4 @@ BEGIN
 
 END
 
-DROP TABLE #Bettype, #Sum_Winloss_Extra
+DROP TABLE #Bettype, #Sum_Winloss_Extra,#Sum_Winloss_Extra_tmp
