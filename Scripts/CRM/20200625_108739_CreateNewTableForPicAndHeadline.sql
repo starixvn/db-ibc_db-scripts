@@ -44,7 +44,7 @@ CREATE TABLE crmPICHeadline(
 ) ON [DATA]
 
 
-CREATE TABLE crmUserLog_RunSP(
+CREATE TABLE dbo.crmUserLog_RunSP(
 	LogID		BIGINT IDENTITY (1,1) NOT NULL,
 	LogDate		DATETIME NOT NULL,
 	UserID		INT NOT NULL,
@@ -52,7 +52,8 @@ CREATE TABLE crmUserLog_RunSP(
 	IP			VARCHAR(20),
 	NewValues	XML,
 	OldValues	XML,
-	CONSTRAINT PK_crmUserLog_RunSP PRIMARY KEY NONCLUSTERED(LogID) ON [userlog],
-	CONSTRAINT CIX_LogDare_ActionID CLUSTERED INDEX(LogDate, ActionID) ON [userlog]
+	CONSTRAINT PK_crmUserLog_RunSP PRIMARY KEY NONCLUSTERED(LogID) ON [userlog]
 ) ON [userlog]
+
+CREATE CLUSTERED INDEX CIX_LogDare_ActionID ON dbo.crmUserLog_RunSP(LogDate, ActionID) ON [userlog]
 
