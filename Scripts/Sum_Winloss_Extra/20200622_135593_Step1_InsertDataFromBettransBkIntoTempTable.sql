@@ -8,7 +8,7 @@
 
 /*create physical table*/
 
-CREATE TABLE dbo.Sum_Winloss_Extra_Tmp
+CREATE TABLE dbo.Sum_Winloss_Extra_tmp_xtest
 (
 		WinlostDate			DATETIME,
 		CustId				INT,
@@ -84,37 +84,11 @@ CREATE TABLE #Sum_Winloss_Extra
 		GrossCommSAg		MONEY
 	)
 
-CREATE TABLE #Sum_Winloss_Extra_tmp
-(
-		WinlostDate			DATETIME,
-		CustId				INT,
-		ProductId			SMALLINT,
-		Bettype				SMALLINT,
-		RoleID				INT,
-		Recommend			INT,
-		MRecommend			INT,
-		SRecommend			INT,
-		BetCount			INT,
-		Turnover			MONEY,
-		NetTurnover			MONEY,
-		TurnoverNoDraw		MONEY,
-		WinLoss				MONEY,
-		AgWinLoss			MONEY,
-		MAgWinLoss			MONEY,
-		SAgWinLoss			MONEY,
-		ExtraWinloss		MONEY,
-		PlayerComm			MONEY,
-		AgComm				MONEY,
-		MAgComm				MONEY,
-		SAgComm				MONEY,
-		ExtraComm			MONEY,
-		GrossComm			MONEY
-)
-
-
 WHILE  @WinlostDate <= @BalanceUpDay
 BEGIN
-	INSERT INTO #Sum_Winloss_Extra
+		TRUNCATE TABLE #Sum_Winloss_Extra
+
+		INSERT INTO #Sum_Winloss_Extra
 		(
 			WinlostDate,
 			CustId,
@@ -182,235 +156,9 @@ BEGIN
 			AND bt.statusID NOT IN (102,101,103)
 		GROUP BY winlostdate ,custid, recommend, mrecommend, srecommend, b.ProductId
 
-		SET @WinlostDate = DATEADD(DAY,1,@WinlostDate)	
-END
-	-- for agent, roleid = 2
+			-- for agent, roleid = 2
 	
-INSERT INTO #Sum_Winloss_Extra
-(
-	WinlostDate,
-	CustId,
-	ProductId,
-	Bettype,
-	RoleID,
-	Recommend,
-	MRecommend,
-	SRecommend,
-	BetCount,
-	Turnover,
-	NetTurnover,
-	TurnoverNoDraw,
-	WinLoss,
-	AgWinLoss,		
-	MAgWinLoss,
-	SAgWinLoss,
-	ExtraWinloss,
-	PlayerComm,
-	AgComm,
-	MAgComm,
-	SAgComm,
-	ExtraComm,
-	GrossComm
-)
-SELECT 
-	WinlostDate,
-	Recommend,
-	ProductId,
-	Bettype,
-    2 AS RoleId,
-	Recommend,
-	MRecommend,
-	SRecommend,
-	SUM(BetCount),
-	SUM(Turnover),
-	SUM(NetTurnoverAg),
-	SUM(TurnoverNoDraw),
-	SUM(WinLoss),
-	SUM(AgWinLoss),		
-	SUM(MAgWinLoss),
-	SUM(SAgWinLoss),
-	SUM(ExtraWinloss),
-	SUM(PlayerComm),
-	SUM(AgComm),
-	SUM(MAgComm),
-	SUM(SAgComm),
-	SUM(ExtraComm),
-	SUM(GrossCommAg)
-FROM #Sum_Winloss_Extra
-WHERE RoleId = 1 
-GROUP BY WinlostDate,Recommend,MRecommend,SRecommend,ProductId,Bettype
-	
--- for master, roleId = 3
-	
-INSERT INTO #Sum_Winloss_Extra
-(
-	WinlostDate,
-	CustId,
-	ProductId,
-	Bettype,
-	RoleID,
-	Recommend,
-	MRecommend,
-	SRecommend,
-	BetCount,
-	Turnover,
-	NetTurnover,
-	TurnoverNoDraw,
-	WinLoss,
-	AgWinLoss,		
-	MAgWinLoss,
-	SAgWinLoss,
-	ExtraWinloss,
-	PlayerComm,
-	AgComm,
-	MAgComm,
-	SAgComm,
-	ExtraComm,
-	GrossComm
-)
-SELECT 
-	WinlostDate,
-	Mrecommend,
-	ProductId,
-	Bettype,
-	3 AS RoleId,
-	0 AS Recommend,
-	MRecommend,
-	SRecommend,
-	SUM(BetCount),
-	SUM(Turnover),
-	SUM(NetTurnoverMAg),
-	SUM(TurnoverNoDraw),
-	SUM(WinLoss),
-	SUM(AgWinLoss),		
-	SUM(MAgWinLoss),
-	SUM(SAgWinLoss),
-	SUM(ExtraWinloss),
-	SUM(PlayerComm),
-	SUM(AgComm),
-	SUM(MAgComm),
-	SUM(SAgComm),
-	SUM(ExtraComm),
-	SUM(GrossCommMAg)
-FROM #Sum_Winloss_Extra
-WHERE RoleID = 1
-GROUP BY WinlostDate,MRecommend,SRecommend,ProductId,Bettype
-	
-	-- for super, roleId = 4
-	
-INSERT INTO #Sum_Winloss_Extra
-(
-	WinlostDate,
-	CustId,
-	ProductId,
-	Bettype,
-	RoleID,
-	Recommend,
-	MRecommend,
-	SRecommend,
-	BetCount,
-	Turnover,
-	NetTurnover,
-	TurnoverNoDraw,
-	WinLoss,
-	AgWinLoss,		
-	MAgWinLoss,
-	SAgWinLoss,
-	ExtraWinloss,
-	PlayerComm,
-	AgComm,
-	MAgComm,
-	SAgComm,
-	ExtraComm,
-	GrossComm
-)
-SELECT 
-	WinlostDate,
-	SRecommend AS CustId,
-	ProductId,
-	Bettype,
-	4 AS RoleId,
-	0 AS Recommend,
-	0 AS MRecommend,
-	SRecommend,
-	SUM(BetCount),
-	SUM(Turnover),
-	SUM(NetTurnoverSAg),
-	SUM(TurnoverNoDraw),
-	SUM(WinLoss),
-	SUM(AgWinLoss),		
-	SUM(MAgWinLoss),
-	SUM(SAgWinLoss),
-	SUM(ExtraWinloss),
-	SUM(PlayerComm),
-	SUM(AgComm),
-	SUM(MAgComm),
-	SUM(SAgComm),
-	SUM(ExtraComm),
-	SUM(GrossCommSAg)
-FROM #Sum_Winloss_Extra
-WHERE RoleID = 1 
-GROUP BY WinlostDate,SRecommend,ProductId,Bettype
-		
-WHILE 1 = 1
-BEGIN
-	DELETE #Sum_Winloss_Extra_tmp
-
-	DELETE TOP(2000) FROM #Sum_Winloss_Extra
-	OUTPUT	deleted.WinlostDate,
-			deleted.CustId,
-			deleted.ProductId,
-			deleted.Bettype,
-			deleted.RoleID,
-			deleted.Recommend,
-			deleted.MRecommend,
-			deleted.SRecommend,
-			deleted.BetCount,
-			deleted.Turnover,
-			deleted.NetTurnover,
-			deleted.TurnoverNoDraw,
-			deleted.WinLoss,
-			deleted.AgWinLoss,		
-			deleted.MAgWinLoss,
-			deleted.SAgWinLoss,
-			deleted.ExtraWinloss,
-			deleted.PlayerComm,
-			deleted.AgComm,
-			deleted.MAgComm,
-			deleted.SAgComm,
-			deleted.ExtraComm,
-			deleted.GrossComm
-	INTO #Sum_Winloss_Extra_tmp
-	(
-		WinlostDate,
-		CustId,
-		ProductId,
-		Bettype,
-		RoleID,
-		Recommend,
-		MRecommend,
-		SRecommend,
-		BetCount,
-		Turnover,
-		NetTurnover,
-		TurnoverNoDraw,
-		WinLoss,
-		AgWinLoss,		
-		MAgWinLoss,
-		SAgWinLoss,
-		ExtraWinloss,
-		PlayerComm,
-		AgComm,
-		MAgComm,
-		SAgComm,
-		ExtraComm,
-		GrossComm
-	)
-
-	IF  @@ROWCOUNT = 0
-		BREAK
-
-	INSERT INTO dbo.Sum_Winloss_Extra_Tmp
+		INSERT INTO #Sum_Winloss_Extra
 		(
 			WinlostDate,
 			CustId,
@@ -436,7 +184,39 @@ BEGIN
 			ExtraComm,
 			GrossComm
 		)
-	SELECT	WinlostDate,
+		SELECT 
+			WinlostDate,
+			Recommend,
+			ProductId,
+			Bettype,
+			2 AS RoleId,
+			Recommend,
+			MRecommend,
+			SRecommend,
+			SUM(BetCount),
+			SUM(Turnover),
+			SUM(NetTurnoverAg),
+			SUM(TurnoverNoDraw),
+			SUM(WinLoss),
+			SUM(AgWinLoss),		
+			SUM(MAgWinLoss),
+			SUM(SAgWinLoss),
+			SUM(ExtraWinloss),
+			SUM(PlayerComm),
+			SUM(AgComm),
+			SUM(MAgComm),
+			SUM(SAgComm),
+			SUM(ExtraComm),
+			SUM(GrossCommAg)
+		FROM #Sum_Winloss_Extra
+		WHERE RoleId = 1 
+		GROUP BY WinlostDate,Recommend,MRecommend,SRecommend,ProductId,Bettype
+	
+		-- for master, roleId = 3
+	
+		INSERT INTO #Sum_Winloss_Extra
+		(
+			WinlostDate,
 			CustId,
 			ProductId,
 			Bettype,
@@ -459,8 +239,144 @@ BEGIN
 			SAgComm,
 			ExtraComm,
 			GrossComm
-	FROM #Sum_Winloss_Extra_tmp
+		)
+		SELECT 
+			WinlostDate,
+			Mrecommend,
+			ProductId,
+			Bettype,
+			3 AS RoleId,
+			0 AS Recommend,
+			MRecommend,
+			SRecommend,
+			SUM(BetCount),
+			SUM(Turnover),
+			SUM(NetTurnoverMAg),
+			SUM(TurnoverNoDraw),
+			SUM(WinLoss),
+			SUM(AgWinLoss),		
+			SUM(MAgWinLoss),
+			SUM(SAgWinLoss),
+			SUM(ExtraWinloss),
+			SUM(PlayerComm),
+			SUM(AgComm),
+			SUM(MAgComm),
+			SUM(SAgComm),
+			SUM(ExtraComm),
+			SUM(GrossCommMAg)
+		FROM #Sum_Winloss_Extra
+		WHERE RoleID = 1
+		GROUP BY WinlostDate,MRecommend,SRecommend,ProductId,Bettype
+	
+			-- for super, roleId = 4
+	
+		INSERT INTO #Sum_Winloss_Extra
+		(
+			WinlostDate,
+			CustId,
+			ProductId,
+			Bettype,
+			RoleID,
+			Recommend,
+			MRecommend,
+			SRecommend,
+			BetCount,
+			Turnover,
+			NetTurnover,
+			TurnoverNoDraw,
+			WinLoss,
+			AgWinLoss,		
+			MAgWinLoss,
+			SAgWinLoss,
+			ExtraWinloss,
+			PlayerComm,
+			AgComm,
+			MAgComm,
+			SAgComm,
+			ExtraComm,
+			GrossComm
+		)
+		SELECT 
+			WinlostDate,
+			SRecommend AS CustId,
+			ProductId,
+			Bettype,
+			4 AS RoleId,
+			0 AS Recommend,
+			0 AS MRecommend,
+			SRecommend,
+			SUM(BetCount),
+			SUM(Turnover),
+			SUM(NetTurnoverSAg),
+			SUM(TurnoverNoDraw),
+			SUM(WinLoss),
+			SUM(AgWinLoss),		
+			SUM(MAgWinLoss),
+			SUM(SAgWinLoss),
+			SUM(ExtraWinloss),
+			SUM(PlayerComm),
+			SUM(AgComm),
+			SUM(MAgComm),
+			SUM(SAgComm),
+			SUM(ExtraComm),
+			SUM(GrossCommSAg)
+		FROM #Sum_Winloss_Extra
+		WHERE RoleID = 1 
+		GROUP BY WinlostDate,SRecommend,ProductId,Bettype
 
+		INSERT INTO  dbo.Sum_Winloss_Extra_tmp_xtest
+		(
+			WinlostDate,	
+			CustId,			
+			ProductId,		
+			Bettype,		
+			RoleID,			
+			Recommend,		
+			MRecommend,		
+			SRecommend,		
+			BetCount,		
+			Turnover,		
+			NetTurnover,		
+			TurnoverNoDraw,	
+			WinLoss,			
+			AgWinLoss,		
+			MAgWinLoss,		
+			SAgWinLoss,		
+			ExtraWinloss,	
+			PlayerComm,		
+			AgComm,			
+			MAgComm,			
+			SAgComm,			
+			ExtraComm,		
+			GrossComm		
+		)
+		SELECT 
+			WinlostDate,
+			CustId,
+			ProductId,
+			Bettype,
+			RoleID,
+			Recommend,
+			MRecommend,
+			SRecommend,
+			BetCount,
+			Turnover,
+			NetTurnover,
+			TurnoverNoDraw,
+			WinLoss,
+			AgWinLoss,		
+			MAgWinLoss,
+			SAgWinLoss,
+			ExtraWinloss,
+			PlayerComm,
+			AgComm,
+			MAgComm,
+			SAgComm,
+			ExtraComm,
+			GrossComm
+		FROM #Sum_Winloss_Extra
+
+		SET @WinlostDate = DATEADD(DAY,1,@WinlostDate)	
 END
 
-DROP TABLE #Bettype, #Sum_Winloss_Extra,#Sum_Winloss_Extra_tmp
+DROP TABLE #Bettype, #Sum_Winloss_Extra
