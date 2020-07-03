@@ -12,7 +12,7 @@ GO
 DECLARE @MinDate SMALLDATETIME, @MaxDate SMALLDATETIME
 
 SELECT @MinDate = MIN(WinlostDate),@MaxDate = MAX(WinlostDate)
-FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Extra_Tmp
+FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Extra_tmp_xtest
 
 WHILE @MinDate <= @MaxDate
 BEGIN
@@ -65,7 +65,7 @@ BEGIN
 			SAgComm,
 			ExtraComm,
 			GrossComm
-   FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Extra_Tmp
+   FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Extra_tmp_xtest
    WHERE WinlostDate = @MinDate
 
    SET @MinDate = DATEADD(DAY,1,@MinDate)	

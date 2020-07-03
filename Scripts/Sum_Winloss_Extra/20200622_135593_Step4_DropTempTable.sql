@@ -6,4 +6,4 @@
 	DB: DBARC.bodb_Archive
 */
 
-DROP TABLE Sum_Winloss_Extra_Tmp
+DROP TABLE Sum_Winloss_Extra_tmp_xtest
