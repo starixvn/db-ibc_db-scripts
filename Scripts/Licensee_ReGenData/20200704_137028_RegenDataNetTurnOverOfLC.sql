@@ -14,3 +14,7 @@ EXEC [Task_rptBetting_CheckData_Job]
 	, @ToDate  = '2020-06-27'
 	, @Step  = 0
 	, @AllowCorrect = 1
+	
+EXEC Task_DailyRptCasinoTurnover_Bettrans14 '2020-06-26'
+
+EXEC Task_DailyRptCasinoTurnover_Bettrans14 '2020-06-27' 
