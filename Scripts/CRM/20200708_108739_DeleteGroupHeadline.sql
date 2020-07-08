@@ -11,5 +11,5 @@ GO
 */
 
 DELETE 
-FROM CustGroupHeadline
+FROM CustGroupHeadline WITH(ROWLOCK, UPDLOCK)
 WHERE GroupID = 0
