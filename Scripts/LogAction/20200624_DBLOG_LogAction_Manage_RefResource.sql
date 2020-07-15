@@ -3,7 +3,7 @@
 /*
 	Created by: Malcolm
 	Date: 20200624
-	Task: Insert LogAction into table  [#redmindId: 35057]
+	Task: Add new row into logaction table  [#redmindId: 131241]
 	DB: DBLOG/bodb_CustomerLog
 */
 CREATE TABLE #TmpAction
