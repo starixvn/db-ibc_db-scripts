@@ -1,4 +1,4 @@
-
+/*<info serverAlias="DBACC-bodb_ACC" ></info>*/
 use bodb_Acc
 GO 
 
