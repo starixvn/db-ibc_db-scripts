@@ -1,4 +1,4 @@
-
+/*<info serverAlias="DBPRO-bodb02" step="1"></info>*/
 use bodb02
 GO 
 /*
