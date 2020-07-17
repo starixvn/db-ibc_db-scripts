@@ -99,14 +99,17 @@ DB: DBSUM.bodb_Summary
 	BEGIN 
 
 		UPDATE s  
-		SET 	s.netTurnover = t.netTurnover
-				,s.TunroverNoDraw = t.TunroverNoDraw
-		FROM 	dbo.Sum_Winloss_Old s WITH (UPDLOCK)
+		SET 	 s.TunroverNoDraw = t.TunroverNoDraw
+		FROM 	dbo.Sum_Winloss_Old s WITH (ROWLOCK)
 		INNER JOIN #tmpSum_winloss t
 				ON t.winlostdate = s.winlostdate
 				AND t.CustID = s.CustID
-				AND t.roleid = s.RoleID							
-		WHERE s.WinlostDate = @winlostdate		
+				AND t.roleid = s.RoleID		
+				AND t.sporttype = s.sporttype
+				AND t.bettype = s.bettype				
+		WHERE s.WinlostDate = @winlostdate	
+				AND s.sporttype  IN (225,242) 
+				AND s.TunroverNoDraw <> t.TunroverNoDraw
 				
 					   		
 		DELETE #Date WHERE WinlostDate = @WinlostDate
