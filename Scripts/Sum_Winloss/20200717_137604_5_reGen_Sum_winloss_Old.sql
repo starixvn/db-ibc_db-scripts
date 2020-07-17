@@ -36,7 +36,7 @@ DB: DBSUM.bodb_Summary
 			,TunroverNoDraw		MONEY
 		)
 
-		-- Member
+	 
 		INSERT INTO #tmpSum_winloss
 		(
 			winlostdate
@@ -98,86 +98,16 @@ DB: DBSUM.bodb_Summary
 	WHILE EXISTS (SELECT 1 FROM #Date )
 	BEGIN 
 
-		;MERGE  dbo.sum_winloss_old  AS TARGET
-		USING (select * from #tmpSum_winloss) AS SOURCE
-			ON		TARGET.winlostdate	= SOURCE.winlostdate
-				AND	TARGET.custid		= SOURCE.custid
-				AND TARGET.sporttype	= SOURCE.sporttype
-				AND TARGET.bettype		= SOURCE.bettype
+		UPDATE s  
+		SET 	s.netTurnover = t.netTurnover
+				,s.TunroverNoDraw = t.TunroverNoDraw
+		FROM 	dbo.Sum_Winloss_Old s WITH (UPDLOCK)
+		INNER JOIN #tmpSum_winloss t
+				ON t.winlostdate = s.winlostdate
+				AND t.CustID = s.CustID
+				AND t.roleid = s.RoleID							
+		WHERE s.WinlostDate = @winlostdate		
 				
-		WHEN MATCHED THEN UPDATE
-			SET	TARGET.username			= SOURCE.username
-				,TARGET.roleid			= SOURCE.roleid
-				,TARGET.recommend		= SOURCE.recommend
-				,TARGET.mrecommend		= SOURCE.mrecommend
-				,TARGET.srecommend		= SOURCE.srecommend
-				,TARGET.turnover		= SOURCE.turnover
-				,TARGET.winlost			= SOURCE.winlost
-				,TARGET.awinlost		= SOURCE.awinlost
-				,TARGET.mwinlost		= SOURCE.mwinlost
-				,TARGET.swinlost		= SOURCE.swinlost
-				,TARGET.playercomm		= SOURCE.playercomm
-				,TARGET.comm			= SOURCE.comm
-				,TARGET.acomm			= SOURCE.acomm
-				,TARGET.scomm			= SOURCE.scomm
-				,TARGET.BetCount		= SOURCE.BetCount
-				,TARGET.grosscomm		= SOURCE.grosscomm
-				,TARGET.netTurnover		= SOURCE.netTurnover
-				,TARGET.TunroverNoDraw	= SOURCE.TunroverNoDraw -- TunroverNoDraw
-		WHEN NOT MATCHED BY TARGET THEN INSERT
-			(
-				winlostdate
-				,username
-				,custid
-				,roleid
-				,recommend
-				,mrecommend
-				,srecommend
-				,turnover
-				,winlost
-				,awinlost
-				,mwinlost
-				,swinlost
-				,playercomm
-				,comm
-				,acomm
-				,scomm
-				,BetCount
-				,grosscomm
-				,sporttype
-				,bettype
-				,netTurnover
-				,TunroverNoDraw -- TunroverNoDraw
-			)
-			VALUES
-			(
-				SOURCE.winlostdate
-				,SOURCE.username
-				,SOURCE.custid
-				,SOURCE.roleid
-				,SOURCE.recommend
-				,SOURCE.mrecommend
-				,SOURCE.srecommend
-				,SOURCE.turnover
-				,SOURCE.winlost
-				,SOURCE.awinlost
-				,SOURCE.mwinlost
-				,SOURCE.swinlost
-				,SOURCE.playercomm
-				,SOURCE.comm
-				,SOURCE.acomm
-				,SOURCE.scomm
-				,SOURCE.BetCount
-				,SOURCE.grosscomm
-				,SOURCE.sporttype
-				,SOURCE.bettype
-				,SOURCE.netTurnover
-				,SOURCE.TunroverNoDraw
-			)
-		WHEN NOT MATCHED BY SOURCE
-			AND TARGET.winlostdate = @winlostdate
-			--AND EXISTS (SELECT 1 FROM #tmpSum_winloss ts WHERE TARGET.srecommend = ts.srecommend)
-			THEN DELETE;
 					   		
 		DELETE #Date WHERE WinlostDate = @WinlostDate
 
