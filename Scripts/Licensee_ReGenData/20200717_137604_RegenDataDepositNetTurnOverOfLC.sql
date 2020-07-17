@@ -10,13 +10,11 @@ DB: DBLIC.bodb_LicenseeReport
  
  
 EXEC [Task_rptBetting_CheckData_Job]
-	@FromDate  = '2020-07-06'
+	@FromDate  = '2020-07-07'
 	, @ToDate  = '2020-07-07'
 	, @Step  = 0
 	, @AllowCorrect = 1
-	
-EXEC Task_DailyRptCasinoTurnover_Bettrans14 '2020-07-06'
-
+	 
 EXEC Task_DailyRptCasinoTurnover_Bettrans14 '2020-07-07' 
 
 
