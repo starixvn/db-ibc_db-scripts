@@ -7,8 +7,7 @@ DB: DBSUM.bodb_Summary
 
 */ 
  
-
-	 
+ 
 	-- Sum up Data by Level
 	BEGIN
 		CREATE TABLE #tmpSum_winloss
@@ -90,9 +89,16 @@ DB: DBSUM.bodb_Summary
 
 	
 	------------------------------------------------------------
+	DECLARE @WinlostDate SMALLDATETIME
 
+	SELECT DISTINCT WinlostDate INTO #Date from #tmpSum_winloss ORDER BY WinlostDate 
+	
+	SELECT TOP 1 @WinlostDate = WinlostDate FROM #Date
 
-		MERGE  dbo.sum_winloss_old  AS TARGET
+	WHILE EXISTS (SELECT 1 FROM #Date )
+	BEGIN 
+
+		;MERGE  dbo.sum_winloss_old  AS TARGET
 		USING (select * from #tmpSum_winloss) AS SOURCE
 			ON		TARGET.winlostdate	= SOURCE.winlostdate
 				AND	TARGET.custid		= SOURCE.custid
@@ -169,11 +175,17 @@ DB: DBSUM.bodb_Summary
 				,SOURCE.TunroverNoDraw
 			)
 		WHEN NOT MATCHED BY SOURCE
-			--AND TARGET.winlostdate = @winlostdate
-			--AND EXISTS (SELECT 1 FROM #tmpSuper ts WHERE TARGET.srecommend = ts.srecommend)
+			AND TARGET.winlostdate = @winlostdate
+			--AND EXISTS (SELECT 1 FROM #tmpSum_winloss ts WHERE TARGET.srecommend = ts.srecommend)
 			THEN DELETE;
- 
+					   		
+		DELETE #Date WHERE WinlostDate = @WinlostDate
+
+		SELECT TOP 1 @WinlostDate = WinlostDate FROM #Date
+
+	END 
 	-- End Regen data 
 	DROP TABLE #tmpSum_winloss
+	DROP TABLE #Date
  
  END 
