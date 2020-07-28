@@ -29,6 +29,7 @@ WHERE 	Bettype = 21003
 		AND Currency IN (2,67)
 GROUP BY RefNo 
 HAVING SUM((Winlost- actual_Stake) * actualrate ) <> 0
+AND COUNT (Currency) = 2  
 
 
 UPDATE b
