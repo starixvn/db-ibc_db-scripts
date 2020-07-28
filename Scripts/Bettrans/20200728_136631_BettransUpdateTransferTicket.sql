@@ -32,6 +32,18 @@ HAVING SUM((Winlost- actual_Stake) * actualrate ) <> 0
 AND COUNT (Currency) = 2  
 
 
+;WITH dup as ( 
+SELECT b.RefNo,  COUNT(b.TransID)as TransID ,  COUNT (b.Currency) as  Currency
+FROM #RefNo R 
+INNER JOIN Bettrans b WITH (NOLOCK)  
+	ON b.RefNo = r.Refno	
+GROUP BY b.RefNo 
+HAVING COUNT(b.TransID) > 2 OR COUNT (b.Currency) > 2  
+)
+DELETE #RefNo    
+WHERE  RefNo  IN (Select Refno FROM  Dup)
+
+
 UPDATE b
 SET	 WinlostDate = '2020-07-26',
 	 ActualRate = CASE WHEN Currency = 67 THEn 0.4 ELSE ActualRate END
