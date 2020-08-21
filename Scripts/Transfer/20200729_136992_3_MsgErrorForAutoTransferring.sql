@@ -25,16 +25,15 @@ INSERT INTO [dbo].[MsgError]
      VALUES
            (50015
            ,6
-		   ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
+		   ,'Your line is being auto transferred. Please wait a few minutes and try again.'
+           ,N'你的線路正在自動轉移。請稍等幾分鐘後再嘗試。'
+           ,N'你的线路正在自动转移。请稍等几分钟后再尝试。'
+           ,N'Your line is being auto transferred. Please wait a few minutes and try again.'
+           ,N'สายของคุณกำลังโอนโดยอัตโนมัติ โปรดรอสักครู่แล้วลองอีกครั้ง'
+           ,N'Your line is being auto transferred. Please wait a few minutes and try again.'
+           ,N'Your line is being auto transferred. Please wait a few minutes and try again.'
+           ,N'Your line is being auto transferred. Please wait a few minutes and try again.'
            ,1
-           ,'Your line is being auto transfer. Please wait a few minutes and try again.'
+           ,N'Your line is being auto transferred. Please wait a few minutes and try again.'
 		   )
-GO
- 
+GO 
