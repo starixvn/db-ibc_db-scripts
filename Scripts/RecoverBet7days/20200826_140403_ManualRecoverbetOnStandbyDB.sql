@@ -38,6 +38,7 @@ DECLARE @errorCode INT,@errmsg VARCHAR(MAX) ,
 
 	 
 ---step 2 & 4
+IF @stepNo IN (2, 4) 
 WHILE EXISTS (SELECT 1 FROM @inputList WHERE isDone = 0)
 BEGIN
 	--- run by winlostdate & list of custid
@@ -77,7 +78,7 @@ BEGIN
 END
 ---------------------------------------------------------------------------------
 ---- Step 6  -- those kind of execution only need input @winlostdate 
-
+IF @stepNo = 6
 WHILE EXISTS (SELECT 1 FROM @inputList WHERE isDone = 0)
 BEGIN
 	SELECT TOP 1 @winlostdate = winlostdate
