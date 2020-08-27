@@ -11,7 +11,7 @@ GO
 
 ----DB052
 
-EXEC bodb_summary.dbo.Task_CS_SumWinloss_14	'2020-08-17 00:00:00.000',	'44506624,44506651,44608262 '
+EXEC bodb_summary.dbo.Task_CS_SumWinloss_14	'2020-08-17 00:00:00.000',	'44506624,44506651,44608262'
 
 EXEC bodb_summary.dbo.Task_CS_SumCancelled_14	'2020-08-17 00:00:00.000',	'44506624,44506651,44608262'
 
