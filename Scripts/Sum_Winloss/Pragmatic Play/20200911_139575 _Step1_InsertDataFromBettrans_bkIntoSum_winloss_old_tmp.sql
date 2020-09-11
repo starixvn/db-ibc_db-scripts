@@ -2,12 +2,21 @@
 /*
 	Create: 20200910@Malcolm
 	DB : DBACC-bodb02
-	Task: re-generate data for sum_winloss [redmine: #139575]
+	Task: re-generate data for sum_winloss_old [redmine: #139575]
 */
 
 USE bodb02;
 
 GO
+
+DECLARE @MoveBetsDay SMALLDATETIME, @BalanceUpDay SMALLDATETIME		
+DECLARE @MoveBetAndBalanceUp TABLE( MoveBetsDay SMALLDATETIME, BalanceUpDay SMALLDATETIME)
+
+INSERT INTO @MoveBetAndBalanceUp (BalanceUpDay, MoveBetsDay)
+EXEC bodb02.dbo.Age_SelBalanceUpDay
+
+SELECT @MoveBetsDay = MoveBetsDay, @BalanceUpDay = BalanceUpDay
+FROM @MoveBetAndBalanceUp
 
 TRUNCATE TABLE  bodb_Archive.dbo.sum_winloss_old_tmp;
 
@@ -18,8 +27,8 @@ DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE
 DECLARE @strSuperIds VARCHAR(MAX) = ''
 
 SELECT
-	@FromDate = '20200816'
-   ,@Todate = '20200821'
+	@FromDate = '20200831'
+   ,@Todate = DATEADD(DD, -1, @BalanceUpDay)
 
 --- run from 2020-08-15 to current movebet date
 SELECT @WinlostDate = @FromDate
@@ -40,7 +49,7 @@ BEGIN
 	FROM bodb_Archive.dbo.bettrans_bk b WITH(NOLOCK)
 	WHERE b.winlostdate = @WinlostDate 
 		AND b.statusID IN (111, 112, 113)
-		AND b.bettype <= 19000
+		AND b.bettype IN (4297, 4298)
 
 	--- run sp to generate data
 	WHILE 1 = 1
@@ -60,10 +69,9 @@ BEGIN
 		FROM #tblRunningSuperIds
 
 		--- generate data
-		EXEC Task_Sum_Winloss_Old  @WinlostDate
-								,@strSuperIds						
-
-		WAITFOR DELAY '00:00:00:500'
+		EXEC Task_Sum_Winloss_Old  @WinlostDate = @WinlostDate
+								,@CustIds = @strSuperIds	
+								,@ProductIds = '32'
 
 	END
 

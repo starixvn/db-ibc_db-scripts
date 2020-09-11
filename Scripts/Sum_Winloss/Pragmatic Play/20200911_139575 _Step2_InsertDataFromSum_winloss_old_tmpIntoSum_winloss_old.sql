@@ -2,11 +2,20 @@
 /*
 	Create: 20200910@Malcolm
 	DB : DBSUM-bodb_Summary
-	Task: re-generate data for sum_winloss [redmine: #139575]
+	Task: re-generate data for sum_winloss_old [redmine: #139575]
 */
 
 USE bodb_Summary
 GO
+
+DECLARE @MoveBetsDay SMALLDATETIME, @BalanceUpDay SMALLDATETIME		
+DECLARE @MoveBetAndBalanceUp TABLE( MoveBetsDay SMALLDATETIME, BalanceUpDay SMALLDATETIME)
+
+INSERT INTO @MoveBetAndBalanceUp (BalanceUpDay, MoveBetsDay)
+EXEC bodb02.dbo.Age_SelBalanceUpDay
+
+SELECT @MoveBetsDay = MoveBetsDay, @BalanceUpDay = BalanceUpDay
+FROM @MoveBetAndBalanceUp
 
 CREATE TABLE #CustId (CustId INT)
 
@@ -15,8 +24,8 @@ DECLARE cursor_custId CURSOR FOR SELECT CustId FROM #CustId
 DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE, @CustId INT
 
 SELECT
-	@FromDate = '20200816'
-   ,@Todate = '20200821'
+	@FromDate = '20200831'
+   ,@Todate = DATEADD(DD, -1, @BalanceUpDay)
 
 SELECT @WinlostDate = @FromDate
 
@@ -26,14 +35,9 @@ BEGIN
 	DELETE FROM #CustId
 
 	INSERT INTO #CustId(CustId)
-	SELECT DISTINCT b.custid
-	FROM bodb_Archive.dbo.bettrans_bk b WITH(NOLOCK)
-	WHERE b.winlostdate = @WinlostDate 
-		AND b.statusID IN (111, 112, 113)
-		AND EXISTS(SELECT 1
-			FROM bodb02.dbo.SportBettypeMatrix m WITH(NOLOCK)
-			WHERE m.BetType = b.bettype 
-				AND m.SportType = 248)
+	SELECT DISTINCT s.custid
+	FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Old_Tmp s WITH (NOLOCK)
+	WHERE s.winlostdate = @WinlostDate 
 
 	OPEN cursor_custId 
 	FETCH NEXT FROM cursor_custId INTO @custId
@@ -101,6 +105,9 @@ BEGIN
 		FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Old_Tmp t
 		WHERE t.winlostdate = @WinlostDate
 			AND t.CustId = @CustId
+
+		FETCH NEXT FROM cursor_custId INTO @custId
+
 	END
 
 	CLOSE cursor_custId
@@ -111,4 +118,5 @@ BEGIN
 END
 
 DEALLOCATE cursor_custId
+DROP TABLE #CustId
 GO
