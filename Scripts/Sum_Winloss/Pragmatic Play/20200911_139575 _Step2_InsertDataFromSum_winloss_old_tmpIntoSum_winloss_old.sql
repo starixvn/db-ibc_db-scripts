@@ -49,6 +49,7 @@ BEGIN
 		FROM dbo.sum_winloss_old s WITH(ROWLOCK, UPDLOCK)
 		WHERE s.winlostdate = @WinlostDate
 			AND s.custid = @CustId
+			AND s.sporttype = 248
 
 		INSERT INTO dbo.sum_winloss_old
 		(
