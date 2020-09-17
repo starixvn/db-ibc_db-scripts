@@ -27,8 +27,8 @@ DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE
 DECLARE @strSuperIds VARCHAR(MAX) = ''
 
 SELECT
-	@FromDate = '20200831'
-   ,@Todate = DATEADD(DD, -1, @BalanceUpDay)
+	@FromDate = '20200904'
+   ,@Todate = '20200913'
 
 --- run from 2020-08-15 to current movebet date
 SELECT @WinlostDate = @FromDate

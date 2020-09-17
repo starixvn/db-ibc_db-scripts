@@ -24,8 +24,8 @@ DECLARE cursor_custId CURSOR FOR SELECT CustId FROM #CustId
 DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE, @CustId INT
 
 SELECT
-	@FromDate = '20200831'
-   ,@Todate = DATEADD(DD, -1, @BalanceUpDay)
+	@FromDate = '20200904'
+   ,@Todate = '20200913'
 
 SELECT @WinlostDate = @FromDate
 
