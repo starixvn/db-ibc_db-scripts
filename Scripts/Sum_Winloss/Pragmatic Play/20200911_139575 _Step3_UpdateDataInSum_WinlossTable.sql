@@ -14,8 +14,8 @@ DECLARE @MoveBetAndBalanceUp TABLE( MoveBetsDay SMALLDATETIME, BalanceUpDay SMAL
 INSERT INTO @MoveBetAndBalanceUp (BalanceUpDay, MoveBetsDay)
 EXEC bodb02.dbo.Age_SelBalanceUpDay
 
-SELECT @MoveBetsDay = MoveBetsDay, @BalanceUpDay = BalanceUpDay
-FROM @MoveBetAndBalanceUp
+SELECT @MoveBetsDay = '2020-09-13', @BalanceUpDay = '2020-09-11'
+ 
 
 CREATE TABLE #tblRunningSuperIds (SuperId INT PRIMARY KEY)
 CREATE TABLE #tblSuperIdsTemp (SuperId INT PRIMARY KEY)
@@ -25,7 +25,7 @@ DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE
 DECLARE @strSuperIds VARCHAR(MAX) = ''
 
 SELECT
-	@FromDate = '20200831'
+	@FromDate = '2020-09-11'
    ,@Todate =  @MoveBetsDay
 
 IF @FromDate < @BalanceUpDay
