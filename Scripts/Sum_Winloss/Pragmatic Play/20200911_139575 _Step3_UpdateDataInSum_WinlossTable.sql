@@ -7,13 +7,7 @@
 
 USE bodb02;
 GO
-
-DECLARE @MoveBetsDay SMALLDATETIME, @BalanceUpDay SMALLDATETIME		
-DECLARE @MoveBetAndBalanceUp TABLE( MoveBetsDay SMALLDATETIME, BalanceUpDay SMALLDATETIME)
-
-INSERT INTO @MoveBetAndBalanceUp (BalanceUpDay, MoveBetsDay)
-EXEC bodb02.dbo.Age_SelBalanceUpDay
-
+ 
 SELECT @MoveBetsDay = '2020-09-13', @BalanceUpDay = '2020-09-11'
  
 
