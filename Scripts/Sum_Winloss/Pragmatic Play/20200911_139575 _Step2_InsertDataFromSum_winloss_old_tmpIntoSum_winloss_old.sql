@@ -2,7 +2,7 @@
 /*
 	Create: 20200910@Malcolm
 	DB : DBSUM-bodb_Summary
-	Task: re-generate data for sum_winloss_old [redmine: #139575]
+	Task: Copy Data from Sum_Winloss_Old_Tmp to sum_winloss_old [redmine: #139575]
 */
 
 USE bodb_Summary
