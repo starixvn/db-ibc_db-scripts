@@ -2,7 +2,7 @@
 /*
 	Create: 20200910@Malcolm
 	DB : DBSUM-bodb_Summary
-	Task: Copy Data from Sum_Winloss_Old_Tmp to sum_winloss_old [redmine: #139575]
+	Task: Copy Data from sum_winloss_p_tmp  to sum_winloss  [redmine: #139575]
 */
 
 USE bodb_Summary
@@ -24,8 +24,8 @@ DECLARE cursor_custId CURSOR FOR SELECT CustId FROM #CustId
 DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE, @CustId INT
 
 SELECT
-	@FromDate = '20200831'
-   ,@Todate = '20200911'
+	@FromDate = '20200911'
+   ,@Todate = '20200913'
 
 SELECT @WinlostDate = @FromDate
 
@@ -36,7 +36,7 @@ BEGIN
 
 	INSERT INTO #CustId(CustId)
 	SELECT DISTINCT s.custid
-	FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Old_Tmp s WITH (NOLOCK)
+	FROM DBARC.bodb_Archive.dbo.sum_winloss_p_tmp s WITH (NOLOCK)
 	WHERE s.winlostdate = @WinlostDate 
 
 	OPEN cursor_custId 
@@ -103,7 +103,7 @@ BEGIN
 			,TunroverNoDraw
 			,ExtraWinloss
 			,ExtraComm
-		FROM DBARC.bodb_Archive.dbo.Sum_Winloss_Old_Tmp t
+		FROM DBARC.bodb_Archive.dbo.sum_winloss_p_tmp t
 		WHERE t.winlostdate = @WinlostDate
 			AND t.CustId = @CustId
 

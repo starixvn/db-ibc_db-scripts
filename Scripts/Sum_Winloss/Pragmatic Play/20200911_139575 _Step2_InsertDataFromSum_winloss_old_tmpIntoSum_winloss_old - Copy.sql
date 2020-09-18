@@ -25,7 +25,7 @@ DECLARE @WinlostDate DATE , @FromDate DATE, @Todate DATE, @CustId INT
 
 SELECT
 	@FromDate = '20200831'
-   ,@Todate = '20200911'
+   ,@Todate = '20200910'
 
 SELECT @WinlostDate = @FromDate
 
