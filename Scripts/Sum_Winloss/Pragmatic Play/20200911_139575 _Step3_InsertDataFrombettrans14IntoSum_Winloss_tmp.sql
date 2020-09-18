@@ -60,7 +60,7 @@ BEGIN
 		FROM #tblRunningSuperIds
 
 		--- generate data
-		EXEC Task_sum_winloss_14 @WinlostDate = @WinlostDate
+		EXEC Task_sum_winloss_14_Tmp @WinlostDate = @WinlostDate
 								,@CustIds = @strSuperIds
 
 		WAITFOR DELAY '00:00:00:500'

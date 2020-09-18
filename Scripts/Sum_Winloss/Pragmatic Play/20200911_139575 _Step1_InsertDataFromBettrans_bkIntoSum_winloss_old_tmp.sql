@@ -28,7 +28,7 @@ DECLARE @strSuperIds VARCHAR(MAX) = ''
 
 SELECT
 	@FromDate = '20200831'
-   ,@Todate = '20200911'
+   ,@Todate = '20200910'
 
 --- run from 2020-08-15 to current movebet date
 SELECT @WinlostDate = @FromDate
