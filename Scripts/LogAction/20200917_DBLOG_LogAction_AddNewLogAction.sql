@@ -16,12 +16,12 @@ CREATE TABLE #TmpAction
 )
 INSERT INTO #TmpAction (ActionID,ActionTypeID,SPName,ActionNameEN,IsInternal)
 VALUES																																																				
-	(95032,4,	'Acc_DWLList_Ins',N'Insert new Acc_DWLList',1),																			
-	(95033,4,	'Acc_DWLList_Upd',N'Update Acc_DWLList',1),																			
-	(95034,4,	'Acc_DWLList_ExtraPT_Ins',N'Insert new Acc_DWLList_ExtraPT',1),																			
-	(95035,4,	'Acc_DWLList_ExtraPT_Upd',N'Update Acc_DWLList_ExtraPT',1),
-	(95036,4,	'Acc_DWLList_Del',N'Delete Acc_DWLList',1),
-	(95037,4,	'Acc_DWLList_ExtraPTDel',N'Delete Acc_DWLList_ExtraPT',1)	
+	(95032,4,	'Acc_DWLList_Ins',N'Insert new row into Acc_DWLList table',1),																			
+	(95033,4,	'Acc_DWLList_Upd',N'Update a row of Acc_DWLList table',1),																			
+	(95034,4,	'Acc_DWLList_ExtraPT_Ins',N'Insert new row into Acc_DWLList_ExtraPT',1),																			
+	(95035,4,	'Acc_DWLList_ExtraPT_Upd',N'Update a row of Acc_DWLList_ExtraPT table',1),
+	(95036,4,	'Acc_DWLList_Del',N'Delete a row of Acc_DWLList table',1),
+	(95037,4,	'Acc_DWLList_ExtraPTDel',N'Delete a row of Acc_DWLList_ExtraPT table',1)	
 
 INSERT INTO dbo.LogAction
 (
