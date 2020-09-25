@@ -18,5 +18,4 @@ GRANT SELECT ON Acc_ClearBalanceList TO  bodbDownlineNet
 
 GRANT SELECT ON Acc_ClearBalanceList TO  bodbDownlineNetView 
 
-
-GRANT SELECT ON Acc_ClearBalanceList TO  bodbExtAccNet  
+ 
