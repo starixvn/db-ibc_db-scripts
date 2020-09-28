@@ -1,9 +1,9 @@
-/*<info serverAlias="DBCUST-CUSTDB"></info>*/
+/*<info serverAlias="DBTXN-CUSTDB"></info>*/
 
 /*
 Create: 20200729@Sophia
 Task: Add column Is Transferring into Acc_ClearBalanceList [Redmine: #137141]
-DB: DBCUST-CUSTDB
+DB: DBTXN-CUSTDB
 
 */
 
