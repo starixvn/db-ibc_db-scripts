@@ -1,4 +1,4 @@
-/*<info serverAlias="DBCUST-CUSTDB,DBTXN-CUSTDB"></info>*/
+/*<info serverAlias="DBCUST-CUSTDB"></info>*/
 
 USE [CustDB]
 GO
