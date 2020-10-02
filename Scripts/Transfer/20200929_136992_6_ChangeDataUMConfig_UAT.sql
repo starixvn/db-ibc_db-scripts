@@ -5,12 +5,12 @@ GO
   
 /*
 Create : 202001001@Sophia
-Task: Update data test for QC: UMConfig_UAT [Redmine: #136992]
+Task: Update data test for QC: UMConfig [Redmine: #136992]
 DB : DBCUST.CUSTDB
 */ 
  
  
-INSERT INTO [dbo].[UMConfig_UAT]
+INSERT INTO [dbo].[UMConfig]
            ([ProductID]
            ,[SportType]
            ,[BetType]
@@ -29,9 +29,9 @@ INSERT INTO [dbo].[UMConfig_UAT]
            ,0
            ,0
            ,101 --- transfer
-           ,0 
-           ,0 
-           ,1176070
-           ,'2020-10-02 01:00:00'
-           ,'2020-10-03 21:00:00'
+           ,1 
+           ,20 
+           ,23003140
+           ,'2020-10-02 1:00:00'
+           ,'2020-10-06 2:00:00'
 		   )
