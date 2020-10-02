@@ -10,8 +10,7 @@ DB : DBCUST.CUSTDB
 */ 
  
 UPDATE Acc_ClearBalanceList 
-SET isTransferring = 1,
-LastTransfer ='2020-10-10 4:11:38'
+SET isTransferring = 1 
 WHERE custID IN (27994283,
 43212912,
 44091846)
