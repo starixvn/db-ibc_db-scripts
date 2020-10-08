@@ -3,16 +3,16 @@ use bodb_Acc
 GO 
 
 /*
-Created: 20200808@Sophia
-Task: Update name sexy Gaming to AE Casino [redmine: 140945]
+Created: 20201008@Sophia
+Task: Update name CardClub to Arcadia Gaming [redmine: 142443]
 DB: DBACC.bodb_Acc
 */
 
 
 UPDATE  Acc_DWLList 
-SET Product = 'AE Casino'
-where productID = 45  
+SET Product = 'Arcadia Gaming'
+where productID = 34  
 
 UPDATE  Acc_DWLList_xtest
-SET Product = 'AE Casino'
-where productID = 45   
+SET Product = 'Arcadia Gaming'
+where productID = 34   
