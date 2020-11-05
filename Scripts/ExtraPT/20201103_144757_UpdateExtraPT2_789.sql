@@ -20,7 +20,7 @@ Task: Script Update ExtraPT2 for 789 [Redmine: #144757]
 
  ---- #1. End of Old Data with  @EffectiveDate - 1
 ----------1.1. Acc_GroupExtraPT2_Product 
-UPDATE  Acc_GroupExtraPT2_Product
+UPDATE  Acc_GroupExtraPT2_Product WITH (ROWLOCK) 
 SET		ToDate = DATEADD(DAY, -1, @EffectiveDate) 
 WHERE	GroupName IN ('ACCUT','ACCYEN789', 'ACCYEN889' , 'ACCUUS', 'ACCTEST') 
 		AND  CONVERT(DATE, GetDate()) BETWEEN FromDate AND Todate
@@ -29,14 +29,20 @@ WHERE	GroupName IN ('ACCUT','ACCYEN789', 'ACCYEN889' , 'ACCUUS', 'ACCTEST')
 		AND ToDate = @EndDate
 
 ---------1.2. Acc_GroupExtraPT2Setting
-UPDATE  Acc_GroupExtraPT2Setting
-SET		ToDate = DATEADD(DAY, -1, @EffectiveDate) 
-WHERE	GroupName IN ('ACCUT','ACCYEN789', 'ACCYEN889' , 'ACCUUS', 'ACCTEST') 
-		AND  CONVERT(DATE, GetDate()) BETWEEN FromDate AND Todate
-		AND ProductID = 1
-		AND ExtraPT = 0.015
-		AND ToDate = @EndDate
+WHILE 1 = 1 
+BEGIN 
+	UPDATE  TOP (5000) Acc_GroupExtraPT2Setting WITH (ROWLOCK) 
+	SET		ToDate = DATEADD(DAY, -1, @EffectiveDate) 
+	WHERE	GroupName IN ('ACCUT','ACCYEN789', 'ACCYEN889' , 'ACCUUS', 'ACCTEST') 
+			AND  CONVERT(DATE, GetDate()) BETWEEN FromDate AND Todate
+			AND ProductID = 1
+			AND ExtraPT = 0.015
+			AND ToDate = @EndDate
+	
+	IF @@ROWCOUNT = 0 
+	BREAK
 
+END 
 ---- #2. Insert New Setting
 /*
 15	ACCYEN789
