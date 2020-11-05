@@ -10,11 +10,20 @@ USE bodb02;
 GO 
 
 EXEC dbo.Task_sum_winloss_14
-	@WinlostDate = @WinlostDate,
-	@CustIds = @CustIds
+	@WinlostDate = '2020-10-29',
+	@CustIds = '46093945'
+	
+	
+EXEC dbo.Task_sum_winloss_14
+	@WinlostDate = '2020-10-31',
+	@CustIds = '46093945,45593622'
 
+
+
+EXEC dbo.Task_sum_winloss_14
+	@WinlostDate = '2020-11-01',
+	@CustIds = '46246612'
+	
+	
 GO
-
-EXEC dbo.Task_Sum_Winloss @winlostdate
-
-GO
+ 
