@@ -33,4 +33,6 @@ SELECT 'EXEC Task_sum_winloss_Old @WinlostDate = ''' + CONVERT(VARCHAR(10),Winlo
 */
 ------------------------------EXCUTE SP----------------------------------------------
 
+TRUNCATE TABLE [sum_winloss_old_tmp]
+
 EXEC Task_sum_winloss_Old @WinlostDate = '2020-10-29', @CustIds = '46093945'
