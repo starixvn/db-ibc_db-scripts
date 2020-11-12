@@ -1,3 +1,5 @@
+/*<info serverAlias="DBPRO-bodb02"></info>*/
+
 USE bodb02
 GO
 
