@@ -10,7 +10,6 @@ UPDATE t
 SET t.OrderNo = CASE WHEN t.ProductID = 31 THEN 14 -- Exchange
 					 WHEN t.ProductID = 25 THEN 16 -- Cash Out
 					 WHEN t.ProductID = 27 THEN 102 -- Virtual Sports 2
-					 WHEN t.ProductID = 49 THEN 104 -- Virtual Sports 3
 					 ---------------------------------------------------------
 					 WHEN t.ProductID = 20 THEN 500 -- Cricket
 					 WHEN t.ProductID = 41 THEN 505 -- Live Casino
@@ -36,7 +35,6 @@ FROM dbo.Products t WITH(ROWLOCK)
 WHERE t.ProductID IN  (	31 , -- Exchange
 						25 , -- Cash Out
 						27 , -- Virtual Sports 2
-						49 , -- Virtual Sports 3
 					 ---------------------------------------------------------
 						20 , -- Cricket
 						41 , -- Live Casino
