@@ -6,9 +6,6 @@
 */
 
 
-DELETE t
-FROM  dbo.Products t WITH(ROWLOCK) WHERE ProductID = 29
-
 UPDATE t 
 SET t.OrderNo = CASE WHEN t.ProductID = 31 THEN 14 -- Exchange
 					 WHEN t.ProductID = 25 THEN 16 -- Cash Out
@@ -34,39 +31,6 @@ SET t.OrderNo = CASE WHEN t.ProductID = 31 THEN 14 -- Exchange
 					 WHEN t.ProductID = 30 THEN 620 -- Bullfighting
 					 WHEN t.ProductID = 33 THEN 622 -- Poker Games
 
-					 ---------------------------------------------------------------
-						--WHEN t.ProductID = 1 THEN 10
-						--WHEN t.ProductID = 3 THEN 30
-						--WHEN t.ProductID = 5 THEN 100
-						--WHEN t.ProductID = 6 THEN 210
-						--WHEN t.ProductID = 8 THEN 70
-						--WHEN t.ProductID = 11 THEN 180
-						--WHEN t.ProductID = 12 THEN 150
-						--WHEN t.ProductID = 14 THEN 230
-						--WHEN t.ProductID = 16 THEN 12
-						--WHEN t.ProductID = 21 THEN 130
-						--WHEN t.ProductID = 22 THEN 200
-						--WHEN t.ProductID = 23 THEN 40
-						--WHEN t.ProductID = 24 THEN 110
-						--WHEN t.ProductID = 28 THEN 60
-						--WHEN t.ProductID = 32 THEN 250
-						--WHEN t.ProductID = 34 THEN 220
-						--WHEN t.ProductID = 36 THEN 240
-						--WHEN t.ProductID = 37 THEN 20
-						--WHEN t.ProductID = 38 THEN 90
-						--WHEN t.ProductID = 39 THEN 160
-						--WHEN t.ProductID = 40 THEN 80
-						--WHEN t.ProductID = 42 THEN 120
-						--WHEN t.ProductID = 43 THEN 50
-						--WHEN t.ProductID = 45 THEN 170
-						--WHEN t.ProductID = 46 THEN 190
-						--WHEN t.ProductID = 47 THEN 140
-						--WHEN t.ProductID = 50 THEN 75
-						--WHEN t.ProductID = 51 THEN 194
-						--WHEN t.ProductID = 52 THEN 192
-						--WHEN t.ProductID = 55 THEN 260
-						--WHEN t.ProductID = 56 THEN 270
-					 -- -----------------------------------------------------------
 					END
 FROM dbo.Products t WITH(ROWLOCK)
 WHERE t.ProductID IN  (	31 , -- Exchange
