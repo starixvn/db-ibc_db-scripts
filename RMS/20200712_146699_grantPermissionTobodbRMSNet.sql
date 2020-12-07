@@ -1,5 +1,4 @@
 /*<info serverAlias="DBARC-bodb02" isFunction="0" isNested=""></info>*/
-
 /*
 	Created by: Danny
 	Date: 20201207
@@ -9,4 +8,3 @@
 
 
 GRANT SELECT ON dbo.league TO bodbRMSNet
-
