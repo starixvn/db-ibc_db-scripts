@@ -7,4 +7,8 @@
 */
 
 
-GRANT SELECT ON dbo.league TO bodbRMSNet
+--GRANT SELECT ON dbo.league TO bodbRMSNet
+
+GRANT SELECT ON dbo.Sports TO bodbRMSNet
+GRANT SELECT ON dbo.Customer TO bodbRMSNet
+GRANT SELECT ON dbo.Acc_GroupExtraPTSetting TO bodbRMSNet
