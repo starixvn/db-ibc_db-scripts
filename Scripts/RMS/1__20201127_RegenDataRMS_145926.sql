@@ -1,10 +1,8 @@
-USE bodb_RMS
-GO
-
+/*<info serverAlias="DBRMS-bodb_RMS"></info>*/
 /*
 	Created: 20201102@Danny
 	DB: DBRMS.bodb_RMS
-	Task: PRMS - Create table structure 
+	Task: PRMS - Create table structure [redmine: #145926]
 */
 BEGIN
 
