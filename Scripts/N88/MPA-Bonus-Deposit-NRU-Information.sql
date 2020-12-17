@@ -1,12 +1,5 @@
 -- run on DBN88-bodb_N88 (DB052.bodb_N88)
 
-/*
-	-- IMPORTANT --
-	Please change Affiliate Database before run this script
-		Nova88	- N88: Affiliate_N88
-		Goal123	- N8B: Affiliate_N8B
-		Bwing	- N8G: Affiliate_N8G
-*/
 use bodb_N88
 go
 
