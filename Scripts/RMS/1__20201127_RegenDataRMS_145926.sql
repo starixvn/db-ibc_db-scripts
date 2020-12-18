@@ -1,8 +1,8 @@
-/*<info serverAlias="DBRMS-bodb_RMS"></info>*/
+/*<info serverAlias="DBRMS-bodb_RMS" isFunction="0" isNested=""></info>*/
 /*
 	Created: 20201102@Danny
 	DB: DBRMS.bodb_RMS
-	Task: PRMS - Create table structure [redmine: #145926]
+	Task: PRMS - Create table structure 
 */
 BEGIN
 
