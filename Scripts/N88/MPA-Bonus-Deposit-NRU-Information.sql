@@ -54,7 +54,7 @@ end
 select CustId, BonusCode, SUM(BonusAmount) AS Amount
 into #BonusInfo
 from dbo.BonusInfo b with (nolock)
-where CreateTime >= @fdate and CreateTime < @tdate
+where CreateTime >= @fdate and CreateTime < dateadd(day, 1, @tdate)
 	and SiteId = @siteId
 group by CustId, BonusCode
 
@@ -82,7 +82,7 @@ drop table #BonusInfo
 select custid, sum(amount) as Amount, sum(case when FirstDeposit = 1 then amount else 0 end) as FirstDepositAmount
 into #DepositInfo
 from dbo.DepositInfo with (nolock)
-where CreateTime >= @fdate and CreateTime < @tdate
+where CreateTime >= @fdate and CreateTime < dateadd(day, 1, @tdate)
 	and SiteId = @SiteId
 	and Status = 3 -- Approved
 group by custid
@@ -149,9 +149,9 @@ from dbo.Customer c with (nolock)
 		from dbo.DepositInfo d with (nolock)
 		where c.custid = d.CustId
 			and d.Status = 3
-			and d.CreateTime >= @fdate and d.CreateTime < @tdate
+			and d.CreateTime >= @fdate and d.CreateTime < dateadd(day, 1, @tdate)
 	) d
-where c.RegTime >= @fdate and c.RegTime < @tdate
+where c.RegTime >= @fdate and c.RegTime < dateadd(day, 1, @tdate)
 	and c.SiteId = @siteId
 	and c.IsTest = 0
 group by ag.UserName, a.AffName, isnull(cg.SignupUrl, 'None')
@@ -178,9 +178,9 @@ from dbo.Customer c with (nolock)
 		from dbo.DepositInfo d with (nolock)
 		where c.custid = d.CustId
 			and d.Status = 3 -- Aprroved
-			and d.CreateTime >= @fdate and d.CreateTime < @tdate
+			and d.CreateTime >= @fdate and d.CreateTime < dateadd(day, 1, @tdate)
 	) d
-where c.RegTime >= @fdate and c.RegTime < @tdate
+where c.RegTime >= @fdate and c.RegTime < dateadd(day, 1, @tdate)
 	and c.SiteId = @siteId
 	and c.IsTest = 0
 group by
