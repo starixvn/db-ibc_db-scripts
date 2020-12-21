@@ -76,10 +76,10 @@ CREATE TABLE [dbo].[rmBettrans_UAT](
 )
 GO
 
-CREATE CLUSTERED INDEX [CIX_rmBettrans] ON [dbo].[rmBettrans_uat]
+CREATE UNIQUE CLUSTERED INDEX [CIX_rmBettrans] ON [dbo].[rmBettrans_uat]
 (
 	[transid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [rmTable]
 GO
 
 
@@ -316,3 +316,7 @@ INCLUDE([currency],[stake],[winlost],[company_stake],[company_winlost],[actualra
 GO
 
 
+GRANT SELECT ON [dbo].[rmbettrans_uat] TO [bodbRMSNet] AS [dbo]
+GRANT SELECT ON [dbo].[rmbettrans_Old_uat] TO [bodbRMSNet] AS [dbo]
+GRANT SELECT ON [dbo].[rmSumWinloss_UAT] TO [bodbRMSNet] AS [dbo]
+GRANT SELECT ON [dbo].[rmSumWinloss_Old_UAT] TO [bodbRMSNet] AS [dbo]
