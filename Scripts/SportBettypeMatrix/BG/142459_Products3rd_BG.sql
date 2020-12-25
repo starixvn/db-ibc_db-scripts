@@ -10,4 +10,4 @@ DB: DBCUST/bodb_Licensee
 
 
 INSERT INTO  Product3rd  (ProductID,ProductName,Description,ProductPrefix,OfferSingle,ApplyDCS ) 
-VALUES (57,'BG','Big Gaming Live Casino','BGG','1',1)
+VALUES (57,'BG','Big Gaming Live Casino','BG','1',1)
