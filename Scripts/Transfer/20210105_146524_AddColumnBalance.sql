@@ -3,7 +3,7 @@
 /*
 Create: 20210105@Danny
 Task: Add column balance into transfer_bk [Redmine: #146038]
-DB: DBCUST-CUSTDB
+DB: DBARC-bodb_Archive
 
 */
 
