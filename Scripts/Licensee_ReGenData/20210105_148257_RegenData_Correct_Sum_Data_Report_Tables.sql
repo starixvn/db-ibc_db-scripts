@@ -27,7 +27,7 @@ END CATCH
 
 BEGIN TRY
 	SET @errmsg = ''
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_PrepareStaging
+	EXEC dbo.Task_PrepareStaging
 			@datefrom = @WinlostDate,
 			@dateto = @WinlostDate, 
 			@ErrorMsg = @errmsg OUTPUT  
@@ -44,7 +44,7 @@ END CATCH
 
 -- check and correct
 BEGIN TRY			 
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_rptBetting_CheckData 
+	EXEC dbo.Task_rptBetting_CheckData 
 		@WinlostDate	 = @WinlostDate,
 		@HasDataMismatch = @errorCode OUTPUT,
 		@BetTypes		 = @BetTypes OUTPUT
@@ -53,12 +53,7 @@ BEGIN TRY
 	BEGIN 
 		EXEC dbo.GEN_rptBetting @date = @WinlostDate, @date2 = @WinlostDate
 	END
-
-	-----2.3.b. Correct data of Rpt_BettingByProduct table because of rpt_betting , rpt_betting_BA has been corrected 
-	IF @errorCode <> 0
-	BEGIN 
-		EXEC dbo.GEN_rptBettingByProduct @date = @WinlostDate, @date2 = @WinlostDate, @DataSource = 'rpt_betting' , @SeparatedProductID = 0   
-	END
+	
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.3' + '--' + ERROR_MESSAGE()			
@@ -66,7 +61,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_PostStaging
+	EXEC dbo.Task_PostStaging
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.4' + '--' + ERROR_MESSAGE()			
@@ -74,7 +69,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.GEN_rptBettingByProduct
+	EXEC dbo.GEN_rptBettingByProduct
 			@date = @winlostdate,
 			@date2 = @winlostdate,
 			@DataSource = 'rpt_Betting'
@@ -86,7 +81,7 @@ END CATCH
 
 --check and correct
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_rptBettingBySport_CheckData 
+	EXEC dbo.Task_rptBettingBySport_CheckData 
 		@WinlostDate = @WinlostDate,
 		@HasDataMismatch = @errorCode OUTPUT,
 		@IsParlay = @result OUTPUT
@@ -103,7 +98,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_DailyRptLicWinloss2 @winlostdate = @WinlostDate
+	EXEC dbo.Task_DailyRptLicWinloss2 @winlostdate = @WinlostDate
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.7' + '--' + ERROR_MESSAGE()			
@@ -111,7 +106,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_rptCustomerTurnOver_Bettrans14 @Date = @WinlostDate
+	EXEC dbo.Task_rptCustomerTurnOver_Bettrans14 @Date = @WinlostDate
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.8' + '--' + ERROR_MESSAGE()			
@@ -119,7 +114,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY 
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_rptWinlostbyleague_Bettrans14 @Date = @WinlostDate
+	EXEC dbo.Task_rptWinlostbyleague_Bettrans14 @Date = @WinlostDate
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.9' + '--' + ERROR_MESSAGE()			
@@ -127,7 +122,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_rptCustomerMatch_Bettrans14 @Date = @WinlostDate
+	EXEC dbo.Task_rptCustomerMatch_Bettrans14 @Date = @WinlostDate
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.91' + '--' + ERROR_MESSAGE()			
@@ -135,7 +130,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.GEN_rptBetting_Parlay14
+	EXEC dbo.GEN_rptBetting_Parlay14
 			@datefrom = @WinlostDate,
 			@dateto = @WinlostDate
 END TRY
@@ -145,7 +140,7 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_DailyRptLicWinlossGMT_Bettrans14 @FromDate = @winlostdate
+	EXEC dbo.Task_DailyRptLicWinlossGMT_Bettrans14 @FromDate = @winlostdate
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.93' + '--' + ERROR_MESSAGE()			
@@ -153,11 +148,19 @@ BEGIN CATCH
 END CATCH
 
 BEGIN TRY
-	EXEC DBLIC.bodb_LicenseeReport.dbo.Task_DailySummaryLicPromotion_Bettrans14 @PromoDate = @winlostdate, @IsCheckDataOnly = 0
+	EXEC dbo.Task_DailySummaryLicPromotion_Bettrans14 @PromoDate = @winlostdate, @IsCheckDataOnly = 0
 END TRY
 BEGIN CATCH
 	SET @errmsg = 'step 6.94' + '--' + ERROR_MESSAGE()			
 	RAISERROR(@errmsg,16,1)
 END CATCH
 	 
+-- update status of step 6 in dbtxn
+UPDATE DBTXN.bodb02.dbo.TicketVoiding_RoutineTasks
+	SET Status = 2,
+		remark = '148257-support to void tickets manually'
+WHERE ExecuteType = 2 AND StepNo = 6
+	AND CreatedDate < CONVERT(VARCHAR, GETDATE(), 23)
+	AND status = 0
+
 GO
