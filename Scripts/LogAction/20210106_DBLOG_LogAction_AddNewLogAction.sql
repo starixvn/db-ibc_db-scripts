@@ -8,8 +8,13 @@
 */
 
 INSERT INTO dbo.LogAction (ActionID, ActionTypeID, SPName, ActionNameEN, IsInternal)
-VALUES (95038, 4, 'EAS_Bonus_Ins','Headline create bonus', 1)
-, (95039, 4, 'Age_ConfirmPayment','Update Payement Date', 1)
-, (95040, 4, 'EAS_CancelBonus','Cancel Bonus', 1)
+VALUES (20401, 4, 'EAS_Bonus_Ins','Create Bonus', 1)
+,(20402, 4, 'EAS_Bonus_Cancel','Cancel Bonus', 1)
+,(708, 5, 'Age_Bonus_ConfirmPayment','Update Payement Date', 0)
+
+
+
+
+
 
 
