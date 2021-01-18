@@ -167,5 +167,6 @@ BEGIN
 				) ;
 		SELECT @__fdate = DATEADD(DAY,1, @__fdate)
 	END
+	DROP TABLE #rmSumWinloss_old_xpre
 END
 
