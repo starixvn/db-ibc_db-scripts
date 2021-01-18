@@ -6,7 +6,7 @@
 */
 
 	
-CREATE TABLE [dbo].[rmSumWinloss_Old_xpre](
+CREATE TABLE [dbo].[rmSumWinloss_Old](
 	[winlostdate] [smalldatetime] NOT NULL,
 	[custid] [int] NOT NULL,
 	[sporttype] [smallint] NULL,
@@ -40,7 +40,7 @@ CREATE TABLE [dbo].[rmSumWinloss_Old_xpre](
 
 
 
-CREATE CLUSTERED INDEX [CIX_rmSumWinloss_OLD] ON [dbo].[rmSumWinloss_Old_xpre]
+CREATE CLUSTERED INDEX [CIX_rmSumWinloss_OLD] ON [dbo].[rmSumWinloss_Old]
 (
 	[winlostdate] ASC,
 	[custid] ASC,

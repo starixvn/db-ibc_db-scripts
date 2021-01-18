@@ -13,7 +13,7 @@ DECLARE @__fdate smalldatetime
 DECLARE @__tdate smalldatetime
 
 BEGIN
-	CREATE TABLE #rmSumWinloss_old_xpre(
+	CREATE TABLE #rmSumWinloss_old(
 				[winlostdate] [smalldatetime] NOT NULL,
 				[custid] [int] NOT NULL,
 				[sporttype] [smallint] NULL,
@@ -49,9 +49,9 @@ BEGIN
 
 	WHILE  @__fdate <= @__tdate
 	BEGIN
-		truncate table #rmSumWinloss_old_xpre
+		truncate table #rmSumWinloss_old
 
-		INSERT INTO #rmSumWinloss_old_xpre
+		INSERT INTO #rmSumWinloss_old
 		(
 			winlostdate,custid,sporttype,statusID,combo,username,currency,stake,winlost
 			,company_stake,company_winlost,actualrate,odds,betcount,recommend,parlaytype
@@ -62,10 +62,10 @@ BEGIN
 			,company_stake,company_winlost,actualrate,odds,betcount,recommend,parlaytype
 			,scomm,Extra_comm,Extra_stake,Extra_winlost,
 			mrecommend,srecommend,awinlost,mwinlost,swinlost,actual_stake,playercomm,comm,acomm
-		FROM DBARC.bodb_Archive.dbo.rmSumWinloss_old_xpre WHERE winlostdate = @__fdate
+		FROM DBARC.bodb_Archive.dbo.rmSumWinloss_old WHERE winlostdate = @__fdate
 
 		MERGE dbo.rmSumWinloss_old_uat AS TARGET
-		USING #rmSumWinloss_old_xpre AS SOURCE
+		USING #rmSumWinloss_old AS SOURCE
 			ON		TARGET.WinlostDate	= SOURCE.WinlostDate
 				AND TARGET.CustId		= SOURCE.CustId
 				AND TARGET.sporttype	= SOURCE.sporttype
@@ -167,6 +167,6 @@ BEGIN
 				) ;
 		SELECT @__fdate = DATEADD(DAY,1, @__fdate)
 	END
-	DROP TABLE #rmSumWinloss_old_xpre
+	DROP TABLE #rmSumWinloss_old
 END
 
