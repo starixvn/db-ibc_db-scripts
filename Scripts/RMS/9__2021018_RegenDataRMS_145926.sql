@@ -16,7 +16,7 @@ BEGIN
 	select @__fdate = @fdate, @__tdate = @tdate
 	WHILE  @__fdate <= @__tdate
 	BEGIN
-		exec RMS_ARC_rmSumwinloss_OLD_Ins @__fdate
+		exec RMS_ARC_rmSumwinloss_OLD_Ins @winlostdate = @__fdate
 		SELECT @__fdate = DATEADD(DAY,1, @__fdate)
 	END
 END
