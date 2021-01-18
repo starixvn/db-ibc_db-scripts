@@ -6,7 +6,7 @@
 */
 
 	
-CREATE TABLE [dbo].[rmSumWinloss_Old](
+CREATE TABLE [dbo].[rmSumWinloss_Old_xpre](
 	[winlostdate] [smalldatetime] NOT NULL,
 	[custid] [int] NOT NULL,
 	[sporttype] [smallint] NULL,
@@ -40,21 +40,13 @@ CREATE TABLE [dbo].[rmSumWinloss_Old](
 
 
 
-CREATE CLUSTERED INDEX [CIX_rmSumWinloss_OLD] ON [dbo].[rmSumWinloss_Old]
+CREATE CLUSTERED INDEX [CIX_rmSumWinloss_OLD] ON [dbo].[rmSumWinloss_Old_xpre]
 (
-	[custid] ASC,
 	[winlostdate] ASC,
+	[custid] ASC,
 	[sporttype] ASC,
 	[statusid] ASC,
 	[combo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [rmSumWinlossOld]
-GO
-
-
-CREATE NONCLUSTERED INDEX [IX_Winlostdate] ON [dbo].[rmSumWinloss_Old]
-(
-	[winlostdate] ASC
-)
-INCLUDE([currency],[stake],[winlost],[company_stake],[company_winlost],[actualrate],[betcount],[parlaytype],[combo],[sporttype],[statusid],[custid],[username],[srecommend],[awinlost],[mwinlost],[swinlost],[actual_stake],[playercomm],[comm],[acomm]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [rmSumWinlossOld]
 GO
 
