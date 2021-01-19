@@ -54,7 +54,7 @@ UPDATE t
 FROM @Tmp t
 CROSS APPLY (
 	SELECT c.custid, c.recommend, c.mrecommend, c.srecommend
-	FROM DBCUST.CustDB.dbo.Customer c WITH(NOLOCK) 
+	FROM CustDB.dbo.Customer c WITH(NOLOCK) 
 	WHERE c.username = t.Username
 ) AS C
 
