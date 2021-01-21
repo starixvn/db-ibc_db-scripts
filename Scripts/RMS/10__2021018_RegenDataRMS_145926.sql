@@ -7,7 +7,7 @@
 
 SET NOCOUNT ON
 
-DECLARE @fdate smalldatetime = '2020-03-01'
+DECLARE @fdate smalldatetime = '2020-05-20'
 DECLARE @tdate smalldatetime = '2020-12-20'
 DECLARE @__fdate smalldatetime
 DECLARE @__tdate smalldatetime
@@ -168,5 +168,32 @@ BEGIN
 		SELECT @__fdate = DATEADD(DAY,1, @__fdate)
 	END
 	DROP TABLE #rmSumWinloss_old
+
+
+	DECLARE @fdate_Original smalldatetime = '2018-01-01'
+	DECLARE @tdate_Original smalldatetime = '2020-05-19'
+	DECLARE @__fdate_ori smalldatetime
+	DECLARE @__tdate_ori smalldatetime
+
+	select @__fdate_ori = @fdate_Original, @__tdate_ori = @tdate_Original
+
+	WHILE  @__fdate_ori <= @__tdate_ori
+	BEGIN
+		INSERT INTO dbo.rmSumWinloss_old_uat 
+		(
+				winlostdate,custid,sporttype,statusID,combo,username,currency,stake,winlost
+				,company_stake,company_winlost,actualrate,odds,betcount,recommend,parlaytype
+				,scomm,Extra_comm,Extra_stake,Extra_winlost
+		)
+		SELECT winlostdate,custid,sporttype,statusID,combo,username,currency,stake,winlost
+				,company_stake,company_winlost,actualrate,odds,betcount,recommend,parlaytype
+				,scomm,Extra_comm,Extra_stake,Extra_winlost
+		FROM dbo.rmSumWinloss_old WITH(NOLOCK)
+		WHERE winlostdate = @__fdate_ori
+
+		SELECT @__fdate_ori = DATEADD(DAY,1, @__fdate_ori)
+	END
+
+
 END
 
