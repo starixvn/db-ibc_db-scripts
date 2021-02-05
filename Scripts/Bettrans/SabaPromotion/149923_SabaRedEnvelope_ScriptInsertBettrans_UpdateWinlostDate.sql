@@ -1,0 +1,32 @@
+/*<info serverAlias="DBTXN-bodb02"></info>*/
+/*
+	Created: 20210202@Sophia
+	DB : DBTXN-bodb02
+	Task: Update WinlostDate [Redmine: #149923]
+*/
+
+
+UPDATE b
+SET WinlostDate = '2021-02-09'
+FROM bettrans b WITH (ROWLOCK)  
+WHERE CustID IN (19096713,
+19096700,
+36962408,
+43100097,
+14242912,
+14242913,
+14242914,
+14242917,
+41937183,
+47319070,
+26883473,
+29253535,
+29253690,
+33343517,
+36662879,
+45666571,
+46433331,
+46533937,
+47178574)
+AND Bettype = 17004
+AND Winlostdate IN ('2021-02-04', '2021-02-05') 
