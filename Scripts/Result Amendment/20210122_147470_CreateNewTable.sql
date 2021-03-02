@@ -8,7 +8,7 @@
 
 CREATE TABLE dbo.TicketAmendment_Event
 (
-	AEventId		INT	IDENTITY(1, 1) 
+	TicketEventId	INT	IDENTITY(1, 1) 
 	,ProductId		TINYINT
 	,Sporttype		SMALLINT
 	,MatchId		INT
@@ -22,16 +22,16 @@ CREATE TABLE dbo.TicketAmendment_Event
 
 CREATE TABLE dbo.TicketAmendment_Detail 
 (
-	ATicketId		INT IDENTITY(1, 1)
+	TicketId		INT IDENTITY(1, 1)
 	,CustId			INT
 	,RefNo			BIGINT
-	,AEventId		INT
+	,TicketEventId	INT
 	,RefTable		TINYINT
 	,Bettype		SMALLINT
 )
 
-ALTER TABLE dbo.TicketAmendment_Event ADD CONSTRAINT PK_TicketAmendment_Event  PRIMARY KEY CLUSTERED (AEventId ASC);
+ALTER TABLE dbo.TicketAmendment_Event ADD CONSTRAINT PK_TicketAmendment_Event  PRIMARY KEY CLUSTERED (TicketEventId ASC);
 
-ALTER TABLE dbo.TicketAmendment_Detail ADD CONSTRAINT PK_TicketAmendment_Detail  PRIMARY KEY CLUSTERED (ATicketId ASC);
+ALTER TABLE dbo.TicketAmendment_Detail ADD CONSTRAINT PK_TicketAmendment_Detail  PRIMARY KEY CLUSTERED (TicketId ASC);
 
-CREATE NONCLUSTERED INDEX IX_CustId_RefNo ON TicketAmendment_Detail(CustId ASC,RefNo ASC, AEventId ASC);
+CREATE NONCLUSTERED INDEX IX_CustId_RefNo ON TicketAmendment_Detail(CustId ASC,RefNo ASC, TicketEventId ASC);
