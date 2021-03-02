@@ -102,7 +102,7 @@ SET NOCOUNT ON
 			SUM(playercomm) as playercomm,
 			SUM(comm) as comm,
 			SUM(acomm) as acomm
-		FROM dbo.rmBettrans_old b WITH (NOLOCK, INDEX = IX_Winlostdate)
+		FROM dbo.rmBettrans_old b WITH (NOLOCK)
 		WHERE b.winlostdate = @__fdate
 			AND b.statusID IN (111, 112, 113)
 		GROUP BY
@@ -137,6 +137,7 @@ SET NOCOUNT ON
 					AND TARGET.actualrate	= SOURCE.actualrate
 					AND TARGET.recommend	= SOURCE.recommend
 					AND TARGET.ParlayType	= SOURCE.ParlayType
+					AND TARGET.WinlostDate  = @__fdate
 					
 					
 
