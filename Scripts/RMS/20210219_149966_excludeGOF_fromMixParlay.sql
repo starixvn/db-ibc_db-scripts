@@ -57,7 +57,7 @@ SET NOCOUNT ON
 	WHILE  @__fdate <= @__tdate
 	BEGIN
 		--EXEC dbo.Task_RMS_MBU_CheckSumData_rmSumWinloss @__fdate
-		truncate table #rmSumWinloss
+		truncate table #rmSumWinloss_Old
 
 		INSERT INTO #rmSumWinloss_Old
 		(
@@ -102,7 +102,7 @@ SET NOCOUNT ON
 			SUM(playercomm) as playercomm,
 			SUM(comm) as comm,
 			SUM(acomm) as acomm
-		FROM dbo.rmBettrans_old b WITH (NOLOCK)
+		FROM dbo.rmBettrans_old b WITH (NOLOCK, INDEX = IX_Winlostdate)
 		WHERE b.winlostdate = @__fdate
 			AND b.statusID IN (111, 112, 113)
 		GROUP BY
