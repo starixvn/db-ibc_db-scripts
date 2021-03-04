@@ -17,6 +17,7 @@ CREATE TABLE dbo.TicketAmendment_Event
 	,ActualResult	NVARCHAR(MAX)
 	,WrongResult	NVARCHAR(MAX)
 	,CreatedDate	DATETIME DEFAULT(GETDATE())
+	,Status			NVARCHAR(20)
 )
 
 CREATE TABLE dbo.TicketAmendment_Detail 
