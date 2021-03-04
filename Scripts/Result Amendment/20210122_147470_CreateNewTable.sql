@@ -10,7 +10,6 @@ CREATE TABLE dbo.TicketAmendment_Event
 (
 	TicketEventId	INT	IDENTITY(1, 1) 
 	,ProductId		TINYINT
-	,Sporttype		SMALLINT
 	,MatchId		INT
 	,MatchCode		NVARCHAR(100)
 	,EventType		TINYINT
