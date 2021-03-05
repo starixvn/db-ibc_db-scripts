@@ -19,7 +19,7 @@ BEGIN
 
 	CREATE TABLE #match_bk (matchid INT, sporttype SMALLINT)
 
-	INSERT INTO match_bk (matchid, sporttype)
+	INSERT INTO #match_bk (matchid, sporttype)
 	select matchid, sporttype
 	from DBARC.bodb_Archive.dbo.macth_bk bk WITH(NOLOCK)
 	where eventdate = '2021-02-25' and sporttype in (1,2)
@@ -121,4 +121,5 @@ BEGIN
 
 	EXEC dbo.Task_RMS_MBU_CheckSumData_rmSumWinloss @__fdate
 	SELECT @__fdate = DATEADD(DAY,1, @__fdate)
+	WAITFOR DELAY '00:00:00.280'
 END
