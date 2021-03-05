@@ -11,30 +11,26 @@ USE bodb_RMS ;
 
 SET NOCOUNT ON
 
-DECLARE @fdate smalldatetime = '2021-02-26'
-DECLARE @tdate smalldatetime
-
-SELECT @tdate = MAX(winlostdate) FROM rmSumWinloss WITH(NOLOCK)
 
 
 -- Update data range bettrans_bk
 BEGIN
 
 
-	CREATE TABLE match_bk (matchid INT, sporttype SMALLINT)
+	CREATE TABLE #match_bk (matchid INT, sporttype SMALLINT)
 
 	INSERT INTO match_bk (matchid, sporttype)
 	select matchid, sporttype
-	from DBARC.bodb_Archive.dbo.macth_bk bk 
+	from DBARC.bodb_Archive.dbo.macth_bk bk WITH(NOLOCK)
 	where eventdate = '2021-02-25' and sporttype in (1,2)
 
 	UPDATE t WITH(ROWLOCK)
 	SET t.transid2 = bk.sporttype
 	FROM rmBettrans_Old t 
-	INNER JOIN 	match_bk bk ON bk.matchid = t.matchid 
+	INNER JOIN 	#match_bk bk ON bk.matchid = t.matchid 
 	WHERE t.winlostdate = '2021-02-25' and t.bettype = 38
 
-	DROP TABLE match_bk
+	DROP TABLE #match_bk
 
 	DELETE  dbo.rmSumWinloss_Old WITH(ROWLOCK) WHERE winlostdate = '2021-02-25'
 	INSERT INTO rmSumWinloss_Old
@@ -106,6 +102,9 @@ BEGIN
 END
 
 -- Update data range bettrans14 
+DECLARE @fdate smalldatetime = '2021-02-26'
+DECLARE @tdate smalldatetime = '2021-02-28'
+--SELECT @tdate = MAX(winlostdate) FROM rmSumWinloss WITH(NOLOCK)
 DECLARE @__fdate smalldatetime
 DECLARE @__tdate smalldatetime
 
