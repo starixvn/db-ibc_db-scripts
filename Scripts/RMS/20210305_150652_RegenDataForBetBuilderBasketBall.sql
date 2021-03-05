@@ -19,15 +19,24 @@ SELECT @tdate = MAX(winlostdate) FROM rmSumWinloss WITH(NOLOCK)
 
 -- Update data range bettrans_bk
 BEGIN
+
+
+	CREATE TABLE match_bk (matchid INT, sporttype SMALLINT)
+
+	INSERT INTO match_bk (matchid, sporttype)
+	select matchid, sporttype
+	from DBARC.bodb_Archive.dbo.macth_bk bk 
+	where eventdate = '2021-02-25' and sporttype in (1,2)
+
 	UPDATE t WITH(ROWLOCK)
 	SET t.transid2 = bk.sporttype
 	FROM rmBettrans_Old t 
-	INNER JOIN 	DBARC.bodb_Archive.dbo.macth_bk bk WITH(NOLOCK) ON bk.matchid = t.matchid 
+	INNER JOIN 	match_bk bk ON bk.matchid = t.matchid 
 	WHERE t.winlostdate = '2021-02-25' and t.bettype = 38
 
+	DROP TABLE match_bk
 
 	DELETE  dbo.rmSumWinloss_Old WITH(ROWLOCK) WHERE winlostdate = '2021-02-25'
-
 	INSERT INTO rmSumWinloss_Old
 		(
 			winlostdate,custid,sporttype,statusID,combo,username,currency,stake,winlost
