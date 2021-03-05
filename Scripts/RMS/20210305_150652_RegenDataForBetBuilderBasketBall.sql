@@ -107,9 +107,9 @@ BEGIN
 	
 	UPDATE b WITH (ROWLOCK)
 	SET b.transid2 = m.sporttype
-	FROM dbo.rmBettrans b
+	FROM dbo.rmBettrans_Old b
 	INNER JOIN bodb02.dbo.match14 m WITH (NOLOCK) ON b.matchid = m.matchid
-	WHERE b.bettype =38
+	WHERE b.winlostdate = @__fdate  AND b.bettype =38
 
 	EXEC dbo.Task_RMS_MBU_CheckSumData_rmSumWinloss @__fdate
 	SELECT @__fdate = DATEADD(DAY,1, @__fdate)
