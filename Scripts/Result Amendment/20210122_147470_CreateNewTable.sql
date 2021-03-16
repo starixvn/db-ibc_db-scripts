@@ -18,6 +18,7 @@ CREATE TABLE dbo.TicketAmendment_Event
 	,WrongResult	NVARCHAR(MAX)
 	,CreatedDate	DATETIME DEFAULT(GETDATE())
 	,Status			NVARCHAR(20)
+	,Type			TINYINT
 )
 
 CREATE TABLE dbo.TicketAmendment_Detail 
