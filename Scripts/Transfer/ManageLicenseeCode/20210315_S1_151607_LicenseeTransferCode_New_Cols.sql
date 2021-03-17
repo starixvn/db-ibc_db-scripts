@@ -1,4 +1,4 @@
-/*<info serverAlias="DBCUST-CUSTDB"></info>*/
+/*<info serverAlias="DBCUST-bodb_Licensee"></info>*/
 /*
 	Created: 20210315@Sol
 	Task: 151607 - NAP - Enhance Manage Licensee Code to support change base currency of licensees
