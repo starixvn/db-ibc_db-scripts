@@ -94,7 +94,6 @@ DECLARE @cutOffToDate DATE = '20210228'
 			('Pinbo', 'PHL-LSEE-PINBO CNY'),
 			('PKbet', 'PHL-LSEE-PKBET CNY'),
 			('PKKing', 'PHL-LSEE-PKKING CNY'),
-			('Saibo', 'PHL-LSEE-SAIBO CNY'),
 			('SDY', 'PHL-LSEE-SDY CNY'),
 			('Soon88', 'PHL-LSEE-SOON88 CNY'),
 			('Spark', 'PHL-LSEE-SPARK CNY'),
