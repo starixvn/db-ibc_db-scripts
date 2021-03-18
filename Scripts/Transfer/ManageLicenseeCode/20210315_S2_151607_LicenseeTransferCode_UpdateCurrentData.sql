@@ -150,7 +150,7 @@ FROM dbo.LicenseeTransferCode l
 ---insert new currency with new time range
 INSERT INTO dbo.LicenseeTransferCode(LicenseeName,CustID,StatusId, FromDate, ToDate)
 OUTPUT INSERTED.LicenseeName, INSERTED.CustID, INSERTED.FromDate, INSERTED.ToDate INTO	@tblLicenseeInserted
-SELECT t.LicenseeName, t.NewMemberId, 0, DATEADD(Day, 1, @cutOffToDate), '20500131'
+SELECT t.LicenseeName, t.NewMemberId, 1, DATEADD(Day, 1, @cutOffToDate), '20500131'
 FROM @tblLicenseeWithNewCode t
 
 ---review data

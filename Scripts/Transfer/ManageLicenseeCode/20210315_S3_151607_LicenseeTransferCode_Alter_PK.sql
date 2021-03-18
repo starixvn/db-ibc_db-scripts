@@ -24,4 +24,5 @@ ADD CONSTRAINT PK_LicenseeTransferCode PRIMARY KEY (LicenseeName, CustID, FromDa
 
 GO
 
-
+ALTER TABLE LicenseeTransferCode
+ADD CONSTRAINT DF_LicenseeTransferCode_ToDate DEFAULT '2050-01-31' FOR ToDate
