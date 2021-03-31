@@ -13,7 +13,7 @@ USE bodb02
 SET NOCOUNT ON
 
 --INSERT INTO dbo.SystemSettings (VName,VValue) VALUES ('isCaptureBalance', 1)
-UPDATE 
+UPDATE t
 SET t.VValue = 0
 FROM dbo.SystemSettings t WITH(ROWLOCK)
 WHERE t.VName = 'isCaptureBalance'
