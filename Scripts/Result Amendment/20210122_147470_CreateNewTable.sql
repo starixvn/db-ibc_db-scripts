@@ -1,8 +1,8 @@
-/*<info serverAlias="DBTXN-bodb02" ></info>*/
+/*<info serverAlias="DBEXT-bodb02" ></info>*/
 
 /*
 	Created: 20210122@Malcolm
-	DB: DBTXN-bodb02
+	DB: DBEXT-bodb02
 	Task: Create new table [RedmineId : #147470]
 */
 
@@ -18,7 +18,7 @@ CREATE TABLE dbo.TicketAmendment_Event
 	,WrongResult	NVARCHAR(MAX)
 	,CreatedDate	DATETIME DEFAULT(GETDATE())
 	,Status			NVARCHAR(20)
-	,Type			TINYINT
+	,MessageId		INT
 )
 
 CREATE TABLE dbo.TicketAmendment_Detail 
