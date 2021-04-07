@@ -1,3 +1,5 @@
+/*<info serverAlias="DBRMS-bodb_RMS" isFunction="0" isNested=""></info>*/
+
 use bodb_RMS
 go
 
