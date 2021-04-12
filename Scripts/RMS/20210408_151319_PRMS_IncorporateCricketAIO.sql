@@ -72,8 +72,60 @@ BEGIN
 
 	WHILE  @winlostdate <= @ToDate
 	BEGIN
-		EXEC dbo.Task_RMS_MBU_CopyData_rmBettransm_bk @winlostdate
-		SELECT @winlostdate = DATEADD(DAY, 1, @winlostdate)
+		BEGIN TRY
+			INSERT INTO dbo.rmBettransm_bk
+			(
+				transid,
+				odds,
+				stake,
+				statusID,
+				refno,
+				winlostdate,
+				matchid,
+				matchdate
+			)
+			SELECT 
+				transid,
+				odds,
+				stake,
+				statusID,
+				refno,
+				winlostdate,
+				matchid,
+				matchdate
+			FROM DBARC.bodb_archive.dbo.bettransm r WITH (NOLOCK)
+			WHERE r.winlostdate = @winlostdate
+
+
+			INSERT INTO dbo.rmMatch_bk
+			(
+				matchid,
+				leagueid,
+				eventdate,
+				ParentID,
+				ChildMatchType,
+				sporttype,
+				GlobalShowTime,
+				eventstatus
+			)
+			SELECT 
+				matchid,
+				leagueid,
+				eventdate,
+				ParentID,
+				ChildMatchType,
+				sporttype,
+				GlobalShowTime,
+				eventstatus
+			FROM DBARC.bodb_archive.dbo.match_bk r WITH (NOLOCK)
+			WHERE r.eventdate = @winlostdate 
+
+			SELECT @winlostdate = DATEADD(DAY, 1, @winlostdate)
+		END TRY
+		BEGIN CATCH
+			RETURN
+		END CATCH
+		
 	END
 
 END
