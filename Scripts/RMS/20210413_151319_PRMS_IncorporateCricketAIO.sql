@@ -113,7 +113,7 @@ CREATE CLUSTERED INDEX CIX_refno ON #sporttype (refno)
 				INNER JOIN bodb02.dbo.bettransm bm WITH (NOLOCK) ON b.refno = bm.refno
 				INNER JOIN bodb02.dbo.match m WITH (NOLOCK) ON bm.matchid = m.matchid
 				INNER JOIN bodb02.dbo.League l WITH(NOLOCK) ON m.leagueid = l.leagueid
-			WHERE b.bettype = 29  AND bm.winlostdate > @MoveBetsDay
+			WHERE b.bettype = 29  AND (bm.winlostdate > @MoveBetsDay OR bm.winlostdate IS NULL)
 			
 			-- bettransm14
 			INSERT INTO #sporttype (refno, sporttype, Saba, odds, stake, matchid)
