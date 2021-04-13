@@ -101,35 +101,6 @@ WHERE winlostdate between '2021-04-12' and '2021-04-13'
 CREATE TABLE #sporttype (refno BIGINT, sporttype INT, Saba INT ,odds smallmoney, stake money, matchid INT)
 CREATE CLUSTERED INDEX CIX_refno ON #sporttype (refno)
 
-
-	-- bettransm
-INSERT INTO #sporttype (refno, sporttype, Saba, odds, stake, matchid)
-SELECT bm.refno, m.sporttype, CASE WHEN  l.LeagueGroupID IN (42, 74) THEN 1 ELSE -1 END Saba, bm.odds, bm.stake, CASE WHEN m.ChildMatchType = 200 THEN m.ParentID ELSE bm.matchid END
-FROM #rmBettrans b 
-	INNER JOIN bodb02.dbo.bettransm bm WITH (NOLOCK) ON b.refno = bm.refno
-	INNER JOIN bodb02.dbo.match m WITH (NOLOCK) ON bm.matchid = m.matchid
-	INNER JOIN bodb02.dbo.League l WITH(NOLOCK) ON m.leagueid = l.leagueid
-WHERE b.bettype = 29  AND bm.winlostdate > @MoveBetsDay
-			
--- bettransm14
-INSERT INTO #sporttype (refno, sporttype, Saba, odds, stake, matchid)
-SELECT bm.refno, m.sporttype, CASE WHEN  l.LeagueGroupID IN (42, 74) THEN 1 ELSE -1 END Saba, bm.odds, bm.stake, CASE WHEN m.ChildMatchType = 200 THEN m.ParentID ELSE bm.matchid END
-FROM #rmBettrans b 
-	INNER JOIN bodb02.dbo.bettransm14 bm WITH (NOLOCK) ON b.refno = bm.refno
-	INNER JOIN bodb02.dbo.match14 m WITH (NOLOCK) ON bm.matchid = m.matchid
-	INNER JOIN bodb02.dbo.League l WITH(NOLOCK) ON m.leagueid = l.leagueid
-WHERE b.bettype = 29 AND bm.winlostdate BETWEEN @BalanceUpDay AND @MoveBetsDay 
-
--- bettrans_bk
-INSERT INTO #sporttype (refno, sporttype, Saba, odds, stake, matchid)
-SELECT bm.refno, m.sporttype, CASE WHEN  l.LeagueGroupID IN (42, 74) THEN 1 ELSE -1 END Saba, bm.odds, bm.stake, CASE WHEN m.ChildMatchType = 200 THEN m.ParentID ELSE bm.matchid END
-FROM #rmBettrans b 
-	INNER JOIN dbo.rmBettransm_bk bm WITH (NOLOCK) ON b.refno = bm.refno
-	INNER JOIN dbo.rmMatch_bk m WITH (NOLOCK) ON bm.matchid = m.matchid
-	INNER JOIN bodb02.dbo.League l WITH(NOLOCK) ON m.leagueid = l.leagueid
-WHERE b.bettype = 29 AND bm.winlostdate BETWEEN DATEADD(DAY, -20, @BalanceUpDay) AND DATEADD(DAY, -1, @BalanceUpDay)
-
-
 		-- Update some columns for bettype = 29
 		IF EXISTS (SELECT 1 FROM #rmBettrans WHERE bettype = 29)
 		BEGIN
