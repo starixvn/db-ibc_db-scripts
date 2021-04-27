@@ -24,3 +24,4 @@ begin
 
 	waitfor delay '00:00:00.280'
 end
+go
