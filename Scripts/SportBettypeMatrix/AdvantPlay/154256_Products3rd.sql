@@ -4,7 +4,7 @@ GO
 
 /*
 Create : 20210506@Sophia
-Task: Add  AdvantPlay [redmine :#154256]
+Task: Add  AdvantPlay [redmine:#154256]
 DB: DBCUST/bodb_Licensee
 */
 
