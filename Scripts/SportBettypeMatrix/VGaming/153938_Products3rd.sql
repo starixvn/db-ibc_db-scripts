@@ -9,4 +9,4 @@ DB: DBCUST/bodb_Licensee
 */
 
 
-INSERT INTO  Product3rd  (ProductID,ProductName,Description,ProductPrefix,OfferSingle,ApplyDCS ) VALUES (66,'VGaming','VGaming','VGA','1',1)
+INSERT INTO  Product3rd  (ProductID,ProductName,Description,ProductPrefix,OfferSingle,ApplyDCS ) VALUES (66,'Vgaming','Vgaming','VGA','1',1)
