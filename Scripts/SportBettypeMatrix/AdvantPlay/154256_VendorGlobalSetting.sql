@@ -11,3 +11,6 @@ DB: DBCUST/CUSTDB
 
 INSERT INTO VendorGlobalSetting (VendorID, VName, NumberValue, Sporttype, Bettype )   select 67, '3rdCashWLShareRate',0.05,172,7701
 INSERT INTO VendorGlobalSetting (VendorID, VName, NumberValue, Sporttype, Bettype )   select 67, '3rdCreditWLShareRate',0.05,172,7701
+
+INSERT INTO VendorGlobalSetting (VendorID, VName, NumberValue, Sporttype, Bettype )   select 68, '3rdCashWLShareRate',0.05,174,7801
+INSERT INTO VendorGlobalSetting (VendorID, VName, NumberValue, Sporttype, Bettype )   select 68, '3rdCreditWLShareRate',0.05,174,7801 
