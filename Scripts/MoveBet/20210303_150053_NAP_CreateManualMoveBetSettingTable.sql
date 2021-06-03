@@ -22,3 +22,6 @@ CREATE TABLE [dbo].[Acc_ManualMovebetConfig](
 		[MBDate] ASC
 	)
 )
+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON [dbo].[Acc_ManualMovebetConfig] TO bodbAdminNet;
