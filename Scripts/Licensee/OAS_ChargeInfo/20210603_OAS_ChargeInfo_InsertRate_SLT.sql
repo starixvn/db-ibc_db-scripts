@@ -38,8 +38,6 @@ select 'Alphalota', 0.08 union all
 select 'ANGbet', 0.1 union all
 select 'AnvoFH', 0.1 union all
 select 'AOGcasino', 0.1 union all
-select 'awc', 0.1 union all
-select 'awc2', 0.1 union all
 select 'B24VN', 0.1 union all
 select 'Baji', 0.1 union all
 select 'HAIFA', 0.05 union all
