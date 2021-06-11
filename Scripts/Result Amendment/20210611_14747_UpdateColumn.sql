@@ -15,7 +15,7 @@ ALTER TABLE TicketAmendment_Event
 DROP COLUMN CreatedDate;
 
 ALTER TABLE TicketAmendment_Event
-ADD SubmitDate DATETIME2;
+ADD SubmitDate DATETIME;
 
 ALTER TABLE TicketAmendment_Detail
 ADD Seq INT;
