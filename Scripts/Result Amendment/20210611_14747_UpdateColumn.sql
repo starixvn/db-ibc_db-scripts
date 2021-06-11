@@ -9,13 +9,18 @@ TRUNCATE TABLE TicketAmendment_Event
 TRUNCATE TABLE TicketAmendment_Detail
 
 ALTER TABLE TicketAmendment_Event
-DROP CONSTRAINT DF__TicketAme__Creat__0D7E5A9E;
+DROP CONSTRAINT DF__TicketAme__Creat__28F8FCEA; 
+/*
+CONSTRAINT NAME :
+	+ DF__TicketAme__Creat__28F8FCEA FOR DB052
+	+ DF__TicketAme__Creat__26683FB0 FOR DB053
+*/
 
 ALTER TABLE TicketAmendment_Event
 DROP COLUMN CreatedDate;
 
 ALTER TABLE TicketAmendment_Event
-ADD SubmitDate DATETIME;
+ADD SubmitDate DATETIME2;
 
 ALTER TABLE TicketAmendment_Detail
 ADD Seq INT;
