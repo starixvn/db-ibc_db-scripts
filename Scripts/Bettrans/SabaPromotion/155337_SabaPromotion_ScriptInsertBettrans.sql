@@ -15,33 +15,34 @@
 				, @Balance      MONEY	 
 				, @ErrCode 		INT		 
 				, @ErrMsg 		NVARCHAR(200) 
-				, @CustID INT
-				, @i INT = 1
-				, @Max INT
+				, @CustID 		INT
+				, @Amount 		MONEY
+				, @i 			INT = 1
+				, @Max 			INT
 
-	CREATE TABLE #CustList ( ID INT IDENTITY(1,1), CustID INT)
-	INSERT INTO #CustList 
-	VALUES  (18178436),
-			(52017417),
-			(52017465),
-			(52017508),
-			(52017541),
-			(52017588),
-			(31607896),
-			(32951624),
-			(33257253),
-			(36351352),
-			(49802202)
+	CREATE TABLE #CustList ( ID INT IDENTITY(1,1), CustID INT, Amount MONEY)
+	INSERT INTO #CustList (CustID, Amount) 
+	VALUES  (18178436,200000),
+			(52017417,200000),
+			(52017465,200000),
+			(52017508,200000),
+			(52017541,200000),
+			(52017588,200000),
+			(31607896,175000),
+			(32951624,175000),
+			(33257253,75000),
+			(36351352,75000),
+			(49802202,75000)
 	
 	SELECT @Max = MAX(ID) FROM #CustList
 	WHILE @i <= @Max
 	BEGIN 
-			SELECT @CustID = CustID FROM #CustList WHERE ID = @i
+			SELECT @CustID = CustID , @Amount = Amount FROM #CustList WHERE ID = @i
 
 			EXEC Dot_Dep_BettransIns_SabaPromotion
 				@CustID			= @CustID
 				, @ExtraInfo	= NULL
-				, @Amount		= 100			
+				, @Amount		= @Amount			
 				, @Bettype		= 17005
 				, @sporttype	= 246	
 				, @Betfrom		= 'd'
