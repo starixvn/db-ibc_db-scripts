@@ -47,7 +47,7 @@
 				, @Betfrom		= 'd'
 				, @TransDesc	= 'EC2020 Promotion - Licensee income'
 				, @IP			= ''
-				, @Creator		= NULL  
+				, @Creator		= 10278938  ---starixIT  
 				------------------------------------------
 				, @TransID 		= @TransID OUTPUT
 				, @TransDate	= @TransDate OUTPUT
