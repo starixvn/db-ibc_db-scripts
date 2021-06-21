@@ -23,22 +23,29 @@
 	CREATE TABLE #CustList ( ID INT IDENTITY(1,1), CustID INT, Amount MONEY)
 	INSERT INTO #CustList (CustID, Amount) 
 	VALUES  (18178436,200000),
-			(52017417,200000),
-			(52017465,200000),
-			(52017508,200000),
 			(52017541,200000),
-			(52017588,200000),
-			(31607896,175000),
-			(32951624,175000),
-			(33257253,75000),
-			(36351352,75000),
+			(52017417,200000),
+			(31607896,200000),
+			(36351352,200000),
+			(32951624,200000),
+			(52017465,175000),
+			(33257253,175000),
+			(52017588,75000),
+			(52017508,75000),
 			(49802202,75000)
 	
 	SELECT @Max = MAX(ID) FROM #CustList
 	WHILE @i <= @Max
 	BEGIN 
 			SELECT @CustID = CustID , @Amount = Amount FROM #CustList WHERE ID = @i
-
+			
+			SELECT @TransID = NULL
+				, @TransDate = NULL
+				, @RefNo 	 = NULL
+				, @Balance   = NULL
+				, @ErrCode 	 = NULL
+				, @ErrMsg 	 = NULL
+				
 			EXEC Dot_Dep_BettransIns_SabaPromotion
 				@CustID			= @CustID
 				, @ExtraInfo	= NULL
