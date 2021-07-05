@@ -1,6 +1,8 @@
 USE NAP_UserControl
 GO
 
+DECLARE @currentDate DATETIME = CONVERT(DATE, GETDATE())
+
 -- Get Headline - Super
 CREATE TABLE #GroupHeadline (GroupHeadlineId INT, SiteId INT, ExchangeId INT, ExternalGroup VARCHAR(50), PrimaryExtraPTGroup VARCHAR(50), FromDate DATETIME, ToDate DATETIME)
 INSERT INTO #GroupHeadline (GroupHeadlineId, SiteId, ExchangeId, ExternalGroup, PrimaryExtraPTGroup, FromDate, ToDate)
@@ -9,15 +11,18 @@ FROM CustDB.dbo.CustGroupHeadline cgh WITH (NOLOCK)
 	INNER JOIN CustDB.dbo.Customer ch WITH (NOLOCK) ON cgh.CustId = ch.CustId AND ch.Currency <> 20 -- Headline
 	INNER JOIN CustDB.dbo.CustAccount ca WITH (NOLOCK) ON cgh.GroupId = ca.GroupId AND cgh.GroupId <> 0
 	INNER JOIN CustDB.dbo.Customer s WITH (NOLOCK) ON ca.CustId = s.CustId AND s.RoleId = 4 AND s.Currency <> 20 -- Super
+	INNER JOIN CustDB.dbo.CustInfo ci WITH (NOLOCK) ON s.CustId = ci.CustId AND ci.Enabled = 1
 	INNER JOIN CustDB.dbo.Site ss WITH (NOLOCK) ON s.site = ss.site
-	LEFT JOIN CustDB.dbo.Acc_CustGroup cg WITH (NOLOCK) ON s.CustId = cg.CustId
-	LEFT JOIN (
+	INNER JOIN CustDB.dbo.Acc_CustGroup cg WITH (NOLOCK) ON s.CustId = cg.CustId
+	INNER JOIN dbo.EaGroup eg WITH (NOLOCK) ON cg.GroupName = eg.GroupName AND eg.ParentId = 0
+	INNER JOIN (
 		SELECT SuperId, GroupName, MIN(FromDate) AS FromDate, MAX(ToDate) AS ToDate
 		FROM CustDB.dbo.Acc_GroupExtraPTSetting WITH (NOLOCK)
-		WHERE '2021-06-11' < ToDate
+		WHERE @currentDate <= ToDate
 		GROUP BY SuperId, GroupName
 	) e ON s.CustId = e.SuperId
-WHERE cg.GroupName IS NOT NULL OR e.GroupName IS NOT NULL
+WHERE s.site <> 'CN88'
+	AND (s.site <> 'EU88' OR s.Currency <> 78)
 GROUP BY cgh.GroupId, ss.SiteId, s.Currency, cg.GroupName, e.GroupName
 
 -- Insert data --> will be replace by real table
