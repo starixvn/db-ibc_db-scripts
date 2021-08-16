@@ -10,3 +10,8 @@ Task: Change datatype [160260]
 
 ALTER TABLE Ref
 ALTER COLUMN RefNo BIGINT
+
+ALTER TABLE Ref
+ALTER COLUMN transcode BIGINT
+
+
