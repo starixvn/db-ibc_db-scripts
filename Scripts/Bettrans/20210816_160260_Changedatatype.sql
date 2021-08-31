@@ -2,9 +2,9 @@
 Use bodb02
 
 /*
-Create: 20200816@Sophia
+Create: 20210816@Sophia
 DB : DBTXN-bodb02
-Task: Change datatype [160260]
+Task: Change datatype from INT to BIGINT of Ref table [Redmine: #160260]
 
 */
 
