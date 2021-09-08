@@ -32,7 +32,7 @@ BEGIN
 	WHILE  @winlostdate <= @ToDate
 	BEGIN
 		BEGIN TRY
-			print('Success :' + CAST(@winlostdate AS VARCHAR(10)))
+			print('Running :' + CAST(@winlostdate AS VARCHAR(10)))
 			TRUNCATE TABLE #bettransm_staging
 
 			INSERT INTO #bettransm_staging (transid, refno, winlostdate, betteam, bettype)
@@ -50,7 +50,7 @@ BEGIN
 			SELECT @winlostdate = DATEADD(DAY, 1, @winlostdate)
 		END TRY
 		BEGIN CATCH
-			print('Failed :' + CAST(@winlostdate AS VARCHAR(10)))
+			print('Failed :' + CAST(@winlostdate AS VARCHAR(10)) +  ERROR_MESSAGE())
 		END CATCH
 		
 	END
