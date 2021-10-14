@@ -15,13 +15,10 @@ EXEC dbo.sp_update_jobstep
     @step_id = 1,  
 	@command=N'EXEC bodb_LicenseeReport.dbo.Task_ImportQueue_CheckReady'
 
-
-
-
 EXEC dbo.sp_update_jobstep  
     @job_name = N'bodb_LicenseeReport: DW - Generate Daily',  
     @step_id = 2,  
-	@command=N'	EXEC dbo.Task_PostStaging
+	@command=N'EXEC dbo.Task_PostStaging
 EXEC dbo.Task_PrepareStaging'
 
 
