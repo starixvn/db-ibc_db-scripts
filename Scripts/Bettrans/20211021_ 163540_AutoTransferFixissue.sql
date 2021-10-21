@@ -8,7 +8,7 @@ DB: DBCUST-CUSTDB
 
 
 
-		UPDATE  dbo.Acc_ClearBalanceList   
+		UPDATE  dbo.Acc_ClearBalanceList  WITH (ROWLOCK)
 		SET 	Status = 'failed',
 				LastTransfer = getdate(),
 				IsTransferring = 0
