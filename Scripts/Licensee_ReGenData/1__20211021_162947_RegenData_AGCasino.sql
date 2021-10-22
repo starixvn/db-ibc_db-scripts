@@ -9,17 +9,8 @@ USE bodb02
 
 -- DBACC - bodb02
 -- resum data from bettrans_AGCasino to bettrans_AGCasino
-DECLARE @__MinWLDate DATETIME = '2021-10-01'
-DECLARE @__MaxWLDate DATETIME = '2021-10-20' 
-DECLARE @__RunWLDate DATETIME
+DECLARE @__RunWLDate DATETIME = '2021-10-12' 
 
-SELECT @__RunWLDate = @__MinWLDate
+EXEC bodb02.dbo.Task_DOT_AGCasino_DailySummary @winlostdate = @__RunWLDate, @IsManual = 1
 
-
-WHILE @__RunWLDate <= @__MaxWLDate
-BEGIN
-	PRINT('run: ' + CAST (@__RunWLDate  AS VARCHAR(20)))
-	EXEC bodb02.dbo.Task_DOT_AGCasino_DailySummary @winlostdate = @__RunWLDate, @IsManual = 1
-	SELECT @__RunWLDate = DATEADD(DAY, 1, @__RunWLDate )
-END
 	

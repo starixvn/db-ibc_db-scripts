@@ -9,8 +9,8 @@ USE bodb_LicenseeReport
 -- DBLIC - bodb_LicenseeReport 
 -- regen data AGC 
 EXEC dbo.GEN_rptBettingByProduct
-	@date					= '2021-10-01',
-	@date2					= '2021-10-20',
+	@date					= '2021-10-12',
+	@date2					= '2021-10-12',
 	@DataSource				= 'SeparatedProduct',
 	@SeparatedProductID		= 10,
 	@ProductCodes			= 'AGC',
