@@ -1,0 +1,48 @@
+/*<info serverAlias="DBTXN-bodb02,DBACC-bodb02,DBAGE-bodb02,DBBOF-bodb02,DBBAH-bodb02,DBBAL-bodb02" step="2"></info>*/
+
+USE bodb02
+GO
+ 
+
+CREATE TABLE dbo.Transfer(
+	TransId BIGINT IDENTITY(333242000,1) NOT FOR REPLICATION NOT NULL,
+	CustId INT NOT NULL,
+	TransDate DATETIME NOT NULL CONSTRAINT DF_Transfer_TransDate DEFAULT (getdate()),
+	WinlostDate SMALLDATETIME NULL CONSTRAINT DF_Transfer_Winlostdate  DEFAULT (getdate()),
+	Bettype SMALLINT NULL,
+	Stake	MONEY NOT NULL CONSTRAINT DF_Transfer_stake  DEFAULT ((0)),
+	Actual_Stake MONEY NULL CONSTRAINT DF_Transfer_Actual_Stake  DEFAULT ((0)),
+	Winlost MONEY NULL CONSTRAINT DF_Transfer_Winlost  DEFAULT ((0)),
+	AWinlost MONEY NULL CONSTRAINT DF_Transfer_AWinlost  DEFAULT ((0)),
+	MWinlost MONEY NULL CONSTRAINT DF_Transfer_MWinlost  DEFAULT ((0)),
+	SWinlost MONEY NULL CONSTRAINT DF_Transfer_SWinlost  DEFAULT ((0)),
+	PlayerComm MONEY NULL CONSTRAINT DF_Transfer_PlayerComm  DEFAULT ((0)),
+	Comm MONEY NULL CONSTRAINT DF_Transfer_Comm  DEFAULT ((0)),
+	AComm MONEY NULL CONSTRAINT DF_Transfer_AComm  DEFAULT ((0)),
+	SComm MONEY NULL CONSTRAINT DF_Transfer_SComm  DEFAULT ((0)),	
+	StatusId TINYINT NULL,	
+	RefNo BIGINT NOT NULL,
+	TransDesc NVARCHAR(1000) NULL,
+	Recommend	INT NOT NULL,
+	MRecommend	INT NOT NULL,
+	SRecommend	INT NOT NULL,
+	Username	VARCHAR(30) NULL,
+	Currency	TINYINT NULL,	
+	CurrencyName NVARCHAR(50) NULL,
+	ActualRate	FLOAT NULL,
+	Creator INT NOT NULL CONSTRAINT DF_Transfer_Creator  DEFAULT ((0)),
+	Balance	MONEY NULL,
+	IP	VARCHAR (45),
+	CheckerId	INT NULL,
+	CheckerName	VARCHAR(30) NULL,
+	CheckTime	DATETIME NULL,
+	IsCollection BIT NULL,
+	IsDel	BIT NULL,
+ CONSTRAINT PK_Transfer PRIMARY KEY CLUSTERED 
+(
+	TransID ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON Transfer_Index
+) ON Transfer_Table
+
+GO
+ 
