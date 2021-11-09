@@ -38,6 +38,7 @@ CREATE TABLE dbo.Transfer(
 	CheckTime	DATETIME NULL,
 	IsCollection BIT NULL,
 	IsDel	BIT NULL,
+	RepUpdateTime	datetime2(7) NULL,
  CONSTRAINT PK_Transfer PRIMARY KEY CLUSTERED 
 (
 	TransID ASC
