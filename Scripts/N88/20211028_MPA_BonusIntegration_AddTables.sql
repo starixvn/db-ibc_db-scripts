@@ -58,7 +58,7 @@ CREATE TABLE dbo.VipUpgradeReview
 	,CreateTime			DATETIME
 	,SettleTime			DATETIME
 	,LastUpdateTime		DATETIME
-	,LastUpdateUser		VARCHAR
+	,LastUpdateUser		VARCHAR(50)
 	,WinlostDate		AS CONVERT(DATE, SettleTime)
 	,CONSTRAINT PK_VipUpgradeReview PRIMARY KEY NONCLUSTERED (CustId, CalculateMonth)
 ) ON ReportData
