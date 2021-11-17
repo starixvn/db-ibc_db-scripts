@@ -3,7 +3,6 @@
 USE bodb02
 GO
  
-
 CREATE TABLE dbo.Transfer(
 	TransId BIGINT IDENTITY(333242000,1) NOT FOR REPLICATION NOT NULL,
 	CustId INT NOT NULL,
@@ -33,12 +32,9 @@ CREATE TABLE dbo.Transfer(
 	Creator INT NOT NULL CONSTRAINT DF_Transfer_Creator  DEFAULT ((0)),
 	Balance	MONEY NULL,
 	IP	VARCHAR (45),
-	CheckerId	INT NULL,
-	CheckerName	VARCHAR(30) NULL,
 	CheckTime	DATETIME NULL,
-	IsCollection BIT NULL,
-	IsDel	BIT NULL,
-	RepUpdateTime	datetime2(7) NULL,
+	SerialNo VARCHAR(50) NULL,
+	RepUpdateTime	DATETIME2(7) NULL,
  CONSTRAINT PK_Transfer PRIMARY KEY CLUSTERED 
 (
 	TransID ASC
@@ -47,3 +43,27 @@ CREATE TABLE dbo.Transfer(
 
 GO
  
+CREATE TABLE dbo.TransferInfo(
+	TransId BIGINT IDENTITY(333242000,1) NOT FOR REPLICATION NOT NULL,
+	APositiontaking	SMALLMONEY,
+	MPositiontaking	SMALLMONEY,
+	SPositiontaking	SMALLMONEY,
+	EPositiontaking	SMALLMONEY,
+	PlayerDiscount DECIMAL(9,8),
+	Discount DECIMAL(9,8),
+	ADiscount DECIMAL(9,8),
+	SDiscount DECIMAL(9,8),
+	WalletType TINYINT,
+	BonusID	INT,
+	CheckerId INT,
+	CheckerName	VARCHAR(30), 
+	IsCollection BIT,
+	IsDel BIT,
+	RepUpdateTime DATETIME2(7) NULL,
+ CONSTRAINT PK_TransferInfo PRIMARY KEY CLUSTERED 
+(
+	TransID ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON Transfer_Index
+) ON Transfer_Table
+
+GO
