@@ -44,7 +44,7 @@ CREATE TABLE dbo.Transfer(
 GO
  
 CREATE TABLE dbo.TransferInfo(
-	TransId BIGINT IDENTITY(333242000,1) NOT FOR REPLICATION NOT NULL,
+	TransId BIGINT NOT NULL,
 	APositiontaking	SMALLMONEY,
 	MPositiontaking	SMALLMONEY,
 	SPositiontaking	SMALLMONEY,
