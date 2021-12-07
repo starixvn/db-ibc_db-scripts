@@ -50,5 +50,5 @@ CREATE NONCLUSTERED INDEX [IX_winlostdate] ON [dbo].[Transfer]
 (
 	[WinlostDate] ASC
 )
-INCLUDE([CustId],[Bettype],[SWinlost],[MWinlost],[AWinlost],[Winlost],[SComm],[Actual_Stake],[ActualRate],[StatusId]) ON [Transfer_Index]
+INCLUDE([Bettype],[SWinlost],[MWinlost],[AWinlost],[Winlost],[SComm],[Actual_Stake],[ActualRate],Currency) ON [Transfer_Index]
 GO

@@ -40,7 +40,7 @@ CREATE NONCLUSTERED INDEX [IX_Srecommend] ON [dbo].[Transfer]
 	[Recommend] ASC,
 	[CustId] ASC
 )
-INCLUDE([WinlostDate],[Bettype],[SWinlost],[MWinlost],[AWinlost],[Winlost],[SComm],[AComm],[Comm],[PlayerComm],[Actual_Stake],[ActualRate],[StatusId]) ON [Transfer_Index]
+INCLUDE([WinlostDate],[Bettype],[SWinlost],[MWinlost],[AWinlost],[Winlost],[SComm],[AComm],[Comm],[PlayerComm],[Actual_Stake],[ActualRate]) ON [Transfer_Index]
 GO
 
 CREATE NONCLUSTERED INDEX [IX_WinlostDate] ON [dbo].[Transfer]
