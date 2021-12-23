@@ -7,17 +7,17 @@ DB: DBARC.bodb_Archive
 
 */
 
- 
+ use bodb_Archive
  
 ------------------------------EXCUTE SP----------------------------------------------
 
 TRUNCATE TABLE [sum_winloss_old_tmp]
 
-EXEC 	Task_sum_winloss_Old  
+EXEC 	bodb02.dbo.Task_sum_winloss_Old  
 		@WinlostDate = '2021-12-14',
 		@CustIds = '56475760' 
 	
-EXEC 	dbo.Task_sum_winloss_Old
+EXEC 	bodb02.dbo.Task_sum_winloss_Old
 		@WinlostDate = '2021-12-15',
 		@CustIds = '53634893,58703902,33655935,56475760'
 	
