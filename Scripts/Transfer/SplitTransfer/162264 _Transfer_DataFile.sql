@@ -1,4 +1,4 @@
-/*<info serverAlias="DBTXN-bodb02,DBACC-bodb02,DBAGE-bodb02,DBBOF-bodb02,DBBAH-bodb02,DBBAL-bodb02" step="1"></info>*/
+/*<info serverAlias="DBTXN-bodb02,DBACC-bodb02,DBAGE-bodb02,DBTP-bodb02,DBBAH-bodb02,DBBAL-bodb02" step="1"></info>*/
  
 USE [master]
 GO
