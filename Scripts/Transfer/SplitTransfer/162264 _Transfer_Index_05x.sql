@@ -1,7 +1,7 @@
-/*<info serverAlias="DBAGE-bodb02,DBBOF-bodb02,DBBAH-bodb02,DBBAL-bodb02"></info>*/
+/*<info serverAlias="DBAGE-bodb02,DBBAH-bodb02,DBBAL-bodb02"></info>*/
 /*
 	Created: 20211118@Sol
-	DB : DBAGE-bodb02,DBBOF-bodb02,DBBAH-bodb02,DBBAL-bodb02
+	DB : DBAGE-bodb02,DBBAH-bodb02,DBBAL-bodb02
 	Task: New indexes for Transfer table - [Redmine: #162264]
 */
 
