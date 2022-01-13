@@ -63,6 +63,8 @@ BEGIN
 		---insert data
 		EXEC bodb02.dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList, @IsDelete = 0
 
+		WAITFOR DELAY '00:00:00.020'
+
 	END TRY
 	BEGIN CATCH
 

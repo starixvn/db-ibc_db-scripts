@@ -53,6 +53,8 @@ BEGIN
 		---delete data
 		EXEC bodb02.dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList, @IsDelete = 1
 
+		WAITFOR DELAY '00:00:00.020'
+
 	END TRY
 	BEGIN CATCH
 

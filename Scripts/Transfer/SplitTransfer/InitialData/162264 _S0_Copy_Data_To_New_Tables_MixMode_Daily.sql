@@ -39,6 +39,7 @@ WHERE
 							,24975833
 							,10063437 -- super deposit
 							,1338545 -- super TW
+							--,10063437 -- super tw
 						)
 				)
 	AND b.winlostdate = @winlostdate

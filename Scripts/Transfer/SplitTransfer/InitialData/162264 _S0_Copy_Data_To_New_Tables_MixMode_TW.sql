@@ -31,8 +31,7 @@ WHERE
 				WHERE c.custid = b.custid
 					AND c.custid IN 
 						(
-							14228863,14191761,1338545
-							,14242618,17104991
+							24975857,10063439,10063438,10063437
 						) --- sma of tw line 
 				)
 
