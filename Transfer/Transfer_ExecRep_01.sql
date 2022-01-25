@@ -1,8 +1,7 @@
 /*<info serverAlias="DBTXN-bodb02" executers="" viewers="" isFunction="0"></info>*/
 ALTER PROCEDURE dbo.Transfer_ExecRep_01
 (
-	@TransIdList VARCHAR(MAX) = '',
-	@IsDelete BIT = 0
+	@TransIdList VARCHAR(MAX) = ''
 )
 AS
 /*
@@ -22,10 +21,10 @@ BEGIN
 	---get list transid from string to temp table
 	INSERT INTO #TransIdList(TransId)
 	SELECT f.val
-	FROM bodb02.dbo.f_SplitString(@TransIdList, ',') f
+	FROM dbo.f_SplitString(@TransIdList, ',') f
 	OPTION (MAXRECURSION 0)
 
-	IF (@IsDelete = 0)
+	----insert data
 	BEGIN
 		---insert data to temp table by batch
 		SELECT 
@@ -37,14 +36,14 @@ BEGIN
 			b.playerdiscount, b.discount, b.adiscount, b.sdiscount, b.WalletType, b.BonusID, b.oddsspread,
 			b.betid, b.oddsid, b.liveindicator
 		INTO #BettransByBatch
-		FROM bodb02.dbo.bettrans b WITH(NOLOCK)
+		FROM dbo.bettrans b WITH(NOLOCK)
 		WHERE b.transid IN (SELECT TransId FROM #TransIdList)
 
 		---set identity ON
-		SET IDENTITY_INSERT bodb02.dbo.Transfer ON
+		SET IDENTITY_INSERT dbo.Transfer ON
 
 		---insert into transfer table
-		INSERT INTO bodb02.dbo.Transfer
+		INSERT INTO dbo.Transfer
 		(
 			TransId, CustId, TransDate, WinlostDate, Bettype, Stake, Actual_Stake, Winlost, AWinlost, MWinlost,
 			SWinlost, PlayerComm, Comm, AComm, SComm, StatusId, RefNo, TransDesc, Recommend, MRecommend, 
@@ -60,10 +59,10 @@ BEGIN
 		FROM #BettransByBatch b WITH(NOLOCK)
 
 		---set identity OFF
-		SET IDENTITY_INSERT bodb02.dbo.Transfer OFF
+		SET IDENTITY_INSERT dbo.Transfer OFF
 
 		---insert into transferinfo table for bettype > 20000
-		INSERT INTO bodb02.dbo.TransferInfo
+		INSERT INTO dbo.TransferInfo
 		(
 			TransId, APositiontaking, MPositiontaking, SPositiontaking, EPositiontaking, PlayerDiscount,
 			Discount, ADiscount, SDiscount, WalletType, BonusID, Amount, CheckerId, CheckerName, IsCollection,
@@ -80,13 +79,6 @@ BEGIN
 
 		---drop table temp
 		DROP TABLE #BettransByBatch
-
-	END
-	ELSE IF (@IsDelete = 1)
-	BEGIN
-
-		---delete data in bettrans
-		DELETE FROM bodb02.dbo.bettrans WHERE transid IN (SELECT TransId FROM #TransIdList)
 
 	END
 	

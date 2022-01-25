@@ -5,10 +5,6 @@
 	Task: copy data to new table transfer and transferinfo - [Redmine: #162264]
 */
 
-USE bodb02;
-
-GO  
-
 ---get latest transid from bettrans
 DECLARE 
 	@RowInBatch INT = 2000,
@@ -62,7 +58,7 @@ BEGIN
 	BEGIN TRY
 
 		---insert data
-		EXEC bodb02.dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList, @IsDelete = 0
+		EXEC dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList
 
 		WAITFOR DELAY '00:00:00.020'
 

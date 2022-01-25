@@ -5,10 +5,6 @@
 	Task: delete data from bettrans - [Redmine: #162264]
 */
 
-USE bodb02;
-
-GO
-
 DECLARE 
 	@RowInBatch INT = 2000,
 	@Msg VARCHAR(MAX) = '',
@@ -51,7 +47,7 @@ BEGIN
 	BEGIN TRY
 
 		---delete data
-		EXEC bodb02.dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList, @IsDelete = 1
+		EXEC dbo.ExecRep_12 @TransIdList = @TransIdList
 
 		WAITFOR DELAY '00:00:00.020'
 

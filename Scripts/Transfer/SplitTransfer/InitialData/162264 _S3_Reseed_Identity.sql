@@ -5,14 +5,10 @@
 	Task: copy data to new table transfer and transferinfo - [Redmine: #162264]
 */
 
-USE bodb02;
-
-GO  
-
 ---get latest transid from bettrans
 DECLARE @MaxTransId BIGINT
 
-SELECT @MaxTransId = MAX(b.transid) FROM bodb02.dbo.bettrans b WITH(NOLOCK)
+SELECT @MaxTransId = MAX(b.transid) FROM dbo.bettrans b WITH(NOLOCK)
 
 --reseed identity
 DBCC CHECKIDENT ('Transfer', RESEED, @MaxTransId);  

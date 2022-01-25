@@ -5,10 +5,6 @@
 	Task: copy data to new table transfer and transferinfo - [Redmine: #162264]
 */
 
-USE bodb02;
-
-GO  
-
 DROP TABLE TransIdList_Temp
 
 GO
