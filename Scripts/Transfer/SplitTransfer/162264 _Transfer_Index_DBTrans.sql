@@ -15,12 +15,6 @@ CREATE NONCLUSTERED INDEX [IX_WinlostDate] ON [dbo].[Transfer]
 ) ON [Transfer_Index]
 GO
 
-CREATE NONCLUSTERED INDEX [IX_RefNo] ON [dbo].[Transfer]
-(
-	[RefNo] ASC
-) ON [Transfer_Index]
-GO
-
 CREATE NONCLUSTERED INDEX [IX_Recommend] ON [dbo].[Transfer]
 (
 	[Recommend] ASC,

@@ -50,3 +50,9 @@ CREATE NONCLUSTERED INDEX [IX_WinlostDate] ON [dbo].[Transfer]
 )
 INCLUDE([RefNo],[Username],[Winlost],[Actual_Stake],[AWinlost],[MWinlost],[SWinlost],[SComm],[ActualRate],[Creator],[SerialNo],[CheckTime],[TransDate],[TransDesc]) ON [Transfer_Index]
 GO
+
+CREATE NONCLUSTERED INDEX [IX_RepUpdateTime] ON [dbo].[Transfer]
+(
+	RepUpdateTime ASC
+) ON [Transfer_Index]
+GO
