@@ -11,7 +11,12 @@ DECLARE
 	@Msg VARCHAR(MAX) = '',
 	@TransIdList VARCHAR(MAX) = '',
 	@MaxTransId BIGINT = 0,
+	@NewMaxTransId BIGINT = 0,
 	@TotalRow INT = 0
+
+---get new max transid
+SELECT @NewMaxTransId = MAX(b.transid) FROM dbo.bettrans b WITH(NOLOCK)
+SELECT 'New Max TransId' = @NewMaxTransId
 
 ---get from script STEP 2.1
 SELECT @MaxTransId = xxxx  
@@ -26,6 +31,7 @@ SELECT b.TransID
 FROM dbo.bettrans b WITH(NOLOCK) 
 WHERE 
 	b.transid > @MaxTransId
+	AND b.transid <= @NewMaxTransId
 	AND b.bettype >= 19999
 	AND b.bettype NOT IN 
 	(
