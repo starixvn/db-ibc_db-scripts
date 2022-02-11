@@ -80,6 +80,8 @@ BEGIN
 										ELSE 1 END) AS BetCount
 					,SUM(Turnover * CASE
 										WHEN ISNULL(TicketType, 0) = 2 THEN 0
+										WHEN StatusId = 111 THEN 0
+										WHEN StatusId IN (114, 115) THEN 0.5
 										ELSE 1 END) AS Turnover
 					,SUM(CASE WHEN ISNULL(TicketType, 0) = 2 THEN 0 ELSE MemberWL END) AS MemberWL
 					,SUM(CASE WHEN ProductId = 31 THEN CommissionP ELSE 0 END) AS CommissionP
