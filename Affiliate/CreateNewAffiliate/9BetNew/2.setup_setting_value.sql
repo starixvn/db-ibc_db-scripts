@@ -170,6 +170,11 @@ UPDATE AffDomain
 SET domainname = 'go.9Bet.com'
 WHERE domainid = 1
 GO
+
+DELETE DeductionSetting WITH(ROWLOCK,  UPDLOCK)
+WHERE GroupID > 102
+GO
+
 --language Setting
 ;WITH langTmp
 AS (
