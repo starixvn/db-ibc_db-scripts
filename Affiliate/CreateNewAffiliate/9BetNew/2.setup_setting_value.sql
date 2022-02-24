@@ -333,7 +333,7 @@ GO
 AS (
 	SELECT 'Meta' AS [type]
 		,'AFF_MaximumAdjustmentIDR' AS [sname]
-		,'100000' AS [svalue]
+		,'1000000' AS [svalue]
 	
 	UNION
 	SELECT 'Meta' AS [type]
