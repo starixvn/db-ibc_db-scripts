@@ -3,7 +3,7 @@ USE [Affiliate_9Bet]
 GO
 /*
 	Created: 20220228@Malcolm
-	DB: DBAFF12BET.Affiliate_12BET
+	DB: DBAFF12BET.Affiliate_9Bet
 	Task: truncate data
 */
 
@@ -299,7 +299,8 @@ AS (
 		,'AFF_MinPlayerUUS' AS [sname]
 		,'100' AS [svalue]
 		
-	UNION 'Meta' AS [type]
+	UNION 
+	SELECT'Meta' AS [type]
 		,'AFF_MinPlayerIDR' AS [sname]
 		,'100' AS [svalue]
 )
@@ -402,12 +403,6 @@ FROM Product WITH(NOLOCK) WHERE ProductName IN ('Sportsbook', 'Virtual Sports', 
 DELETE Product WHERE ProductId NOT IN (@ProductID_Sportsbook,@ProductID_VS ,@ProductID_NG ,@ProductID_RC )
 
 
-SELECT *
-FROM SystemSettings
-
-
-select *
-from commgroup
 go
 
 
@@ -438,8 +433,5 @@ delete d
 from dbo.AdminUser d
 inner join #delAdmin a on d.custid = a.custid
 
-
-select custid, Username
-from dbo.AdminUser (nolock)
 
 drop table #delAdmin

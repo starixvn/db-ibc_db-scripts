@@ -1,8 +1,9 @@
 /*<info serverAlias="DBAFF12BET-Affiliate_9Bet" ></info>*/
+/*<info serverAlias="DBACC-bodb02" executers="bodbAdminNet" isFunction="0" isNested="0"></info>*/
 
 /*
 	Created: 20220228@Malcolm
-	DB: DBAFF12BET.Affiliate_12BET
+	DB: DBAFF12BET.Affiliate_9Bet
 	Task: add job
 */
 USE [msdb]
