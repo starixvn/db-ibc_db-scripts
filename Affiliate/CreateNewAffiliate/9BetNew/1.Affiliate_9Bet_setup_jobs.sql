@@ -1,4 +1,10 @@
 /*<info serverAlias="DBAFF12BET-Affiliate_9Bet" ></info>*/
+
+/*
+	Created: 20220228@Malcolm
+	DB: DBAFF12BET.Affiliate_12BET
+	Task: add job
+*/
 USE [msdb]
 GO
 

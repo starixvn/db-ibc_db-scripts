@@ -2,15 +2,9 @@
 USE [Affiliate_9Bet]
 GO
 /*
-- Licensee Name : 9Bet
-- Logo : link
-- Member site domain : www.9Bet.com. Template : www.bcr999.com
-- Affiliate website languages: Indonesia, Simplify Chinese (Default), English
-- Affiliate admin website languages:  Simplify Chinese (Default), English
-- Affiliate's currencies : IDR,USD,UUS
-- Affiliate admin's currencies : IDR
-- Products : Sportsbook, Number Game, Virtual Sports, Live Casino, RNG Casino
-- Player's currencies : IDR,USD,UUS
+	Created: 20220228@Malcolm
+	DB: DBAFF12BET.Affiliate_12BET
+	Task: truncate data
 */
 
 
