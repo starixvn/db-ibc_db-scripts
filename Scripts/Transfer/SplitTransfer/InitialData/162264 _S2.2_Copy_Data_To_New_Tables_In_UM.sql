@@ -66,7 +66,9 @@ BEGIN
 		---insert data
 		EXEC dbo.Transfer_ExecRep_01 @TransIdList = @TransIdList
 
-		WAITFOR DELAY '00:00:00.020'
+		DECLARE @__delayTime VARCHAR(50)
+		SELECT @__delayTime = dbo.f_DBA_GetDelayTime('Key1')
+		WAITFOR DELAY @__delayTime
 
 	END TRY
 	BEGIN CATCH
