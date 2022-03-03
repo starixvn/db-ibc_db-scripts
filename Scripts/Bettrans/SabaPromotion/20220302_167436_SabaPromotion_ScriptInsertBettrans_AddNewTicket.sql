@@ -258,7 +258,7 @@ GO
 				, @Bettype		= 17005
 				, @sporttype	= 246	
 				, @Betfrom		= 'd'
-				, @TransDesc	= 'Chinese New Year promotion'
+				, @TransDesc	= 'CNY Promotion for Licensees on Feb 01, 2022'
 				, @IP			= ''
 				, @Creator		= 10278938  ---starixIT  
 				, @Winlostdate  = '2022-02-28'
