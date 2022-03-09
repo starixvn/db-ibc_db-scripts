@@ -18,7 +18,7 @@ ADD GroupProductId TINYINT , IsActivePlayerSum BIT
 GO
 
 ALTER TABLE dbo.TierSettingHistory
-ADD GroupProductId TINYINT NOT NULL, IsActivePlayerSum BIT
+ADD GroupProductId TINYINT, IsActivePlayerSum BIT 
 GO
 
 UPDATE TierSettingHistory
@@ -38,9 +38,9 @@ ALTER COLUMN GroupProductId TINYINT NOT NULL
 GO
 
 ALTER TABLE dbo.TierSetting
-ADD CONSTRAINT PK_TierSetting PRIMARY KEY (GroupId, TierId, GroupProductId)
+ADD CONSTRAINT PK_TierSetting PRIMARY KEY (GroupId, GroupProductId, TierId)
 GO
 
 ALTER TABLE dbo.TierSettingHistory
-ADD CONSTRAINT PK_TierSettingHistory PRIMARY KEY (GroupId, MonthDate, TierId, GroupProductId)
+ADD CONSTRAINT PK_TierSettingHistory PRIMARY KEY (GroupId, MonthDate, GroupProductId, TierId)
 GO
