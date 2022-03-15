@@ -1,4 +1,4 @@
-/*<info serverAlias="DBAFFN88-Affiliate_N88"></info>*/
+/*<info serverAlias="DBAFFN88-Affiliate_N88,DBAFFN8B-Affiliate_N8B,DBAFFN8G-Affiliate_N8G"></info>*/
 /*
 	Created: 20220308@Malcolm
 	DB: DBAFFN88-Affiliate_N88
@@ -13,7 +13,7 @@ ALTER TABLE dbo.rptAffCommission
 ADD GroupProductId TINYINT 
 GO
 
-UPDATE dbo.rptAffCommission
+UPDATE dbo.rptAffCommission WITH(ROWLOCK)
 SET GroupProductId = 0
 GO
 

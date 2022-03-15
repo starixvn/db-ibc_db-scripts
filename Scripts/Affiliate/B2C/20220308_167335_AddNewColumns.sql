@@ -1,4 +1,4 @@
-/*<info serverAlias="DBAFFN88-Affiliate_N88"></info>*/
+/*<info serverAlias="DBAFFN88-Affiliate_N88,DBAFFN8B-Affiliate_N8B,DBAFFN8G-Affiliate_N8G"></info>*/
 /*
 	Created: 20220308@Malcolm
 	DB: DBAFFN88-Affiliate_N88
@@ -21,11 +21,11 @@ ALTER TABLE dbo.TierSettingHistory
 ADD GroupProductId TINYINT, IsActivePlayerSum BIT 
 GO
 
-UPDATE TierSettingHistory
+UPDATE TierSettingHistory WITH(ROWLOCK)
 SET GroupProductId = 0, IsActivePlayerSum = 1
 GO
 
-UPDATE TierSetting
+UPDATE TierSetting WITH(ROWLOCK)
 SET GroupProductId = 0, IsActivePlayerSum = 1
 GO
 
