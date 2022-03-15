@@ -69,7 +69,7 @@ DECLARE
 				,t.Balance = b.Balance 
 				,t.IP = b.IP 
 				,t.CheckTime = b.CheckTime
-				,t.SerialNo = CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN '0' ELSE b.betcheck END 
+				,t.SerialNo = CASE WHEN ISNULL(b.betid, 0) NOT IN (0, 1) AND b.betcheck <> '0' THEN '0' ELSE b.betcheck END 
 				,t.RepUpdateTime = b.RepUpdateTime
 		FROM dbo.Transfer t
 			INNER JOIN #BettransByBatch b
@@ -90,7 +90,7 @@ DECLARE
 				,t.BonusID = b.BonusID
 				,t.Amount = b.oddsspread
 				,t.CheckerId = CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN b.betid ELSE NULL END
-				,t.CheckerName = CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN b.betcheck ELSE NULL END
+				,t.CheckerName = CASE WHEN ISNULL(b.betid, 0) NOT IN (0, 1) AND b.betcheck <> '0' THEN b.betcheck ELSE NULL END
 				,t.IsCollection = b.oddsid
 				,t.IsDel = b.liveindicator
 				,t.RepUpdateTime = b.RepUpdateTime

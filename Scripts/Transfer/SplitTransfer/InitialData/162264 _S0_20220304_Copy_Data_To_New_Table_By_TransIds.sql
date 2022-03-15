@@ -49,7 +49,7 @@ DECLARE
 					b.transid, b.CustId, TransDate, WinlostDate, Bettype, Stake, Actual_Stake, Winlost, AWinlost, MWinlost,
 					SWinlost, PlayerComm, Comm, AComm, SComm, StatusId, RefNo, TransDesc, Recommend, MRecommend, 
 					SRecommend, b.Username, b.Currency, CurrencyName, ActualRate, Creator, Balance, IP, CheckTime,
-					CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN '0' ELSE b.betcheck END AS SerialNo
+					CASE WHEN ISNULL(b.betid, 0) NOT IN (0, 1) AND b.betcheck <> '0' THEN '0' ELSE b.betcheck END AS SerialNo
 					, RepUpdateTime
 				FROM #BettransByBatch b WITH(NOLOCK)
 			) AS src
@@ -82,7 +82,7 @@ DECLARE
 			t.TransferTransId, b.apositiontaking, b.mpositiontaking, b.spositiontaking, b.epositiontaking,
 			b.playerdiscount, b.discount, b.adiscount, b.sdiscount, b.WalletType, b.BonusID, b.oddsspread,
 			CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN b.betid ELSE NULL END, --custid when verify/unverify
-			CASE WHEN ISNULL(b.betid, 0) <> 0 AND b.betcheck <> '0' THEN b.betcheck ELSE NULL END, --username when verify/unverify
+			CASE WHEN ISNULL(b.betid, 0) NOT IN (0, 1) AND b.betcheck <> '0' THEN b.betcheck ELSE NULL END, --username when verify/unverify
 			b.oddsid, b.liveindicator, b.RepUpdateTime
 		FROM #BettransByBatch b
 			INNER JOIN @TransferTransId t
