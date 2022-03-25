@@ -11,6 +11,9 @@ USE bodb_Archive
 GO
  
 ALTER TABLE [dbo].[sum_winloss_old_tmp]
-ADD  leagueGroupID	SMALLINT CONSTRAINT [DF_sum_winloss_old_tmp_leagueGroupID] NOT NULL DEFAULT ((0)),
-	 ticketType		TINYINT	 CONSTRAINT [DF_sum_winloss_old_tmp_ticketType] NOT NULL DEFAULT ((0))
+ADD  leagueGroupID	SMALLINT,
+	 ticketType		TINYINT
 	
+
+ALTER TABLE  [dbo].[sum_winloss_old_tmp] ADD  CONSTRAINT [DF_sum_winloss_old_tmp_leagueGroupID] DEFAULT ((0)) FOR leagueGroupID;
+ALTER TABLE  [dbo].[sum_winloss_old_tmp] ADD  CONSTRAINT [DF_sum_winloss_old_tmp_ticketType] DEFAULT ((0)) FOR ticketType;

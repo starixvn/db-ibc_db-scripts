@@ -12,6 +12,10 @@ USE bodb_Summary
 GO
  
 ALTER TABLE [dbo].[sum_winloss_old]
-ADD  leagueGroupID	SMALLINT CONSTRAINT [DF_sum_winloss_old_leagueGroupID] NOT NULL DEFAULT ((0)),
-	 ticketType		TINYINT	 CONSTRAINT [DF_sum_winloss_old_ticketType] NOT NULL DEFAULT ((0))
+ADD  leagueGroupID	SMALLINT,
+	 ticketType		TINYINT
 	
+
+	
+ALTER TABLE  [dbo].[sum_winloss_old] ADD  CONSTRAINT [DF_sum_winloss_old_leagueGroupID] DEFAULT ((0)) FOR leagueGroupID;
+ALTER TABLE  [dbo].[sum_winloss_old] ADD  CONSTRAINT [DF_sum_winloss_old_ticketType] DEFAULT ((0)) FOR ticketType;
