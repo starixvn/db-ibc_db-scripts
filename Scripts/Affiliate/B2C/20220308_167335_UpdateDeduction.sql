@@ -8,3 +8,6 @@
 UPDATE Deductions WITH(ROWLOCK)
 	SET DeductedPercentage = 0.00
 WHERE DeductionId = 10 
+
+INSERT INTO dbo.SystemSettings (SName, SValue)
+VALUES ('GroupProduct_CutOffDate', '2022-03-31')
