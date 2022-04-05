@@ -7,17 +7,18 @@
 
 DECLARE @MonthData DATETIME = '2022-04-01'
 
+DELETE FROM dbo.TierSetting WITH(ROWLOCK, UPDLOCK) 
+
 ;WITH CTE AS (
 	SELECT GroupId, GroupProductId
 	FROM dbo.DeductionSetting WITH(NOLOCK)
 	GROUP BY GroupId, GroupProductId
 )
 INSERT INTO dbo.TierSetting (GroupId, TierId, MinAmount, MaxAmount, MinAM, MaxAM, Commission, GroupProductId, IsActivePlayerSum)
-SELECT e.GroupId, t.TierId, t.MinAmount, t.MaxAmount, t.MinAM, t.MaxAM, t.Commission, e.GroupProductId, 1
+SELECT e.GroupId, 1 AS TierId, 0 AS MinAmount, 100000000000 AS MaxAmount, 0 AS MinAM, 1000000000 AS MaxAM, 0 AS Commission, e.GroupProductId, 1
 FROM CTE e
-	INNER JOIN dbo.TierSetting t ON e.GroupId = t.GroupId
 
-DELETE FROM dbo.TierSetting WITH(ROWLOCK, UPDLOCK) WHERE ISNULL(GroupProductId, 0) = 0
+DELETE FROM dbo.TierSettingHistory WITH(ROWLOCK, UPDLOCK) WHERE MonthDate >= @MonthData
 
 ;WITH CTE AS (
 	SELECT GroupId, GroupProductId, MonthDate
@@ -26,8 +27,7 @@ DELETE FROM dbo.TierSetting WITH(ROWLOCK, UPDLOCK) WHERE ISNULL(GroupProductId, 
 	GROUP BY GroupId, GroupProductId, MonthDate
 )
 INSERT INTO dbo.TierSettingHistory(GroupId, MonthDate, TierId, MinAmount, MaxAmount, MinAM, MaxAM, Commission, GroupProductId, IsActivePlayerSum)
-SELECT e.GroupId, e.MonthDate, t.TierId, t.MinAmount, t.MaxAmount, t.MinAM, t.MaxAM, t.Commission, e.GroupProductId, 1
+SELECT e.GroupId, e.MonthDate, 1 AS TierId, 0 AS MinAmount,  100000000000 AS MaxAmount, 0 AS MinAM, 1000000000 AS MaxAM, 0 AS Commission, e.GroupProductId, 1
 FROM CTE e
-	INNER JOIN dbo.TierSettingHistory t ON e.GroupId = t.GroupId AND e.MonthDate = t.MonthDate
 
-DELETE FROM dbo.TierSettingHistory WITH(ROWLOCK, UPDLOCK) WHERE ISNULL(GroupProductId, 0) = 0 AND MonthDate >= @MonthData
+
