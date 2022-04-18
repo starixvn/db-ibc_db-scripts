@@ -1,0 +1,169 @@
+/*<info serverAlias="DBN88-bodb_N88"></info>*/
+/*
+	Creator:	20220221@Brice
+	Task:		MPA - Archive process for TpBetRecord - [Redmine: #167823]
+	Database:	DBN88.bodb_N88_Archive
+
+*/
+
+USE [master]
+GO
+/****** Object:  Database [bodb_N88_Archive]    Script Date: 2/21/2022 12:33:59 AM ******/
+CREATE DATABASE [bodb_N88_Archive]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'bodb_N88_Archive', FILENAME = N'F:\USER_DB\bodb_N88_Archive\bodb_N88_Archive.mdf' , SIZE = 16384KB , MAXSIZE = UNLIMITED, FILEGROWTH = 32768KB ), 
+ FILEGROUP [ReportData] 
+( NAME = N'ReportData', FILENAME = N'F:\USER_DB\bodb_N88_Archive\ReportData.ndf' , SIZE = 150241728KB , MAXSIZE = UNLIMITED, FILEGROWTH = 16384KB )
+ LOG ON 
+( NAME = N'bodb_N88_Archive_log', FILENAME = N'F:\USER_DB\bodb_N88_Archive\bodb_N88_Archive_Log.ldf' , SIZE = 3735552KB , MAXSIZE = 2048GB , FILEGROWTH = 32768KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [bodb_N88_Archive].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET  ENABLE_BROKER 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET RECOVERY SIMPLE 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET DELAYED_DURABILITY = DISABLED 
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET QUERY_STORE = OFF
+GO
+
+ALTER DATABASE [bodb_N88_Archive] SET  READ_WRITE 
+GO
+
+USE [bodb_N88_Archive]
+GO
+
+/****** Object:  Table [dbo].[TpBetRecord_bk]    Script Date: 2/21/2022 12:30:24 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TpBetRecord_bk](
+	[TpId] [int] NOT NULL,
+	[TransId] [varchar](50) NOT NULL,
+	[GameType] [int] NOT NULL,
+	[CustId] [varchar](45) NOT NULL,
+	[UserName] [varchar](30) NOT NULL,
+	[CurrencyId] [int] NOT NULL,
+	[SiteId] [int] NOT NULL,
+	[TpUserName] [varchar](50) NOT NULL,
+	[TransTime] [datetime] NOT NULL,
+	[SettledTime] [datetime] NOT NULL,
+	[Stake] [decimal](20, 4) NOT NULL,
+	[WinlostAmount] [decimal](20, 4) NOT NULL,
+	[SettlementType] [tinyint] NOT NULL,
+	[TicketStatus] [tinyint] NOT NULL,
+	[OriginalState] [varchar](10) NULL,
+	[TicketKey] [bigint] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[WinlostDate] [smalldatetime] NULL,
+	[ValidBet] [decimal](20, 4) NULL,
+	[BonusId] [int] NULL,
+	[Revenue] [decimal](20, 4) NULL,
+	[ProgressiveBet] [decimal](20, 4) NULL,
+	[ProgressiveWin] [decimal](20, 4) NULL,
+ CONSTRAINT [PK_TpBetRecord_bk] PRIMARY KEY NONCLUSTERED 
+(
+	[TpId] ASC,
+	[TransId] ASC,
+	[GameType] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [ReportData]
+) ON [ReportData]
+GO
+
+CREATE CLUSTERED INDEX [CIX_WinlostDate_bk] ON [dbo].[TpBetRecord_bk]
+(
+	[WinlostDate] ASC
+)
+ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [ReportData]
+GO
