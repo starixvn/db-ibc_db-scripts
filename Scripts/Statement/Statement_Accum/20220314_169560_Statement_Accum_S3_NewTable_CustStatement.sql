@@ -25,31 +25,47 @@ GO
 CREATE INDEX IX_IsFinished ON dbo.Cust_Statement (IsFinished, CreatedDate)
 GO
 
+DROP TABLE BalanceDate
+
 CREATE TABLE dbo.BalanceDate
 (
-	AccDate DATETIME
-	,IsBal BIT
-	,CONSTRAINT PK_BalanceDate PRIMARY KEY (AccDate)
+	FromDate	DATETIME
+	,ToDate		DATETIME
+	,CONSTRAINT PK_BalanceDate PRIMARY KEY (FromDate)
 )
 GO
 
 -- Initialize Data
-;WITH CTE_Date AS (
-	SELECT CONVERT(DATETIME, '2011-12-31') AS accdate
-	UNION ALL
-	SELECT DATEADD(DAY, 1, accdate)
-	FROM CTE_Date
-	WHERE accdate < '2022-04-22'
-)
-INSERT INTO dbo.BalanceDate (AccDate, IsBal)
-SELECT AccDate, CASE
-					WHEN accdate <= '2016-05-07' AND DATEPART(WEEKDAY, accdate) = 6 THEN 1 -- Saturday	- 1 to get Closing Balance
-					WHEN accdate >= '2016-05-08' AND DATEPART(WEEKDAY, accdate) = 5 THEN 1 -- Friday	- 1 to get Closing Balance
-					ELSE 0 END
-FROM CTE_Date
-OPTION (MAXRECURSION 0)
-GO
+	-- BU on Saturday
+	;WITH CTE_Date AS (
+		SELECT CONVERT(DATETIME, '2011-12-31') AS FromDate, CONVERT(DATETIME, '2012-01-06') AS ToDate
+		UNION ALL
+		SELECT DATEADD(DAY, 1, ToDate), DATEADD(DAY, 7, ToDate)
+		FROM CTE_Date
+		WHERE DATEADD(DAY, 7, ToDate) <= '2016-05-13'
+	)
+	INSERT INTO dbo.BalanceDate (FromDate, ToDate)
+	SELECT FromDate, ToDate FROM CTE_Date OPTION (MAXRECURSION 0)
+	GO
+
+	UPDATE dbo.BalanceDate WITH (ROWLOCK) SET ToDate = '2016-05-12' WHERE FromDate = '2016-05-07'
+	GO
+
+	-- BU on Friday
+	;WITH CTE_Date AS (
+		SELECT CONVERT(DATETIME, '2016-05-13') AS FromDate, CONVERT(DATETIME, '2016-05-19') AS ToDate
+		UNION ALL
+		SELECT DATEADD(DAY, 1, ToDate), DATEADD(DAY, 7, ToDate)
+		FROM CTE_Date
+		WHERE DATEADD(DAY, 7, ToDate) <= '2022-04-22'
+	)
+	INSERT INTO dbo.BalanceDate (FromDate, ToDate)
+	SELECT FromDate, ToDate FROM CTE_Date OPTION (MAXRECURSION 0)
+	GO
 
 INSERT INTO dbo.Cust_Statement (CustId, CreatedDate)
 SELECT CustId, Creatdate FROM bodb02.dbo.Customer WITH (NOLOCK) WHERE roleid BETWEEN 1 AND 4
 GO
+
+
+SELECT * FROm BalanceDate
