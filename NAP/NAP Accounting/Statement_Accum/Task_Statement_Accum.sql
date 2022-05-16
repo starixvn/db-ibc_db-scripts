@@ -70,11 +70,11 @@ BEGIN
 
 	-- Update Cust_Statement table
 	BEGIN
-		UPDATE t
-		SET t.IsDiffAmt = 1
-		FROM #Statement_Accum t
-			LEFT JOIN dbo.Statement s WITH (NOLOCK) ON t.CustId = s.custid AND t.AccDate = s.accdate AND s.transtype = 'Bal'
-		WHERE s.custid IS NULL OR t.TotalAmt <> s.totalamt
+		--UPDATE t
+		--SET t.IsDiffAmt = 1
+		--FROM #Statement_Accum t
+		--	LEFT JOIN dbo.Statement s WITH (NOLOCK) ON t.CustId = s.custid AND t.AccDate = s.accdate AND s.transtype = 'Bal'
+		--WHERE s.custid IS NULL OR t.TotalAmt <> s.totalamt
 
 		;WITH CTE_Statement_Accum AS (
 			SELECT CustId, MIN(AccDate) AS StartDate, MAX(AccDate) AS EndDate, MAX(IsDiffAmt) AS IsDiffAmt
