@@ -16,7 +16,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @InitBalDate DATETIME = '2011-12-31'
+	DECLARE @InitBalDate DATETIME = '2022-04-29'
 
 	-- Get Customer List
 	BEGIN
@@ -63,9 +63,10 @@ BEGIN
 		DELETE s WITH (ROWLOCK)
 		FROM dbo.Statement_Accum s
 			INNER JOIN #Statement_Accum t ON s.CustId = t.CustId AND s.AccDate = t.AccDate
+		WHERE s.AccDate > @InitBalDate
 
 		INSERT INTO dbo.Statement_Accum (CustId, AccDate, TotalAmt)
-		SELECT CustId, AccDate, TotalAmt FROM #Statement_Accum
+		SELECT CustId, AccDate, TotalAmt FROM #Statement_Accum WHERE AccDate > @InitBalDate
 	END
 
 	-- Update Cust_Statement table

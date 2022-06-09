@@ -25,8 +25,6 @@ GO
 CREATE INDEX IX_IsFinished ON dbo.Cust_Statement (IsFinished, CreatedDate)
 GO
 
-DROP TABLE BalanceDate
-
 CREATE TABLE dbo.BalanceDate
 (
 	FromDate	DATETIME
@@ -36,36 +34,18 @@ CREATE TABLE dbo.BalanceDate
 GO
 
 -- Initialize Data
-	-- BU on Saturday
-	;WITH CTE_Date AS (
-		SELECT CONVERT(DATETIME, '2011-12-31') AS FromDate, CONVERT(DATETIME, '2012-01-06') AS ToDate
-		UNION ALL
-		SELECT DATEADD(DAY, 1, ToDate), DATEADD(DAY, 7, ToDate)
-		FROM CTE_Date
-		WHERE DATEADD(DAY, 7, ToDate) <= '2016-05-13'
-	)
-	INSERT INTO dbo.BalanceDate (FromDate, ToDate)
-	SELECT FromDate, ToDate FROM CTE_Date OPTION (MAXRECURSION 0)
-	GO
-
-	UPDATE dbo.BalanceDate WITH (ROWLOCK) SET ToDate = '2016-05-12' WHERE FromDate = '2016-05-07'
-	GO
-
-	-- BU on Friday
-	;WITH CTE_Date AS (
-		SELECT CONVERT(DATETIME, '2016-05-13') AS FromDate, CONVERT(DATETIME, '2016-05-19') AS ToDate
-		UNION ALL
-		SELECT DATEADD(DAY, 1, ToDate), DATEADD(DAY, 7, ToDate)
-		FROM CTE_Date
-		WHERE DATEADD(DAY, 7, ToDate) <= '2022-04-22'
-	)
-	INSERT INTO dbo.BalanceDate (FromDate, ToDate)
-	SELECT FromDate, ToDate FROM CTE_Date OPTION (MAXRECURSION 0)
-	GO
-
-INSERT INTO dbo.Cust_Statement (CustId, CreatedDate)
-SELECT CustId, Creatdate FROM bodb02.dbo.Customer WITH (NOLOCK) WHERE roleid BETWEEN 1 AND 4
+;WITH CTE_Date AS (
+	SELECT CONVERT(DATETIME, '2022-04-29') AS FromDate, CONVERT(DATETIME, '2022-05-05') AS ToDate
+	UNION ALL
+	SELECT DATEADD(DAY, 1, ToDate), DATEADD(DAY, 7, ToDate)
+	FROM CTE_Date
+	WHERE DATEADD(DAY, 7, ToDate) <= '2022-05-27'
+)
+INSERT INTO dbo.BalanceDate (FromDate, ToDate)
+SELECT FromDate, ToDate FROM CTE_Date OPTION (MAXRECURSION 0)
 GO
 
-
-SELECT * FROm BalanceDate
+-- 6,670,765 rows
+INSERT INTO dbo.Cust_Statement (CustId, CreatedDate)
+SELECT CustId, '2022-04-29' FROM dbo.Statement_Accum WITH (NOLOCK) WHERE AccDate = '2022-05-06'
+GO
