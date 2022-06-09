@@ -1,0 +1,72 @@
+/*<info serverAlias="DBN88-bodb_N88"></info>*/
+/*
+	Created: 20220426@Percy
+	DB: DBN88-bodb_N88
+	Task: Update data due to API source change [RedmineID: #171516]
+		Part 5. Iconic - Goal123
+*/
+
+USE bodb_N88
+GO
+
+-- Update raw data
+UPDATE dbo.TpBetRecord WITH (ROWLOCK)
+SET Stake = CASE TransId
+				WHEN 'r-1000298014' THEN 312400
+				WHEN 'r-1004921822' THEN 373300
+				WHEN 'r-819498821' THEN 110100
+				WHEN 'r-859291758' THEN 419700
+				WHEN 'r-876989361' THEN 1091000
+				WHEN 'r-887600485' THEN 523900
+				WHEN 'r-910289604' THEN 406800
+				WHEN 'r-913124027' THEN 167400
+				WHEN 'r-920654328' THEN 40300
+				WHEN 'r-948831153' THEN 1103000
+				WHEN 'r-949698276' THEN 604800
+				WHEN 'r-957329642' THEN 239900
+				WHEN 'r-957537344' THEN 407600
+				WHEN 'r-963764455' THEN 840000
+				WHEN 'r-963815832' THEN 606000
+				WHEN 'r-973349359' THEN 77200
+				WHEN 'r-987580054' THEN 305100
+				ELSE Stake END,
+	WinlostAmount = CASE TransId
+				WHEN 'r-1000298014' THEN -87700
+				WHEN 'r-1004921822' THEN 21500
+				WHEN 'r-819498821' THEN -17800
+				WHEN 'r-859291758' THEN 57100
+				WHEN 'r-876989361' THEN 155000
+				WHEN 'r-887600485' THEN -16700
+				WHEN 'r-910289604' THEN 226500
+				WHEN 'r-913124027' THEN 23300
+				WHEN 'r-920654328' THEN -10600
+				WHEN 'r-948831153' THEN 958900
+				WHEN 'r-949698276' THEN 512500
+				WHEN 'r-957329642' THEN 64800
+				WHEN 'r-957537344' THEN -13500
+				WHEN 'r-963764455' THEN -422000
+				WHEN 'r-963815832' THEN 127000
+				WHEN 'r-973349359' THEN 2700
+				WHEN 'r-987580054' THEN -78800
+				ELSE WinlostAmount END
+WHERE TpId = 24 AND GameType = 40 -- Iconic Fish
+	AND TransId IN ('r-1000298014','r-1004921822','r-819498821','r-859291758','r-876989361','r-887600485','r-910289604','r-913124027',
+		'r-920654328','r-948831153','r-949698276','r-957329642','r-957537344','r-963764455','r-963815832','r-973349359','r-987580054')
+
+GO
+
+-- Regen sum data
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-03'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-09'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-11'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-13'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-16'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-17'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-21'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-22'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-23'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-25'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-26'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-28'
+EXEC dbo.Task_N88_SumWinloss @WinlostDate = '2022-03-29'
+GO
