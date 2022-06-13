@@ -2,6 +2,7 @@
 ALTER PROCEDURE [dbo].[Task_Statement_Accum]
 	@CustIds		VARCHAR(MAX)
 	,@StartAccDate	DATETIME
+	,@InitBalDate	DATETIME
 AS
 
 /*
@@ -15,8 +16,6 @@ AS
 
 BEGIN
 	SET NOCOUNT ON
-
-	DECLARE @InitBalDate DATETIME = '2022-04-29'
 
 	-- Get Customer List
 	BEGIN
@@ -60,9 +59,9 @@ BEGIN
 		) t
 		WHERE TotalAmt <> 0
 		
-		DELETE s WITH (ROWLOCK)
+		DELETE s -- WITH (ROWLOCK)
 		FROM dbo.Statement_Accum s
-			INNER JOIN #Statement_Accum t ON s.CustId = t.CustId AND s.AccDate = t.AccDate
+			INNER JOIN @Customer c ON s.CustId = c.CustId
 		WHERE s.AccDate > @InitBalDate
 
 		INSERT INTO dbo.Statement_Accum (CustId, AccDate, TotalAmt)

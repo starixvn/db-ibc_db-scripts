@@ -14,37 +14,35 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @FromCreatedDate DATE, @ToCreatedDate DATE
-	DECLARE @CustIds VARCHAR(MAX), @StartAccDate DATETIME
-	DECLARE @i INT, @n INT, @batch INT = 1000
+	DECLARE @CustIds VARCHAR(MAX), @StartAccDate DATETIME, @InitBalDate DATETIME
+	DECLARE @i INT, @n INT, @batch INT = 100000
 
 	WHILE 1 = 1
 	BEGIN
-		SET @FromCreatedDate = NULL
-		SELECT @FromCreatedDate = MIN(CreatedDate) FROM dbo.Cust_Statement WITH (NOLOCK) WHERE IsFinished = 0
-		SELECT @ToCreatedDate = DATEADD(DAY, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, @FromCreatedDate) + 1, 0)) -- get end of month
+		SET @StartAccDate = NULL
+		SELECT @StartAccDate = MIN(CreatedDate) FROM dbo.Cust_Statement WITH (NOLOCK) WHERE IsFinished = 0
 
-		IF @FromCreatedDate IS NULL
+		IF @StartAccDate IS NULL
 			BREAK
 
-		SELECT @StartAccDate = CASE WHEN @FromCreatedDate < '2011-12-31' THEN '2011-12-31' ELSE @FromCreatedDate END
+		SELECT @InitBalDate = @StartAccDate
 
 		-- Get cust list
-		SELECT @i = 1, @n = COUNT(1) FROM dbo.Cust_Statement WITH (NOLOCK) WHERE CreatedDate BETWEEN @FromCreatedDate AND @ToCreatedDate AND IsFinished = 0
+		SELECT @i = 1, @n = COUNT(1) FROM dbo.Cust_Statement WITH (NOLOCK) WHERE CreatedDate = @StartAccDate AND IsFinished = 0
 		SET @n = @n/@batch + 1
 		
 		WHILE 1 = 1
 		BEGIN
 			SET @CustIds = NULL
-			;WITH CTE_CustId AS (SELECT TOP (@batch) CustId FROM dbo.Cust_Statement WITH (NOLOCK) WHERE CreatedDate BETWEEN @FromCreatedDate AND @ToCreatedDate AND IsFinished = 0)
+			;WITH CTE_CustId AS (SELECT TOP (@batch) CustId FROM dbo.Cust_Statement WITH (NOLOCK) WHERE CreatedDate = @StartAccDate AND IsFinished = 0)
 			SELECT @CustIds = COALESCE(@CustIds + ',', '') + CONVERT(VARCHAR(20), CustId) FROM CTE_CustId
 
 			IF ISNULL(@CustIds, '') = ''
 				BREAK
 
-			PRINT ('Start Customers with CreatedDate = ' + CONVERT(VARCHAR(10), @ToCreatedDate, 120) + ', batch ' + CONVERT(VARCHAR(10), @i) + ' / ' + CONVERT(VARCHAR(10), @n))
+			PRINT ('Start Customers with CreatedDate = ' + CONVERT(VARCHAR(10), @StartAccDate, 120) + ', batch ' + CONVERT(VARCHAR(10), @i) + ' / ' + CONVERT(VARCHAR(10), @n))
 
-			EXEC dbo.Task_Statement_Accum @CustIds = @CustIds, @StartAccDate = @StartAccDate
+			EXEC dbo.Task_Statement_Accum @CustIds = @CustIds, @StartAccDate = @StartAccDate, @InitBalDate = @InitBalDate
 			-- this SP will update IsFinished = 1
 
 			SET @i = @i + 1
