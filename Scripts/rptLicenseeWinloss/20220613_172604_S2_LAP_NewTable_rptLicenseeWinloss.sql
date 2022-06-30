@@ -13,7 +13,8 @@ CREATE TABLE [dbo].[rptLicenseeWinloss]
 (
 	WinlostDate		SMALLDATETIME	NOT NULL,
 	CustId			INT				NOT NULL,
-	StatusID		SMALLINT		NOT NULL,
+	StatusId		SMALLINT		NOT NULL,
+	ProductId		TINYINT			NOT NULL,
 	Sporttype		SMALLINT		NOT NULL,
 	Bettype			SMALLINT		NOT NULL,
 	LiveIndicator	BIT				NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE [dbo].[rptLicenseeWinloss]
 	Betfrom			NVARCHAR(1)		NOT NULL,
 	IsBA			BIT				NOT NULL,
 	Recommend		INT				NOT NULL,
+	APositiontaking	SMALLMONEY		NOT NULL,
 	BetCount		INT				NULL,
 	Turnover		MONEY			NULL,
 	ValidBetAmount	MONEY			NULL,
@@ -29,11 +31,10 @@ CREATE TABLE [dbo].[rptLicenseeWinloss]
 	AWinlost		MONEY			NULL,
 	MWinlost		MONEY			NULL,
 	SWinlost		MONEY			NULL,
-	PlayerComm		MONEY			NULL,
-	Comm			MONEY			NULL,
+	PComm			MONEY			NULL,
 	AComm			MONEY			NULL,
+	MComm			MONEY			NULL,
 	SComm			MONEY			NULL,
-	APositiontaking	SMALLMONEY		NULL,
 	BetEffective	MONEY			NULL,
 	Amount			MONEY			NULL
 ) ON [PS_rptLicenseeWinloss_Monthly](WinlostDate);
