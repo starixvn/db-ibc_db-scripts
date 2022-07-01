@@ -31,24 +31,31 @@ BEGIN
 		CREATE TABLE #tmpData (CustId INT, AccDate DATETIME, TotalAmt MONEY, PRIMARY KEY (CustId, AccDate))
 		CREATE TABLE #Statement_Accum (CustId INT, AccDate DATETIME, TotalAmt MONEY, IsDiffAmt TINYINT DEFAULT(0), PRIMARY KEY (CustId, AccDate))
 		
+		-- Opening
 		INSERT INTO #tmpData (CustId, AccDate, TotalAmt)
-		SELECT s.CustId, CONVERT(DATE, CASE WHEN s.transtype <> 'Bal' AND s.AccDate = @InitBalDate THEN DATEADD(DAY, 1, AccDate) ELSE AccDate END), SUM(s.totalamt)
+		SELECT s.CustId, s.AccDate, s.TotalAmt
+		FROM dbo.Statement_Accum s WITH (NOLOCK)
+			INNER JOIN @Customer c ON s.CustId = c.CustId
+		WHERE s.AccDate = @StartAccDate
+
+		-- From Opening to Closing
+		INSERT INTO #tmpData (CustId, AccDate, TotalAmt)
+		SELECT s.CustId, CONVERT(DATE, s.AccDate), SUM(s.TotalAmt)
 		FROM @Customer c
 			INNER JOIN dbo.Statement s WITH (NOLOCK) ON s.custid = c.CustId
-		WHERE s.AccDate >= @StartAccDate
-			AND (s.transtype <> 'Bal' OR s.AccDate = @InitBalDate)
-		GROUP BY s.CustId, CONVERT(DATE, CASE WHEN s.transtype <> 'Bal' AND s.AccDate = @InitBalDate THEN DATEADD(DAY, 1, AccDate) ELSE AccDate END)
+		WHERE s.AccDate >= @StartAccDate AND s.transtype <> 'Bal'
+		GROUP BY s.CustId, CONVERT(DATE, s.AccDate)
 
 		INSERT INTO @State_Cust (CustId)
 		SELECT DISTINCT CustId FROM #tmpData
 
 		;WITH CTE_Statement AS (
-			SELECT c.CustId, CASE WHEN t.AccDate = @InitBalDate THEN DATEADD(DAY, -1, @InitBalDate) ELSE b.ToDate END AS ToDate, SUM(ISNULL(t.TotalAmt, 0)) AS TotalAmt
+			SELECT c.CustId, b.ToDate, SUM(ISNULL(t.TotalAmt, 0)) AS TotalAmt
 			FROM dbo.BalanceDate b WITH (NOLOCK)
 				CROSS JOIN @State_Cust c
 				LEFT JOIN #tmpData t ON t.custid = c.CustId AND t.accdate BETWEEN b.FromDate AND b.ToDate
 			WHERE b.ToDate >= @StartAccDate
-			GROUP BY c.CustId, CASE WHEN t.AccDate = @InitBalDate THEN DATEADD(DAY, -1, @InitBalDate) ELSE b.ToDate END
+			GROUP BY c.CustId, b.ToDate
 		)
 		INSERT INTO #Statement_Accum (CustId, AccDate, TotalAmt)
 		SELECT CustId, AccDate, TotalAmt
