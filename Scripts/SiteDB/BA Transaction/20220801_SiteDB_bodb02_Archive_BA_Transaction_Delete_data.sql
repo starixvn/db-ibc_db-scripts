@@ -4,12 +4,12 @@ GO
 /*
 	Created: 20220801@Evan
 	DB: DBSID
-	Task: Add job [bodb02: Archive BA Transaction - Delete data] on SiteDB [RedmineID: #175297]
+	Task: Add job [SiteDB bodb02: Archive BA Transaction - Delete data] on SiteDB [RedmineID: #175297]
 */
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 8/1/2022 11:56:19 AM ******/
+
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -18,7 +18,7 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'bodb02: Archive BA Transaction - Delete data', 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Archive BA Transaction - Delete data', 
 		@enabled=0, 
 		@notify_level_eventlog=0, 
 		@notify_level_email=0, 
@@ -30,7 +30,6 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'bodb02: Archive BA Transacti
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
-/****** Object:  Step [Archive BA Transaction - Delete data]    Script Date: 8/1/2022 11:56:19 AM ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Archive BA Transaction - Correct and Delete data', 
 		@step_id=5, 
 		@cmdexec_success_code=0, 

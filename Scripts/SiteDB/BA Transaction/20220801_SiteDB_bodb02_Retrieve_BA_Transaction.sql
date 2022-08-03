@@ -4,13 +4,13 @@ GO
 /*
 	Created: 20220801@Evan
 	DB: DBSID
-	Task: Add job [bodb02: Retrieve BA Transaction] on SiteDB [RedmineID: #175297]
+	Task: Add job [SiteDB bodb02: Retrieve BA Transaction] on SiteDB [RedmineID: #175297]
 */
 
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 7/29/2022 11:33:54 AM ******/
+
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -19,7 +19,7 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'bodb02: Retrieve BA Transaction', 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Retrieve BA Transaction', 
 		@enabled=0, 
 		@notify_level_eventlog=0, 
 		@notify_level_email=0, 
@@ -28,9 +28,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'bodb02: Retrieve BA Transact
 		@delete_level=0, 
 		@description=N'No description available.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'dbateam', @job_id = @jobId OUTPUT
+		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Call Jobs: Insert BA Transaction]    Script Date: 7/29/2022 11:33:54 AM ******/
+
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Jobs: Insert BA Transaction', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 

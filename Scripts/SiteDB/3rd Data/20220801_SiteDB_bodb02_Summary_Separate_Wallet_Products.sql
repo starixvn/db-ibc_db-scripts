@@ -4,12 +4,13 @@ GO
 /*
 	Created: 20220801@Evan
 	DB: DBSID
-	Task: Add job [bodb02: Verify BA Tickets] on SiteDB [RedmineID: #175297]
+	Task: Add job [SiteDB bodb02: Summary Separate Wallet Products] on SiteDB [RedmineID: #175297]
 */
+
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 7/29/2022 11:34:54 AM ******/
+	
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -18,20 +19,36 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'bodb02: Verify BA Tickets', 
-		@enabled=0, 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Summary Separate Wallet Products', 
+		@enabled=1, 
 		@notify_level_eventlog=0, 
-		@notify_level_email=0, 
+		@notify_level_email=2, 
 		@notify_level_netsend=0, 
 		@notify_level_page=0, 
 		@delete_level=0, 
 		@description=N'No description available.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'dbateam', @job_id = @jobId OUTPUT
+		@owner_login_name=N'sa', 
+		@notify_email_operator_name=N'DBAAdmin', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Call Jobs: Check date]    Script Date: 7/29/2022 11:34:54 AM ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Jobs: Check date', 
+/****** Object:  Step [Daily summary odds addjustment in bettrans]    Script Date: 8/1/2022 5:08:40 PM ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Daily summary odds addjustment in bettrans', 
 		@step_id=1, 
+		@cmdexec_success_code=0, 
+		@on_success_action=3, 
+		@on_success_step_id=0, 
+		@on_fail_action=2, 
+		@on_fail_step_id=0, 
+		@retry_attempts=0, 
+		@retry_interval=0, 
+		@os_run_priority=0, @subsystem=N'TSQL', 
+		@command=N'EXEC dbo.SiteDB_Task_Dep_DailySum_OddsAdjustment_Job', 
+		@database_name=N'bodb02', 
+		@flags=0
+IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
+/****** Object:  Step [Generate data]    Script Date: 8/1/2022 5:08:40 PM ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Generate data', 
+		@step_id=2, 
 		@cmdexec_success_code=0, 
 		@on_success_action=1, 
 		@on_success_step_id=0, 
@@ -40,27 +57,27 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Job
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'
---Run Jobs BA Tickets Checking
-EXEC [SiteDB_Task_BATransaction_CheckAndCorrect]', 
+		@command=N'DECLARE @WinlostDate SMALLDATETIME
+SELECT  @WinlostDate = CONVERT(VARCHAR(10), DATEADD(DAY, -1, GETDATE()), 112)
+EXEC dbo.SiteDB_Task_DEP_SeparatedWallet_GenerateData @WinlostDate = @WinlostDate', 
 		@database_name=N'bodb02', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'15 mins', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Run daily', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
-		@freq_subday_type=4, 
-		@freq_subday_interval=15, 
+		@freq_subday_type=1, 
+		@freq_subday_interval=0, 
 		@freq_relative_interval=0, 
 		@freq_recurrence_factor=0, 
-		@active_start_date=20130104, 
+		@active_start_date=20150605, 
 		@active_end_date=99991231, 
-		@active_start_time=0, 
+		@active_start_time=1500, 
 		@active_end_time=235959, 
-		@schedule_uid=N'08c85c3e-1af2-4e67-89df-7c8a755059a4'
+		@schedule_uid=N'1c4879de-579c-4ac5-9fe1-b93ce7a0febd'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -70,5 +87,4 @@ QuitWithRollback:
     IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
 EndSave:
 GO
-
 
