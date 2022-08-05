@@ -29,7 +29,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Verify BA Tic
 		@category_name=N'[Uncategorized (Local)]', 
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Call Jobs: Check date]    Script Date: 7/29/2022 11:34:54 AM ******/
+
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Jobs: Check date', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
