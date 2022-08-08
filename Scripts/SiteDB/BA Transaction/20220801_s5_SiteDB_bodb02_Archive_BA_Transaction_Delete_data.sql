@@ -4,7 +4,7 @@ GO
 /*
 	Created: 20220801@Evan
 	DB: DBSID
-	Task: Add job [SiteDB bodb02: Archive BA Transaction - Delete data] on SiteDB [RedmineID: #175297]
+	Task: Add job [SiteDB bodb02: Remove data BA Transaction after MoveBets day] on SiteDB [RedmineID: #175297]
 */
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
@@ -18,7 +18,7 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Archive BA Transaction - Delete data', 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Remove data BA Transaction after MoveBets day', 
 		@enabled=0, 
 		@notify_level_eventlog=0, 
 		@notify_level_email=0, 
@@ -30,17 +30,17 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Archive BA Tr
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Archive BA Transaction - Correct and Delete data', 
-		@step_id=5, 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Remove data BA Transaction after MoveBets day', 
+		@step_id=1, 
 		@cmdexec_success_code=0, 
-		@on_success_action=3, 
+		@on_success_action=1, 
 		@on_success_step_id=0, 
 		@on_fail_action=2, 
 		@on_fail_step_id=0, 
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'EXEC dbo.SiteDB_Task_LicenseeBATransaction_Archive_Delete', 
+		@command=N'EXEC dbo.SiteDB_Task_Archive_BATransaction_Del', 
 		@database_name=N'bodb02', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback

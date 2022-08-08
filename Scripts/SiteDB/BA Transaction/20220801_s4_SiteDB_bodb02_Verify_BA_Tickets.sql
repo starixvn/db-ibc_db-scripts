@@ -30,7 +30,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'SiteDB bodb02: Verify BA Tic
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Jobs: Check date', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Check and correct BA Transaction', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
 		@on_success_action=1, 
@@ -41,7 +41,6 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Call Job
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'
---Run Jobs BA Tickets Checking
 EXEC [SiteDB_Task_BATransaction_CheckAndCorrect]', 
 		@database_name=N'bodb02', 
 		@flags=0
