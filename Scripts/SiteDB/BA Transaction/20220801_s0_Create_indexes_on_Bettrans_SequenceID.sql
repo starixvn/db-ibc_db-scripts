@@ -1,0 +1,15 @@
+/*<info serverAlias="DBEXT-bodb02,DBACC-bodb02,DBBOF-bodb02,DBBAL-bodb02"></info>*/
+USE [bodb02]
+GO
+/*
+	Created: 20220819@Evan
+	DB: DBEXT-bodb02,DBACC-bodb02,DBBOF-bodb02,DBBAL-bodb02
+	Task: Create indexes on Bettrans.SequenceID at DB052/DB053/DB054/DB055/DB061/DB062/DBBAL [RedmineID: #175297]
+*/
+
+CREATE NONCLUSTERED INDEX [IX_sequenceid] ON [dbo].[bettrans]
+(
+  [SequenceID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [Bettrans_index3]
+
+GO
