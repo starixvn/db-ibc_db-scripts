@@ -14,5 +14,6 @@ GO
 GRANT SELECT ON ExchangeDailyOanda TO bodbLicenseeNet
 GRANT SELECT ON CustInfo TO bodbLicenseeNet
 GRANT SELECT ON Customer TO bodbLicenseeNet
+GRANT SELECT ON exchange TO bodbLicenseeNet
 
 GO
