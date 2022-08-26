@@ -1,0 +1,169 @@
+﻿/*<info serverAlias="DBCUST-bodb_Licensee"></info>*/
+/*
+	Created: 20220811@Danny
+	DB: DBCUST-bodb_Licensee
+	Task: Insert deposit licensee charge rate for MaxGame
+	https://nexdev.net/issues/176504
+*/
+USE bodb_Licensee
+GO
+
+CREATE TABLE #PartyList (PartyId INT, PartyName VARCHAR(50), SiteId INT, SiteName VARCHAR(50), ParentId INT, ChargeRate MONEY, InvoiceLanguage VARCHAR(7))
+INSERT INTO #PartyList (SiteName, ChargeRate)
+SELECT '9w', 0.035 UNION ALL
+SELECT 'N88', 0.035 UNION ALL
+SELECT '368Cash', 0.07 UNION ALL
+SELECT '383sport', 0.07 UNION ALL
+SELECT '3ge888', 0.07 UNION ALL
+SELECT '3Star88', 0.07 UNION ALL
+SELECT '5ATech', 0.07 UNION ALL
+SELECT '633esports', 0.07 UNION ALL
+SELECT '88Macao', 0.07 UNION ALL
+SELECT '9Club', 0.07 UNION ALL
+SELECT 'A1game', 0.07 UNION ALL
+SELECT 'ab6688', 0.07 UNION ALL
+SELECT 'ABcasino', 0.07 UNION ALL
+SELECT 'AE88', 0.07 UNION ALL
+SELECT 'AEUG', 0.07 UNION ALL
+SELECT 'AG', 0.07 UNION ALL
+SELECT 'Aladdin99', 0.07 UNION ALL
+SELECT 'Alog', 0.07 UNION ALL
+SELECT 'ALPHA88', 0.07 UNION ALL
+SELECT 'Alphalota', 0.07 UNION ALL
+SELECT 'AnvoFH', 0.07 UNION ALL
+SELECT 'B24VN', 0.07 UNION ALL
+SELECT 'Barcelo9', 0.07 UNION ALL
+SELECT 'beplay', 0.07 UNION ALL
+SELECT 'BigGaming', 0.07 UNION ALL
+SELECT 'bmwbet', 0.07 UNION ALL
+SELECT 'Bobo88', 0.07 UNION ALL
+SELECT 'Boma365', 0.07 UNION ALL
+SELECT 'BPLE', 0.07 UNION ALL
+SELECT 'CGame', 0.07 UNION ALL
+SELECT 'Datang001', 0.07 UNION ALL
+SELECT 'Dawoo', 0.07 UNION ALL
+SELECT 'Dawooxin', 0.07 UNION ALL
+SELECT 'DEWA', 0.07 UNION ALL
+SELECT 'dj888', 0.07 UNION ALL
+SELECT 'e8casino', 0.07 UNION ALL
+SELECT 'ECLBET', 0.07 UNION ALL
+SELECT 'erhaozhan', 0.07 UNION ALL
+SELECT 'FB88', 0.07 UNION ALL
+SELECT 'GAMEBee', 0.07 UNION ALL
+SELECT 'Gaobet', 0.07 UNION ALL
+SELECT 'GESAB', 0.07 UNION ALL
+SELECT 'GMASTER', 0.07 UNION ALL
+SELECT 'GPIgame', 0.07 UNION ALL
+SELECT 'HBPT', 0.07 UNION ALL
+SELECT 'Hecbet', 0.07 UNION ALL
+SELECT 'Hejiyongle', 0.07 UNION ALL
+SELECT 'HIDZ', 0.07 UNION ALL
+SELECT 'HL8', 0.07 UNION ALL
+SELECT 'HonorW', 0.07 UNION ALL
+SELECT 'iBET', 0.07 UNION ALL
+SELECT 'IBO', 0.07 UNION ALL
+SELECT 'ID88', 0.07 UNION ALL
+SELECT 'IGPTech', 0.07 UNION ALL
+SELECT 'infini88', 0.07 UNION ALL
+SELECT 'INSERTGAME', 0.07 UNION ALL
+SELECT 'JIBET', 0.07 UNION ALL
+SELECT 'Jiuyou', 0.07 UNION ALL
+SELECT 'JJBGAME', 0.07 UNION ALL
+SELECT 'Leng4D', 0.07 UNION ALL
+SELECT 'LIGAWLHKB', 0.07 UNION ALL
+SELECT 'LLgaming', 0.07 UNION ALL
+SELECT 'loc', 0.07 UNION ALL
+SELECT 'Lode88', 0.07 UNION ALL
+SELECT 'MANBETX', 0.07 UNION ALL
+SELECT 'ManCity', 0.07 UNION ALL
+SELECT 'Mancity2', 0.07 UNION ALL
+SELECT 'MAX88', 0.07 UNION ALL
+SELECT 'Mayayule', 0.07 UNION ALL
+SELECT 'MICL', 0.07 UNION ALL
+SELECT 'Million', 0.07 UNION ALL
+SELECT 'MTech', 0.07 UNION ALL
+SELECT 'MYGAME', 0.07 UNION ALL
+SELECT 'N8BK', 0.07 UNION ALL
+SELECT 'Ole777', 0.07 UNION ALL
+SELECT 'OXbet', 0.07 UNION ALL
+SELECT 'PKbet', 0.07 UNION ALL
+SELECT 'Rio66', 0.07 UNION ALL
+SELECT 'ROYAL88', 0.07 UNION ALL
+SELECT 'SEAGaming', 0.07 UNION ALL
+SELECT 'Sin88', 0.07 UNION ALL
+SELECT 'Sky88', 0.07 UNION ALL
+SELECT 'Soon88', 0.07 UNION ALL
+SELECT 'starsoccer', 0.07 UNION ALL
+SELECT 'Sunwin', 0.07 UNION ALL
+SELECT 'TaoCai', 0.07 UNION ALL
+SELECT 'TCbet', 0.07 UNION ALL
+SELECT 'Titanbet', 0.07 UNION ALL
+SELECT 'TLC', 0.07 UNION ALL
+SELECT 'Towin', 0.07 UNION ALL
+SELECT 'Tripleone', 0.07 UNION ALL
+SELECT 'TSEnter', 0.07 UNION ALL
+SELECT 'TSLA', 0.07 UNION ALL
+SELECT 'txwl002', 0.07 UNION ALL
+SELECT 'Uwoniwin', 0.07 UNION ALL
+SELECT 'VCBA', 0.07 UNION ALL
+SELECT 'VKGAME', 0.07 UNION ALL
+SELECT 'VN88', 0.07 UNION ALL
+SELECT 'W88', 0.07 UNION ALL
+SELECT 'win365', 0.07 UNION ALL
+SELECT 'WINCLUB88', 0.07 UNION ALL
+SELECT 'WINHX1', 0.07 UNION ALL
+SELECT 'WKCUR', 0.07 UNION ALL
+SELECT 'WKPHIL', 0.07 UNION ALL
+SELECT 'wmcasino', 0.07 UNION ALL
+SELECT 'WRServices', 0.07 UNION ALL
+SELECT 'Xinbo', 0.07 UNION ALL
+SELECT 'Yibo', 0.07 UNION ALL
+SELECT 'Yintai', 0.07 UNION ALL
+SELECT 'YongBao', 0.07 UNION ALL
+SELECT 'YSYBO688', 0.07 UNION ALL
+SELECT 'YYHbet', 0.07 UNION ALL
+SELECT 'Zowin', 0.07 UNION ALL
+SELECT 'zt828', 0.07 UNION ALL
+SELECT 'ZTech', 0.07
+
+UPDATE pl
+SET pl.PartyId = p.PartyID, pl.PartyName = p.PartyName, pl.SiteId = l.LicenseeID, pl.ParentId = c.ToParty, pl.InvoiceLanguage = pd.InvoiceLanguage
+FROM #PartyList pl
+	INNER JOIN dbo.Licensees l WITH (NOLOCK) ON pl.SiteName = l.LicenseeName
+	INNER JOIN dbo.OAS_Party p WITH (NOLOCK) ON l.LicenseeID = p.OldRefID
+	INNER JOIN dbo.OAS_PartyDetail pd WITH (NOLOCK) ON p.PartyID = pd.PartyID
+	INNER JOIN dbo.OAS_ChargeInfo c WITH (NOLOCK) ON p.PartyID = c.FromParty AND c.ProductID = 0 -- base on SB
+WHERE c.ToParty IN (1, 9, 11, 98) AND c.ToDate >= '2022-08-09'
+
+--SELECT * FROM #PartyList WHERE PartyId IS NULL OR ParentId IS NULL
+
+-- SELECT * FROM dbo.Product3rd WITH (NOLOCK) WHERE ProductName = 'MaxGame' -- ProductId = 60
+INSERT INTO dbo.OAS_ChargeInfo (ProductID,FromParty,ToParty,ParentChargeID,Rate,ChargeType,FromDate,ToDate,Remark,FirstOfBilling,BasisOfBilling)
+SELECT 60 AS ProductID,PartyId AS FromParty,ParentId AS ToParty,0 AS ParentChargeID,ChargeRate AS Rate,1 AS ChargeType,'2022-08-09' AS FromDate,'2050-01-01' AS ToDate,
+	'created date: 8/09/2022' AS Remark,'2022-08-09' AS FirstOfBilling
+	,CASE InvoiceLanguage
+		WHEN 'en-US' THEN CONVERT(VARCHAR(5), CONVERT(FLOAT, ChargeRate * 100)) + '% of Gross Win
+Launched on 08 Sep 2022'
+		WHEN 'zh-CN' THEN N'授权费为: ' + CONVERT(VARCHAR(5), CONVERT(FLOAT, ChargeRate * 100)) + N'% 
+上线日期: 2022年08月09号'
+		ELSE '' END AS BasisOfBilling
+FROM #PartyList WHERE PartyId IS NOT NULL AND  ParentId IS NOT NULL
+
+INSERT INTO dbo.LA_ChargeInfo_SystemMapping (ChargeID,SystemID)
+SELECT c.ChargeID,2 AS SystemID -- LA
+FROM dbo.OAS_ChargeInfo c WITH (NOLOCK)
+	LEFT JOIN dbo.LA_ChargeInfo_SystemMapping s WITH (NOLOCK) ON c.ChargeID = s.ChargeID AND s.SystemID = 2 -- LA
+WHERE c.ProductID = 60 AND c.ToParty IN (1, 9, 11, 98) -- Deposit Licensees
+	AND s.ChargeID IS NULL
+
+INSERT INTO dbo.LA_InvoiceSetting (FromPartyId,ToPartyId,ProductId,InvTypeId,InvTempId,BankId,ActiveAddress)
+SELECT s.FromPartyId,s.ToPartyId,60 AS ProductId,s.InvTypeId,s.InvTempId,s.BankId,s.ActiveAddress
+FROM #PartyList pl
+	INNER JOIN dbo.LA_InvoiceSetting s WITH (NOLOCK) ON pl.PartyId = s.FromPartyId AND s.ProductId = 0 -- SB
+	LEFT JOIN dbo.LA_InvoiceSetting ls WITH (NOLOCK) ON s.FromPartyId = ls.FromPartyId AND s.ToPartyId = ls.ToPartyId AND ls.ProductId = 60
+WHERE s.ActiveAddress = 1
+	AND ls.FromPartyId IS NULL
+	AND s.ToPartyId IN (112, 125) -- Boping & Zelianta -- SELECT * FROM dbo.LA_BillerInfo WITH (NOLOCK)
+	AND pl.PartyId IS NOT NULL AND  pl.ParentId IS NOT NULL
+
+DROP TABLE #PartyList
