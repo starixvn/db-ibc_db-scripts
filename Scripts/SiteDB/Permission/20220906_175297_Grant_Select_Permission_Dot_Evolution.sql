@@ -1,7 +1,7 @@
-/*<info serverAlias="DBTXN-CustDB,DBTXN-LogDB"></info>*/
+/*<info serverAlias="DBTXN-CustDB,DBTXN-LogDB,DBSIG-CustDB,DBSIG-LogDB"></info>*/
 /*
 	Created: 20220906@Sol
-	DB: DBTXN-CustDB,DBTXN-LogDB
+	DB: DBTXN-CustDB,DBTXN-LogDB,DBSIG-CustDB,DBSIG-LogDB
 	Task: grant permisson to Dot_Evolution - [RedmineID: #175297]
 */
 
