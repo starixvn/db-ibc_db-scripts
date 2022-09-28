@@ -2,13 +2,13 @@
 USE bodb02
 GO
 /*
-	Created: 20220801@Evan
-	DB: DBSID-bodb02
+	Created: 20220928@Evan
+	DB: DBSID-bodb02 (run SiteDB2 only)
 	Task: Initialize data for LICSettings,LicenseeBATransaction_active for SiteDB2 [RedmineID: #178145]
 */
 
 
--- LicenseeBATransaction_active : Migrate data
+-- Step 1: Migrate data of BATransaction table 
 
 DECLARE @SiteDBGroupID SMALLINT;
 SELECT @SiteDBGroupID = dbo.f_Get_SiteDBGroupID()  -- 2
@@ -31,7 +31,7 @@ WHERE	d.SiteDBGroupID = @SiteDBGroupID
 			'OCMSS','ANGbet','De365','TGXICV','mbxusdt','Winsplay','GoldenF2','ZhiFeng019','GmasterS','DTGJZ','UGaming','ZhiFeng173','AEUGSW','0sServices','YSYBO688CV','TXJT','OBGM')
 GO
 
--- LICSettings: Update Min - Max TransId flag for BA Transaction Job
+-- Step 2: Update Min - Max TransId flag for BA Transaction Job
 
 DECLARE @SiteDBGroupID SMALLINT;
 SELECT @SiteDBGroupID = dbo.f_Get_SiteDBGroupID()
