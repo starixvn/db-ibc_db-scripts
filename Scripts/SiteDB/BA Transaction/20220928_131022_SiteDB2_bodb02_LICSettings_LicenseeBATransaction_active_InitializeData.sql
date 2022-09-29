@@ -3,7 +3,7 @@ USE bodb02
 GO
 /*
 	Created: 20220928@Evan
-	DB: DBSID-bodb02 (run SiteDB2 only)
+	DB: DBSID-bodb02 
 	Task: Initialize data for LICSettings,LicenseeBATransaction_active for SiteDB2 [RedmineID: #178145]
 */
 
@@ -18,7 +18,7 @@ SELECT l.TransID,l.transdate,l.custid,l.recommend,l.srecommend
 FROM DBLIC.bodb_Licensee.dbo.LicenseeBATransaction_active l WITH(NOLOCK)
 	INNER JOIN CustDB.dbo.Dep_CustSuper d WITH(NOLOCK) ON d.custid = l.srecommend
 WHERE	d.SiteDBGroupID = @SiteDBGroupID  
-		AND site IN ('9Club','X2Dynamic','OneSports')
+		AND site IN ('9Club','X2Dynamic','OneSports','Macaubet')
 GO
 
 -- Step 2: Update Min - Max TransId flag for BA Transaction Job
@@ -36,4 +36,4 @@ WHERE	vname = 'BA_transid'
 SELECT	@TransID = TransId FROM DBCTG.bodb02.dbo.bettrans WITH(NOLOCK) WHERE sequenceid = @VValue_SequenceID
 SELECT	@VValue_TransID = MAX(TransId) FROM bettrans WITH(NOLOCK) WHERE TransId <= @TransID AND SiteDBGroupID = @SiteDBGroupID
 
-UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = @VValue_TransID, VValue = @VValue_TransID WHERE vname = 'BA_transid'
+UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = ISNULL(@VValue_TransID,0), VValue = ISNULL(@VValue_TransID,0) WHERE vname = 'BA_transid'

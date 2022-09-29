@@ -4,7 +4,7 @@ GO
 /*
 	Created: 20220928@Evan
 	DB: DBSID-bodb02 (run SiteDB2 only)
-	Task: Initialize data for LICSettings,LicenseeBATransaction_active for SiteDB2 [RedmineID: #178145]
+	Task: Initialize data for LICSettings,LicenseeBATransaction_active for SiteDB2 (214 Lics) [RedmineID: #178145]
 */
 
 
@@ -46,4 +46,4 @@ WHERE	vname = 'BA_transid'
 SELECT	@TransID = TransId FROM DBCTG.bodb02.dbo.bettrans WITH(NOLOCK) WHERE sequenceid = @VValue2_SequenceID
 SELECT	@VValue2_TransID = MAX(TransId) FROM bettrans WITH(NOLOCK) WHERE TransId <= @TransID AND SiteDBGroupID = @SiteDBGroupID
 
-UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = @VValue2_TransID WHERE vname = 'BA_transid'
+UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = ISNULL(@VValue2_TransID,0) WHERE vname = 'BA_transid'

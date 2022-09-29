@@ -34,4 +34,4 @@ WHERE	vname = 'BA_transid'
 SELECT	@TransID = TransId FROM DBCTG.bodb02.dbo.bettrans WITH(NOLOCK) WHERE sequenceid = @VValue_SequenceID
 SELECT	@VValue_TransID = MAX(TransId) FROM bettrans WITH(NOLOCK) WHERE TransId <= @TransID AND SiteDBGroupID = @SiteDBGroupID
 
-UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = @VValue_TransID, VValue = @VValue_TransID WHERE vname = 'BA_transid'
+UPDATE dbo.LICSettings WITH(ROWLOCK) SET VValue2 = ISNULL(@VValue_TransID,0), VValue = ISNULL(@VValue_TransID,0) WHERE vname = 'BA_transid'
