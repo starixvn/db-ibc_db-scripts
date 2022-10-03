@@ -96,6 +96,7 @@ BEGIN
 			SELECT QueueID
 			FROM @runningQueueId
 			)
+			AND NOT EXISTS (SELECT 1 FROM bodb_PlaytechCS.dbo.Product3rd_ImportQueue q_db052 WITH(NOLOCK) WHERE q.QueueID = q_db052.QueueID AND q_db052.ProductID = 31)
 END
 
 DROP TABLE #QueueIdList
