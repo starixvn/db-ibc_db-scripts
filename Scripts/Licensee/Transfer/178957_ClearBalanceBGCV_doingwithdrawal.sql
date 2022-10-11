@@ -31,10 +31,7 @@ SELECT @Max = MAX(ID) FROM #Balance
 
 DECLARE @p5 bigint 
 , @p6 int 
-, @p7 nvarchar(200) 
-, @p11 bigint 
-, @p13 bigint 
-, @p14 datetime
+, @p7 nvarchar(200)  
 , @amount MONEY
 , @custid INT
 , @bal_custid INT
@@ -45,13 +42,18 @@ BEGIN
 	FROM	#Balance
 	WHERE	ID = @i
 
+	SELECT @p5 = 0, @p6 = 0, @p7 = '' 
+
 
 	EXEC Dot_Dep_BettransInsTransaction_V2_cust @amount = @amount, @custid = @custid, @bal_custid = @bal_custid,
 	@transdesc=N'Reset balance for reopening',
 	@transid=@p5 output,@ErrCode=@p6 output,@ErrMsg=@p7 output
-	,@bettype=22002,@IsCharge=0,@ip=default,@RefNo=@p11 output,@ExchangeRate=default,@bal_transid=@p13 output,@transdate=@p14 output,@BetCheck=default,@BonusID=default
+	,@bettype=22002,@IsCharge=0
+	---,@ip=default,@RefNo=@p11 output,@ExchangeRate=default,@bal_transid=@p13 output,@transdate=@p14 output,@BetCheck=default,@BonusID=default
 	
-	SELECT @p5, @p6, @p7, @p11, @p13, @p14
+	SELECT @p5, @p6, @p7 
+
+
 
 	SELECT @i = @i + 1
 END
