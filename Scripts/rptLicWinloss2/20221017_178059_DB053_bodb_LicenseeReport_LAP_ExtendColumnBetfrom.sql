@@ -9,9 +9,10 @@ USE bodb_LicenseeReport
 GO
 
 ALTER TABLE rptLicWinloss2
-ALTER COLUMN betfrom	nvarchar(3);
+ALTER COLUMN betfrom	nvarchar(3) WITH (ONLINE=ON);
 GO
 
 ALTER TABLE rptLicWinlossGMT
-ALTER COLUMN betfrom	nvarchar(3);
+ALTER COLUMN betfrom	nvarchar(3) WITH (ONLINE=ON);
 GO
+    

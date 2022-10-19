@@ -9,5 +9,5 @@ USE bodb_report
 GO
 
 ALTER TABLE rptLicWinlossGMTTmp
-ALTER COLUMN betfrom	nvarchar(3);
+ALTER COLUMN betfrom	nvarchar(3) WITH (ONLINE=ON);
 GO
