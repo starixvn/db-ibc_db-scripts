@@ -12,7 +12,7 @@ DECLARE @ExChangeCryto TABLE (ExchangeId int,Currency nvarchar(50), USDT float)
 
 DECLARE @MinDate SMALLDATETIME;
 DECLARE @Today DATE =  GETDATE();
-SELECT @MinDate = DATEADD(DAY, -1, @Today)
+SELECT @MinDate = CONVERT(SMALLDATETIME,@Today)
 
 INSERT INTO @ExChangeCryto(Currency,USDT)
 VALUES  ('GMT',	0.09725),
@@ -46,15 +46,15 @@ VALUES  ('GMT',	0.09725),
 		('SNAP',	0.001532),
 		('GENE',	2.47),
 		('HERO',	0.004721),
-		('BITE',	4.132),
-		('NSDX',	0.02004),
+		--('BITE',	4.132),
+		--('NSDX',	0.02004),
 		('XT',	3.32),
-		('KSW',	0.04035),
+		--('KSW',	0.04035),
 		('OKT',	14.4),
 		('GS',	0.01246),
 		('JEWEL',	0.1537),
-		('WLBO',	0.005761),
-		('SOD',	7.12),
+		--('WLBO',	0.005761),
+		--('SOD',	7.12),
 		('GGM',	0.009527),
 		('CHZ',	0.1813),
 		('TON',	1.48),
