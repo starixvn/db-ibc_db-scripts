@@ -5,7 +5,7 @@ GO
 
 /*
 	Create : 20221117@Sophia
-	TZask : Regen data for LAP system [Redmine: #180613] 
+	Task : Regen data for LAP system [Redmine: #180613] 
 	DB: DBLIC.bodb_LicenseeReport
 */
  
