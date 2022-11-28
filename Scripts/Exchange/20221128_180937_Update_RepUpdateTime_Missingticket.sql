@@ -1,7 +1,7 @@
-/*<info serverAlias="DBSID-bodb02"></info>*/
+/*<info serverAlias="DBGRP02L-bodb02"></info>*/
 /*
 	Created: 20221128@Evan
-	DB: DBSID-bodb02
+	DB: DBGRP02L-bodb02
 	Task : Tickets of bettype=999 are not replicated from SiteDB to CentralDB (SitegroupId = 2)
 	https://nexdev.net/issues/180937
 */
