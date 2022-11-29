@@ -5,6 +5,8 @@
 	Task: Correct rptStatement historical data
 	Redmine: https://nexdev.net/issues/169560
 */
+use bodb_Report;
+GO
 --- 259 affected rows
 with cte 
 AS (

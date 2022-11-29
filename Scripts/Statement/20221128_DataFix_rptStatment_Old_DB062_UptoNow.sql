@@ -6,6 +6,9 @@
 	Task: Correct rptStatement historical data
 	Redmine: https://nexdev.net/issues/169560
 */
+use bodb_Report;
+GO
+
 --- 634 affected rows - rptStatement_Old
 ;with result AS (
 	select * 

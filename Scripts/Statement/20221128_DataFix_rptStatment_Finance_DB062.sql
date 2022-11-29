@@ -11,10 +11,9 @@ GO
 drop table if exists #chkCust;
 drop table if exists #result;
 
-create table #result (rIdx INT identity(1,1) primary key nonclustered, WinlostDate smalldatetime, Custid int, OpeningBalance money, TransferAmt money, ClosingBalance money, OpeningTotalBalance money)
-create clustered index CIX_Winlostdate ON #result(WinlostDate, custid);
+create table #result (rIdx INT identity(1,1) primary key, WinlostDate smalldatetime, Custid int, OpeningBalance money, TransferAmt money, ClosingBalance money, OpeningTotalBalance money)
 
-declare @cIdx int = 0, @batch int = 500;
+declare @cIdx int, @batch int = 500;
 
 select custid, DiffFrom
 INTO #chkCust
@@ -105,15 +104,14 @@ end
 
 -- Part 2 - Sync rptStatement - 448 rows
 drop table if exists #result2;
-create table #result2 (rIdx INT identity(1,1) primary key nonclustered, WinlostDate smalldatetime, Custid int, OpeningBalance money, TransferAmt money, ClosingBalance money, OpeningTotalBalance money)
-create clustered index CIX_Winlostdate_result2 ON #result2(WinlostDate, custid);
+create table #result2 (rIdx INT identity(1,1) primary key, WinlostDate smalldatetime, Custid int, OpeningBalance money, TransferAmt money, ClosingBalance money, OpeningTotalBalance money)
 
 insert into #result2 (WinlostDate, Custid, OpeningBalance, TransferAmt, ClosingBalance, OpeningTotalBalance)
 select rpt.WinlostDate, rpt.Custid, rpt.OpeningBalance, rpt.TransferAmt, rpt.ClosingBalance, rpt.OpeningTotalBalance
 from #chkCust cte
 inner join DBRPT.bodb_report.dbo.rptStatement rpt with(nolock) on rpt.Custid=cte.custid and rpt.WinlostDate > cte.DiffFrom
 
-select @@ROWCOUNT #result2
+select @@ROWCOUNT [#result2]
 
 SET @cIdx = 0;
 while exists (select top 1 1 from #result2 where rIdx >  @cIdx)
