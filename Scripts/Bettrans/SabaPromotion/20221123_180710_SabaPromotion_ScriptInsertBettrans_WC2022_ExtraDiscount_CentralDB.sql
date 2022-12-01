@@ -23,11 +23,10 @@ GO
 
 	-- Insert Licensee (SiteDBGroupID = 0)				
 	CREATE TABLE #CustList ( ID INT IDENTITY(1,1), CustID INT, Amount MONEY)
-	/*
-	 --Example
-	 INSERT INTO #CustList (CustID, Amount) 
-	 VALUES   (33257253, 815.02) -- 12Bet
-	*/
+	INSERT INTO #CustList (CustID, Amount) 
+				SELECT	67794717	,	0.1166		--aws03
+	UNION ALL SELECT	60347335	,	732.9074	--Betway
+	UNION ALL SELECT	18178396	,	60926.5470	--12Bet
 	
 
 	SELECT @Max = MAX(ID) FROM #CustList
