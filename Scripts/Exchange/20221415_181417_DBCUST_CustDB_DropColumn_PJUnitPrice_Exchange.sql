@@ -7,6 +7,8 @@
 */
 
 USE CustDB
+GO
 
 ALTER TABLE Exchange 
 DROP COLUMN PJUnitPrice;
+
