@@ -51,3 +51,19 @@ CREATE TABLE [dbo].[MessageLicensee] (
 ) ON [LIC_Data]
 
 GO
+
+CREATE TABLE [dbo].[SystemSettings] (
+	[VID]		INT	IDENTITY(1,1)	NOT NULL
+	,[VName]	VARCHAR(50)			NULL
+	,[VValue]	VARCHAR(200)		NULL
+	,CONSTRAINT [PK_SystemSettings] PRIMARY KEY CLUSTERED (
+		[VID] ASC
+	) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [LIC_Data]
+) ON [LIC_Data]
+
+GO
+
+INSERT INTO [dbo].[SystemSettings] ([VName], [VValue])
+VALUES ('AbnormalBetNotificationJobDoneDate', NULL);
+
+GO
