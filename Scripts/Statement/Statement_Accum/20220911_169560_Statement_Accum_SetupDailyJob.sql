@@ -5,7 +5,7 @@
 	Task: Setup Statement_Accum job [RedmineID: #169560]
 */
 
--- Run on DB061
+-- Run on DB061/DB062
 USE msdb
 GO
 
@@ -25,6 +25,11 @@ EXEC msdb.dbo.sp_add_jobstep
 		@database_name=N'bodb_Report', 
 		@flags=0
 GO
+EXEC msdb.dbo.sp_update_jobstep
+		@job_name=N'bodb_Report: Daily Summary rptStatement',
+		@step_id=2, 
+		@on_success_action=3
+GO
 
 -- Add job step
 EXEC msdb.dbo.sp_add_jobstep
@@ -37,7 +42,12 @@ EXEC msdb.dbo.sp_add_jobstep
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'EXEC bodb_report.dbo.Task_Statement_Accum_CheckData', 
+		@command=N'EXEC dbo.Task_Statement_Accum_CheckData', 
 		@database_name=N'bodb_Report', 
 		@flags=0
+GO
+EXEC msdb.dbo.sp_update_jobstep
+		@job_name=N'bodb02: Check and Correct Data - After MBU',
+		@step_id=4, 
+		@on_success_action=3
 GO
