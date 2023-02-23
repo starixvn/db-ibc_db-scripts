@@ -1,0 +1,20 @@
+/*<info serverAlias="DBPRO-bodb02"></info>*/
+/*
+DB: DBPRO.bodb02
+Create: 20230223@Sophia: Add Period
+Task: rebuild CN88   [RedmineId : #184200]
+*/ 
+
+INSERT INTO CS_AccountingPeriod VALUES ('2022','1','12/21/2022 0:00:00','1/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','2','2/1/2023 0:00:00','2/28/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','3','3/1/2023 0:00:00','3/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','4','4/1/2023 0:00:00','4/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','5','5/1/2023 0:00:00','5/31/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','6','6/1/2023 0:00:00','6/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','7','7/1/2023 0:00:00','7/31/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','8','8/1/2023 0:00:00','8/31/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','9','9/1/2023 0:00:00','9/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','10','10/1/2023 0:00:00','10/31/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','11','11/1/2023 0:00:00','11/30/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','12','12/1/2023 0:00:00','12/25/2023 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2023','13','12/26/2023 0:00:00','1/26/2024 0:00:00')
