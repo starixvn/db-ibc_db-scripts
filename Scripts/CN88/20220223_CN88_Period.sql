@@ -5,6 +5,7 @@ Create: 20230223@Sophia: Add Period
 Task: rebuild CN88   [RedmineId : #184200]
 */ 
 
+/*
 INSERT INTO CS_AccountingPeriod VALUES ('2022','1','12/21/2022 0:00:00','1/30/2023 0:00:00')
 INSERT INTO CS_AccountingPeriod VALUES ('2023','2','2/1/2023 0:00:00','2/28/2023 0:00:00')
 INSERT INTO CS_AccountingPeriod VALUES ('2023','3','3/1/2023 0:00:00','3/30/2023 0:00:00')
@@ -18,3 +19,21 @@ INSERT INTO CS_AccountingPeriod VALUES ('2023','10','10/1/2023 0:00:00','10/31/2
 INSERT INTO CS_AccountingPeriod VALUES ('2023','11','11/1/2023 0:00:00','11/30/2023 0:00:00')
 INSERT INTO CS_AccountingPeriod VALUES ('2023','12','12/1/2023 0:00:00','12/25/2023 0:00:00')
 INSERT INTO CS_AccountingPeriod VALUES ('2023','13','12/26/2023 0:00:00','1/26/2024 0:00:00')
+*/
+
+Update CS_AccountingPeriod SET Year = 2023 where Year = 2022
+
+
+INSERT INTO CS_AccountingPeriod VALUES ('2022','1','12/21/2021 0:00:00','1/30/2022 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','2','2/1/2022','2/28/2022 0:00:00')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','3','3/1/2022 0:00:00','3/30/2022 ')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','4','4/1/2022','4/30/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','5','5/1/2022','5/31/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','6','6/1/2022','6/30/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','7','7/1/2022','7/31/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','8','8/1/2022','8/31/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','9','9/1/2022','9/30/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','10','10/1/2022','10/31/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','11','11/1/2022','11/30/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','12','12/1/2022','12/15/2022')
+INSERT INTO CS_AccountingPeriod VALUES ('2022','13','12/16/2022','12/20/2022')
