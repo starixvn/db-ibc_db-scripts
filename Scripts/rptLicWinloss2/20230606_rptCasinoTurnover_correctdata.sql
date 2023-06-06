@@ -1,8 +1,8 @@
 /*<info serverAlias="DBLIC-bodb_LicenseeReport"></info>*/
 /*
-	Created: 20211213@Kos
+	Created: 20230606@Evan
 	DB: DBLIC-bodb_LicenseeReport
-	Task: Correct data table rptCasinoTurnover (Inteagrate SG promotion prize (miss sp Task_DailyRptCasinoTurnover_Bettrans14) [Redmine: #183497])
+	Task: Correct data table rptCasinoTurnover [Redmine: #189369]
 */
 
 USE bodb_LicenseeReport
@@ -22,29 +22,8 @@ DECLARE @rptCasinoTurnover_expected TABLE (
 	,TicketType		TINYINT
 )
 
-DECLARE @rptCasinoTurnover_Current TABLE (
-	WinlostDate	DATE
-	,CustId		INT
-	,Recommend	INT
-	,ProductId	INT
-	,StatusId	TINYINT
-	,Currency	INT
-	,BetCount	INT
-	,Turnover	MONEY
-	,Winlost	MONEY
-	,ValidBetAmount	MONEY
-	,TicketType		TINYINT
-)
-DECLARE @WinLostDate SMALLDATETIME = '20230410', 
-		@CustId INT = 33796999, 
+DECLARE @CustId INT = 33796999, 
 		@ProductId INT = 36 -- SG
-
-INSERT INTO @rptCasinoTurnover_Current ([WinlostDate], [CustId], [Recommend], [ProductId], [StatusId], [Currency], [BetCount], [Turnover], [Winlost], [ValidBetAmount], [TicketType])
-SELECT [WinlostDate], [CustId], [Recommend], [ProductId], [StatusId], [Currency], [BetCount], [Turnover], [Winlost], [ValidBetAmount], [TicketType] 
-FROM rptCasinoTurnover WITH(NOLOCK)
-WHERE CustId = @CustId 
-	AND WinlostDate = @WinLostDate 
-	--AND ProductId = @ProductId
 
 DECLARE @SportBetTypeMatrix TABLE (ProductId TINYINT, BetType SMALLINT, RefTable TINYINT)
 
@@ -80,11 +59,11 @@ FROM
 	INNER JOIN bodb02.dbo.Products AS p WITH (NOLOCK) ON p.ProductID = sbt.ProductId
 	INNER JOIN bodb_licensee.dbo.Product3rd AS p3rd WITH (NOLOCK) ON p3rd.ProductPrefix = p.ProductPrefix
 WHERE
-	b.WinlostDate = @WinLostDate
+	b.WinlostDate IN ('20230410','20230501')
 	AND b.custid = @CustId
 	AND b.statusID IN (111, 112, 113)
 	AND sbt.RefTable = 1
-	--AND p.ProductID = @ProductId
+	AND p.ProductID = @ProductId
 GROUP BY b.winlostdate ,
 	b.custid,
 	b.recommend,
@@ -98,8 +77,7 @@ GROUP BY b.winlostdate ,
 		ELSE 0
 	END
 
---MERGE dbo.rptCasinoTurnover a
-MERGE @rptCasinoTurnover_Current a
+MERGE dbo.rptCasinoTurnover a
 USING @rptCasinoTurnover_expected b ON
 a.custid=b.custid
 AND a.ProductId=b.ProductId
@@ -108,23 +86,21 @@ AND a.recommend=b.recommend
 AND a.statusID=b.statusID
 AND a.currency=b.currency
 AND a.TicketType=b.TicketType
-WHEN MATCHED THEN
+WHEN MATCHED 
+AND 
+	(a.BetCount <> b.BetCount OR
+	a.Turnover <> b.Turnover OR
+	a.Winlost <> b.Winlost OR
+	a.ValidBetAmount <> b.ValidBetAmount)
+THEN
 	UPDATE SET	a.BetCount = b.BetCount,
 				a.Turnover = b.Turnover,
 				a.Winlost = b.Winlost,
 				a.ValidBetAmount = b.ValidBetAmount
 WHEN NOT MATCHED THEN
 	INSERT ([WinlostDate], [CustId], [Recommend], [ProductId], [StatusId], [Currency], [BetCount], [Turnover], [Winlost], [ValidBetAmount], [TicketType])
- 
 	VALUES (b.[WinlostDate], b.[CustId], b.[Recommend], b.[ProductId], b.[StatusId], b.[Currency], b.[BetCount], b.[Turnover], b.[Winlost], b.[ValidBetAmount], b.[TicketType])
 OUTPUT
    $action,
    inserted.*,
    deleted.*;
-
-SELECT * FROM @rptCasinoTurnover_Current
-SELECT * FROM @rptCasinoTurnover_expected
-
---SELECT * FROM sys.servers where data_source='10.18.200.56'
---SELECT * FROM sys.servers where name='DBARC'
-----10.40.40.100
