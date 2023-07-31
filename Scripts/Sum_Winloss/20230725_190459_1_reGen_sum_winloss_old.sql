@@ -70,8 +70,8 @@ ELSE
 		DELETE
 		FROM bodb_Archive.dbo.sum_winloss_old_tmp 
 		WHERE winlostdate = @wldate
-			AND	roleid = 1 --not SMA
-			AND custid NOT IN (SELECT custid FROM #databettrans_bk) --not in list Custids
+			AND	roleid = 1
+			AND custid NOT IN (SELECT custid FROM #databettrans_bk)
 	END
 
 	 	
