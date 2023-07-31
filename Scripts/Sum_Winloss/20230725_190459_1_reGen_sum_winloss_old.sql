@@ -49,11 +49,9 @@ SELECT @custids = STRING_AGG(CAST(b.custid AS VARCHAR(MAX)),',')
 FROM #databettrans_bk b
 WHERE b.winlostdate = @wldate
 
-IF EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
+IF EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK))
 BEGIN
-	DELETE
-	FROM bodb_Archive.dbo.sum_winloss_old_tmp 
-	WHERE winlostdate = @wldate
+	TRUNCATE TABLE bodb_Archive.dbo.sum_winloss_old_tmp
 END
 
 EXEC dbo.Task_Sum_Winloss_Old 
