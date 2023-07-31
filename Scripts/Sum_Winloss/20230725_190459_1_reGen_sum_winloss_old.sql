@@ -61,14 +61,18 @@ WAITFOR DELAY '00:00:02'
 -- ==============================================================================
 
 IF NOT EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
-BEGIN
-	RETURN
-END
+	BEGIN
+		PRINT 'Insert data into dbo.sum_winloss_old_tmp fail'
+		RETURN
+	END
+ELSE
+	BEGIN
+		DELETE
+		FROM bodb_Archive.dbo.sum_winloss_old_tmp 
+		WHERE winlostdate = @wldate
+			AND	roleid = 1 --not SMA
+			AND custid NOT IN (SELECT custid FROM #databettrans_bk) --not in list Custids
+	END
 
-DELETE
-FROM bodb_Archive.dbo.sum_winloss_old_tmp 
-WHERE winlostdate = @wldate
-	AND	roleid = 1 --not SMA
-	AND custid NOT IN (SELECT custid FROM #databettrans_bk) --not in list Custids
 	 	
 DROP TABLE #databettrans_bk	
