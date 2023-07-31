@@ -62,7 +62,6 @@ WAITFOR DELAY '00:00:02'
 
 IF NOT EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
 	BEGIN
-		PRINT 'Insert data into dbo.sum_winloss_old_tmp fail'
 		RETURN
 	END
 ELSE
