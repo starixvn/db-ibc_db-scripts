@@ -49,9 +49,11 @@ SELECT @custids = STRING_AGG(CAST(b.custid AS VARCHAR(MAX)),',')
 FROM #databettrans_bk b
 WHERE b.winlostdate = @wldate
 
-IF EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK))
+IF EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
 BEGIN
-	TRUNCATE TABLE bodb_Archive.dbo.sum_winloss_old_tmp
+	DELETE
+	FROM bodb_Archive.dbo.sum_winloss_old_tmp 
+	WHERE winlostdate = @wldate
 END
 
 EXEC dbo.Task_Sum_Winloss_Old 
@@ -65,14 +67,15 @@ WAITFOR DELAY '00:00:02'
 -- DELETE data bodb_Archive.dbo.sum_winloss_old_tmp not in list Custids & not SMA
 -- ==============================================================================
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK))
+IF NOT EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
 BEGIN
 	RETURN
 END
 
-	DELETE
-	FROM bodb_Archive.dbo.sum_winloss_old_tmp 
-    WHERE roleid = 1 --not SMA
-		AND custid NOT IN (SELECT custid FROM #databettrans_bk) 
-		 	
+DELETE
+FROM bodb_Archive.dbo.sum_winloss_old_tmp 
+WHERE winlostdate = @wldate
+	AND	roleid = 1 --not SMA
+	AND custid NOT IN (SELECT custid FROM #databettrans_bk) --not in list Custids
+	 	
 DROP TABLE #databettrans_bk	

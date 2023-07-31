@@ -9,6 +9,7 @@ Description:
 	1. RUN Script 1 to get data bk --> INSERT into sum_winloss_old_tmp (DBACC-bodb02)
 	2. RUN Script 2 to reGen for sum_winloss_old (DBSUM-bodb_Summary)
 */
+DECLARE @wldate SMALLDATETIME = '20230628'  --'20230629'
 
 BEGIN
 	CREATE TABLE #tmpSum_winloss
@@ -97,6 +98,7 @@ BEGIN
 		,leagueGroupID
 		,ticketType
 	FROM DBARC.bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) 
+	WHERE winlostdate = @wldate
 
 	--regen--
 
