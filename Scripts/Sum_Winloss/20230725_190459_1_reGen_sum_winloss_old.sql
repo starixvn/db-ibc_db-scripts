@@ -60,18 +60,13 @@ WAITFOR DELAY '00:00:02'
 -- DELETE data bodb_Archive.dbo.sum_winloss_old_tmp not in list Custids & not SMA
 -- ==============================================================================
 
-IF NOT EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
-	BEGIN
-		RETURN
-	END
-ELSE
-	BEGIN
-		DELETE
-		FROM bodb_Archive.dbo.sum_winloss_old_tmp 
-		WHERE winlostdate = @wldate
-			AND	roleid = 1
-			AND custid NOT IN (SELECT custid FROM #databettrans_bk)
-	END
-
+IF EXISTS (SELECT TOP 1 1 FROM bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) WHERE winlostdate = @wldate)
+BEGIN
+	DELETE
+	FROM bodb_Archive.dbo.sum_winloss_old_tmp 
+	WHERE winlostdate = @wldate
+		AND	roleid = 1
+		AND custid NOT IN (SELECT custid FROM #databettrans_bk)
+END
 	 	
 DROP TABLE #databettrans_bk	
