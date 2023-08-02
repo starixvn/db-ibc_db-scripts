@@ -106,11 +106,6 @@ END
 -- Compare before regen
 -- ====================
 BEGIN
-	--list custids--
-	CREATE TABLE #Listcustids (custid INT, roleid INT)
-	INSERT INTO #Listcustids (custid, roleid)
-	SELECT DISTINCT custid, roleid FROM #sum_winloss_old_tmp
-	
 	--compare--
 	CREATE TABLE #sum_winloss_old
 	(
@@ -202,7 +197,7 @@ BEGIN
 		,ticketType			
 	FROM dbo.sum_winloss_old s WITH (NOLOCK)
 	WHERE s.winlostdate = @wldate
-		AND EXISTS (SELECT 1 FROM #Listcustids lc WHERE s.srecommend = lc.custid)
+		AND EXISTS (SELECT 1 FROM #sum_winloss_old_tmp s_old WHERE s.custid = s_old.custid)
 
 	DECLARE @RowCount INT = 0
 	;WITH CTE_s AS
@@ -235,8 +230,7 @@ BEGIN
 				,leagueGroupID		
 				,ticketType			
 			FROM #sum_winloss_old s WITH (NOLOCK)
-			WHERE s.winlostdate = @wldate
-				AND EXISTS (SELECT 1 FROM #Listcustids lc WHERE s.srecommend = lc.custid AND lc.roleid = 4)
+			WHERE s.roleid = 4
 		)
 		SELECT @RowCount = COUNT(1)
 		FROM #sum_winloss_old_tmp tmp
@@ -304,7 +298,7 @@ BEGIN
 				,TARGET.BetCount		= SOURCE.BetCount
 				,TARGET.grosscomm		= SOURCE.grosscomm
 				,TARGET.netTurnover		= SOURCE.netTurnover
-				,TARGET.TunroverNoDraw	= SOURCE.TurnoverNoDraw -- TurnoverNoDraw
+				,TARGET.TunroverNoDraw	= SOURCE.TurnoverNoDraw
 				,TARGET.ExtraWinloss	= SOURCE.ExtraWinloss
 				,TARGET.ExtraComm		= SOURCE.ExtraComm
 		WHEN NOT MATCHED BY TARGET THEN 
@@ -330,7 +324,7 @@ BEGIN
 				,sporttype
 				,bettype
 				,netTurnover
-				,TunroverNoDraw -- TurnoverNoDraw
+				,TunroverNoDraw
 				,ExtraWinloss
 				,ExtraComm
 				,leagueGroupID
@@ -394,5 +388,4 @@ BEGIN
 
 	DROP TABLE #sum_winloss_old_tmp
 	DROP TABLE #sum_winloss_old
-	DROP TABLE #Listcustids
 END
