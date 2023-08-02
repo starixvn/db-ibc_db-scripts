@@ -2,7 +2,7 @@
 
 /*
 Create: 20230725@Lewis
-Task: ReGen Data of Sum_Winloss_Old - SabaTennis [RedmineID: #190459]
+Task: ReGen Data of Sum_Winloss_Old - SabaTennis  RedmineID: #190459 
 DB: DBSUM-bodb_Summary
 
 Description:
@@ -10,9 +10,11 @@ Description:
 	2. RUN Script 2 to reGen for sum_winloss_old (DBSUM-bodb_Summary)
 */
 DECLARE @wldate SMALLDATETIME = '20230628'  --'20230629'
-
+-- ===========================================
+-- Get data sum_winloss_old_tmp from DB06-DB05
+-- ===========================================
 BEGIN
-	CREATE TABLE #tmpSum_winloss
+	CREATE TABLE #sum_winloss_old_tmp
 	(
 		winlostdate			SMALLDATETIME
 		,username			NVARCHAR(50)
@@ -41,7 +43,7 @@ BEGIN
 		,leagueGroupID		SMALLINT
 		,ticketType			TINYINT
 	)
-	INSERT INTO #tmpSum_winloss
+	INSERT INTO #sum_winloss_old_tmp
 	(
 		winlostdate
 		,username
@@ -99,96 +101,298 @@ BEGIN
 		,ticketType
 	FROM DBARC.bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) 
 	WHERE winlostdate = @wldate
+END
+-- ====================
+-- Compare before regen
+-- ====================
+BEGIN
+	--list custids--
+	CREATE TABLE #Listcustids (custid INT, roleid INT)
+	INSERT INTO #Listcustids (custid, roleid)
+	SELECT DISTINCT custid, roleid FROM #sum_winloss_old_tmp
+	
+	--compare--
+	CREATE TABLE #sum_winloss_old
+	(
+		keyid				BIGINT
+		,winlostdate		SMALLDATETIME
+		,username			NVARCHAR(50)
+		,custid				INT
+		,roleid				INT
+		,recommend			INT
+		,mrecommend			INT
+		,srecommend			INT
+		,turnover			MONEY
+		,winlost			MONEY
+		,awinlost			MONEY
+		,mwinlost			MONEY
+		,swinlost			MONEY
+		,playercomm			MONEY
+		,comm				MONEY
+		,acomm				MONEY
+		,scomm				MONEY
+		,BetCount			INT
+		,grosscomm			MONEY
+		,sporttype			SMALLINT
+		,bettype			SMALLINT
+		,netTurnover		MONEY
+		,TurnoverNoDraw		MONEY
+		,ExtraWinloss		MONEY NULL
+		,ExtraComm			MONEY NULL
+		,leagueGroupID		SMALLINT
+		,ticketType			TINYINT
+	)
+	INSERT INTO #sum_winloss_old
+	(
+		keyid
+		,winlostdate
+		,username
+		,custid
+		,roleid
+		,recommend
+		,mrecommend
+		,srecommend
+		,turnover
+		,winlost
+		,awinlost
+		,mwinlost
+		,swinlost
+		,playercomm
+		,comm
+		,acomm
+		,scomm
+		,BetCount
+		,grosscomm
+		,sporttype
+		,bettype
+		,netTurnover
+		,TurnoverNoDraw
+		,ExtraWinloss
+		,ExtraComm
+		,leagueGroupID
+		,ticketType
+	)
+	SELECT
+		keyid
+		,winlostdate
+		,username
+		,custid
+		,roleid
+		,recommend
+		,mrecommend
+		,srecommend
+		,turnover
+		,winlost
+		,awinlost
+		,mwinlost
+		,swinlost
+		,playercomm
+		,comm
+		,acomm
+		,scomm
+		,BetCount
+		,grosscomm
+		,sporttype
+		,bettype
+		,netTurnover
+		,TunroverNoDraw
+		,ISNULL(ExtraWinloss, 0) AS ExtraWinloss
+		,ISNULL(ExtraComm, 0) AS ExtraComm
+		,leagueGroupID		
+		,ticketType			
+	FROM dbo.sum_winloss_old s WITH (NOLOCK)
+	WHERE s.winlostdate = @wldate
+		AND EXISTS (SELECT 1 FROM #Listcustids lc WHERE s.srecommend = lc.custid)
 
-	--regen--
+	DECLARE @RowCount INT = 0
+	;WITH CTE_s AS
+		(
+			SELECT
+				winlostdate
+				,username
+				,custid
+				,roleid
+				,recommend
+				,mrecommend
+				,srecommend
+				,turnover
+				,winlost
+				,awinlost
+				,mwinlost
+				,swinlost
+				,playercomm
+				,comm
+				,acomm
+				,scomm
+				,BetCount
+				,grosscomm
+				,sporttype
+				,bettype
+				,netTurnover
+				,TurnoverNoDraw
+				,ISNULL(ExtraWinloss, 0) AS ExtraWinloss
+				,ISNULL(ExtraComm, 0) AS ExtraComm
+				,leagueGroupID		
+				,ticketType			
+			FROM #sum_winloss_old s WITH (NOLOCK)
+			WHERE s.winlostdate = @wldate
+				AND EXISTS (SELECT 1 FROM #Listcustids lc WHERE s.srecommend = lc.custid AND lc.roleid = 4)
+		)
+		SELECT @RowCount = COUNT(1)
+		FROM #sum_winloss_old_tmp tmp
+			FULL OUTER JOIN CTE_s s
+				ON		tmp.winlostdate	= s.winlostdate
+					AND tmp.custid		= s.custid
+					AND tmp.sporttype	= s.sporttype
+					AND tmp.bettype		= s.bettype
+					AND tmp.leagueGroupID = s.leagueGroupID
+					AND tmp.ticketType	= s.ticketType
+		WHERE tmp.custid IS NULL
+			OR s.custid IS NULL
+			OR tmp.username				<> s.username
+			OR tmp.roleid				<> s.roleid
+			OR tmp.recommend			<> s.recommend
+			OR tmp.mrecommend			<> s.mrecommend
+			OR tmp.srecommend			<> s.srecommend
+			OR tmp.turnover				<> s.turnover
+			OR tmp.winlost				<> s.winlost
+			OR tmp.awinlost				<> s.awinlost
+			OR tmp.mwinlost				<> s.mwinlost
+			OR tmp.swinlost				<> s.swinlost
+			OR tmp.playercomm			<> s.playercomm
+			OR tmp.comm					<> s.comm
+			OR tmp.acomm				<> s.acomm
+			OR tmp.scomm				<> s.scomm
+			OR tmp.BetCount				<> s.BetCount
+			OR tmp.grosscomm			<> s.grosscomm
+			OR tmp.netTurnover			<> s.netTurnover
+			OR tmp.TurnoverNoDraw		<> s.TurnoverNoDraw
+			OR tmp.ExtraWinloss			<> s.ExtraWinloss
+			OR tmp.ExtraComm			<> s.ExtraComm
 
-	MERGE dbo.sum_winloss_old AS TARGET
-	USING #tmpSum_winloss AS SOURCE
-		ON		TARGET.winlostdate	= SOURCE.winlostdate
-			AND	TARGET.custid		= SOURCE.custid
-			AND TARGET.sporttype	= SOURCE.sporttype
-			AND TARGET.bettype		= SOURCE.bettype
-			AND TARGET.leagueGroupID = SOURCE.leagueGroupID
-			AND TARGET.ticketType	= SOURCE.ticketType
-	WHEN MATCHED THEN 
-	UPDATE
-		SET	TARGET.username			= SOURCE.username
-			,TARGET.roleid			= SOURCE.roleid
-			,TARGET.recommend		= SOURCE.recommend
-			,TARGET.mrecommend		= SOURCE.mrecommend
-			,TARGET.srecommend		= SOURCE.srecommend
-			,TARGET.turnover		= SOURCE.turnover
-			,TARGET.winlost			= SOURCE.winlost
-			,TARGET.awinlost		= SOURCE.awinlost
-			,TARGET.mwinlost		= SOURCE.mwinlost
-			,TARGET.swinlost		= SOURCE.swinlost
-			,TARGET.playercomm		= SOURCE.playercomm
-			,TARGET.comm			= SOURCE.comm
-			,TARGET.acomm			= SOURCE.acomm
-			,TARGET.scomm			= SOURCE.scomm
-			,TARGET.BetCount		= SOURCE.BetCount
-			,TARGET.grosscomm		= SOURCE.grosscomm
-			,TARGET.netTurnover		= SOURCE.netTurnover
-			,TARGET.TunroverNoDraw	= SOURCE.TurnoverNoDraw -- TurnoverNoDraw
-			,TARGET.ExtraWinloss	= SOURCE.ExtraWinloss
-			,TARGET.ExtraComm		= SOURCE.ExtraComm
-	WHEN NOT MATCHED BY TARGET THEN 
-	INSERT (
-			winlostdate
-			,username
-			,custid
-			,roleid
-			,recommend
-			,mrecommend
-			,srecommend
-			,turnover
-			,winlost
-			,awinlost
-			,mwinlost
-			,swinlost
-			,playercomm
-			,comm
-			,acomm
-			,scomm
-			,BetCount
-			,grosscomm
-			,sporttype
-			,bettype
-			,netTurnover
-			,TunroverNoDraw -- TurnoverNoDraw
-			,ExtraWinloss
-			,ExtraComm
-			,leagueGroupID
-			,ticketType
-			)
-	VALUES (
-			SOURCE.winlostdate
-			,SOURCE.username
-			,SOURCE.custid
-			,SOURCE.roleid
-			,SOURCE.recommend
-			,SOURCE.mrecommend
-			,SOURCE.srecommend
-			,SOURCE.turnover
-			,SOURCE.winlost
-			,SOURCE.awinlost
-			,SOURCE.mwinlost
-			,SOURCE.swinlost
-			,SOURCE.playercomm
-			,SOURCE.comm
-			,SOURCE.acomm
-			,SOURCE.scomm
-			,SOURCE.BetCount
-			,SOURCE.grosscomm
-			,SOURCE.sporttype
-			,SOURCE.bettype
-			,SOURCE.netTurnover
-			,SOURCE.TurnoverNoDraw
-			,SOURCE.ExtraWinloss
-			,SOURCE.ExtraComm
-			,SOURCE.leagueGroupID
-			,SOURCE.ticketType
-			);
+END
+-- =========
+-- Regen
+-- =========
+BEGIN
+	IF @RowCount <> 0
+	BEGIN
+		MERGE dbo.sum_winloss_old AS TARGET
+		USING #sum_winloss_old_tmp AS SOURCE
+			ON		TARGET.winlostdate	= SOURCE.winlostdate
+				AND	TARGET.custid		= SOURCE.custid
+				AND TARGET.sporttype	= SOURCE.sporttype
+				AND TARGET.bettype		= SOURCE.bettype
+				AND TARGET.leagueGroupID = SOURCE.leagueGroupID
+				AND TARGET.ticketType	= SOURCE.ticketType
+		WHEN MATCHED THEN 
+		UPDATE
+			SET	TARGET.username			= SOURCE.username
+				,TARGET.roleid			= SOURCE.roleid
+				,TARGET.recommend		= SOURCE.recommend
+				,TARGET.mrecommend		= SOURCE.mrecommend
+				,TARGET.srecommend		= SOURCE.srecommend
+				,TARGET.turnover		= SOURCE.turnover
+				,TARGET.winlost			= SOURCE.winlost
+				,TARGET.awinlost		= SOURCE.awinlost
+				,TARGET.mwinlost		= SOURCE.mwinlost
+				,TARGET.swinlost		= SOURCE.swinlost
+				,TARGET.playercomm		= SOURCE.playercomm
+				,TARGET.comm			= SOURCE.comm
+				,TARGET.acomm			= SOURCE.acomm
+				,TARGET.scomm			= SOURCE.scomm
+				,TARGET.BetCount		= SOURCE.BetCount
+				,TARGET.grosscomm		= SOURCE.grosscomm
+				,TARGET.netTurnover		= SOURCE.netTurnover
+				,TARGET.TunroverNoDraw	= SOURCE.TurnoverNoDraw -- TurnoverNoDraw
+				,TARGET.ExtraWinloss	= SOURCE.ExtraWinloss
+				,TARGET.ExtraComm		= SOURCE.ExtraComm
+		WHEN NOT MATCHED BY TARGET THEN 
+		INSERT (
+				winlostdate
+				,username
+				,custid
+				,roleid
+				,recommend
+				,mrecommend
+				,srecommend
+				,turnover
+				,winlost
+				,awinlost
+				,mwinlost
+				,swinlost
+				,playercomm
+				,comm
+				,acomm
+				,scomm
+				,BetCount
+				,grosscomm
+				,sporttype
+				,bettype
+				,netTurnover
+				,TunroverNoDraw -- TurnoverNoDraw
+				,ExtraWinloss
+				,ExtraComm
+				,leagueGroupID
+				,ticketType
+				)
+		VALUES (
+				SOURCE.winlostdate
+				,SOURCE.username
+				,SOURCE.custid
+				,SOURCE.roleid
+				,SOURCE.recommend
+				,SOURCE.mrecommend
+				,SOURCE.srecommend
+				,SOURCE.turnover
+				,SOURCE.winlost
+				,SOURCE.awinlost
+				,SOURCE.mwinlost
+				,SOURCE.swinlost
+				,SOURCE.playercomm
+				,SOURCE.comm
+				,SOURCE.acomm
+				,SOURCE.scomm
+				,SOURCE.BetCount
+				,SOURCE.grosscomm
+				,SOURCE.sporttype
+				,SOURCE.bettype
+				,SOURCE.netTurnover
+				,SOURCE.TurnoverNoDraw
+				,SOURCE.ExtraWinloss
+				,SOURCE.ExtraComm
+				,SOURCE.leagueGroupID
+				,SOURCE.ticketType
+				);
 
-	DROP TABLE #tmpSum_winloss
+		--Delete - case only sabatennis--
+		;WITH CTE_del_mem AS
+		(
+			SELECT a.keyid 
+			FROM #sum_winloss_old a WITH (NOLOCK)
+			LEFT JOIN #sum_winloss_old_tmp b WITH (NOLOCK)
+				ON a.winlostdate	= b.winlostdate
+				AND a.custid		= b.custid
+				AND a.sporttype		= b.sporttype
+				AND a.bettype		= b.bettype
+				AND a.leagueGroupID = b.leagueGroupID
+				AND a.ticketType	= b.ticketType
+			WHERE a.winlostdate = @wldate
+				--AND a.roleid = 1
+				AND (b.winlostdate IS NULL 
+					OR b.custid IS NULL
+					OR b.sporttype IS NULL
+					OR b.bettype IS NULL
+					OR b.leagueGroupID IS NULL
+					OR b.ticketType IS NULL)
+		)
+		DELETE a
+		FROM dbo.sum_winloss_old a
+		JOIN CTE_del_mem b
+			ON a.keyid = b.keyid
+	END
+
+	DROP TABLE #sum_winloss_old_tmp
+	DROP TABLE #sum_winloss_old
+	DROP TABLE #Listcustids
 END
