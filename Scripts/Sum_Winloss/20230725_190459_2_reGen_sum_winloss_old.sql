@@ -204,65 +204,76 @@ BEGIN
 		(
 			SELECT
 				winlostdate
-				,username
 				,custid
-				,roleid
-				,recommend
-				,mrecommend
-				,srecommend
-				,turnover
-				,winlost
-				,awinlost
-				,mwinlost
-				,swinlost
-				,playercomm
-				,comm
-				,acomm
-				,scomm
-				,BetCount
-				,grosscomm
-				,sporttype
-				,bettype
-				,netTurnover
-				,TurnoverNoDraw
-				,ISNULL(ExtraWinloss, 0) AS ExtraWinloss
-				,ISNULL(ExtraComm, 0) AS ExtraComm
-				,leagueGroupID		
-				,ticketType			
+				,SUM(turnover) turnover
+				,SUM(winlost) winlost
+				,SUM(awinlost) awinlost
+				,SUM(mwinlost) mwinlost
+				,SUM(swinlost) swinlost
+				,SUM(playercomm) playercomm
+				,SUM(comm) comm
+				,SUM(acomm) acomm
+				,SUM(scomm) scomm
+				,SUM(BetCount) BetCount
+				,SUM(grosscomm) grosscomm
+				,SUM(netTurnover) netTurnover
+				,SUM(TurnoverNoDraw) TurnoverNoDraw
+				,SUM(ExtraWinloss) AS ExtraWinloss
+				,SUM(ExtraComm) AS ExtraComm	
 			FROM #sum_winloss_old s WITH (NOLOCK)
-			WHERE s.roleid = 4
+			--WHERE s.roleid = 4
+			GROUP BY 
+				winlostdate
+				,custid
+		),
+	 CTE_old AS
+		(
+			SELECT
+				winlostdate
+				,custid
+				,SUM(turnover) turnover
+				,SUM(winlost) winlost
+				,SUM(awinlost) awinlost
+				,SUM(mwinlost) mwinlost
+				,SUM(swinlost) swinlost
+				,SUM(playercomm) playercomm
+				,SUM(comm) comm
+				,SUM(acomm) acomm
+				,SUM(scomm) scomm
+				,SUM(BetCount) BetCount
+				,SUM(grosscomm) grosscomm
+				,SUM(netTurnover) netTurnover
+				,SUM(TurnoverNoDraw) TurnoverNoDraw
+				,SUM(ExtraWinloss) AS ExtraWinloss
+				,SUM(ExtraComm) AS ExtraComm	
+			FROM #sum_winloss_old_tmp s WITH (NOLOCK)
+			--WHERE s.roleid = 4
+			GROUP BY 
+				winlostdate
+				,custid
 		)
 		SELECT @RowCount = COUNT(1)
-		FROM #sum_winloss_old_tmp tmp
-			FULL OUTER JOIN CTE_s s
-				ON		tmp.winlostdate	= s.winlostdate
-					AND tmp.custid		= s.custid
-					AND tmp.sporttype	= s.sporttype
-					AND tmp.bettype		= s.bettype
-					AND tmp.leagueGroupID = s.leagueGroupID
-					AND tmp.ticketType	= s.ticketType
-		WHERE tmp.custid IS NULL
+		FROM CTE_s s
+			FULL OUTER JOIN CTE_old old
+				ON		s.winlostdate	= old.winlostdate
+					AND s.custid		= old.custid
+		WHERE old.custid IS NULL
 			OR s.custid IS NULL
-			OR tmp.username				<> s.username
-			OR tmp.roleid				<> s.roleid
-			OR tmp.recommend			<> s.recommend
-			OR tmp.mrecommend			<> s.mrecommend
-			OR tmp.srecommend			<> s.srecommend
-			OR tmp.turnover				<> s.turnover
-			OR tmp.winlost				<> s.winlost
-			OR tmp.awinlost				<> s.awinlost
-			OR tmp.mwinlost				<> s.mwinlost
-			OR tmp.swinlost				<> s.swinlost
-			OR tmp.playercomm			<> s.playercomm
-			OR tmp.comm					<> s.comm
-			OR tmp.acomm				<> s.acomm
-			OR tmp.scomm				<> s.scomm
-			OR tmp.BetCount				<> s.BetCount
-			OR tmp.grosscomm			<> s.grosscomm
-			OR tmp.netTurnover			<> s.netTurnover
-			OR tmp.TurnoverNoDraw		<> s.TurnoverNoDraw
-			OR tmp.ExtraWinloss			<> s.ExtraWinloss
-			OR tmp.ExtraComm			<> s.ExtraComm
+			OR old.turnover				<> s.turnover
+			OR old.winlost				<> s.winlost
+			OR old.awinlost				<> s.awinlost
+			OR old.mwinlost				<> s.mwinlost
+			OR old.swinlost				<> s.swinlost
+			OR old.playercomm			<> s.playercomm
+			OR old.comm					<> s.comm
+			OR old.acomm				<> s.acomm
+			OR old.scomm				<> s.scomm
+			OR old.BetCount				<> s.BetCount
+			OR old.grosscomm			<> s.grosscomm
+			OR old.netTurnover			<> s.netTurnover
+			OR old.TurnoverNoDraw		<> s.TurnoverNoDraw
+			OR old.ExtraWinloss			<> s.ExtraWinloss
+			OR old.ExtraComm			<> s.ExtraComm
 
 END
 -- =========
@@ -372,7 +383,6 @@ BEGIN
 				AND a.leagueGroupID = b.leagueGroupID
 				AND a.ticketType	= b.ticketType
 			WHERE a.winlostdate = @wldate
-				--AND a.roleid = 1
 				AND (b.winlostdate IS NULL 
 					OR b.custid IS NULL
 					OR b.sporttype IS NULL
