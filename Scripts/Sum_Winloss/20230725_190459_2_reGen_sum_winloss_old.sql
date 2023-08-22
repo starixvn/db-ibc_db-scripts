@@ -99,7 +99,7 @@ BEGIN
 		,ExtraComm
 		,leagueGroupID
 		,ticketType
-	FROM DBARC.bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) 
+	FROM DBACC.bodb_Archive.dbo.sum_winloss_old_tmp WITH (NOLOCK) 
 	WHERE winlostdate = @wldate
 END
 -- ====================
@@ -197,7 +197,7 @@ BEGIN
 		,ticketType			
 	FROM dbo.sum_winloss_old s WITH (NOLOCK)
 	WHERE s.winlostdate = @wldate
-		AND EXISTS (SELECT 1 FROM #sum_winloss_old_tmp s_old WHERE s.custid = s_old.custid)
+		AND EXISTS (SELECT 1 FROM #sum_winloss_old_tmp s_old WHERE s.custid = s_old.custid AND s.sporttype = s_old.sporttype)
 
 	DECLARE @RowCount INT = 0
 	;WITH CTE_s AS
@@ -373,7 +373,7 @@ BEGIN
 		--Delete - case only sabatennis--
 		;WITH CTE_del_mem AS
 		(
-			SELECT a.keyid 
+			SELECT a.keyid, a.winlostdate, a.custid, a.sporttype, a.bettype, a.leagueGroupID, a.ticketType 
 			FROM #sum_winloss_old a WITH (NOLOCK)
 			LEFT JOIN #sum_winloss_old_tmp b WITH (NOLOCK)
 				ON a.winlostdate	= b.winlostdate
@@ -391,9 +391,15 @@ BEGIN
 					OR b.ticketType IS NULL)
 		)
 		DELETE a
-		FROM dbo.sum_winloss_old a
+		FROM dbo.sum_winloss_old a WITH (ROWLOCK)
 		JOIN CTE_del_mem b
 			ON a.keyid = b.keyid
+			AND a.winlostdate	= b.winlostdate
+			AND a.custid		= b.custid
+			AND a.sporttype		= b.sporttype
+			AND a.bettype		= b.bettype
+			AND a.leagueGroupID = b.leagueGroupID
+			AND a.ticketType	= b.ticketType
 	END
 
 	DROP TABLE #sum_winloss_old_tmp
