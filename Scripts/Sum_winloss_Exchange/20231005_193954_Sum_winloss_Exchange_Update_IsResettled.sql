@@ -9,25 +9,44 @@ GO
 
 DROP TABLE IF EXISTS  #tmpSum_winloss_Exchange_Detail 
 DROP TABLE IF EXISTS  #tmpxml 
+DROP TABLE IF EXISTS  #tmpData 
+DROP TABLE IF EXISTS  #tmpQueue 
 
 DECLARE @CutOffDate SMALLDATETIME = '2023-09-01'
 
+CREATE TABLE #tmpQueue
+(
+	QueueID			BIGINT
+)
 CREATE TABLE #tmpxml
 (
 	RowId			INT IDENTITY(1,1),
-	QueueID			BIGINT,
 	XmlData			XML
 )
-INSERT INTO #tmpxml (QueueID,XmlData)
-SELECT piq.QueueID,piq.XmlData 
+INSERT INTO #tmpQueue (QueueID)
+SELECT piq.QueueID
 FROM bodb_PlaytechCS.dbo.Product3rd_ImportQueue piq WITH(NOLOCK) 
 WHERE piq.JobType = 3 AND piq.ProductID = 31 
 	AND piq.CheckInTime >= @CutOffDate
 	
-DECLARE @QueueID INT, @RowId INT = 1;
+INSERT INTO #tmpxml (XmlData)
+SELECT piq.XmlData
+FROM bodb_PlaytechCS.dbo.Product3rd_ImportQueue piq WITH (NOLOCK)
+	INNER JOIN #tmpQueue q ON piq.QueueID = q.QueueID
+
+	
+DECLARE @RowId INT = 1;
 DECLARE @XmlData XML
 DECLARE @BatchSize INT = 2000
 
+CREATE TABLE #tmpData
+(
+	userId			VARCHAR(16),
+	eventID			INT,
+	marketID		VARCHAR(50),
+	settledDate		DATETIME ,
+	custID			VARCHAR(16), 
+)
 -- transaction detail for Resettled Summary Job (JobType = 3)
 CREATE TABLE #tmpSum_winloss_Exchange_Detail
 (
@@ -46,7 +65,7 @@ BEGIN
 	IF @@ROWCOUNT = 0
 		BREAK
 		
-	INSERT INTO #tmpSum_winloss_Exchange_Detail
+	INSERT INTO #tmpData
 	(
 		userId,
 		eventID,
@@ -64,10 +83,19 @@ BEGIN
 		OUTER APPLY t.c.nodes('TransactionDetail') t1 (c1)
 
 	SET @RowId = @RowId + 1
+	
 END
 
-DELETE #tmpSum_winloss_Exchange_Detail
+DELETE #tmpData
 WHERE ISNUMERIC(custId + '.e0') = 0
+
+INSERT INTO #tmpSum_winloss_Exchange_Detail (userId, eventID, marketID, settledDate, custID)
+SELECT DISTINCT d.userId
+			  , d.eventID
+			  , d.marketID
+			  , d.settledDate
+			  , d.custID
+FROM #tmpData d
 
 WHILE EXISTS (SELECT TOP 1 1 FROM #tmpSum_winloss_Exchange_Detail)
 BEGIN
@@ -82,7 +110,7 @@ BEGIN
 			AND a.eventID = b.eventID
 			AND a.marketID = b.marketID
 			AND a.settledDate = b.settledDate
-	WHERE isfinished = 1	
+	WHERE b.isfinished = 1 AND a.resettledDate >= @CutOffDate	
 
 	DELETE #tmpSum_winloss_Exchange_Detail WHERE isfinished = 1
 
