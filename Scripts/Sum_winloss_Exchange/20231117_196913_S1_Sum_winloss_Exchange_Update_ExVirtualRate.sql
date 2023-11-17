@@ -2,8 +2,11 @@
 /*
 	Created: 20231117@Evan
 	DB: DBLIC-bodb_3rdProduct
-	Task: Update ExVirtualRate on Sum_winloss_Exchange [RedmineID: #196913]
+	Task: Step 1: Update ExVirtualRate on Sum_winloss_Exchange [RedmineID: #196913]
+	
+
 */
+
 USE bodb_3rdProduct
 GO
 
