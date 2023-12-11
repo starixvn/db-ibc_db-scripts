@@ -2,7 +2,7 @@
 /*
 	Created: 20231130@Evan
 	DB: DBLIC-bodb_PlaytechCS
-	Task: Step2: Gen data bettrans_AGCasino_Temp
+	Task: Step2: Gen data bettrans_AGCasino_Temp (run on db053)
 
 */
 USE [bodb_PlaytechCS]
@@ -11,8 +11,8 @@ SET NOCOUNT ON
 DECLARE @QueueID BIGINT = NULL
 	  , @XmlData XML
 
-DECLARE @fromdate DATE = '20230801'
-DECLARE @todate DATE = '20230831'
+DECLARE @fromdate DATE = '20231001'
+DECLARE @todate DATE = '20231130'
 
 DECLARE @QueueIDs TABLE (
 	  QueueID BIGINT
