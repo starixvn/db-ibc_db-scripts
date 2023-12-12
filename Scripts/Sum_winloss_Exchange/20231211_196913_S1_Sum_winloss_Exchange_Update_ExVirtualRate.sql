@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS  #tmpSum_winloss_Exchange
 
 DECLARE @CutOffDateFrom SMALLDATETIME = '2023-09-01'
 DECLARE @CutOffDateTo SMALLDATETIME = '2023-10-31'
-	
+
 DECLARE @BatchSize INT = 2000
  
 CREATE TABLE #tmpSum_winloss_Exchange
@@ -39,7 +39,7 @@ SELECT DISTINCT d.userId
 FROM dbo.Sum_winloss_Exchange d WITH (NOLOCK)
 	INNER JOIN bodb02.dbo.Customer c WITH (NOLOCK) ON d.custId = c.custid
 	INNER JOIN bodb02.dbo.Exchange e WITH (NOLOCK) ON e.ExchangeId = c.currency
-WHERE d.settledDate BETWEEN @CutOffDateFrom AND @CutOffDateTo
+WHERE d.settledDate >= @CutOffDateFrom AND d.settledDate < DATEADD(DAY,1,@CutOffDateTo)
 
 WHILE EXISTS (SELECT TOP 1 1 FROM #tmpSum_winloss_Exchange)
 BEGIN
