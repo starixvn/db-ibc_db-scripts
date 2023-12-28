@@ -13,18 +13,16 @@ DECLARE @QueueID BIGINT = NULL
 
 DECLARE @fromdate DATE = '20231001'
 DECLARE @todate DATE = '20231130'
+DECLARE @Winlostdate DATE;
 
 DECLARE @QueueIDs TABLE (
 	  QueueID BIGINT
 )
 
 INSERT INTO @QueueIDs (QueueID)
-SELECT MAX(QueueID)
-FROM dbo.Product3rd_ImportQueue(NOLOCK)
+SELECT QueueID
+FROM dbo.Product3rd_ImportQueue_CheckData (NOLOCK)
 WHERE ProductID = 10
-	AND Winlostdate BETWEEN @fromdate AND @todate
-GROUP BY Winlostdate
-	   , LicenseeName
 
 DROP TABLE IF EXISTS #Product3rd_ImportQueue
 
@@ -38,7 +36,7 @@ INSERT INTO #Product3rd_ImportQueue (QueueID, XmlData, IsFinished)
 SELECT a.QueueID
 	 , a.XmlData
 	 , 0 IsFinished
-FROM dbo.Product3rd_ImportQueue(NOLOCK) a
+FROM dbo.Product3rd_ImportQueue_CheckData(NOLOCK) a
 	INNER JOIN @QueueIDs b ON a.QueueID = b.QueueID
 
 DROP TABLE IF EXISTS #TmpData
@@ -55,6 +53,8 @@ CREATE TABLE #TmpData (
 	, LoginIP VARCHAR(45)
 	, Currency TINYINT
 	, Flag SMALLINT
+	, JpInvest MONEY
+	, JpPayout MONEY
 )
 
 WHILE EXISTS (
@@ -68,7 +68,9 @@ BEGIN
 	FROM #Product3rd_ImportQueue
 	WHERE IsFinished = 0
 
-	INSERT INTO #TmpData (BillNo, IBCCustID, BetTime, GameType, GameCode, BetAmount, NetAmount, PlayType, LoginIP, Currency, Flag)
+	TRUNCATE TABLE #TmpData
+
+	INSERT INTO #TmpData (BillNo, IBCCustID, BetTime, GameType, GameCode, BetAmount, NetAmount, PlayType, LoginIP, Currency, Flag, JpInvest, JpPayout)
 	SELECT x.v.value('(BILLNO/text())[1]', 'BIGINT') AS BillNo
 		 , x.v.value('(IBCCUSTID/text())[1]', 'INT') AS IBCCustID
 		 , CONVERT(VARCHAR(10), x.v.value('(BETTIME/text())[1]', 'DATETIME'), 120) AS BetTime
@@ -80,8 +82,16 @@ BEGIN
 		 , x.v.value('(LOGINIP/text())[1]', 'VARCHAR(45)') AS LoginIP
 		 , x.v.value('(CURRENCY/text())[1]', 'TINYINT') AS Currency
 		 , x.v.value('(FLAG/text())[1]', 'SMALLINT') AS Flag
+		 , t.jp_invest
+		 , t.jp_payout
 	FROM @XmlData.nodes('/TransList/TRANSACTION') x (v)
+		OUTER APPLY (	SELECT jp_invest,jp_payout  
+						FROM OPENJSON(x.v.value('(REMARK/text())[1]', 'NVARCHAR(MAX)'))WITH (jp_invest MONEY '$.jp_invest',jp_payout MONEY '$.jp_payout')
+						WHERE ISJSON(x.v.value('(REMARK/text())[1]', 'NVARCHAR(MAX)'))= 1) AS t
 	OPTION (OPTIMIZE FOR (@XmlData = NULL))
+
+	SELECT @Winlostdate = MIN(BetTime)
+	FROM #TmpData
 
 	--Import data to DB
 	MERGE dbo.bettrans_AGCasino_Temp AS dest USING (
@@ -115,10 +125,12 @@ BEGIN
 				   WHEN GameType LIKE 'CBAC' THEN 1
 				   ELSE 0
 			   END -- IsVIPGame
+			 , d.JpInvest
+			 , d.JpPayout
 		FROM #TmpData d
 			INNER JOIN bodb02.dbo.Customer c WITH (NOLOCK) ON c.CustID = d.IBCCustID
 	) AS src (BillNo, IBCCustID, Transdate, GameType, GameCode, Stake, Actual_Stake, Winlost, [Status], StatusID,
-	PlayType, Winlostdate, Username, LoginIP, recommend, mrecommend, srecommend, currency, IsVIPGame)
+	PlayType, Winlostdate, Username, LoginIP, recommend, mrecommend, srecommend, currency, IsVIPGame, JpInvest, JpPayout)
 	ON (dest.TicketID = src.BillNo)
 	WHEN MATCHED
 		THEN UPDATE
@@ -140,13 +152,25 @@ BEGIN
 			  , dest.srecommend = src.srecommend
 			  , dest.currency = src.currency
 			  , dest.IsVIPGame = src.IsVIPGame
+			  , dest.JpInvest = src.JpInvest
+			  , dest.JpPayout = src.JpPayout
 	WHEN NOT MATCHED
-		THEN INSERT (TicketID, CustID, Transdate, GameType, GameCode, Stake, Actual_Stake, Winlost, [Status], StatusID, PlayType, Winlostdate, Username, IP, recommend, mrecommend, srecommend, Currency, IsVIPGame)
-			VALUES (src.BillNo, src.IBCCustID, src.Transdate, src.GameType, src.GameCode, src.Stake, src.Actual_Stake, src.Winlost, src.[Status], src.StatusID, src.PlayType, src.Winlostdate, src.Username, src.LoginIP, src.recommend, src.mrecommend, src.srecommend, src.currency, src.IsVIPGame);
+		THEN INSERT (TicketID, CustID, Transdate, GameType, GameCode, Stake, Actual_Stake, Winlost, [Status], StatusID, PlayType, Winlostdate, Username, IP, recommend, mrecommend, srecommend, Currency, IsVIPGame, JpInvest, JpPayout)
+			VALUES (src.BillNo, src.IBCCustID, src.Transdate, src.GameType, src.GameCode, src.Stake, src.Actual_Stake, src.Winlost, src.[Status], src.StatusID, src.PlayType, src.Winlostdate, src.Username, src.LoginIP, src.recommend, src.mrecommend, src.srecommend, src.currency, src.IsVIPGame, src.JpInvest, src.JpPayout);
 	
+	UPDATE dbo.Product3rd_ImportQueue_CheckData
+	SET FinishedTime = CASE WHEN FinishedTime IS NULL THEN CURRENT_TIMESTAMP
+							ELSE FinishedTime
+					   END
+		, WinlostDate = @Winlostdate
+	WHERE QueueID = @QueueID
+
 	UPDATE #Product3rd_ImportQueue SET IsFinished = 1 WHERE QueueID = @QueueID
 
 	WAITFOR DELAY '00:00:00.280'
 END
 
 
+GO
+
+	
