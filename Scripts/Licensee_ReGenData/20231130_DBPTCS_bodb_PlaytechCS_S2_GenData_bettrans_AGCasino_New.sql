@@ -11,8 +11,6 @@ SET NOCOUNT ON
 DECLARE @QueueID BIGINT = NULL
 	  , @XmlData XML
 
-DECLARE @fromdate DATE = '20231001'
-DECLARE @todate DATE = '20231130'
 DECLARE @Winlostdate DATE;
 
 DECLARE @QueueIDs TABLE (
@@ -22,7 +20,7 @@ DECLARE @QueueIDs TABLE (
 INSERT INTO @QueueIDs (QueueID)
 SELECT QueueID
 FROM dbo.Product3rd_ImportQueue_CheckData (NOLOCK)
-WHERE ProductID = 10
+WHERE ProductID = 10 AND FinishedTime IS NULL
 
 DROP TABLE IF EXISTS #Product3rd_ImportQueue
 
