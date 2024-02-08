@@ -43,5 +43,5 @@ bettype,
 balance 
 FROM Transfer WITH (NOLOCK) 
 WHERE Bettype IN (21001, 21002)
-AND Winlostdate IN ('20240129','20240130','20240131', '20240201', '20240202')
+AND Winlostdate IN ('20240129','20240130','20240131', '20240201')
 AND Transdate >= '2024-02-08'
