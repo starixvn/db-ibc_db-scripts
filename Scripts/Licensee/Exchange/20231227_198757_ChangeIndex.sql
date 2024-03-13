@@ -10,12 +10,21 @@ GO
 
 --Sum_winloss_Exchange
 
+CREATE NONCLUSTERED INDEX [IX_settledDate] ON [dbo].[Sum_winloss_Exchange]
+(
+[settledDate],[CustID] ASC
+)
+INCLUDE ([profitLoss], [marketTotal], [commission], [agentCommission], [stakeTotal], [Currency], [ExVirtualRate], resettledDate, [IsResettled])
+WITH (ONLINE = ON, DROP_EXISTING = ON) 
+ON [3rdProduct_Data]
+
+
 CREATE NONCLUSTERED INDEX [IX_ResettledDate] ON [dbo].[Sum_winloss_Exchange]
 (
-	[resettledDate] ASC,
-	[settledDate] ASC
+[resettledDate],[CustID] ASC
 )
-INCLUDE ([profitLoss], [marketTotal], [commission], [agentCommission], [stakeTotal], [CustID], [Currency], [ExVirtualRate], [IsResettled])
+INCLUDE ([profitLoss], [marketTotal], [commission], [agentCommission], [stakeTotal], [Currency], [ExVirtualRate], [IsResettled])
+WHERE resettledDate IS NOT NULL
 ON [3rdProduct_Data]
 
 GO
