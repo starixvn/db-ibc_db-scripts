@@ -37,7 +37,6 @@ ALTER COLUMN Bettype INT NOT NULL;
 ALTER TABLE [dbo].[rptDepWinlost_AGCasino]  
 DROP CONSTRAINT CIX_rptDepWinlost_AGCasino;  
 -- Create new index
-CREATE UNIQUE INDEX PK_rptDepWinlost_AGCasino on [dbo].[rptDepWinlost_AGCasino]([Custid],[Winlostdate],[Sporttype],[Bettype],[IsVIPGame])
 CREATE CLUSTERED INDEX CIX_Winlostdate on [dbo].[rptDepWinlost_AGCasino] ([Winlostdate],[Custid])
 
 GO
