@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS #tmp1
 CREATE TABLE #tmp1  ( recommend INT, winlostdate SMALLDATETIME, Diff_Amt MONEY, OpeningBalance_SUM MONEY, OpeningBalance_bk MONEY)
 DECLARE @cdate SMALLDATETIME = @fdate
 
-SET @Msg = 'Start Update data from  (2022-03-30 -> 2022-04-01)'
+SET @Msg = 'Start Update data from  (2022-03-31 -> 2022-04-01)'
 RAISERROR (@Msg , 0, 1) WITH NOWAIT
 
 WHILE (@cdate <= @tdate)
@@ -72,7 +72,7 @@ FROM rptdepwinlost_SUM b WITH(ROWLOCK)
 
 SELECT @rowCount = @@RowCount
 
-SET @Msg = 'Done Update data from  (2022-03-30 -> 2022-04-01) - Affected row: ' + CAST(@rowCount AS VARCHAR(50))
+SET @Msg = 'Done Update data from  (2022-03-31 -> 2022-04-01) - Affected row: ' + CAST(@rowCount AS VARCHAR(50))
 RAISERROR (@Msg , 0, 1) WITH NOWAIT
 
 -- List cust diff same value
@@ -354,7 +354,7 @@ VALUES
 	(35554779, 121.00, '2022-01-01 00:00:00'),
 	(40586146, -172.00, '2022-01-01 00:00:00')
 
-SET @Msg = 'Start Insert data from  (2022-03-30 -> 2022-04-01)'
+SET @Msg = 'Start Insert data from  (2022-03-31 -> 2022-04-01)'
 RAISERROR (@Msg , 0, 1) WITH NOWAIT
 
 -- Insert data from  '2022-03-30' -> '2022-04-01'
@@ -422,14 +422,14 @@ INSERT INTO dbo.rptDepwinlost_SUM (
 	ORDER BY a.winlostdate
 
 SELECT @rowCount = @@RowCount
-SET @Msg = 'Done Insert data from  (2022-03-30 -> 2022-04-01) - Affected row: ' + CAST(@rowCount AS VARCHAR(50))
+SET @Msg = 'Done Insert data from  (2022-03-31 -> 2022-04-01) - Affected row: ' + CAST(@rowCount AS VARCHAR(50))
 RAISERROR (@Msg , 0, 1) WITH NOWAIT
 
 
 DECLARE @Recommend INT, @Winlostdate SMALLDATETIME,  @diffamt MONEY
 SET @cdate = '2022-03-31'
 
-SET @Msg = 'Start update data before 2022-03-30' 
+SET @Msg = 'Start update data before 2022-03-31' 
 RAISERROR (@Msg , 0, 1) WITH NOWAIT
 
 WHILE EXISTS (SELECT 1 FROM #tmp2 WHERE Isfinished = 0 )
