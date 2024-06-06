@@ -1,12 +1,13 @@
 /*<info serverAlias="DBRPT-bodb_Report" isFunction="0" isNested=""></info>*/
 
 /*
-	Created: 20240514@Evan
+	Created: 20240606@Evan
 	DB: DBRPT-bodb_Report
 	Task: Reactivation - Check & fix rounded data issue [Redmine: 179084]
-	Run on DB061
+	Run on DB061, DB062
 */
-SET NOCOUNT ON
+
+
 DROP TABLE IF EXISTS #DiffData
 
 CREATE TABLE #DiffData (
@@ -16,48 +17,8 @@ CREATE TABLE #DiffData (
 	, DateAffect SMALLDATETIME -- Date of detection diff data
 	, Isfinished BIT  DEFAULT(0)
 )
-
+ 
 INSERT INTO #DiffData (CustId, DiffAmt, DateAffect) VALUES
-	(26723697, 7144887.972, '2021-12-15 00:00:00'),
-	(26723696, -3626795.5707, '2017-10-29 00:00:00'),
-	(26723588, -3193944.4888, '2017-10-31 00:00:00'),
-	(26575031, -2300523.3156, '2017-10-31 00:00:00'),
-	(28201992, -2157306.64, '2020-06-20 00:00:00'),
-	(26575033, -1711399.0971, '2017-10-31 00:00:00'),
-	(26723727, -1568328.1263, '2017-10-31 00:00:00'),
-	(26183827, -1465454.6023, '2017-10-31 00:00:00'),
-	(26723614, -1077581.5665, '2017-10-30 00:00:00'),
-	(26723615, -851850.5941, '2017-10-31 00:00:00'),
-	(28762849, -586945.4373, '2020-06-20 00:00:00'),
-	(26723589, -413007.9643, '2017-10-31 00:00:00'),
-	(28201692, -239526.805, '2020-06-20 00:00:00'),
-	(26183833, -239218.7078, '2017-10-31 00:00:00'),
-	(26183870, -212591.9902, '2017-10-29 00:00:00'),
-	(26183909, -161436.9832, '2017-10-31 00:00:00'),
-	(26723606, -132724.1238, '2017-10-31 00:00:00'),
-	(26183962, -109246.2954, '2017-09-30 00:00:00'),
-	(26183847, -42980.1579, '2017-10-31 00:00:00'),
-	(26723648, -42696.0443, '2017-10-31 00:00:00'),
-	(26723728, -25232.3534, '2017-10-31 00:00:00'),
-	(26723607, -21201.6258, '2017-10-31 00:00:00'),
-	(26723649, 20336.4177, '2017-10-31 00:00:00'),
-	(26183905, -19181.4747, '2017-10-31 00:00:00'),
-	(26183889, -13756.1299, '2017-10-28 00:00:00'),
-	(26183846, -7564.3975, '2017-10-25 00:00:00'),
-	(26183956, -6613.0732, '2017-10-31 00:00:00'),
-	(26183922, 6111.4039, '2017-10-30 00:00:00'),
-	(26183873, -5498.8852, '2017-07-30 00:00:00'),
-	(26183828, -4436.6447, '2017-10-29 00:00:00'),
-	(26183921, 4113.2844, '2017-10-30 00:00:00'),
-	(26183968, -3118.9223, '2017-10-31 00:00:00'),
-	(26183942, -1962.1214, '2017-10-29 00:00:00'),
-	(26723518, 547.3207, '2017-09-17 00:00:00'),
-	(26723609, 11.1567, '2017-09-09 00:00:00'),
-	(2748100, -12.50, '2013-01-26 00:00:00'),
-	(2748140, 8000.00, '2013-01-26 00:00:00'),
-	(7753579, 0.3903, '2013-01-28 00:00:00'),
-	(26723523, -34.6149, '2017-08-02 00:00:00'),
-	(28763286, -12.9565, '2018-05-30 00:00:00'),
 	(16853913, 0.47, '2022-01-04 00:00:00'),
 	(27829283, 0.47, '2022-01-04 00:00:00'),
 	(17620564, 0.45, '2022-01-04 00:00:00'),
@@ -157,7 +118,6 @@ INSERT INTO #DiffData (CustId, DiffAmt, DateAffect) VALUES
 	(19590608, 0.3794, '2022-01-05 00:00:00'),
 	(17039104, 0.3765, '2022-01-05 00:00:00'),
 	(18909226, 0.43, '2022-01-06 00:00:00'),
-	(29936003, -1.42, '2022-01-06 00:00:00'),
 	(19525849, -0.30, '2022-01-06 00:00:00'),
 	(28631086, -0.30, '2022-01-06 00:00:00'),
 	(31731820, -0.24, '2022-01-06 00:00:00'),
@@ -168,37 +128,17 @@ INSERT INTO #DiffData (CustId, DiffAmt, DateAffect) VALUES
 	(27870985, 0.01, '2022-01-07 00:00:00'),
 	(32322977, -0.08, '2022-01-08 00:00:00'),
 	(30866576, 0.30, '2022-01-08 00:00:00'),
-	(28949763, 1059.9821, '2022-06-16 00:00:00'),
-	(38992636, 99.3525, '2022-06-20 00:00:00'),
 	(29517061, 0.49, '2022-06-21 00:00:00'),
-	(42074412, 165.71, '2022-06-22 00:00:00'),
 	(44955990, -0.345, '2022-08-02 00:00:00'),
-	(45805815, 0.33, '2022-09-22 00:00:00'),
-	(59073953, 33.00, '2022-09-22 00:00:00'),
-	(45840936, -4.91, '2022-09-22 00:00:00'),
-	(26854657, 10000.00, '2022-09-22 00:00:00'),
-	(32657300, -3363.00, '2022-09-22 00:00:00'),
-	(56506786, -1936.00, '2022-09-22 00:00:00'),
-	(28926988, -1000.00, '2022-09-22 00:00:00'),
-	(40586147, 970.00, '2022-09-22 00:00:00'),
-	(65688165, 724.08, '2022-09-22 00:00:00'),
-	(41799217, 666.33, '2022-09-22 00:00:00'),
-	(55254117, 546.48, '2022-09-22 00:00:00'),
-	(43054420, -430.34, '2022-09-22 00:00:00'),
-	(43454885, 300.31, '2022-09-22 00:00:00'),
-	(41252470, 251.00, '2022-09-22 00:00:00'),
-	(41799123, -238.86, '2022-09-22 00:00:00'),
-	(16379951, 234.42, '2022-09-22 00:00:00'),
-	(23987033, 0.6224, '2023-02-18 00:00:00'),
 	(27890017, -0.05, '2022-01-08 00:00:00')
-    
+
 UPDATE a
 SET a.recommend = b.recommend
 FROM #DiffData a
 	INNER JOIN bodb02..custInfo b (NOLOCK) ON a.custid = b.custid
 
 DROP TABLE IF EXISTS #Recommend
-CREATE TABLE #Recommend (Recommend INT,Winlostdate smalldatetime, DiffAmt MONEY, IsCheck BIT DEFAULT(0))
+CREATE TABLE #Recommend (Recommend INT,Winlostdate smalldatetime, DiffAmt MONEY)
 
 INSERT INTO #Recommend(Recommend,Winlostdate,DiffAmt)
 SELECT recommend,dateaffect,SUM(DiffAmt)
@@ -207,25 +147,12 @@ GROUP BY recommend,dateaffect
 
 DELETE #Recommend WHERE Recommend IS NULL
 
-DECLARE @Recommend INT, @Winlostdate SMALLDATETIME,  @diffamt MONEY, @rowCount BIGINT, @Msg VARCHAR (500)
-WHILE exists (SELECT 1 FROM #Recommend WHERE ischeck = 0 )
-BEGIN
-  
-	SELECT TOP 1 @Recommend= Recommend, @Winlostdate = Winlostdate, @diffamt = diffamt FROM #Recommend WHERE ischeck = 0
+UPDATE a 
+SET a.Adjustment = a.Adjustment + b.DiffAmt
+FROM dbo.rptDepWinlost_bk a WITH (ROWLOCK)
+INNER JOIN #DiffData b ON b.CustId = a.custid AND a.winlostdate = b.DateAffect
 
-	UPDATE b
-	SET  b.ClosingBalance = b.ClosingBalance + @diffamt
-		,b.OpeningBalance = CASE WHEN b.winlostdate = @Winlostdate THEN b.OpeningBalance ELSE b.OpeningBalance + @DiffAmt END,
-			b.Deposit = CASE WHEN b.winlostdate = @Winlostdate THEN b.Deposit + @diffamt ELSE b.Deposit END
-	FROM rptdepwinlost_SUM b WITH(ROWLOCK)
-	where b.recommend = @Recommend AND b.winlostdate >= @Winlostdate AND b.winlostdate < '2024-04-12'
-    
-    SELECT @rowCount = @@RowCount
-
-	UPDATE #Recommend set ischeck = 1 where @Recommend= Recommend AND @Winlostdate = Winlostdate
-    SET @Msg = 'DONE - Recommend: ' +  CAST(@Recommend AS VARCHAR(50)) + ' - Affected row: ' + CAST(@rowCount AS VARCHAR(50))
-
-	WAITFOR DELAY '00:00:00.280'
-    RAISERROR (@Msg , 0, 1) WITH NOWAIT
-END
-
+UPDATE a 
+SET a.Adjustment = a.Adjustment + b.DiffAmt
+FROM dbo.rptdepwinlost_SUM a WITH (ROWLOCK)
+INNER JOIN #Recommend b ON b.Recommend = a.Recommend AND a.winlostdate = b.Winlostdate
