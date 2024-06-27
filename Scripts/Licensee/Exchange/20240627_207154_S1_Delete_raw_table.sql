@@ -5,7 +5,8 @@
 	Task: Exchange Product - Remove data in June [RedmineID: #207154]
 		- Step 1: Remove raw data
 */
-
+USE bodb_3rdProduct
+GO
 
 declare  @FromDate date  = '2024-06-01',
 		 @ToDate   date  = '2024-06-27',		
