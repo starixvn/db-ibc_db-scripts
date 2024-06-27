@@ -2,7 +2,7 @@
 /*
 	Created: 20240627@Kelvin
 	DB: DBLIC-bodb_3rdProduct
-	Task: Exchange Product - Remove data in June
+	Task: Exchange Product - Remove data in June [RedmineID: #207154]
 		- Step 1: Remove raw data
 */
 
