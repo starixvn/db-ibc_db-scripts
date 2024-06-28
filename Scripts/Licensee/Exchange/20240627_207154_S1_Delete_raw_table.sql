@@ -9,7 +9,7 @@ USE bodb_3rdProduct
 GO
 
 declare  @FromDate date  = '2024-06-01',
-		 @ToDate   date  = '2024-06-27',		
+		 @ToDate   date  = '2024-06-28',		
 		 @batch	int = 2000
 
 drop table if exists #tmpSum_winloss_Exchange
