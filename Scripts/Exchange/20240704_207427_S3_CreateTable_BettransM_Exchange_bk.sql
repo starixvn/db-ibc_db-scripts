@@ -14,9 +14,9 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
+--DROP TABLE [BettransM_Exchange_bk]
 CREATE TABLE [dbo].[BettransM_Exchange_bk](
-	[TransID] [bigint] IDENTITY(1,1) NOT NULL,
+	[TransID] [bigint] NOT NULL,
 	[BetID] [bigint] NOT NULL,
 	[betTaken] [datetime] NULL,
 	[txStake] [money] NULL,

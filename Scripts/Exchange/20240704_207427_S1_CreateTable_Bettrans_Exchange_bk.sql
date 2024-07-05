@@ -15,7 +15,7 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
+--DROP TABLE [Bettrans_Exchange_bk]
 CREATE TABLE [dbo].[Bettrans_Exchange_bk](
 	[site] [tinyint] NULL,
 	[currencyType] [tinyint] NULL,
@@ -40,7 +40,7 @@ CREATE TABLE [dbo].[Bettrans_Exchange_bk](
 	[matchAvgOdds] [smallmoney] NULL,
 	[profitLoss] [money] NULL,
 	[dateMatched] [datetime] NULL,
-	[tstamp] [timestamp] NOT NULL,
+	--[tstamp] [timestamp] NOT NULL,
 	[betstatus] [varchar](15) NULL,
 	[APIEndDate] [datetime] NULL,
 	[fancyBetRuns] [money] NULL,
@@ -61,11 +61,11 @@ INCLUDE([userId],[eventTypeName],[matchStake]) WITH (PAD_INDEX = OFF, STATISTICS
 GO
 
 /****** Object:  Index [IX_tstamp]    Script Date: 7/4/2024 11:23:29 AM ******/
-CREATE NONCLUSTERED INDEX [IX_tstamp] ON [dbo].[Bettrans_Exchange_bk]
-(
-	[tstamp] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [3rdProduct_Data]
-GO
+--CREATE NONCLUSTERED INDEX [IX_tstamp] ON [dbo].[Bettrans_Exchange_bk]
+--(
+--	[tstamp] ASC
+--)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [3rdProduct_Data]
+--GO
 
 SET ANSI_PADDING ON
 GO
