@@ -17,12 +17,11 @@ SELECT  @FromDate = MIN(settledDate)
 					--DATEADD(yy, DATEDIFF(yy, 0, DATEADD(YEAR, -2, GETDATE())) , 0)	  
 FROM dbo.Sum_winloss_Exchange s WITH(NOLOCK)
 
---SELECT @FromDate FromDate, @ToDate ToDate
+SELECT @FromDate FromDate, @ToDate ToDate
 
 WHILE @FromDate <= @ToDate
 BEGIN
 	
-
 	EXEC dbo.Task_Archive_SelectBettrans_Exchange @settledDate = @FromDate, @batchsize = 2000, @ErrMsg = @ErrMsg OUT
 
 	IF ISNULL(@ErrMsg,'') <> ''
@@ -39,6 +38,8 @@ END
 SELECT TOP 100 * FROM Sum_winloss_Exchange_bk(NOLOCK)
 SELECT TOP 100 * FROM Bettrans_Exchange_bk(NOLOCK)
 SELECT TOP 100 * FROM BettransM_Exchange_bk(NOLOCK)
-SELECT * FROM LOG_Archive_BettransExchange(NOLOCK)
+SELECT TOP 100 * FROM LOG_Archive_BettransExchange(NOLOCK)
+SELECT TOP 100 * FROM Sum_winloss_Exchange_Archive_Staging(NOLOCK)
+SELECT TOP 100 * FROM Bettrans_Exchange_Archive_Staging(NOLOCK)
 
 */
