@@ -1,3 +1,4 @@
+/*<info serverAlias="DBLIC-bodb_LicenseeReport"></info>*/
 /*
 	Created: 20240704@Kelvin
 	DB: DBLIC-bodb_LicenseeReport
