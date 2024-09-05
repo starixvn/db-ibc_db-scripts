@@ -7,13 +7,13 @@
 
 	Run script with date range 07/01/2024 - 09/05/2024
 	Part 1: 
-		betPlaced >= '2024-08-20' and betPlaced < '2024-09-06'
+		betPlaced >= '2024-08-15' and betPlaced < '2024-09-06'
 	Part 2: waiting 1 hours
-		betPlaced >= '2024-08-01' and betPlaced < '2024-08-20'
+		betPlaced >= '2024-08-01' and betPlaced < '2024-08-15'
 	Part 3: waiting 1 hours
-		betPlaced >= '2024-07-16' and betPlaced < '2024-08-01'
+		betPlaced >= '2024-07-15' and betPlaced < '2024-08-01'
 	Part 4: waiting 1 hours
-		betPlaced >= '2024-07-01' and betPlaced < '2024-07-16'
+		betPlaced >= '2024-07-01' and betPlaced < '2024-07-15'
 
 */
 
