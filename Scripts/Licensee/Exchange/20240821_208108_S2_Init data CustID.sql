@@ -3,6 +3,18 @@
 	Created: 20240821@Kelvin
 	DB: DBLIC-bodb_3rdProduct
 	Task: LAP - Exchange - Support Running ticket [RedmineID: #208108]		
+
+
+	Run script with date range 07/01/2024 - 09/05/2024
+	Part 1: 
+		betPlaced >= '2024-08-20' and betPlaced < '2024-09-06'
+	Part 2: waiting 1 hours
+		betPlaced >= '2024-08-01' and betPlaced < '2024-08-20'
+	Part 3: waiting 1 hours
+		betPlaced >= '2024-07-16' and betPlaced < '2024-08-01'
+	Part 4: waiting 1 hours
+		betPlaced >= '2024-07-01' and betPlaced < '2024-07-16'
+
 */
 
 
@@ -17,7 +29,7 @@ create table #tmpBettrans_Exchange (betID bigint, isfinished bit default(0))
 insert into #tmpBettrans_Exchange (betID)
 select s.betID
 from dbo.Bettrans_Exchange s with (nolock)
-where betPlaced >= '2024-07-01'
+where betPlaced >= '2024-08-20' and betPlaced < '2024-09-06'
 
 while exists (select top 1 1 from #tmpBettrans_Exchange)
 begin
