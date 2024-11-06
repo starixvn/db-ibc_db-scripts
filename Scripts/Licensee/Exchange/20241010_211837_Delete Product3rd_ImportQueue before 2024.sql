@@ -12,7 +12,7 @@ DECLARE @BatchSize INT = 3000
 , @rowcnt INT
 , @QueueID bigint
 
-SELECT @QueueID = MAX(QueueID) FROM Product3rd_ImportQueue(NOLOCK) WHERE FinishedTime < '2024-09-01'
+SELECT @QueueID = MAX(QueueID) FROM Product3rd_ImportQueue(NOLOCK) WHERE FinishedTime < '2024-10-01'
 
 SET @rowcnt = @BatchSize
 
