@@ -6,4 +6,4 @@
 */
 
 
-GRANT SELECT ON OBJECT::dbo.rptDepWinlost_AGCasino TO wsv_lap;  
+GRANT SELECT ON [dbo].[rptDepWinlost_AGCasino] TO [wsv_lap] AS [dbo]
