@@ -1,9 +1,10 @@
-
+/*<info serverAlias="DBEXT-bodb02"></info>*/
 /*
 	Created: 20241113@Kelvin
 	DB: DBEXT-bodb02
-	Task: LAP - Integrate Betby (VS6) [RedmineID: #212446]
+	Task : LAP - Integrate Betby (VS6) [RedmineID: #212446]
 */
+
 
 USE bodb02
 GO
