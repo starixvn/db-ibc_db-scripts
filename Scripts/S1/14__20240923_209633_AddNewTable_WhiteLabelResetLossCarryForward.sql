@@ -1,10 +1,9 @@
-/*<info serverAlias="DBAGE-bodb02"></info>*/
+/*<info serverAlias="DBCUST-CustDB"></info>*/
 /*
 	Created: 20240923@Danny
-	DB: DBAGE.bodb02
+	DB: DBCUST.CustDB
 	Task: Add new WhiteLabelResetLossCarryForward table RedmineId #209633
 */
-USE bodb02
 
 GO
 CREATE TABLE [dbo].[WhiteLabelResetLossCarryForward](

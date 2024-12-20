@@ -1,0 +1,155 @@
+/*<info serverAlias="DBWLB-bodb_WhiteLabel"></info>*/
+/*
+	Created: 20240923@Danny
+	DB: DBWLB.bodb_WhiteLabel
+	Task: Add new WhiteLableWinloss table RedmineId #209633
+*/
+
+USE [master]
+
+GO
+
+/*
+CreatD: 20200316@danny.nguyen
+Task: DBAGE/bodb_WhiteLabel
+
+*/
+
+/****** Object:  Database [bodb_WhiteLabel]  ******/
+CREATE DATABASE [bodb_WhiteLabel] ON  PRIMARY 
+( NAME = N'bodb_WhiteLabel', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\bodb_WhiteLabel.mdf' , SIZE = 3072KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB ), 
+ FILEGROUP [DATA]  DEFAULT
+( NAME = N'Data_01', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\Data_01.ndf' , SIZE = 1024KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB ),
+( NAME = N'Data_02', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\Data_02.ndf' , SIZE = 1024KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB ),
+ FILEGROUP [INDEX] 
+( NAME = N'Index_01', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\Index_01.ndf' , SIZE = 1024KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB ),
+( NAME = N'Index_02', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\Index_02.ndf' , SIZE = 1024KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+
+ LOG ON 
+( NAME = N'bodb_WhiteLabel_log', FILENAME = N'G:\SQLSERVER2019_DEVDB053\IBC_DB\bodb_WhiteLabel\bodb_WhiteLabel_log.ldf' , SIZE = 44032KB , MAXSIZE = 2048GB, FILEGROWTH = 32768KB)
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET RECOVERY SIMPLE 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [bodb_WhiteLabel] SET  READ_WRITE 
+GO
+
+
+USE [bodb_WhiteLabel]
+GO
+CREATE USER [wsv_alp] FOR LOGIN [wsv_alp]
+GO
+USE [bodb_WhiteLabel]
+GO
+ALTER USER [wsv_alp] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ 
+ 
+CREATE USER [wsv_alpv] FOR LOGIN [wsv_alpv]
+GO
+USE [bodb_WhiteLabel]
+GO
+ALTER USER [wsv_alpv] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ 
+CREATE USER [wsv_xnap] FOR LOGIN [wsv_xnap]
+GO
+USE [bodb_WhiteLabel]
+GO
+ALTER USER [wsv_xnap] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+
+use bodb_WhiteLabel
+go
+ 
+GRANT SELECT ON [dbo].[WhiteLabelWinloss] TO [wsv_xnap] AS [dbo]
+GO
+GRANT SELECT ON [dbo].[WhiteLabelWinloss_History] TO [wsv_xnap] AS [dbo]
+GO
+ 
+GRANT SELECT ON [dbo].[WhiteLabelWinloss] TO [wsv_alpv] AS [dbo]
+GO
+GRANT SELECT ON [dbo].[WhiteLabelWinloss_History] TO [wsv_alpv] AS [dbo]
+GO
+ 
+GRANT SELECT ON [dbo].[WhiteLabelWinloss] TO [wsv_alp] AS [dbo]
+GO
+GRANT SELECT ON [dbo].[WhiteLabelWinloss_History] TO [wsv_alp] AS [dbo]
+GO
