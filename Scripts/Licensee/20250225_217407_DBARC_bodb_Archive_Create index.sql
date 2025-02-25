@@ -1,0 +1,25 @@
+/*<info serverAlias="DBARC-bodb_Archive"></info>*/
+/*
+	Created: 20250225@Kelvin
+	DB: DBARC-bodb_Archive
+	Task : LAP - Win Loss By League - Support Virtual Sports [RedmineID: #217407]
+*/
+
+USE bodb_Archive
+GO
+
+CREATE NONCLUSTERED INDEX [IX_eventdate] ON [dbo].[outright_bk]
+(
+	[eventdate] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) 
+ON [EVENT]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_eventdate] ON [dbo].[Match3rd_bk]
+(
+	[EventDate] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) 
+ON [Match3rd_bk_table]
+GO
+
+
