@@ -18,6 +18,9 @@
 -- ===========================
 
 ALTER TABLE Acc_FinancePermission
+DROP COLUMN ID
+
+ALTER TABLE Acc_FinancePermission
 DROP CONSTRAINT PK_Acc_FinancePermission
 
 ALTER TABLE Acc_FinancePermission
@@ -28,6 +31,9 @@ ADD ID INT IDENTITY (1,1) NOT NULL CONSTRAINT PK_Acc_FinancePermission_ID PRIMAR
 -- ===========================
 
 ALTER TABLE Acc_GroupExtraPT_Product
+DROP COLUMN ID
+
+ALTER TABLE Acc_GroupExtraPT_Product
 DROP CONSTRAINT PK_Acc_GroupExtraPT_Product
 
 ALTER TABLE Acc_GroupExtraPT_Product
@@ -36,6 +42,9 @@ ADD ID INT IDENTITY (1,1) NOT NULL CONSTRAINT PK_Acc_GroupExtraPT_Product_ID PRI
 -- ===========================
 -- Acc_GroupExtraPT2_Product
 -- ===========================
+
+ALTER TABLE Acc_GroupExtraPT2_Product
+DROP COLUMN ID
 
 ALTER TABLE Acc_GroupExtraPT2_Product
 DROP CONSTRAINT PK_Acc_GroupExtraPT_Product

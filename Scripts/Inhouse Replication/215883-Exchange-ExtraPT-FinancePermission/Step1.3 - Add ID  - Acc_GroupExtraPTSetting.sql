@@ -14,6 +14,8 @@
 -- ===========================
 -- Acc_GroupExtraPTSetting
 -- ===========================
+ALTER TABLE Acc_GroupExtraPTSetting
+DROP COLUMN ID
 
 ALTER TABLE Acc_GroupExtraPTSetting
 DROP CONSTRAINT PK_Acc_GroupExtraPTSetting
