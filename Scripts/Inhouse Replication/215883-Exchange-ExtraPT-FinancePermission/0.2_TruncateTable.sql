@@ -1,0 +1,17 @@
+/*<info serverAlias="DBSIC-CustDB,DBSID-CustDB,DBTXN-CustDB,DBAGE-bodb02,DBBOF-bodb02,DBACC-bodb02,DBTP-bodb02" executers="" isFunction="0" isNested="0"></info>*/
+/*
+	Created: 20250214@Lewis	
+	Task: truncate table
+	DB: DBSIC-CustDB,DBSID-CustDB,DBTXN-CustDB,DBAGE-bodb02,DBBOF-bodb02,DBACC-bodb02,DBTP-bodb02
+	
+	Revisions:
+		- 20250214@Lewis: Created [RedmineID: #215883]
+
+	Description:
+		- Acc_GroupExtraPT2Setting: DBCUST,DBGRP01L,DBTRANS,DBGRP02L,DBGRP03L,DB052,DB053,DB054,DB055,DB061,DB062,DBTP10C
+*/
+-- ===========================
+-- Acc_GroupExtraPT2Setting
+-- ===========================
+
+TRUNCATE TABLE Acc_GroupExtraPT2Setting
