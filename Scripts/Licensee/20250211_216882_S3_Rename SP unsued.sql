@@ -6,7 +6,7 @@
 
 GO
 
-/* <info serverAlias="DBLIC-bodb_LicenseeReport"></info>*/
+--DBLIC-bodb_LicenseeReport
 --=====================================================================================================================================
 USE bodb_LicenseeReport
 GO
@@ -17,7 +17,7 @@ SP_RENAME 'Task_rptBetting_BA_CheckData','DEL_Task_rptBetting_BA_CheckData_BA'
 --=====================================================================================================================================
 
 
-/* <info serverAlias="DB042-bodb_Licensee"></info>*/
+--DB042-bodb_Licensee
 --=====================================================================================================================================
 USE bodb_Licensee
 GO
@@ -28,7 +28,7 @@ SP_RENAME 'Task_BATransaction_Copy_Ticket','DEL_Task_BATransaction_Copy_Ticket'
 --=====================================================================================================================================
 
 
-/* <info serverAlias="DBEXT-bodb02,DBACC-bodb02,DBBOF-bodb02"></info>*/
+--DBEXT-bodb02,DBACC-bodb02,DBBOF-bodb02
 --=====================================================================================================================================
 USE bodb02
 GO
@@ -42,7 +42,7 @@ SP_RENAME 'Task_BATransaction_CheckAndCorrect','DEL_Task_BATransaction_CheckAndC
 --=====================================================================================================================================
 
 
-/*<info serverAlias="DBLIC-bodb_Licensee,DBACC-bodb_Licensee,DB042-bodb_Licensee"></info>*/
+--DBLIC-bodb_Licensee,DBACC-bodb_Licensee,DB042-bodb_Licensee
 --=====================================================================================================================================
 USE bodb_Licensee
 GO
@@ -51,7 +51,7 @@ SP_RENAME 'Task_DetectBAMemberBreakRules','DEL_Task_DetectBAMemberBreakRules'
 --=====================================================================================================================================
 
 
-/*<info serverAlias="DBSID-bodb02"></info>*/
+--DBSID-bodb02
 --=====================================================================================================================================
 USE bodb02
 GO
@@ -66,7 +66,7 @@ SP_RENAME 'SiteDB_Task_BATransaction_Loop_Ins','DEL_SiteDB_Task_BATransaction_Lo
 --=====================================================================================================================================
 
 
-/*<info serverAlias="DBAGE-bodb02,DBACC-bodb02"></info>*/
+--DBAGE-bodb02,DBACC-bodb02
 --=====================================================================================================================================
 USE bodb02
 GO
