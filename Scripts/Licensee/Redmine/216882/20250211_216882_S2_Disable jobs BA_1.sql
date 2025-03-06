@@ -13,10 +13,12 @@ USE [msdb]
 
 GO
 
-EXEC dbo.sp_update_job @job_name = N'bodb02: Retrieve BA Transaction', @enabled = 0 ;
+EXEC dbo.sp_update_job @job_name = N'bodb02: Retrieve BA Transaction', @new_name = N'DEL_bodb02: Retrieve BA Transaction', @enabled = 0 ;
 
 GO
-EXEC dbo.sp_update_job @job_name = N'bodb02: Verify BA Tickets', @enabled = 0 ;
+EXEC dbo.sp_update_job @job_name = N'bodb02: Verify BA Tickets', @new_name = N'DEL_bodb02: Verify BA Tickets', @enabled = 0 ;
+
+GO
 
 --=====================================================================================================================================
 
