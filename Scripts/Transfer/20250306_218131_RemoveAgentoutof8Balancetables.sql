@@ -1,0 +1,34 @@
+/*<info serverAlias="DBSIC-bodb02" isFunction="0" isNested=""></info>*/
+/*
+	Created: 20250306@Bobby
+	DB: DBSIC.bodb02
+	Task: remove agent out of 8 balance tables [Redmind: #218131]
+
+*/
+
+USE bodb02
+
+GO
+DELETE BalCreditTransfer WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalCreditCasino WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalCreditSports WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalCreditOthers WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalDebitTransfer WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalDebitCasino WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalDebitSports WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
+
+DELETE BalDebitOthers WITH (UPDLOCK, ROWLOCK)
+WHERE custID in (13066129,31545614) 
