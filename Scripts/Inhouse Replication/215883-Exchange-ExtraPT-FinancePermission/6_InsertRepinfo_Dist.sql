@@ -43,3 +43,37 @@ END
 GO
 /***************************************************************************/
 
+IF NOT EXISTS (SELECT * FROM dbo.RepInfo WITH (NOLOCK) WHERE [name] = 'Acc_GroupExtraPT2Setting')
+BEGIN
+	INSERT INTO RepInfo ([group],[name],active,version_key,version_type,unique_key,get_sp,put_sp,interval,back_fix,delayed_fix,batch_size) 
+	SELECT 13,'Acc_GroupExtraPT2Setting',0,'repupdatetime',0,'ID','Repl_GetAcc_GroupExtraPT2Setting','Repl_PutAcc_GroupExtraPT2Setting_Dist',1000,10,60000,0
+END
+ELSE
+BEGIN  
+	SELECT 'Acc_GroupExtraPT2Setting exists !!!'
+END
+GO
+/***************************************************************************/
+IF NOT EXISTS (SELECT * FROM dbo.RepInfo WITH (NOLOCK) WHERE [name] = 'Acc_GroupExtraPTSetting')
+BEGIN
+	INSERT INTO RepInfo ([group],[name],active,version_key,version_type,unique_key,get_sp,put_sp,interval,back_fix,delayed_fix,batch_size) 
+	SELECT 13,'Acc_GroupExtraPTSetting',0,'repupdatetime',0,'ID','Repl_GetAcc_GroupExtraPTSetting','Repl_PutAcc_GroupExtraPTSetting_Dist',1000,10,60000,0
+END
+ELSE
+BEGIN  
+	SELECT 'Acc_GroupExtraPTSetting exists !!!'
+END
+GO
+/***************************************************************************/
+IF NOT EXISTS (SELECT * FROM dbo.RepInfo WITH (NOLOCK) WHERE [name] = 'EaGroupHeadline')
+BEGIN
+	INSERT INTO RepInfo ([group],[name],active,version_key,version_type,unique_key,get_sp,put_sp,interval,back_fix,delayed_fix,batch_size) 
+	SELECT 0,'EaGroupHeadline',0,'repupdatetime',0,'GroupHeadlineId|GroupId|GroupName|SiteId|ExchangeId','Repl_GetEaGroupHeadline','Repl_PutEaGroupHeadline_Dist',1000,10,60000,0
+END
+ELSE
+BEGIN  
+	SELECT 'EaGroupHeadline exists !!!'
+END
+GO
+/***************************************************************************/
+
