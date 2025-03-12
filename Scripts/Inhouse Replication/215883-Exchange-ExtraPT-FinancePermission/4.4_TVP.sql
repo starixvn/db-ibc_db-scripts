@@ -1,8 +1,8 @@
-/*<info serverAlias="IRS_DBTP-bodb02" executers="" isFunction="0" isNested="0"></info>*/
+/*<info serverAlias="IRS_DBTP-bodb02,DBCustRepl-ReplCustDB" executers="" isFunction="0" isNested="0"></info>*/
 /*
 	Created: 20250115@Lewis	
 	Task: In-House
-	DB: IRS_DBTP-bodb02
+	DB: IRS_DBTP-bodb02,DBCustRepl-ReplCustDB
 	
 	Revisions:
 		- 20250115@Lewis: Created [RedmineID: #215883]
