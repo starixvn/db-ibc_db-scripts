@@ -1,16 +1,13 @@
-/*<info serverAlias="DBCUST-CustDB,DBACC-bodb02,DBTP-bodb02" executers="" isFunction="0" isNested="0"></info>*/
+/*<info serverAlias="DBCUST-CustDB" executers="" isFunction="0" isNested="0"></info>*/
 /*
 	Created: 20250214@Lewis	
-	Task: STEP1 -- DROP CONSTRAINT + ADD COLUMN ID
+	Task: STEP1 -- ADD COLUMN ID
 	DB: DBCUST-CustDB,DBACC-bodb02,DBTP-bodb02
 	
 	Revisions:
 		- 20250214@Lewis: Created [RedmineID: #215883]
 
 	Description:
-		- Acc_FinancePermission: DBCUST,DB061,DB062,DBTP10C
-		- Acc_GroupExtraPT_Product: DBCUST,DB061,DB062,DBTP10C
-		- Acc_GroupExtraPT2_Product: DBCUST,DB061,DB062,DBTP10C
 */
 
 -- ===========================
@@ -32,6 +29,20 @@ ADD ID INT NULL
 -- ===========================
 
 ALTER TABLE Acc_GroupExtraPT2_Product
+ADD ID INT NULL
+
+-- ===========================
+-- Acc_GroupExtraPTSetting
+-- ===========================
+
+ALTER TABLE Acc_GroupExtraPTSetting
+ADD ID INT NULL
+
+-- ===========================
+-- Acc_GroupExtraPT2Setting
+-- ===========================
+
+ALTER TABLE Acc_GroupExtraPT2Setting
 ADD ID INT NULL
 
 
