@@ -1,4 +1,4 @@
-/*<info serverAlias="DBCUST-bodb_CustomerLog"></info>*/
+/*<info serverAlias="DBCUST-CustDB"></info>*/
 /*
 	Created: 20250414@Kelvin
 	DB: DBCUST-CustDB
@@ -11,10 +11,5 @@ IF DATABASE_PRINCIPAL_ID(N'wsv_nap') IS NULL
 	CREATE USER [wsv_nap] FOR LOGIN [wsv_nap] WITH DEFAULT_SCHEMA = [dbo]
 GRANT EXEC ON dbo.sp_send_dbmail TO [wsv_nap];
 
-
-USE bodb_CustomerLog;
-GO
-GRANT SELECT ON dbo.UserLog_Exchange to [wsv_nap]
-GO
 
 
