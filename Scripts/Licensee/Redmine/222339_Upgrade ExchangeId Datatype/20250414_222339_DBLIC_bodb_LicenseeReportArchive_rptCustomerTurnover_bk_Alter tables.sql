@@ -14,41 +14,33 @@ GO
 ALTER TABLE dbo.rptCustomerTurnover_bk ADD Currency_NEW SMALLINT
 GO
 
-CREATE INDEX IDX_rptCustomerTurnover_bk_Currency_NEW ON dbo.rptCustomerTurnover_bk(Currency_NEW)
+CREATE INDEX IDX_rptCustomerTurnover_bk_Currency_NEW ON dbo.rptCustomerTurnover_bk(Currency_NEW) INCLUDE (Currency)
 GO
 
 /*=================================================================================================*/
 
-DECLARE @FromDate DATE
-		, @ToDate DATE
-		, @rowcnt INT = 0
-
-SELECT @FromDate = MIN(WinlostDate)
-		,@ToDate = MAX(WinlostDate)
-FROM dbo.rptCustomerTurnover_bk WITH(NOLOCK)
-
-WHILE @FromDate <= @ToDate
+WHILE (1 = 1)
 BEGIN
-	SET @rowcnt = 1 -- KICK OFF
+	UPDATE TOP(2000) rptCustomerTurnover_bk
+	SET Currency_NEW = Currency
+	WHERE Currency_NEW IS NULL
 
-	WHILE @rowcnt <> 0
-	BEGIN
-		UPDATE TOP(2000) rptCustomerTurnover_bk
-		SET Currency_NEW = Currency
-		WHERE Currency_NEW IS NULL AND WinlostDate = @FromDate
+	IF @@ROWCOUNT < 2000
+		BREAK;
 
-		SET @rowcnt = @@ROWCOUNT
-
-		WAITFOR DELAY '00:00:00.280'
-	END
-
-	SET @FromDate = DATEADD(D, 1, @FromDate)
+	WAITFOR DELAY '00:00:00.280'
 END
 
-/*
-SELECT TOP 100 WinlostDate,Currency,Currency_NEW
+/* 
+--Check all data updated
+SELECT COUNT(*)
+FROM rptCustomerTurnover_bk WITH(NOLOCK)
+WHERE Currency_NEW IS NULL
+
+SELECT COUNT(*)
 FROM rptCustomerTurnover_bk WITH(NOLOCK)
 WHERE Currency_NEW <> Currency
+
 */
 
 /*=================================================================================================*/
