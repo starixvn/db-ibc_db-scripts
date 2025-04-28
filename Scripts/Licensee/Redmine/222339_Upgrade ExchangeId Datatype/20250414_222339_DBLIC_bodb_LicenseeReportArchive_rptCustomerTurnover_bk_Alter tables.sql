@@ -21,11 +21,11 @@ GO
 
 WHILE (1 = 1)
 BEGIN
-	UPDATE TOP(2000) rptCustomerTurnover_bk
+	UPDATE TOP(20000) rptCustomerTurnover_bk
 	SET Currency_NEW = Currency
 	WHERE Currency_NEW IS NULL
 
-	IF @@ROWCOUNT < 2000
+	IF @@ROWCOUNT < 20000
 		BREAK;
 
 	WAITFOR DELAY '00:00:00.280'
