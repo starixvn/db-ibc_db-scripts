@@ -14,24 +14,51 @@ GO
 ALTER TABLE dbo.rptCustomerTurnover_bk ADD Currency_NEW SMALLINT
 GO
 
-CREATE INDEX IDX_rptCustomerTurnover_bk_Currency_NEW ON dbo.rptCustomerTurnover_bk(Currency_NEW) INCLUDE (Currency)
-GO
-
 /*=================================================================================================*/
 
-WHILE (1 = 1)
-BEGIN
-	UPDATE TOP(20000) rptCustomerTurnover_bk
-	SET Currency_NEW = Currency
-	WHERE Currency_NEW IS NULL
+DECLARE @recommend INT
+		,@Max_recommend INT
 
-	IF @@ROWCOUNT < 20000
+SELECT @recommend = MIN(recommend)
+	, @Max_recommend = MAX(recommend)
+FROM dbo.rptCustomerTurnover_bk(NOLOCK)
+
+WHILE (@recommend <= @Max_recommend)
+BEGIN
+
+	WHILE (1 = 1)
+	BEGIN
+		UPDATE TOP(20000) rptCustomerTurnover_bk
+		SET Currency_NEW = Currency
+		WHERE recommend = @recommend AND Currency_NEW IS NULL
+
+		IF @@ROWCOUNT < 20000
+			BREAK;
+
+		WAITFOR DELAY '00:00:00.280'
+	END
+
+	IF @recommend = @Max_recommend
 		BREAK;
 
-	WAITFOR DELAY '00:00:00.280'
+	SELECT @recommend = MIN(recommend) FROM dbo.rptCustomerTurnover_bk(NOLOCK) WHERE recommend > @recommend
+
 END
 
 /* 
+SELECT c.name, s.name AS StatisticName
+FROM sys.stats AS s
+INNER JOIN sys.stats_columns AS sc ON s.object_id = sc.object_id AND s.stats_id = sc.stats_id
+INNER JOIN sys.columns AS c ON sc.object_id = c.object_id AND sc.column_id = c.column_id
+WHERE s.object_id = OBJECT_ID('dbo.rptCustomerTurnover_bk') AND c.name IN ('Currency','Currency_NEW');
+
+UPDATE STATISTICS dbo.rptCustomerTurnover_bk [%__StatisticName_Currency]; --Currency
+UPDATE STATISTICS dbo.rptCustomerTurnover_bk [%__StatisticName_Currency_NEW]; --Currency_NEW
+
+DBCC SHOW_STATISTICS ('dbo.rptCustomerTurnover_bk', 'Currency');
+DBCC SHOW_STATISTICS ('dbo.rptCustomerTurnover_bk', 'Currency_NEW');
+
+
 --Check all data updated
 SELECT COUNT(*)
 FROM rptCustomerTurnover_bk WITH(NOLOCK)
@@ -42,11 +69,6 @@ FROM rptCustomerTurnover_bk WITH(NOLOCK)
 WHERE Currency_NEW <> Currency
 
 */
-
-/*=================================================================================================*/
-
-DROP INDEX IDX_rptCustomerTurnover_bk_Currency_NEW ON dbo.rptCustomerTurnover_bk
-GO
 
 /*=================================================================================================*/
 
