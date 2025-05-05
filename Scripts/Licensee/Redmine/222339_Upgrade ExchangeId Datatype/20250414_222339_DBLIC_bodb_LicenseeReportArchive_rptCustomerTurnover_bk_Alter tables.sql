@@ -18,6 +18,8 @@ GO
 
 DECLARE @recommend INT
 		,@Max_recommend INT
+		,@rowcnt INT = 0
+		,@i BIGINT = 0
 
 SELECT @recommend = MIN(recommend)
 	, @Max_recommend = MAX(recommend)
@@ -32,7 +34,12 @@ BEGIN
 		SET Currency_NEW = Currency
 		WHERE recommend = @recommend AND Currency_NEW IS NULL
 
-		IF @@ROWCOUNT < 20000
+		SELECT @rowcnt = @@ROWCOUNT
+
+		SELECT @i = @i + @rowcnt
+		PRINT CAST(@i AS VARCHAR)
+
+		IF @rowcnt < 20000
 			BREAK;
 
 		WAITFOR DELAY '00:00:00.280'
