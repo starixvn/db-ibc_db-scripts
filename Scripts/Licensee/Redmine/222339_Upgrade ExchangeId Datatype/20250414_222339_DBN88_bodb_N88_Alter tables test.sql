@@ -7,6 +7,17 @@
 
 USE bodb_N88
 GO
+DROP INDEX [IX_RPT_WL_DepositTest] ON [dbo].[DepositInfoTest]
+GO
 
 ALTER TABLE DepositInfoTest ALTER COLUMN CurrencyId SMALLINT 
+GO
+
+CREATE NONCLUSTERED INDEX [IX_RPT_WL_DepositTest] ON [dbo].[DepositInfoTest]
+(
+	[Status] ASC,
+	[CreateTime] ASC,
+	[WinlostDate] ASC
+)
+INCLUDE([CustId],[CurrencyId],[SiteId],[Amount]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [ReportData]
 GO
