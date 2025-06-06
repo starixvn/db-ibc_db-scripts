@@ -28,5 +28,5 @@ BEGIN
 													   , @ProductCodes = 'BX'
 													   , @IsManual = 1
 	SET @fDate = DATEADD(DAY,1,@fDate)
-	
+	PRINT CONVERT(VARCHAR(10), @fDate, 120)
 END
