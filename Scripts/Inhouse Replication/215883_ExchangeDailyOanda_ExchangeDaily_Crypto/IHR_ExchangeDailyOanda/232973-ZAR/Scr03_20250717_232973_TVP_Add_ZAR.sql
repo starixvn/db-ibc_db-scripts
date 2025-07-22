@@ -20,7 +20,7 @@ BEGIN
 	IF @@SERVERNAME IN (
 						'IHRDISTC1','DBKULC1'			--PROD
 						--'TESTDBCUST','DB92\TESTDBTP'	-- local
-						,'SIT_IHRDISTC1'				--SIT
+						,'SITIHRDISTC1'				--SIT
 						) -- on DBTP and Dist
 		DROP PROCEDURE IF EXISTS Repl_PutExchangeDailyOanda_Dist;
 	ELSE
