@@ -11,6 +11,14 @@ USE ReplCustDB
 USE bodb02
 */
 
+IF @@SERVERNAME NOT IN ('IHRDISTC1','DBDIST03C\Inst3','DBSITEC1','DBSITEC2\INST2','DBTRANS\INST2','DB053','DB052','DB055','DB054','DB061','DB062','DBKULC1','DBDW','DBDW2')
+OR DB_NAME() NOT IN ('CustDB','ReplCustDB','bodb02')
+BEGIN
+	PRINT ('ServerName or Database is wrong')
+	RETURN
+END
+
+
 /******************************ExchangeDailyOanda*********************************************/
 ----------------------------------------------------------------------------------
 IF EXISTS (SELECT 1 FROM RepInfo WITH (NOLOCK)

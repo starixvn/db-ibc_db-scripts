@@ -6,6 +6,13 @@
 
 */
 
+IF @@SERVERNAME NOT IN ('DBCust')
+OR DB_NAME() NOT IN ('CustDB')
+BEGIN
+	PRINT ('ServerName or Database is wrong')
+	RETURN
+END
+
 
 /**********************************ExchangeDailyOanda*****************************************/
 
